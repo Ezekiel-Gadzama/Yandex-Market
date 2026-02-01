@@ -1,0 +1,16 @@
+# Example override file for local customizations
+# Copy this to docker-compose.override.yml (git-ignored) to customize
+
+version: '3.8'
+
+services:
+  backend:
+    # Override environment variables
+    environment:
+      - DATABASE_URL=sqlite:///./data/yandex_market.db
+      # Add your custom overrides here
+  
+  frontend:
+    # Override ports if needed
+    ports:
+      - "3000:80"

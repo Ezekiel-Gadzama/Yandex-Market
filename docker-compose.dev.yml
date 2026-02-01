@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: yandex-market-postgres-dev
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER:-yandex_user}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-yandex_password}
+      - POSTGRES_DB=${POSTGRES_DB:-yandex_market}
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    ports:
+      - "${POSTGRES_PORT:-5433}:5432"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-yandex_user}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: yandex-market-backend-dev
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-yandex_user}:${POSTGRES_PASSWORD:-yandex_password}@postgres:5432/${POSTGRES_DB:-yandex_market}
+      - YANDEX_MARKET_API_TOKEN=${YANDEX_MARKET_API_TOKEN:-}
+      - YANDEX_MARKET_CAMPAIGN_ID=${YANDEX_MARKET_CAMPAIGN_ID:-}
+      - YANDEX_MARKET_API_URL=${YANDEX_MARKET_API_URL:-https://api.partner.market.yandex.ru}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      - SMTP_USER=${SMTP_USER:-}
+      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
+      - FROM_EMAIL=${FROM_EMAIL:-noreply@market.yandex.ru}
+      - SECRET_KEY=${SECRET_KEY:-dev-secret-key}
+      - FRONTEND_URL=http://localhost:3000
+    volumes:
+      - ./backend/app:/app/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: yandex-market-frontend-dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+      - ./frontend/index.html:/app/index.html
+      - ./frontend/vite.config.ts:/app/vite.config.ts
+      - ./frontend/tsconfig.json:/app/tsconfig.json
+      - ./frontend/tailwind.config.js:/app/tailwind.config.js
+      - /app/node_modules
+    restart: unless-stopped
+    environment:
+      - VITE_API_URL=http://localhost:8000
+
+volumes:
+  postgres_data_dev:
