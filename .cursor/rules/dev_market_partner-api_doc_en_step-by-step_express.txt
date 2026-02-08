@@ -1,0 +1,51 @@
+Processing Express-orders
+Yandex Market API it allows you to perform all the same actions that are performed in the cabinet: view new orders, receive labels for them, change something in them if necessary, and so on.
+To understand how everything happens Read itan article about order fulfillment.
+
+Step 1. Getting information about orders
+Read the instructions:Receiving orders
+
+Step 2. Transmission of marking codes
+Labeling of goods in the system"An honest SIGN"optional for orders from individuals
+If the product is marked in «Честном знаке» or other labeling systems, give the Market the code of each sold copy.
+This information is transmitted by requestPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+If the order contains jewelry or goods marked in the Honest Sign system, after transmitting the codes, the Market will begin checking them.How to get verification statuses
+
+Step 3. Label printing and "Ready for shipment" status transmission
+
+• Pack the assembled order according to the rules described in detail inYandex.Market Help for sellers.
+Pack the assembled order according to the rules described in detail inYandex.Market Help for sellers.
+• While the order is in the statusPROCESSINGwith a sub-statusSTARTED, you can pass its external ID —POST v2/campaigns/{campaignId}/orders/{orderId}/external-id.
+While the order is in the statusPROCESSINGwith a sub-statusSTARTED, you can pass its external ID —POST v2/campaigns/{campaignId}/orders/{orderId}/external-id.
+
+PROCESSING
+
+STARTED
+• Get shortcuts using a requestGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsand stick them on the packaged order.
+Get shortcuts using a requestGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsand stick them on the packaged order.
+• Set the order to the statusReady for shipment("status": "PROCESSING" "substatus": "READY_TO_SHIP") — requestPUT v2/campaigns/{campaignId}/orders/{orderId}/status.
+Set the order to the statusReady for shipment("status": "PROCESSING" "substatus": "READY_TO_SHIP") — requestPUT v2/campaigns/{campaignId}/orders/{orderId}/status.
+
+"status": "PROCESSING" "substatus": "READY_TO_SHIP"
+
+Step 4. Sending the confirmation code and the order to the courier
+
+• Send the confirmation code that the courier gave you in the request.PUT v2/campaigns/{campaignId}/orders/{orderId}/verifyEac.
+Send the confirmation code that the courier gave you in the request.PUT v2/campaigns/{campaignId}/orders/{orderId}/verifyEac.
+• If the code verification is successful, send the order to the courier.
+If the code verification is successful, send the order to the courier.
+
+If the product is not enough: cancel and reduce the order.
+If, during the preparation of an order, you find that one or more items are missing, cancel it in whole or in part. This is done by separate requests.
+
+Order action | Request
+Complete cancellation of the order | PUT v2/campaigns/{campaignId}/orders/{orderId}/status.Transfer the order to"status":"CANCELLED""substatus": "SHOP_FAILED".
+Exclusion of the product from the order | PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes Order action
+Request Complete cancellation of the order PUT v2/campaigns/{campaignId}/orders/{orderId}/status. Transfer the order to"status":"CANCELLED""substatus": "SHOP_FAILED".
+
+"status":"CANCELLED"
+
+"substatus": "SHOP_FAILED" Exclusion of the product from the order PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+You can't do that often.
+Any of these actions will lower thequality indexthe store. When the quality index decreases, the store faces limitations.
+Индекс качества — число от 0 до 100. Если магазин работает по модели FBY, индекс качества показывает, насколько хорошо продавец делает поставки на склады Маркета, а в моделях FBS, DBS и Экспресс индекс оценивает работу с заказами.Узнать больше

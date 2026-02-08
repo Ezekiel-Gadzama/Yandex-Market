@@ -1,0 +1,1053 @@
+User's Store List
+The method is available for models:FBY,FBS,ExpressandDBS.
+
+• inventory-and-order-processing —Order processing and inventory
+• inventory-and-order-processing:read-only —View order information
+• pricing —Manage prices
+• pricing:read-only —View prices
+• offers-and-cards-management —Manage products and cards
+• offers-and-cards-management:read-only —View products and cards
+• promotion —Product promotion
+• promotion:read-only —View promotion information
+• finance-and-accounting —View financial data and reports
+• communication —Customer communication
+• settings-management —Store settings
+• supplies-management:read-only —View FBY requests
+• all-methods — Full account management
+• all-methods:read-only — View all data
+For Api-Key-tokens:returns the list of stores in the cabinet for which the token was issued. You cannot get a list of only subagency stores.
+For the OAuth token:returns the list of stores that the user has access to — the owner of the authorization token used in the request. For agency users, the list consists of subagency stores.
+Restriction for the parameterpageSize
+
+pageSize Do not transmit a value greater than 100.
+
+⚙️ Limit:1,000 requests per hour
+
+Request
+GET
+
+https://api.partner.market.yandex.ru/v2/campaigns
+
+https://api.partner.market.yandex.ru/v2/campaigns
+
+Query parameters
+
+Name | Description
+page | Type: integerIf the method haspage_tokenUse it instead of the parameterpage.Learn more about the types of pagination and their useThe number of the results page.Used together with the parameterpageSize.pageignored if specifiedpage_tokenorlimit.Default:1Max value:10000
+pageSize | Type: integerPage size.Used together with the parameterpage.pageSizeignored if specifiedpage_tokenorlimit.
+Name Description page Type: integer If the method haspage_token
+
+page_token Use it instead of the parameterpage.
+
+page Learn more about the types of pagination and their use The number of the results page. Used together with the parameterpageSize.
+
+pageSize pageignored if specifiedpage_tokenorlimit.
+
+page
+
+page_token
+
+limit Default:1
+
+1 Max value:10000
+
+10000 pageSize Type: integer Page size. Used together with the parameterpage.
+
+page pageSizeignored if specifiedpage_tokenorlimit.
+
+pageSize
+
+page_token
+
+limit
+
+Responses
+200 OK
+The user's stores.
+
+Body
+
+{
+"campaigns": [
+{
+"domain": "example",
+"id": 1,
+"clientId": 0,
+"business": {
+"id": 1,
+"name": "example"
+},
+"placementType": "FBS",
+"apiAvailability": "AVAILABLE"
+}
+],
+"pager": {
+"total": 0,
+"from": 0,
+"to": 0,
+"currentPage": 0,
+"pagesCount": 0,
+"pageSize": 0
+}
+}
+
+{
+"campaigns": [
+{
+"domain": "example",
+"id": 1,
+"clientId": 0,
+"business": {
+"id": 1,
+"name": "example"
+},
+"placementType": "FBS",
+"apiAvailability": "AVAILABLE"
+}
+],
+"pager": {
+"total": 0,
+"from": 0,
+"to": 0,
+"currentPage": 0,
+"pagesCount": 0,
+"pageSize": 0
+}
+}
+
+Name | Description
+campaigns | Type: object[]apiAvailabilityType: stringThe ability to use the API:AVAILABLE— API methods are available for executing requests.DISABLED_BY_INACTIVITY— API methods are not available because the store has not placed products in the showcase for more than 90 days.DISABLED_BY_NO_ACTIVE_CONTRACT— API methods are unavailable due to the lack of an active contract with Yandex.Market.MANUALLY_DISABLED— API methods are not available because integration is disabled manually.DISABLED_BY_NO_PLACEMENT_TYPE— API methods are not available because the store is not connected to the placement program.Detailed instructions for restoring accessEnum:AVAILABLE,DISABLED_BY_INACTIVITY,DISABLED_BY_NO_ACTIVE_CONTRACT,MANUALLY_DISABLED,DISABLED_BY_NO_PLACEMENT_TYPEbusinessType: objectidType: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1nameType: stringBusiness name.Example:exampleInformation about the cabinet.Example{"id":1,"name":"example"}clientIdType: integerThe payer's ID in Yandex.Balance.domainType: stringThe store's name.Example:exampleidType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1placementTypeType: stringThe model that the store uses:FBS— FBS or Express.FBY— FBY.DBS— DBS.Enum:FBS,FBY,DBS,LAASA list with information for each store.Example[{"domain":"example","id":1,"clientId":0,"business":{"id":1,"name":"example"},"placementType":"FBS","apiAvailability":"AVAILABLE"}] | apiAvailability | Type: stringThe ability to use the API:AVAILABLE— API methods are available for executing requests.DISABLED_BY_INACTIVITY— API methods are not available because the store has not placed products in the showcase for more than 90 days.DISABLED_BY_NO_ACTIVE_CONTRACT— API methods are unavailable due to the lack of an active contract with Yandex.Market.MANUALLY_DISABLED— API methods are not available because integration is disabled manually.DISABLED_BY_NO_PLACEMENT_TYPE— API methods are not available because the store is not connected to the placement program.Detailed instructions for restoring accessEnum:AVAILABLE,DISABLED_BY_INACTIVITY,DISABLED_BY_NO_ACTIVE_CONTRACT,MANUALLY_DISABLED,DISABLED_BY_NO_PLACEMENT_TYPE | business | Type: objectidType: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1nameType: stringBusiness name.Example:exampleInformation about the cabinet.Example{"id":1,"name":"example"} | id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1 | name | Type: stringBusiness name.Example:example | clientId | Type: integerThe payer's ID in Yandex.Balance. | domain | Type: stringThe store's name.Example:example | id | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | placementType | Type: stringThe model that the store uses:FBS— FBS or Express.FBY— FBY.DBS— DBS.Enum:FBS,FBY,DBS,LAAS
+apiAvailability | Type: stringThe ability to use the API:AVAILABLE— API methods are available for executing requests.DISABLED_BY_INACTIVITY— API methods are not available because the store has not placed products in the showcase for more than 90 days.DISABLED_BY_NO_ACTIVE_CONTRACT— API methods are unavailable due to the lack of an active contract with Yandex.Market.MANUALLY_DISABLED— API methods are not available because integration is disabled manually.DISABLED_BY_NO_PLACEMENT_TYPE— API methods are not available because the store is not connected to the placement program.Detailed instructions for restoring accessEnum:AVAILABLE,DISABLED_BY_INACTIVITY,DISABLED_BY_NO_ACTIVE_CONTRACT,MANUALLY_DISABLED,DISABLED_BY_NO_PLACEMENT_TYPE
+business | Type: objectidType: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1nameType: stringBusiness name.Example:exampleInformation about the cabinet.Example{"id":1,"name":"example"} | id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1 | name | Type: stringBusiness name.Example:example
+id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+name | Type: stringBusiness name.Example:example
+clientId | Type: integerThe payer's ID in Yandex.Balance.
+domain | Type: stringThe store's name.Example:example
+id | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+placementType | Type: stringThe model that the store uses:FBS— FBS or Express.FBY— FBY.DBS— DBS.Enum:FBS,FBY,DBS,LAAS
+pager | Type: objectcurrentPageType: integerThe current page.fromType: integerThe initial number of the found element on the page.pagesCountType: integerThe total number of pages.pageSizeType: integerPage size.toType: integerThe final number of the found element on the page.totalType: integerHow many items were found in total.A model for pagination.Example{"total":0,"from":0,"to":0,"currentPage":0,"pagesCount":0,"pageSize":0} | currentPage | Type: integerThe current page. | from | Type: integerThe initial number of the found element on the page. | pagesCount | Type: integerThe total number of pages. | pageSize | Type: integerPage size. | to | Type: integerThe final number of the found element on the page. | total | Type: integerHow many items were found in total.
+currentPage | Type: integerThe current page.
+from | Type: integerThe initial number of the found element on the page.
+pagesCount | Type: integerThe total number of pages.
+pageSize | Type: integerPage size.
+to | Type: integerThe final number of the found element on the page.
+total | Type: integerHow many items were found in total. Name Description campaigns
+
+apiAvailability | Type: stringThe ability to use the API:AVAILABLE— API methods are available for executing requests.DISABLED_BY_INACTIVITY— API methods are not available because the store has not placed products in the showcase for more than 90 days.DISABLED_BY_NO_ACTIVE_CONTRACT— API methods are unavailable due to the lack of an active contract with Yandex.Market.MANUALLY_DISABLED— API methods are not available because integration is disabled manually.DISABLED_BY_NO_PLACEMENT_TYPE— API methods are not available because the store is not connected to the placement program.Detailed instructions for restoring accessEnum:AVAILABLE,DISABLED_BY_INACTIVITY,DISABLED_BY_NO_ACTIVE_CONTRACT,MANUALLY_DISABLED,DISABLED_BY_NO_PLACEMENT_TYPE
+business | Type: objectidType: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1nameType: stringBusiness name.Example:exampleInformation about the cabinet.Example{"id":1,"name":"example"} | id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1 | name | Type: stringBusiness name.Example:example
+id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+name | Type: stringBusiness name.Example:example
+clientId | Type: integerThe payer's ID in Yandex.Balance.
+domain | Type: stringThe store's name.Example:example
+id | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+placementType | Type: stringThe model that the store uses:FBS— FBS or Express.FBY— FBY.DBS— DBS.Enum:FBS,FBY,DBS,LAAS
+apiAvailability Type: string The ability to use the API:
+
+• AVAILABLE— API methods are available for executing requests.
+
+AVAILABLE
+• DISABLED_BY_INACTIVITY— API methods are not available because the store has not placed products in the showcase for more than 90 days.
+
+DISABLED_BY_INACTIVITY
+• DISABLED_BY_NO_ACTIVE_CONTRACT— API methods are unavailable due to the lack of an active contract with Yandex.Market.
+
+DISABLED_BY_NO_ACTIVE_CONTRACT
+• MANUALLY_DISABLED— API methods are not available because integration is disabled manually.
+
+MANUALLY_DISABLED
+• DISABLED_BY_NO_PLACEMENT_TYPE— API methods are not available because the store is not connected to the placement program.
+
+DISABLED_BY_NO_PLACEMENT_TYPE Detailed instructions for restoring access
+Enum:AVAILABLE,DISABLED_BY_INACTIVITY,DISABLED_BY_NO_ACTIVE_CONTRACT,MANUALLY_DISABLED,DISABLED_BY_NO_PLACEMENT_TYPE
+
+AVAILABLE
+
+DISABLED_BY_INACTIVITY
+
+DISABLED_BY_NO_ACTIVE_CONTRACT
+
+MANUALLY_DISABLED
+
+DISABLED_BY_NO_PLACEMENT_TYPE business
+
+id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+name | Type: stringBusiness name.Example:example id Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns.
+ℹ️What is a cabinet and a store on the Market? Min value:1
+
+1 name Type: string Business name. Example:example
+
+example Information about the cabinet.
+
+{
+"id": 1,
+"name": "example"
+}
+
+{
+"id": 1,
+"name": "example"
+}
+clientId Type: integer The payer's ID in Yandex.Balance. domain Type: string
+The store's name. Example:example
+
+example id Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 placementType Type: string The model that the store uses:
+
+• FBS— FBS or Express.
+
+FBS
+• FBY— FBY.
+
+FBY
+• DBS— DBS.
+
+DBS Enum:FBS,FBY,DBS,LAAS
+
+FBS
+
+FBY
+
+DBS
+
+LAAS A list with information for each store.
+
+[
+{
+"domain": "example",
+"id": 1,
+"clientId": 0,
+"business": {
+"id": 1,
+"name": "example"
+},
+"placementType": "FBS",
+"apiAvailability": "AVAILABLE"
+}
+]
+
+[
+{
+"domain": "example",
+"id": 1,
+"clientId": 0,
+"business": {
+"id": 1,
+"name": "example"
+},
+"placementType": "FBS",
+"apiAvailability": "AVAILABLE"
+}
+]
+
+pager
+
+currentPage | Type: integerThe current page.
+from | Type: integerThe initial number of the found element on the page.
+pagesCount | Type: integerThe total number of pages.
+pageSize | Type: integerPage size.
+to | Type: integerThe final number of the found element on the page.
+total | Type: integerHow many items were found in total. currentPage Type: integer The current page.
+from Type: integer The initial number of the found element on the page. pagesCount Type: integer The total number of pages.
+pageSize Type: integer Page size. to Type: integer The final number of the found element on the page.
+total Type: integer How many items were found in total. A model for pagination.
+
+{
+"total": 0,
+"from": 0,
+"to": 0,
+"currentPage": 0,
+"pagesCount": 0,
+"pageSize": 0
+}
+
+{
+"total": 0,
+"from": 0,
+"to": 0,
+"currentPage": 0,
+"pagesCount": 0,
+"pageSize": 0
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

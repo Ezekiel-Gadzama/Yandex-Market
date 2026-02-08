@@ -1,0 +1,100 @@
+API Access Control
+If Yandex Market API If unavailable, follow these steps: check the access status, determine the reason for the block, and resolve it.
+Request logs If the API is unavailable, requests are not executed and are not recorded inrequest logs.
+
+How to find out the API access status
+Use the following methods:
+
+• GET v2/campaigns/{campaignId}— for a specific store.
+• GET v2/campaigns— for all cabinet stores.
+Check the parameter in the responseapiAvailability:
+
+apiAvailability
+
+• AVAILABLE— The API is available.
+
+AVAILABLE
+• DISABLED_BY_INACTIVITY— The API is disabled due to inactivity.
+
+DISABLED_BY_INACTIVITY
+• DISABLED_BY_NO_ACTIVE_CONTRACT— The API is disabled due to the absence of an active agreement.
+
+DISABLED_BY_NO_ACTIVE_CONTRACT
+• MANUALLY_DISABLED— integration is disabled manually.
+
+MANUALLY_DISABLED
+• DISABLED_BY_NO_PLACEMENT_TYPE— the store is not connected to the placement program.
+
+DISABLED_BY_NO_PLACEMENT_TYPE
+You can also view the API access status inthe seller's account on the Marketin the sectionSettings→APIs and modules.
+Warning
+When a store is disconnected from the API, requests from all integrations to this store are blocked.
+
+Reasons for blocking and solutions
+Integration is disabled manually
+Status:MANUALLY_DISABLED
+
+MANUALLY_DISABLED Error message:
+
+API for campaign {campaignId} manually disabled.
+
+API for campaign {campaignId} manually disabled.
+How to restore access: Enable integration inthe seller's account on the Market.
+
+The store has been inactive for more than 90 days
+Status:DISABLED_BY_INACTIVITY
+
+DISABLED_BY_INACTIVITY Error message:
+
+API for campaign {campaignId} disabled due to inactivity.
+
+API for campaign {campaignId} disabled due to inactivity.
+Reason:The store has not placed products in the showcase for more than 90 days.
+How to restore access:
+
+• Enable integration inthe seller's account on the Market.
+• Check that the integration is working correctly inquery logs.
+• Make sure that the prices and product balances are up to date.
+• Submit the store for moderation to return to the showcase.
+
+There is no active agreement
+Status:DISABLED_BY_NO_ACTIVE_CONTRACT
+
+DISABLED_BY_NO_ACTIVE_CONTRACT Error message:
+
+API for campaign {campaignId} disabled because there are no active contracts with Market.
+
+API for campaign {campaignId} disabled because there are no active contracts with Market.
+How to restore access:
+Complete the account connection in the section"Legal data".
+
+The store is not connected to the placement program
+Status:DISABLED_BY_NO_PLACEMENT_TYPE
+
+DISABLED_BY_NO_PLACEMENT_TYPE Error message:
+
+API for campaign {campaignId} disabled because it has no placement program.
+
+API for campaign {campaignId} disabled because it has no placement program.
+How to restore access: Connect the store to the placement program inthe seller's account on the Market.
+
+All cabinet stores are disabled
+Error message:
+
+API for business {businessId} disabled because it has only disabled partners.
+
+API for business {businessId} disabled because it has only disabled partners.
+Reason:All stores in the cabinet are disabled.
+How to restore access: Enable the API for at least one merchant profile inthe seller's account on the Market.
+
+Checking access after recovery
+After completing the steps to restore access:
+
+• Wait up to a minute — The changes may not be applied instantly.
+• Check the access status using the methodGET v2/campaigns/{campaignId}orGET v2/campaigns.
+• Make sure that the parameterapiAvailabilityit mattersAVAILABLE.
+
+apiAvailability
+
+AVAILABLE
+• Make a test API request.

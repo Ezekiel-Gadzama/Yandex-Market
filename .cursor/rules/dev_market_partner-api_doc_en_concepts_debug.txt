@@ -1,0 +1,49 @@
+Request logs
+On the pages with logs, you can view requests to Yandex Market API or the store's API, as well as find out information about the response. To do this, click on the icon of your account → in the seller's account on the Market.Settingsand in the menu on the left, selectAPIs and modules→ tabQuery logorNotification Log.
+Warning
+If the API is unavailable, API requests are not executed and are not recorded in logs.Learn more about API access control
+On these pages, there are widgets with information for each integration:
+
+• calls to which resources are terminated with errors (tabQuery log);
+calls to which resources are terminated with errors (tabQuery log);
+• the response to which type of notification is received with an error (tabNotification Log);
+the response to which type of notification is received with an error (tabNotification Log);
+• the percentage and number of errors in requests.
+the percentage and number of errors in requests.
+For the integration to work correctly, fix the errors. To view the details, click on the row with the problematic request or notification type, and the log table will be updated.
+
+How to work with logs
+On the logs page, you can:
+
+• Search by the body of the request and response, as well as by the request parameters. To do this, in the fieldSearchenter the information you want to find.
+Search by the body of the request and response, as well as by the request parameters. To do this, in the fieldSearchenter the information you want to find.
+• Search by filters. For example, using theResourcefilter, you can find queries by certain methods, and by the filterIntegration— queries related to the selected integration.
+Search by filters. For example, using theResourcefilter, you can find queries by certain methods, and by the filterIntegration— queries related to the selected integration.
+• View detailed information on request — click on the line with it to see the request itself and the response received. Learn more about errors and how to solve them:Query errors to Yandex Market APIErrors when enabling or working with API notifications
+View detailed information on request — click on the line with it to see the request itself and the response received. Learn more about errors and how to solve them:
+
+• Query errors to Yandex Market API
+• Errors when enabling or working with API notifications
+• Check which integration requests and responses relate to, — in the blockType of integrationsthe name that you provided in the request or response is specified, or the typeDocumentation Consoleif you have used it.Learn more about how to sign integrations
+Check which integration requests and responses relate to, — in the blockType of integrationsthe name that you provided in the request or response is specified, or the typeDocumentation Consoleif you have used it.Learn more about how to sign integrations
+
+Unique request ID
+The market transmits a unique request identifier in the [tracepaint] header(*traceparent):
+
+• the response, if it is a request from the store to the Market.
+• the request itself in the case of API notifications, when the Market sends a request to the store.How to work with notifications
+Example of a request or response header:
+
+Content-Type: application/json
+traceparent: 00-8b05ba11f1d37f7cfce0eac1a5230600-8b23fad39202f968-01
+
+Content-Type: application/json
+traceparent: 00-8b05ba11f1d37f7cfce0eac1a5230600-8b23fad39202f968-01
+
+With the request ID, you can find its logs faster, and it can also be useful when contacting support.
+To find information about a completed query:
+
+• Insert the unique identifier in the fieldSearch.
+Insert the unique identifier in the fieldSearch.
+• Click on the request to see detailed information, including its ID in the field.Tracing.
+Click on the request to see detailed information, including its ID in the field.Tracing. It is included in the open standardOpenTelemetry.

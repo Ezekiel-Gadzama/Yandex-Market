@@ -1,0 +1,137 @@
+List of methods used in the model Express
+If you work according to the model Express couriers come directly to your warehouse or point of sale, pick up packaged orders and immediately deliver them to customers. Read more about the model inYandex.Market Help for sellers.
+
+Offices and shops
+
+Method | Method description
+GET v2/​campaigns | User's Store List
+GET v2/​campaigns/​{campaignId} | Store Information
+GET v2/​campaigns/​{campaignId}/​settings | Store Settings Method Method description GET v2/​campaigns
+User's Store List GET v2/​campaigns/​{campaignId} Store Information GET v2/​campaigns/​{campaignId}/​settings
+Store Settings
+
+Products
+
+Method | Method description
+POST v2/​categories/​tree | The category tree
+POST v2/​category/​{categoryId}/​parameters | Lists of product characteristics by category
+POST v2/​campaigns/​{campaignId}/​offers/​update | Changing the terms of sale of goods in the store
+POST v2/​campaigns/​{campaignId}/​offers | Information about the products that are placed in the specified store
+POST v2/​campaigns/​{campaignId}/​offers/​delete | Removing items from the store's assortment
+GET v2/​campaigns/​{campaignId}/​hidden-offers | Information about the goods you have hidden
+POST v2/​campaigns/​{campaignId}/​hidden-offers | Hiding products and hiding settings
+POST v2/​campaigns/​{campaignId}/​hidden-offers/​delete | Resuming product display Method Method description
+POST v2/​categories/​tree The category tree POST v2/​category/​{categoryId}/​parameters Lists of product characteristics by category
+POST v2/​campaigns/​{campaignId}/​offers/​update Changing the terms of sale of goods in the store POST v2/​campaigns/​{campaignId}/​offers
+Information about the products that are placed in the specified store POST v2/​campaigns/​{campaignId}/​offers/​delete
+Removing items from the store's assortment GET v2/​campaigns/​{campaignId}/​hidden-offers Information about the goods you have hidden
+POST v2/​campaigns/​{campaignId}/​hidden-offers Hiding products and hiding settings POST v2/​campaigns/​{campaignId}/​hidden-offers/​delete
+Resuming product display
+
+Balances and turnover
+
+Method | Method description
+POST v2/​campaigns/​{campaignId}/​offers/​stocks | Information about balances and turnover
+PUT v2/​campaigns/​{campaignId}/​offers/​stocks | Transmitting information about balances Method Method description
+POST v2/​campaigns/​{campaignId}/​offers/​stocks Information about balances and turnover PUT v2/​campaigns/​{campaignId}/​offers/​stocks
+Transmitting information about balances
+
+Prices
+
+Method | Method description
+POST v2/​campaigns/​{campaignId}/​offer-prices/​updates | Setting prices for products in a specific store
+POST v2/​campaigns/​{campaignId}/​offer-prices | View prices for specified products in a specific store
+POST v2/​campaigns/​{campaignId}/​price-quarantine | List of quarantined products by price in the store
+POST v2/​campaigns/​{campaignId}/​price-quarantine/​confirm | Removing an item from quarantine for the price in the store
+Method Method description POST v2/​campaigns/​{campaignId}/​offer-prices/​updates Setting prices for products in a specific store
+POST v2/​campaigns/​{campaignId}/​offer-prices View prices for specified products in a specific store
+POST v2/​campaigns/​{campaignId}/​price-quarantine List of quarantined products by price in the store
+POST v2/​campaigns/​{campaignId}/​price-quarantine/​confirm Removing an item from quarantine for the price in the store
+
+Orders
+
+Method | Method description
+PUT v2/​campaigns/​{campaignId}/​orders/​{orderId}/​boxes | Order preparation
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​external-id | Transmitting an external order ID
+PUT v2/​campaigns/​{campaignId}/​orders/​{orderId}/​status | Changing the status of an order
+POST v2/​campaigns/​{campaignId}/​orders/​status-update | Changing the statuses of multiple orders
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​identifiers/​status | Marking code verification statuses
+PUT v2/​campaigns/​{campaignId}/​orders/​{orderId}/​verifyEac | Sending the confirmation code
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​business-buyer | Information about the buyer — a legal entity
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​documents | Information about documents Method Method description
+PUT v2/​campaigns/​{campaignId}/​orders/​{orderId}/​boxes Order preparation POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​external-id
+Transmitting an external order ID PUT v2/​campaigns/​{campaignId}/​orders/​{orderId}/​status Changing the status of an order
+POST v2/​campaigns/​{campaignId}/​orders/​status-update Changing the statuses of multiple orders POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​identifiers/​status
+Marking code verification statuses PUT v2/​campaigns/​{campaignId}/​orders/​{orderId}/​verifyEac Sending the confirmation code
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​business-buyer Information about the buyer — a legal entity
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​documents Information about documents
+
+Shortcuts FBS and DBS
+
+Method | Method description
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​delivery/​shipments/​{shipmentId}/​boxes/​{boxId}/​label | Ready‑made label-sticker for the box in the order
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​delivery/​labels | Ready‑made labels-stickers for all boxes in one order
+POST v2/​reports/​documents/​labels/​generate | Ready‑made labels-stickers for all boxes in several orders
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​delivery/​labels/​data | Data for self-label production
+Method Method description
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​delivery/​shipments/​{shipmentId}/​boxes/​{boxId}/​label
+Ready‑made label-sticker for the box in the order GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​delivery/​labels
+Ready‑made labels-stickers for all boxes in one order POST v2/​reports/​documents/​labels/​generate Ready‑made labels-stickers for all boxes in several orders
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​delivery/​labels/​data Data for self-label production
+
+Non-purchases and refunds
+
+Method | Method description
+GET v2/​campaigns/​{campaignId}/​returns | List of non-purchases and refunds
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId} | Information about non-purchase or refund
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​application | Receiving a refund request
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​decision/​{itemId}/​image/​{imageHash} | Receiving photos of items in a refund
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​decision/​submit | Transfer and confirmation of the refund decision
+Method Method description GET v2/​campaigns/​{campaignId}/​returns List of non-purchases and refunds
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId} Information about non-purchase or refund
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​application Receiving a refund request
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​decision/​{itemId}/​image/​{imageHash}
+Receiving photos of items in a refund POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​decision/​submit
+Transfer and confirmation of the refund decision
+
+Reports and documents
+
+Method | Method description
+POST v2/​campaigns/​{campaignId}/​stats/​orders | Detailed information on orders
+POST v2/​reports/​united-returns/​generate | Report on non-purchases and refunds
+POST v2/​campaigns/​{campaignId}/​stats/​skus | Product Report
+POST v2/​reports/​stocks-on-warehouses/​generate | Report on warehouse balances
+POST v2/​reports/​united-marketplace-services/​generate | Report on the cost of services
+POST v2/​reports/​closure-documents/​generate | Closing documents
+POST v2/​reports/​closure-documents/​detalization/​generate | Report on convergence with closing documents
+GET v2/​reports/​info/​{reportId} | Getting a given report or document Method Method description POST v2/​campaigns/​{campaignId}/​stats/​orders
+Detailed information on orders POST v2/​reports/​united-returns/​generate Report on non-purchases and refunds
+POST v2/​campaigns/​{campaignId}/​stats/​skus Product Report POST v2/​reports/​stocks-on-warehouses/​generate
+Report on warehouse balances POST v2/​reports/​united-marketplace-services/​generate Report on the cost of services
+POST v2/​reports/​closure-documents/​generate Closing documents POST v2/​reports/​closure-documents/​detalization/​generate
+Report on convergence with closing documents GET v2/​reports/​info/​{reportId} Getting a given report or document
+
+Quality index
+
+Method | Method description
+POST v2/​campaigns/​{campaignId}/​ratings/​quality/​details | Orders that affected the quality index
+Method Method description POST v2/​campaigns/​{campaignId}/​ratings/​quality/​details Orders that affected the quality index
+
+Warehouses
+
+Method | Method description
+POST v2/​campaigns/​{campaignId}/​warehouse/​status | Changing the warehouse status Method Method description
+POST v2/​campaigns/​{campaignId}/​warehouse/​status Changing the warehouse status
+
+Reference books
+
+Method | Method description
+POST v2/​auth/​token | Getting information about the authorization token
+GET v2/​delivery/​services | Directory of delivery services
+POST v2/​regions/​countries | List of valid country codes
+GET v2/​regions | Search for regions by their name
+GET v2/​regions/​{regionId} | Information about the region
+GET v2/​regions/​{regionId}/​children | Information about child regions Method Method description POST v2/​auth/​token
+Getting information about the authorization token GET v2/​delivery/​services Directory of delivery services
+POST v2/​regions/​countries List of valid country codes GET v2/​regions Search for regions by their name
+GET v2/​regions/​{regionId} Information about the region GET v2/​regions/​{regionId}/​children Information about child regions

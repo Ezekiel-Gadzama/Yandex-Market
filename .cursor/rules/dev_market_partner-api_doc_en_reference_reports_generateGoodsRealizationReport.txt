@@ -1,0 +1,1670 @@
+The structure and content of the reports are subject to change without prior notice. For example, a new column may be added or the name of the sheet may be changed.
+
+Implementation Report
+The method is available forall models.
+
+• finance-and-accounting —View financial data and reports
+• all-methods — Full account management
+Starts the generation of the implementation report for the specified period.What kind of report is this
+You can find out the generation status and get a link to the finished report using a request.GET v2/reports/info/{reportId}.
+Explanation of the report columns:
+
+CSV column name | JSON column name | XLSX column name | Value type
+ORDER_ID | orderId | Orders/Order number | integer
+YOUR_ORDER_ID | yourOrderId | Orders/Your order number | string
+ORDER_TYPE | orderType | Orders/Order type | string
+OFFER_NAME | offerName | Orders/Product name | string
+YOUR_SKU | yourSku | Orders/Your SKU | string
+SHOP_SKU | shopSku | Orders/$ | string
+TRANSFERRED_TO_DELIVERY_COUNT | transferredToDeliveryCount | Orders/Number transferred for delivery, items | integer
+ORDER_CREATION_DATE | orderCreationDate | Orders/Order creation date | string
+TRANSFERRED_TO_DELIVERY_DATE | transferredToDeliveryDate | Orders/Date goods were handed over for delivery | string
+DELIVERY_DATE | deliveryDate | Orders/Product delivery date | string
+PAYMENT_TYPE | paymentType | Orders/Payment method | string
+VAT | vat | Orders/VAT rate | string
+PRICE_WITH_VAT_AND_NO_DISCOUNT | priceWithVatAndNoDiscount | Orders/The price includes VAT without discounts per piece. | number
+SHOP_MARKETPLACE_DISCOUNT | shopMarketplaceDiscount | Orders/Your discount on the marketplace promotion is 1 pc. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Orders/Your discount on Yandex points.Advantages per 1 pc . | number
+PRICE_WITH_VAT_AND_ALL_DISCOUNTS | priceWithVatAndAllDiscounts | Orders/Price with VAT, including all discounts per piece. | number
+TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS | transferredToDeliveryPriceSumWithVatAndNoDiscounts | Orders/The cost of all delivered pieces with VAT excluding discounts | number
+TRANSFERRED_TO_DELIVERY_DISCOUNT_SUM | transferredToDeliveryDiscountSum | Orders/The sum of all discounts for delivered pieces | number
+TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_DISCOUNTS | transferredToDeliveryPriceSumWithVatAndDiscounts | Orders/The cost of all delivered pieces with VAT, including all discounts | number
+RNPT | rnpt | Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP) | string
+RECEIPT_ID | receiptId | Orders/Receipt number | string
+RECEIPT_DATETIME | receiptDatetime | Orders/Receipt printing date | string
+ORGANIZATION | organization | Sales to businesses/Information about buyer/Organization name | string
+INN | inn | Sales to businesses/Information about buyer/INN (taxpayer identification number) | string
+KPP | kpp | Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) | string
+ORGANIZATION_JUR_ADDRESS | organizationJurAddress | Sales to businesses/Information about buyer/Legal address | string
+UPD_STATUS | updStatus | Sales to businesses/Electronic document management/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Electronic document management/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Electronic document management/UPD number | string
+UPD_STATUS | updStatus | Sales to businesses/Documents/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Documents/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Documents/UPD number | string
+UKD_STATUS | ukdStatus | Sales to businesses/Documents/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Documents/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Documents/UKD number | string
+CONSIGNMENT_NOTE_DATE | consignmentNoteDate | Sales to businesses/Paper document management/Packing list date | string
+CONSIGNMENT_NOTE_NUMBER | consignmentNoteNumber | Sales to businesses/Paper document management/Packing list number | string
+INVOICE_DATE | invoiceDate | Sales to businesses/Paper document management/Invoice date | string
+INVOICE_NUMBER | invoiceNumber | Sales to businesses/Paper document management/Invoice number | string
+CSV column name JSON column name XLSX column name Value type ORDER_ID orderId Orders/Order number integer
+YOUR_ORDER_ID yourOrderId Orders/Your order number string ORDER_TYPE orderType Orders/Order type string
+OFFER_NAME offerName Orders/Product name string YOUR_SKU yourSku Orders/Your SKU string SHOP_SKU shopSku
+Orders/$ string TRANSFERRED_TO_DELIVERY_COUNT transferredToDeliveryCount Orders/Number transferred for delivery, items
+integer ORDER_CREATION_DATE orderCreationDate Orders/Order creation date string TRANSFERRED_TO_DELIVERY_DATE
+transferredToDeliveryDate Orders/Date goods were handed over for delivery string DELIVERY_DATE deliveryDate
+Orders/Product delivery date string PAYMENT_TYPE paymentType Orders/Payment method string VAT vat Orders/VAT rate
+string PRICE_WITH_VAT_AND_NO_DISCOUNT priceWithVatAndNoDiscount Orders/The price includes VAT without discounts per piece.
+number SHOP_MARKETPLACE_DISCOUNT shopMarketplaceDiscount Orders/Your discount on the marketplace promotion is 1 pc.
+number SPASIBO_DISCOUNT spasiboDiscount Orders/Your discount on Savings bonuses is only (per piece) for 1 piece.
+number YANDEX_PLUS_DISCOUNT yandexPlusDiscount Orders/Your discount on Yandex points.Advantages per 1 pc .
+number PRICE_WITH_VAT_AND_ALL_DISCOUNTS priceWithVatAndAllDiscounts Orders/Price with VAT, including all discounts per piece.
+number TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS transferredToDeliveryPriceSumWithVatAndNoDiscounts
+Orders/The cost of all delivered pieces with VAT excluding discounts number TRANSFERRED_TO_DELIVERY_DISCOUNT_SUM
+transferredToDeliveryDiscountSum Orders/The sum of all discounts for delivered pieces number TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_DISCOUNTS
+transferredToDeliveryPriceSumWithVatAndDiscounts Orders/The cost of all delivered pieces with VAT, including all discounts
+number RNPT rnpt
+Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP)
+string RECEIPT_ID receiptId Orders/Receipt number string RECEIPT_DATETIME receiptDatetime Orders/Receipt printing date
+string ORGANIZATION organization Sales to businesses/Information about buyer/Organization name string
+INN inn Sales to businesses/Information about buyer/INN (taxpayer identification number) string KPP kpp
+Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) string ORGANIZATION_JUR_ADDRESS
+organizationJurAddress Sales to businesses/Information about buyer/Legal address string UPD_STATUS updStatus
+Sales to businesses/Electronic document management/UPD status string UPD_DATE updDate Sales to businesses/Electronic document management/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Electronic document management/UPD number string UPD_STATUS
+updStatus Sales to businesses/Documents/UPD status string UPD_DATE updDate Sales to businesses/Documents/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Documents/UPD number string UKD_STATUS ukdStatus Sales to businesses/Documents/UKD status
+string UKD_DATE ukdDate Sales to businesses/Documents/UKD date string UKD_NUMBER ukdNumber Sales to businesses/Documents/UKD number
+string CONSIGNMENT_NOTE_DATE consignmentNoteDate Sales to businesses/Paper document management/Packing list date
+string CONSIGNMENT_NOTE_NUMBER consignmentNoteNumber Sales to businesses/Paper document management/Packing list number
+string INVOICE_DATE invoiceDate Sales to businesses/Paper document management/Invoice date string INVOICE_NUMBER
+invoiceNumber Sales to businesses/Paper document management/Invoice number string
+
+CSV column name | JSON column name | XLSX column name | Value type
+ORDER_ID | orderId | Orders/Order number | integer
+YOUR_ORDER_ID | yourOrderId | Orders/Your order number | string
+ORDER_TYPE | orderType | Orders/Order type | string
+OFFER_NAME | offerName | Orders/Product name | string
+YOUR_SKU | yourSku | Orders/Your SKU | string
+SHOP_SKU | shopSku | Orders/$ | string
+TRANSFERRED_TO_DELIVERY_COUNT | transferredToDeliveryCount | Orders/Number transferred for delivery, items | integer
+DELIVERED_COUNT | deliveredCount | Orders/Delivered, items | integer
+ORDER_CREATION_DATE | orderCreationDate | Orders/Order creation date | string
+TRANSFERRED_TO_DELIVERY_DATE | transferredToDeliveryDate | Orders/Date goods were handed over for delivery | string
+DELIVERY_DATE | deliveryDate | Orders/Product delivery date | string
+PAYMENT_TYPE | paymentType | Orders/Payment method | string
+VAT | vat | Orders/VAT rate | string
+PRICE_WITH_VAT_AND_NO_DISCOUNT | priceWithVatAndNoDiscount | Orders/The price includes VAT without discounts per piece. | number
+SHOP_MARKETPLACE_DISCOUNT | shopMarketplaceDiscount | Orders/Your discount on the marketplace promotion is 1 pc. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Orders/Your discount on Yandex points.Advantages per 1 pc . | number
+PRICE_WITH_VAT_AND_ALL_DISCOUNTS | priceWithVatAndAllDiscounts | Orders/Price with VAT, including all discounts per piece. | number
+DELIVERED_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS | deliveredPriceSumWithVatAndNoDiscounts | Orders/The cost of all delivered pieces with VAT excluding discounts | number
+DELIVERED_DISCOUNT_SUM | deliveredDiscountSum | Orders/The sum of all discounts for delivered pieces | number
+DELIVERED_PRICE_SUM_WITH_VAT_AND_DISCOUNTS | deliveredPriceSumWithVatAndDiscounts | Orders/The cost of all delivered pieces with VAT, including all discounts | number
+RNPT | rnpt | Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP) | string
+RECEIPT_ID | receiptId | Orders/Receipt number | string
+RECEIPT_DATETIME | receiptDatetime | Orders/Receipt printing date | string
+ORGANIZATION | organization | Sales to businesses/Information about buyer/Organization name | string
+INN | inn | Sales to businesses/Information about buyer/INN (taxpayer identification number) | string
+KPP | kpp | Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) | string
+ORGANIZATION_JUR_ADDRESS | organizationJurAddress | Sales to businesses/Information about buyer/Legal address | string
+UPD_STATUS | updStatus | Sales to businesses/Electronic document management/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Electronic document management/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Electronic document management/UPD number | string
+UPD_STATUS | updStatus | Продажи бизнесу/Документы/Статус УПД | string
+UPD_DATE | updDate | Продажи бизнесу/Документы/Дата УПД | string
+UPD_NUMBER | updNumber | Продажи бизнесу/Документы/Номер УПД | string
+CONSIGNMENT_NOTE_DATE | consignmentNoteDate | Sales to businesses/Paper document management/Packing list date | string
+CONSIGNMENT_NOTE_NUMBER | consignmentNoteNumber | Sales to businesses/Paper document management/Packing list number | string
+INVOICE_DATE | invoiceDate | Sales to businesses/Paper document management/Invoice date | string
+INVOICE_NUMBER | invoiceNumber | Sales to businesses/Paper document management/Invoice number | string
+CSV column name JSON column name XLSX column name Value type ORDER_ID orderId Orders/Order number integer
+YOUR_ORDER_ID yourOrderId Orders/Your order number string ORDER_TYPE orderType Orders/Order type string
+OFFER_NAME offerName Orders/Product name string YOUR_SKU yourSku Orders/Your SKU string SHOP_SKU shopSku
+Orders/$ string TRANSFERRED_TO_DELIVERY_COUNT transferredToDeliveryCount Orders/Number transferred for delivery, items
+integer DELIVERED_COUNT deliveredCount Orders/Delivered, items integer ORDER_CREATION_DATE orderCreationDate
+Orders/Order creation date string TRANSFERRED_TO_DELIVERY_DATE transferredToDeliveryDate Orders/Date goods were handed over for delivery
+string DELIVERY_DATE deliveryDate Orders/Product delivery date string PAYMENT_TYPE paymentType Orders/Payment method
+string VAT vat Orders/VAT rate string PRICE_WITH_VAT_AND_NO_DISCOUNT priceWithVatAndNoDiscount Orders/The price includes VAT without discounts per piece.
+number SHOP_MARKETPLACE_DISCOUNT shopMarketplaceDiscount Orders/Your discount on the marketplace promotion is 1 pc.
+number SPASIBO_DISCOUNT spasiboDiscount Orders/Your discount on Savings bonuses is only (per piece) for 1 piece.
+number YANDEX_PLUS_DISCOUNT yandexPlusDiscount Orders/Your discount on Yandex points.Advantages per 1 pc .
+number PRICE_WITH_VAT_AND_ALL_DISCOUNTS priceWithVatAndAllDiscounts Orders/Price with VAT, including all discounts per piece.
+number DELIVERED_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS deliveredPriceSumWithVatAndNoDiscounts Orders/The cost of all delivered pieces with VAT excluding discounts
+number DELIVERED_DISCOUNT_SUM deliveredDiscountSum Orders/The sum of all discounts for delivered pieces
+number DELIVERED_PRICE_SUM_WITH_VAT_AND_DISCOUNTS deliveredPriceSumWithVatAndDiscounts Orders/The cost of all delivered pieces with VAT, including all discounts
+number RNPT rnpt
+Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP)
+string RECEIPT_ID receiptId Orders/Receipt number string RECEIPT_DATETIME receiptDatetime Orders/Receipt printing date
+string ORGANIZATION organization Sales to businesses/Information about buyer/Organization name string
+INN inn Sales to businesses/Information about buyer/INN (taxpayer identification number) string KPP kpp
+Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) string ORGANIZATION_JUR_ADDRESS
+organizationJurAddress Sales to businesses/Information about buyer/Legal address string UPD_STATUS updStatus
+Sales to businesses/Electronic document management/UPD status string UPD_DATE updDate Sales to businesses/Electronic document management/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Electronic document management/UPD number string UPD_STATUS
+updStatus Продажи бизнесу/Документы/Статус УПД string UPD_DATE updDate Продажи бизнесу/Документы/Дата УПД
+string UPD_NUMBER updNumber Продажи бизнесу/Документы/Номер УПД string CONSIGNMENT_NOTE_DATE consignmentNoteDate
+Sales to businesses/Paper document management/Packing list date string CONSIGNMENT_NOTE_NUMBER consignmentNoteNumber
+Sales to businesses/Paper document management/Packing list number string INVOICE_DATE invoiceDate Sales to businesses/Paper document management/Invoice date
+string INVOICE_NUMBER invoiceNumber Sales to businesses/Paper document management/Invoice number string
+
+CSV column name | JSON column name | XLSX column name | Value type
+ORDER_ID | orderId | Orders/Order number | integer
+YOUR_ORDER_ID | yourOrderId | Orders/Your order number | string
+ORDER_TYPE | orderType | Orders/Order type | string
+OFFER_NAME | offerName | Orders/Product name | string
+YOUR_SKU | yourSku | Orders/Your SKU | string
+SHOP_SKU | shopSku | Orders/$ | string
+TRANSFERRED_TO_DELIVERY_COUNT | transferredToDeliveryCount | Orders/Number transferred for delivery, items | integer
+UNREDEEMED_COUNT | unredeemedCount | Orders/Unpurchased, items | integer
+ORDER_CREATION_DATE | orderCreationDate | Orders/Order creation date | string
+TRANSFERRED_TO_DELIVERY_DATE | transferredToDeliveryDate | Orders/Date goods were handed over for delivery | string
+DELIVERY_DATE | deliveryDate | Orders/Product delivery date | string
+UNREDEEMED_WAREHOUSE_OR_SC_ACCEPT_DATE | unredeemedWarehouseOrScAcceptDate | Orders/Date of acceptance of the non-purchase by the warehouse or sorting center | string
+PAYMENT_TYPE | paymentType | Orders/Payment method | string
+VAT | vat | Orders/VAT rate | string
+PRICE_WITH_VAT_AND_NO_DISCOUNT | priceWithVatAndNoDiscount | Orders/The price includes VAT without discounts per piece. | number
+SHOP_MARKETPLACE_DISCOUNT | shopMarketplaceDiscount | Orders/Your discount on the marketplace promotion is 1 pc. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Orders/Your discount on Yandex points.Advantages per 1 pc . | number
+PRICE_WITH_VAT_AND_ALL_DISCOUNTS | priceWithVatAndAllDiscounts | Orders/Price with VAT, including all discounts per piece. | number
+UNREDEEMED_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS | unredeemedPriceSumWithVatAndNoDiscounts | Orders/The cost of all non-purchased pieces with VAT excluding discounts | number
+UNREDEEMED_DISCOUNT_SUM | unredeemedDiscountSum | Orders/The sum of all discounts for non-purchased pieces | number
+UNREDEEMED_PRICE_SUM_WITH_VAT_AND_DISCOUNTS | unredeemedPriceSumWithVatAndDiscounts | Orders/Стоимость всех невыкупленных штук с НДС с учётом всех скидок | number
+RNPT | rnpt | Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP) | string
+RECEIPT_ID | receiptId | Orders/Receipt number | string
+RECEIPT_DATETIME | receiptDatetime | Orders/Receipt printing date | string
+ORGANIZATION | organization | Sales to businesses/Information about buyer/Organization name | string
+INN | inn | Sales to businesses/Information about buyer/INN (taxpayer identification number) | string
+KPP | kpp | Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) | string
+ORGANIZATION_JUR_ADDRESS | organizationJurAddress | Sales to businesses/Information about buyer/Legal address | string
+UKD_STATUS | ukdStatus | Sales to businesses/Electronic document management/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Electronic document management/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Electronic document management/UKD number | string
+CONSIGNMENT_NOTE_DATE | consignmentNoteDate | Sales to businesses/Paper document management/Packing list date | string
+CONSIGNMENT_NOTE_NUMBER | consignmentNoteNumber | Sales to businesses/Paper document management/Packing list number | string
+INVOICE_DATE | invoiceDate | Sales to businesses/Paper document management/Invoice date | string
+INVOICE_NUMBER | invoiceNumber | Sales to businesses/Paper document management/Invoice number | string
+ADJUSTMENT_INVOICE_DATE | adjustmentInvoiceDate | Sales to businesses/Paper document management/Adjustment invoice date | string
+ADJUSTMENT_INVOICE_NUMBER | adjustmentInvoiceNumber | Sales to businesses/Paper document management/Adjustment invoice number | string
+REDEEMED_PRICE | redeemedPrice | Sales to businesses/The cost of the purchased product | string
+UPD_STATUS | updStatus | Sales to businesses/Electronic document management/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Electronic document management/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Electronic document management/UPD number | string
+UPD_STATUS | updStatus | Sales to businesses/Documents/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Documents/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Documents/UPD number | string
+UKD_STATUS | ukdStatus | Sales to businesses/Documents/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Documents/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Documents/UKD number | string
+REDEEMED_PRICE | redeemedPrice | Sales to businesses/Documents/The cost of the purchased product | string
+CSV column name JSON column name XLSX column name Value type ORDER_ID orderId Orders/Order number integer
+YOUR_ORDER_ID yourOrderId Orders/Your order number string ORDER_TYPE orderType Orders/Order type string
+OFFER_NAME offerName Orders/Product name string YOUR_SKU yourSku Orders/Your SKU string SHOP_SKU shopSku
+Orders/$ string TRANSFERRED_TO_DELIVERY_COUNT transferredToDeliveryCount Orders/Number transferred for delivery, items
+integer UNREDEEMED_COUNT unredeemedCount Orders/Unpurchased, items integer ORDER_CREATION_DATE orderCreationDate
+Orders/Order creation date string TRANSFERRED_TO_DELIVERY_DATE transferredToDeliveryDate Orders/Date goods were handed over for delivery
+string DELIVERY_DATE deliveryDate Orders/Product delivery date string UNREDEEMED_WAREHOUSE_OR_SC_ACCEPT_DATE
+unredeemedWarehouseOrScAcceptDate Orders/Date of acceptance of the non-purchase by the warehouse or sorting center
+string PAYMENT_TYPE paymentType Orders/Payment method string VAT vat Orders/VAT rate string PRICE_WITH_VAT_AND_NO_DISCOUNT
+priceWithVatAndNoDiscount Orders/The price includes VAT without discounts per piece. number SHOP_MARKETPLACE_DISCOUNT
+shopMarketplaceDiscount Orders/Your discount on the marketplace promotion is 1 pc. number SPASIBO_DISCOUNT
+spasiboDiscount Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. number YANDEX_PLUS_DISCOUNT
+yandexPlusDiscount Orders/Your discount on Yandex points.Advantages per 1 pc . number PRICE_WITH_VAT_AND_ALL_DISCOUNTS
+priceWithVatAndAllDiscounts Orders/Price with VAT, including all discounts per piece. number UNREDEEMED_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS
+unredeemedPriceSumWithVatAndNoDiscounts Orders/The cost of all non-purchased pieces with VAT excluding discounts
+number UNREDEEMED_DISCOUNT_SUM unredeemedDiscountSum Orders/The sum of all discounts for non-purchased pieces
+number UNREDEEMED_PRICE_SUM_WITH_VAT_AND_DISCOUNTS unredeemedPriceSumWithVatAndDiscounts Orders/Стоимость всех невыкупленных штук с НДС с учётом всех скидок
+number RNPT rnpt
+Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP)
+string RECEIPT_ID receiptId Orders/Receipt number string RECEIPT_DATETIME receiptDatetime Orders/Receipt printing date
+string ORGANIZATION organization Sales to businesses/Information about buyer/Organization name string
+INN inn Sales to businesses/Information about buyer/INN (taxpayer identification number) string KPP kpp
+Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) string ORGANIZATION_JUR_ADDRESS
+organizationJurAddress Sales to businesses/Information about buyer/Legal address string UKD_STATUS ukdStatus
+Sales to businesses/Electronic document management/UKD status string UKD_DATE ukdDate Sales to businesses/Electronic document management/UKD date
+string UKD_NUMBER ukdNumber Sales to businesses/Electronic document management/UKD number string CONSIGNMENT_NOTE_DATE
+consignmentNoteDate Sales to businesses/Paper document management/Packing list date string CONSIGNMENT_NOTE_NUMBER
+consignmentNoteNumber Sales to businesses/Paper document management/Packing list number string INVOICE_DATE
+invoiceDate Sales to businesses/Paper document management/Invoice date string INVOICE_NUMBER invoiceNumber
+Sales to businesses/Paper document management/Invoice number string ADJUSTMENT_INVOICE_DATE adjustmentInvoiceDate
+Sales to businesses/Paper document management/Adjustment invoice date string ADJUSTMENT_INVOICE_NUMBER
+adjustmentInvoiceNumber Sales to businesses/Paper document management/Adjustment invoice number string
+REDEEMED_PRICE redeemedPrice Sales to businesses/The cost of the purchased product string UPD_STATUS
+updStatus Sales to businesses/Electronic document management/UPD status string UPD_DATE updDate Sales to businesses/Electronic document management/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Electronic document management/UPD number string UPD_STATUS
+updStatus Sales to businesses/Documents/UPD status string UPD_DATE updDate Sales to businesses/Documents/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Documents/UPD number string UKD_STATUS ukdStatus Sales to businesses/Documents/UKD status
+string UKD_DATE ukdDate Sales to businesses/Documents/UKD date string UKD_NUMBER ukdNumber Sales to businesses/Documents/UKD number
+string REDEEMED_PRICE redeemedPrice Sales to businesses/Documents/The cost of the purchased product string
+
+CSV column name | JSON column name | XLSX column name | Value type
+ORDER_ID | orderId | Orders/Order number | integer
+YOUR_ORDER_ID | yourOrderId | Orders/Your order number | string
+ORDER_TYPE | orderType | Orders/Order type | string
+OFFER_NAME | offerName | Orders/Product name | string
+YOUR_SKU | yourSku | Orders/Your SKU | string
+SHOP_SKU | shopSku | Orders/$ | string
+DELIVERED_COUNT | deliveredCount | Orders/Quantity, items | integer
+RETURNED_COUNT | returnedCount | Orders/Returned, items | integer
+ORDER_CREATION_DATE | orderCreationDate | Orders/Order creation date | string
+TRANSFERRED_TO_DELIVERY_DATE | transferredToDeliveryDate | Orders/Date goods were handed over for delivery | string
+DELIVERY_DATE | deliveryDate | Orders/Product delivery date | string
+RETURN_WAREHOUSE_OR_SC_ACCEPT_DATE | returnWarehouseOrScAcceptDate | Orders/Return acceptance date by the warehouse or sorting center | string
+PAYMENT_TYPE | paymentType | Orders/Payment method | string
+VAT | vat | Orders/VAT rate | string
+PRICE_WITH_VAT_AND_NO_DISCOUNT | priceWithVatAndNoDiscount | Orders/The price includes VAT without discounts per piece. | number
+SHOP_MARKETPLACE_DISCOUNT | shopMarketplaceDiscount | Orders/Your discount on the marketplace promotion is 1 pc. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Orders/Your discount on Yandex points.Advantages per 1 pc . | number
+PRICE_WITH_VAT_AND_ALL_DISCOUNTS | priceWithVatAndAllDiscounts | Orders/Price with VAT, including all discounts per piece. | number
+RETURN_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS | returnPriceSumWithVatAndNoDiscounts | Orders/The cost of all returned pieces with VAT excluding discounts | number
+RETURN_DISCOUNT_SUM | returnDiscountSum | Orders/The sum of all discounts for returned pieces | number
+RETURN_PRICE_SUM_WITH_VAT_AND_DISCOUNTS | returnPriceSumWithVatAndDiscounts | Orders/The cost of all returned pieces with VAT, including all discounts | number
+ORGANIZATION | organization | Sales to businesses/Information about buyer/Organization name | string
+INN | inn | Sales to businesses/Information about buyer/INN (taxpayer identification number) | string
+KPP | kpp | Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) | string
+ORGANIZATION_JUR_ADDRESS | organizationJurAddress | Sales to businesses/Information about buyer/Legal address | string
+UPD_STATUS | updStatus | Sales to businesses/Documents/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Documents/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Documents/UPD number | string
+UKD_STATUS | ukdStatus | Sales to businesses/Documents/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Documents/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Documents/UKD number | string
+REDEEMED_PRICE | redeemedPrice | Sales to businesses/Documents/The cost of the purchased product | number
+UPD_STATUS | updStatus | Sales to businesses/Electronic document management/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Electronic document management/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Electronic document management/UPD number | string
+UKD_STATUS | ukdStatus | Sales to businesses/Electronic document management/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Electronic document management/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Electronic document management/UKD number | string
+CONSIGNMENT_NOTE_DATE | consignmentNoteDate | Sales to businesses/Paper document management/Packing list date | string
+CONSIGNMENT_NOTE_NUMBER | consignmentNoteNumber | Sales to businesses/Paper document management/Packing list number | string
+INVOICE_DATE | invoiceDate | Sales to businesses/Paper document management/Invoice date | string
+INVOICE_NUMBER | invoiceNumber | Sales to businesses/Paper document management/Invoice number | string
+ADJUSTMENT_INVOICE_DATE | adjustmentInvoiceDate | Sales to businesses/Paper document management/Adjustment invoice date | string
+ADJUSTMENT_INVOICE_NUMBER | adjustmentInvoiceNumber | Sales to businesses/Paper document management/Adjustment invoice number | string
+REDEEMED_PRICE | redeemedPrice | Sales to businesses/The cost of the purchased product | number
+RNPT | rnpt | Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP) | string
+RECEIPT_ID | receiptId | Orders/Receipt number | string
+RECEIPT_DATETIME | receiptDatetime | Orders/Receipt printing date | string CSV column name JSON column name
+XLSX column name Value type ORDER_ID orderId Orders/Order number integer YOUR_ORDER_ID yourOrderId Orders/Your order number
+string ORDER_TYPE orderType Orders/Order type string OFFER_NAME offerName Orders/Product name string
+YOUR_SKU yourSku Orders/Your SKU string SHOP_SKU shopSku Orders/$ string DELIVERED_COUNT deliveredCount
+Orders/Quantity, items integer RETURNED_COUNT returnedCount Orders/Returned, items integer ORDER_CREATION_DATE
+orderCreationDate Orders/Order creation date string TRANSFERRED_TO_DELIVERY_DATE transferredToDeliveryDate
+Orders/Date goods were handed over for delivery string DELIVERY_DATE deliveryDate Orders/Product delivery date
+string RETURN_WAREHOUSE_OR_SC_ACCEPT_DATE returnWarehouseOrScAcceptDate Orders/Return acceptance date by the warehouse or sorting center
+string PAYMENT_TYPE paymentType Orders/Payment method string VAT vat Orders/VAT rate string PRICE_WITH_VAT_AND_NO_DISCOUNT
+priceWithVatAndNoDiscount Orders/The price includes VAT without discounts per piece. number SHOP_MARKETPLACE_DISCOUNT
+shopMarketplaceDiscount Orders/Your discount on the marketplace promotion is 1 pc. number SPASIBO_DISCOUNT
+spasiboDiscount Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. number YANDEX_PLUS_DISCOUNT
+yandexPlusDiscount Orders/Your discount on Yandex points.Advantages per 1 pc . number PRICE_WITH_VAT_AND_ALL_DISCOUNTS
+priceWithVatAndAllDiscounts Orders/Price with VAT, including all discounts per piece. number RETURN_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS
+returnPriceSumWithVatAndNoDiscounts Orders/The cost of all returned pieces with VAT excluding discounts
+number RETURN_DISCOUNT_SUM returnDiscountSum Orders/The sum of all discounts for returned pieces number
+RETURN_PRICE_SUM_WITH_VAT_AND_DISCOUNTS returnPriceSumWithVatAndDiscounts Orders/The cost of all returned pieces with VAT, including all discounts
+number ORGANIZATION organization Sales to businesses/Information about buyer/Organization name string
+INN inn Sales to businesses/Information about buyer/INN (taxpayer identification number) string KPP kpp
+Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) string ORGANIZATION_JUR_ADDRESS
+organizationJurAddress Sales to businesses/Information about buyer/Legal address string UPD_STATUS updStatus
+Sales to businesses/Documents/UPD status string UPD_DATE updDate Sales to businesses/Documents/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Documents/UPD number string UKD_STATUS ukdStatus Sales to businesses/Documents/UKD status
+string UKD_DATE ukdDate Sales to businesses/Documents/UKD date string UKD_NUMBER ukdNumber Sales to businesses/Documents/UKD number
+string REDEEMED_PRICE redeemedPrice Sales to businesses/Documents/The cost of the purchased product number
+UPD_STATUS updStatus Sales to businesses/Electronic document management/UPD status string UPD_DATE updDate
+Sales to businesses/Electronic document management/UPD date string UPD_NUMBER updNumber Sales to businesses/Electronic document management/UPD number
+string UKD_STATUS ukdStatus Sales to businesses/Electronic document management/UKD status string UKD_DATE
+ukdDate Sales to businesses/Electronic document management/UKD date string UKD_NUMBER ukdNumber Sales to businesses/Electronic document management/UKD number
+string CONSIGNMENT_NOTE_DATE consignmentNoteDate Sales to businesses/Paper document management/Packing list date
+string CONSIGNMENT_NOTE_NUMBER consignmentNoteNumber Sales to businesses/Paper document management/Packing list number
+string INVOICE_DATE invoiceDate Sales to businesses/Paper document management/Invoice date string INVOICE_NUMBER
+invoiceNumber Sales to businesses/Paper document management/Invoice number string ADJUSTMENT_INVOICE_DATE
+adjustmentInvoiceDate Sales to businesses/Paper document management/Adjustment invoice date string ADJUSTMENT_INVOICE_NUMBER
+adjustmentInvoiceNumber Sales to businesses/Paper document management/Adjustment invoice number string
+REDEEMED_PRICE redeemedPrice Sales to businesses/The cost of the purchased product number RNPT rnpt
+Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP)
+string RECEIPT_ID receiptId Orders/Receipt number string RECEIPT_DATETIME receiptDatetime Orders/Receipt printing date
+string
+
+CSV column name | JSON column name | XLSX column name | Value type
+ORDER_ID | orderId | Orders/Order number | integer
+YOUR_ORDER_ID | yourOrderId | Orders/Your order number | string
+ORDER_TYPE | orderType | Orders/Order type | string
+OFFER_NAME | offerName | Orders/Product name | string
+YOUR_SKU | yourSku | Orders/Your SKU | string
+SHOP_SKU | shopSku | Orders/$ | string
+TRANSFERRED_TO_DELIVERY_COUNT | transferredToDeliveryCount | Orders/Number transferred for delivery, items | integer
+ORDER_CREATION_DATE | orderCreationDate | Orders/Order creation date | string
+TRANSFERRED_TO_DELIVERY_DATE | transferredToDeliveryDate | Orders/Date goods were handed over for delivery | string
+DELIVERY_DATE | deliveryDate | Orders/Product delivery date | string
+PAYMENT_TYPE | paymentType | Orders/Payment method | string
+VAT | vat | Orders/VAT rate | string
+PRICE_WITH_VAT_AND_NO_DISCOUNT | priceWithVatAndNoDiscount | Orders/The price includes VAT without discounts per piece. | number
+SHOP_MARKETPLACE_DISCOUNT | shopMarketplaceDiscount | Orders/Your discount on the marketplace promotion is 1 pc. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Orders/Your discount on Yandex points.Advantages per 1 pc . | number
+PRICE_WITH_VAT_AND_ALL_DISCOUNTS | priceWithVatAndAllDiscounts | Orders/Price with VAT, including all discounts per piece. | number
+TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS | transferredToDeliveryPriceSumWithVatAndNoDiscounts | Orders/The cost of all delivered pieces with VAT excluding discounts | number
+TRANSFERRED_TO_DELIVERY_DISCOUNT_SUM | transferredToDeliveryDiscountSum | Orders/The sum of all discounts for delivered pieces | number
+TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_DISCOUNTS | transferredToDeliveryPriceSumWithVatAndDiscounts | Orders/The cost of all delivered pieces with VAT, including all discounts | number
+RNPT | rnpt | Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP) | string
+RECEIPT_ID | receiptId | Orders/Receipt number | string
+RECEIPT_DATETIME | receiptDatetime | Orders/Receipt printing date | string
+COMPENSATION_DATE | compensationDate | Compensations/Autocompensation date | string
+COMPENSATION_AMOUNT | compensationAmount | Compensations/The amount of auto compensation | number
+LOST_RETURN_RECEIVED_DATE | lostReturnReceivedDate | Compensations/Warehouse acceptance or merchant pickup date | string
+DECOMPENSATION_DATE | decompensationDate | Compensations/Decompensation date | string
+DECOMPENSATION_AMOUNT | decompensationAmount | Compensations/The amount of decompensation | number
+ORGANIZATION | organization | Sales to businesses/Information about buyer/Organization name | string
+INN | inn | Sales to businesses/Information about buyer/INN (taxpayer identification number) | string
+KPP | kpp | Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) | string
+ORGANIZATION_JUR_ADDRESS | organizationJurAddress | Sales to businesses/Information about buyer/Legal address | string
+UPD_STATUS | updStatus | Sales to businesses/Electronic document management/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Electronic document management/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Electronic document management/UPD number | string
+CONSIGNMENT_NOTE_DATE | consignmentNoteDate | Sales to businesses/Paper document management/Packing list date | string
+CONSIGNMENT_NOTE_NUMBER | consignmentNoteNumber | Sales to businesses/Paper document management/Packing list number | string
+INVOICE_DATE | invoiceDate | Sales to businesses/Paper document management/Invoice date | string
+INVOICE_NUMBER | invoiceNumber | Sales to businesses/Paper document management/Invoice number | string
+UKD_STATUS | ukdStatus | Sales to businesses/Electronic document management/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Electronic document management/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Electronic document management/UKD number | string
+ADJUSTMENT_INVOICE_DATE | adjustmentInvoiceDate | Sales to businesses/Paper document management/Adjustment invoice date | string
+ADJUSTMENT_INVOICE_NUMBER | adjustmentInvoiceNumber | Sales to businesses/Paper document management/Adjustment invoice number | string
+CSV column name JSON column name XLSX column name Value type ORDER_ID orderId Orders/Order number integer
+YOUR_ORDER_ID yourOrderId Orders/Your order number string ORDER_TYPE orderType Orders/Order type string
+OFFER_NAME offerName Orders/Product name string YOUR_SKU yourSku Orders/Your SKU string SHOP_SKU shopSku
+Orders/$ string TRANSFERRED_TO_DELIVERY_COUNT transferredToDeliveryCount Orders/Number transferred for delivery, items
+integer ORDER_CREATION_DATE orderCreationDate Orders/Order creation date string TRANSFERRED_TO_DELIVERY_DATE
+transferredToDeliveryDate Orders/Date goods were handed over for delivery string DELIVERY_DATE deliveryDate
+Orders/Product delivery date string PAYMENT_TYPE paymentType Orders/Payment method string VAT vat Orders/VAT rate
+string PRICE_WITH_VAT_AND_NO_DISCOUNT priceWithVatAndNoDiscount Orders/The price includes VAT without discounts per piece.
+number SHOP_MARKETPLACE_DISCOUNT shopMarketplaceDiscount Orders/Your discount on the marketplace promotion is 1 pc.
+number SPASIBO_DISCOUNT spasiboDiscount Orders/Your discount on Savings bonuses is only (per piece) for 1 piece.
+number YANDEX_PLUS_DISCOUNT yandexPlusDiscount Orders/Your discount on Yandex points.Advantages per 1 pc .
+number PRICE_WITH_VAT_AND_ALL_DISCOUNTS priceWithVatAndAllDiscounts Orders/Price with VAT, including all discounts per piece.
+number TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS transferredToDeliveryPriceSumWithVatAndNoDiscounts
+Orders/The cost of all delivered pieces with VAT excluding discounts number TRANSFERRED_TO_DELIVERY_DISCOUNT_SUM
+transferredToDeliveryDiscountSum Orders/The sum of all discounts for delivered pieces number TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_DISCOUNTS
+transferredToDeliveryPriceSumWithVatAndDiscounts Orders/The cost of all delivered pieces with VAT, including all discounts
+number RNPT rnpt
+Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP)
+string RECEIPT_ID receiptId Orders/Receipt number string RECEIPT_DATETIME receiptDatetime Orders/Receipt printing date
+string COMPENSATION_DATE compensationDate Compensations/Autocompensation date string COMPENSATION_AMOUNT
+compensationAmount Compensations/The amount of auto compensation number LOST_RETURN_RECEIVED_DATE lostReturnReceivedDate
+Compensations/Warehouse acceptance or merchant pickup date string DECOMPENSATION_DATE decompensationDate
+Compensations/Decompensation date string DECOMPENSATION_AMOUNT decompensationAmount Compensations/The amount of decompensation
+number ORGANIZATION organization Sales to businesses/Information about buyer/Organization name string
+INN inn Sales to businesses/Information about buyer/INN (taxpayer identification number) string KPP kpp
+Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) string ORGANIZATION_JUR_ADDRESS
+organizationJurAddress Sales to businesses/Information about buyer/Legal address string UPD_STATUS updStatus
+Sales to businesses/Electronic document management/UPD status string UPD_DATE updDate Sales to businesses/Electronic document management/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Electronic document management/UPD number string CONSIGNMENT_NOTE_DATE
+consignmentNoteDate Sales to businesses/Paper document management/Packing list date string CONSIGNMENT_NOTE_NUMBER
+consignmentNoteNumber Sales to businesses/Paper document management/Packing list number string INVOICE_DATE
+invoiceDate Sales to businesses/Paper document management/Invoice date string INVOICE_NUMBER invoiceNumber
+Sales to businesses/Paper document management/Invoice number string UKD_STATUS ukdStatus Sales to businesses/Electronic document management/UKD status
+string UKD_DATE ukdDate Sales to businesses/Electronic document management/UKD date string UKD_NUMBER
+ukdNumber Sales to businesses/Electronic document management/UKD number string ADJUSTMENT_INVOICE_DATE
+adjustmentInvoiceDate Sales to businesses/Paper document management/Adjustment invoice date string ADJUSTMENT_INVOICE_NUMBER
+adjustmentInvoiceNumber Sales to businesses/Paper document management/Adjustment invoice number string
+Explanation of the report columns:
+
+CSV column name | JSON column name | XLSX column name | Value type
+ORDER_ID | orderId | Orders/Order number | integer
+YOUR_ORDER_ID | yourOrderId | Orders/Your order number | string
+ORDER_TYPE | orderType | Orders/Order type | string
+OFFER_NAME | offerName | Orders/Title | string
+YOUR_SKU | yourSku | Orders/Your SKU | string
+SHOP_SKU | shopSku | Orders/$ | string
+TRANSFERRED_TO_DELIVERY_COUNT | transferredToDeliveryCount | Orders/Number transferred for delivery, items | integer
+ORDER_CREATION_DATE | orderCreationDate | Orders/Order creation date | string
+TRANSFERRED_TO_DELIVERY_DATE | transferredToDeliveryDate | Orders/Date goods were handed over for delivery | string
+DELIVERY_DATE | deliveryDate | Orders/Product delivery date | string
+PAYMENT_TYPE | paymentType | Orders/Payment method | string
+VAT | vat | Orders/VAT rate | string
+PRICE_WITH_VAT_AND_NO_DISCOUNT | priceWithVatAndNoDiscount | Orders/The price includes VAT without discounts per piece. | number
+SHOP_MARKETPLACE_DISCOUNT | shopMarketplaceDiscount | Orders/Your discount on the marketplace promotion is 1 pc. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Orders/Your discount on Yandex points.Advantages per 1 pc . | number
+PRICE_WITH_VAT_AND_ALL_DISCOUNTS | priceWithVatAndAllDiscounts | Orders/Price with VAT, including all discounts per piece. | number
+TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS | transferredToDeliveryPriceSumWithVatAndNoDiscounts | Orders/The cost of all delivered pieces with VAT excluding discounts | number
+TRANSFERRED_TO_DELIVERY_DISCOUNT_SUM | transferredToDeliveryDiscountSum | Orders/The sum of all discounts for delivered pieces | number
+TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_DISCOUNTS | transferredToDeliveryPriceSumWithVatAndDiscounts | Orders/The cost of all delivered pieces with VAT, including all discounts | number
+RNPT | rnpt | Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP) | string
+RECEIPT_ID | receiptId | Orders/Receipt number | string
+RECEIPT_DATETIME | receiptDatetime | Orders/Receipt printing date | string
+ORGANIZATION | organization | Sales to businesses/Information about buyer/Organization name | string
+INN | inn | Sales to businesses/Information about buyer/INN (taxpayer identification number) | string
+KPP | kpp | Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) | string
+ORGANIZATION_JUR_ADDRESS | organizationJurAddress | Sales to businesses/Information about buyer/Legal address | string
+UPD_STATUS | updStatus | Sales to businesses/Electronic document management/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Electronic document management/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Electronic document management/UPD number | string
+UPD_STATUS | updStatus | Sales to businesses/Documents/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Documents/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Documents/UPD number | string
+UKD_STATUS | ukdStatus | Sales to businesses/Documents/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Documents/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Documents/UKD number | string
+CONSIGNMENT_NOTE_DATE | consignmentNoteDate | Sales to businesses/Paper document management/Packing list date | string
+CONSIGNMENT_NOTE_NUMBER | consignmentNoteNumber | Sales to businesses/Paper document management/Packing list number | string
+INVOICE_DATE | invoiceDate | Sales to businesses/Paper document management/Invoice date | string
+INVOICE_NUMBER | invoiceNumber | Sales to businesses/Paper document management/Invoice number | string
+CSV column name JSON column name XLSX column name Value type ORDER_ID orderId Orders/Order number integer
+YOUR_ORDER_ID yourOrderId Orders/Your order number string ORDER_TYPE orderType Orders/Order type string
+OFFER_NAME offerName Orders/Title string YOUR_SKU yourSku Orders/Your SKU string SHOP_SKU shopSku Orders/$
+string TRANSFERRED_TO_DELIVERY_COUNT transferredToDeliveryCount Orders/Number transferred for delivery, items
+integer ORDER_CREATION_DATE orderCreationDate Orders/Order creation date string TRANSFERRED_TO_DELIVERY_DATE
+transferredToDeliveryDate Orders/Date goods were handed over for delivery string DELIVERY_DATE deliveryDate
+Orders/Product delivery date string PAYMENT_TYPE paymentType Orders/Payment method string VAT vat Orders/VAT rate
+string PRICE_WITH_VAT_AND_NO_DISCOUNT priceWithVatAndNoDiscount Orders/The price includes VAT without discounts per piece.
+number SHOP_MARKETPLACE_DISCOUNT shopMarketplaceDiscount Orders/Your discount on the marketplace promotion is 1 pc.
+number SPASIBO_DISCOUNT spasiboDiscount Orders/Your discount on Savings bonuses is only (per piece) for 1 piece.
+number YANDEX_PLUS_DISCOUNT yandexPlusDiscount Orders/Your discount on Yandex points.Advantages per 1 pc .
+number PRICE_WITH_VAT_AND_ALL_DISCOUNTS priceWithVatAndAllDiscounts Orders/Price with VAT, including all discounts per piece.
+number TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS transferredToDeliveryPriceSumWithVatAndNoDiscounts
+Orders/The cost of all delivered pieces with VAT excluding discounts number TRANSFERRED_TO_DELIVERY_DISCOUNT_SUM
+transferredToDeliveryDiscountSum Orders/The sum of all discounts for delivered pieces number TRANSFERRED_TO_DELIVERY_PRICE_SUM_WITH_VAT_AND_DISCOUNTS
+transferredToDeliveryPriceSumWithVatAndDiscounts Orders/The cost of all delivered pieces with VAT, including all discounts
+number RNPT rnpt
+Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP)
+string RECEIPT_ID receiptId Orders/Receipt number string RECEIPT_DATETIME receiptDatetime Orders/Receipt printing date
+string ORGANIZATION organization Sales to businesses/Information about buyer/Organization name string
+INN inn Sales to businesses/Information about buyer/INN (taxpayer identification number) string KPP kpp
+Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) string ORGANIZATION_JUR_ADDRESS
+organizationJurAddress Sales to businesses/Information about buyer/Legal address string UPD_STATUS updStatus
+Sales to businesses/Electronic document management/UPD status string UPD_DATE updDate Sales to businesses/Electronic document management/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Electronic document management/UPD number string UPD_STATUS
+updStatus Sales to businesses/Documents/UPD status string UPD_DATE updDate Sales to businesses/Documents/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Documents/UPD number string UKD_STATUS ukdStatus Sales to businesses/Documents/UKD status
+string UKD_DATE ukdDate Sales to businesses/Documents/UKD date string UKD_NUMBER ukdNumber Sales to businesses/Documents/UKD number
+string CONSIGNMENT_NOTE_DATE consignmentNoteDate Sales to businesses/Paper document management/Packing list date
+string CONSIGNMENT_NOTE_NUMBER consignmentNoteNumber Sales to businesses/Paper document management/Packing list number
+string INVOICE_DATE invoiceDate Sales to businesses/Paper document management/Invoice date string INVOICE_NUMBER
+invoiceNumber Sales to businesses/Paper document management/Invoice number string
+
+CSV column name | JSON column name | XLSX column name | Value type
+ORDER_ID | orderId | Orders/Order number | integer
+YOUR_ORDER_ID | yourOrderId | Orders/Your order number | string
+ORDER_TYPE | orderType | Orders/Order type | string
+OFFER_NAME | offerName | Orders/Title | string
+YOUR_SKU | yourSku | Orders/Your SKU | string
+SHOP_SKU | shopSku | Orders/$ | string
+TRANSFERRED_TO_DELIVERY_COUNT | transferredToDeliveryCount | Orders/Number transferred for delivery, items | integer
+DELIVERED_COUNT | deliveredCount | Orders/Delivered, items | integer
+ORDER_CREATION_DATE | orderCreationDate | Orders/Order creation date | string
+TRANSFERRED_TO_DELIVERY_DATE | transferredToDeliveryDate | Orders/Date goods were handed over for delivery | string
+DELIVERY_DATE | deliveryDate | Orders/Product delivery date | string
+PAYMENT_TYPE | paymentType | Orders/Payment method | string
+VAT | vat | Orders/VAT rate | string
+PRICE_WITH_VAT_AND_NO_DISCOUNT | priceWithVatAndNoDiscount | Orders/The price includes VAT without discounts per piece. | number
+SHOP_MARKETPLACE_DISCOUNT | shopMarketplaceDiscount | Orders/Your discount on the marketplace promotion is 1 pc. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Orders/Your discount on Yandex points.Advantages per 1 pc . | number
+PRICE_WITH_VAT_AND_ALL_DISCOUNTS | priceWithVatAndAllDiscounts | Orders/Price with VAT, including all discounts per piece. | number
+DELIVERED_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS | deliveredPriceSumWithVatAndNoDiscounts | Orders/The cost of all delivered pieces with VAT excluding discounts | number
+DELIVERED_DISCOUNT_SUM | deliveredDiscountSum | Orders/The sum of all discounts for delivered pieces | number
+DELIVERED_PRICE_SUM_WITH_VAT_AND_DISCOUNTS | deliveredPriceSumWithVatAndDiscounts | Orders/The cost of all delivered pieces with VAT, including all discounts | number
+RNPT | rnpt | Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP) | string
+RECEIPT_ID | receiptId | Orders/Receipt number | string
+RECEIPT_DATETIME | receiptDatetime | Orders/Receipt printing date | string
+ORGANIZATION | organization | Sales to businesses/Information about buyer/Organization name | string
+INN | inn | Sales to businesses/Information about buyer/INN (taxpayer identification number) | string
+KPP | kpp | Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) | string
+ORGANIZATION_JUR_ADDRESS | organizationJurAddress | Sales to businesses/Information about buyer/Legal address | string
+UPD_STATUS | updStatus | Sales to businesses/Electronic document management/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Electronic document management/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Electronic document management/UPD number | string
+UPD_STATUS | updStatus | Продажи бизнесу/Документы/Статус УПД | string
+UPD_DATE | updDate | Продажи бизнесу/Документы/Дата УПД | string
+UPD_NUMBER | updNumber | Продажи бизнесу/Документы/Номер УПД | string
+CONSIGNMENT_NOTE_DATE | consignmentNoteDate | Sales to businesses/Paper document management/Packing list date | string
+CONSIGNMENT_NOTE_NUMBER | consignmentNoteNumber | Sales to businesses/Paper document management/Packing list number | string
+INVOICE_DATE | invoiceDate | Sales to businesses/Paper document management/Invoice date | string
+INVOICE_NUMBER | invoiceNumber | Sales to businesses/Paper document management/Invoice number | string
+CSV column name JSON column name XLSX column name Value type ORDER_ID orderId Orders/Order number integer
+YOUR_ORDER_ID yourOrderId Orders/Your order number string ORDER_TYPE orderType Orders/Order type string
+OFFER_NAME offerName Orders/Title string YOUR_SKU yourSku Orders/Your SKU string SHOP_SKU shopSku Orders/$
+string TRANSFERRED_TO_DELIVERY_COUNT transferredToDeliveryCount Orders/Number transferred for delivery, items
+integer DELIVERED_COUNT deliveredCount Orders/Delivered, items integer ORDER_CREATION_DATE orderCreationDate
+Orders/Order creation date string TRANSFERRED_TO_DELIVERY_DATE transferredToDeliveryDate Orders/Date goods were handed over for delivery
+string DELIVERY_DATE deliveryDate Orders/Product delivery date string PAYMENT_TYPE paymentType Orders/Payment method
+string VAT vat Orders/VAT rate string PRICE_WITH_VAT_AND_NO_DISCOUNT priceWithVatAndNoDiscount Orders/The price includes VAT without discounts per piece.
+number SHOP_MARKETPLACE_DISCOUNT shopMarketplaceDiscount Orders/Your discount on the marketplace promotion is 1 pc.
+number SPASIBO_DISCOUNT spasiboDiscount Orders/Your discount on Savings bonuses is only (per piece) for 1 piece.
+number YANDEX_PLUS_DISCOUNT yandexPlusDiscount Orders/Your discount on Yandex points.Advantages per 1 pc .
+number PRICE_WITH_VAT_AND_ALL_DISCOUNTS priceWithVatAndAllDiscounts Orders/Price with VAT, including all discounts per piece.
+number DELIVERED_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS deliveredPriceSumWithVatAndNoDiscounts Orders/The cost of all delivered pieces with VAT excluding discounts
+number DELIVERED_DISCOUNT_SUM deliveredDiscountSum Orders/The sum of all discounts for delivered pieces
+number DELIVERED_PRICE_SUM_WITH_VAT_AND_DISCOUNTS deliveredPriceSumWithVatAndDiscounts Orders/The cost of all delivered pieces with VAT, including all discounts
+number RNPT rnpt
+Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP)
+string RECEIPT_ID receiptId Orders/Receipt number string RECEIPT_DATETIME receiptDatetime Orders/Receipt printing date
+string ORGANIZATION organization Sales to businesses/Information about buyer/Organization name string
+INN inn Sales to businesses/Information about buyer/INN (taxpayer identification number) string KPP kpp
+Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) string ORGANIZATION_JUR_ADDRESS
+organizationJurAddress Sales to businesses/Information about buyer/Legal address string UPD_STATUS updStatus
+Sales to businesses/Electronic document management/UPD status string UPD_DATE updDate Sales to businesses/Electronic document management/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Electronic document management/UPD number string UPD_STATUS
+updStatus Продажи бизнесу/Документы/Статус УПД string UPD_DATE updDate Продажи бизнесу/Документы/Дата УПД
+string UPD_NUMBER updNumber Продажи бизнесу/Документы/Номер УПД string CONSIGNMENT_NOTE_DATE consignmentNoteDate
+Sales to businesses/Paper document management/Packing list date string CONSIGNMENT_NOTE_NUMBER consignmentNoteNumber
+Sales to businesses/Paper document management/Packing list number string INVOICE_DATE invoiceDate Sales to businesses/Paper document management/Invoice date
+string INVOICE_NUMBER invoiceNumber Sales to businesses/Paper document management/Invoice number string
+
+CSV column name | JSON column name | XLSX column name | Value type
+ORDER_ID | orderId | Orders/Order number | integer
+YOUR_ORDER_ID | yourOrderId | Orders/Your order number | string
+ORDER_TYPE | orderType | Orders/Order type | string
+OFFER_NAME | offerName | Orders/Title | string
+YOUR_SKU | yourSku | Orders/Your SKU | string
+SHOP_SKU | shopSku | Orders/$ | string
+TRANSFERRED_TO_DELIVERY_COUNT | transferredToDeliveryCount | Orders/Number transferred for delivery, items | integer
+UNREDEEMED_COUNT | unredeemedCount | Orders/Not redeemed, PCs. | integer
+ORDER_CREATION_DATE | orderCreationDate | Orders/Order creation date | string
+TRANSFERRED_TO_DELIVERY_DATE | transferredToDeliveryDate | Orders/Date goods were handed over for delivery | string
+DELIVERY_DATE | deliveryDate | Orders/Product delivery date | string
+UNREDEEMED_WAREHOUSE_OR_SC_ACCEPT_DATE | unredeemedWarehouseOrScAcceptDate | Orders/Date of acceptance of the non-purchase by the warehouse or sorting center | string
+PAYMENT_TYPE | paymentType | Orders/Payment method | string
+VAT | vat | Orders/VAT rate | string
+PRICE_WITH_VAT_AND_NO_DISCOUNT | priceWithVatAndNoDiscount | Orders/The price includes VAT without discounts per piece. | number
+SHOP_MARKETPLACE_DISCOUNT | shopMarketplaceDiscount | Orders/Your discount on the marketplace promotion is 1 pc. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Orders/Your discount on Yandex points.Advantages per 1 pc . | number
+PRICE_WITH_VAT_AND_ALL_DISCOUNTS | priceWithVatAndAllDiscounts | Orders/Price with VAT, including all discounts per piece. | number
+UNREDEEMED_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS | unredeemedPriceSumWithVatAndNoDiscounts | Orders/The cost of all non-purchased pieces with VAT excluding discounts | number
+UNREDEEMED_DISCOUNT_SUM | unredeemedDiscountSum | Orders/The sum of all discounts for non-purchased pieces | number
+UNREDEEMED_PRICE_SUM_WITH_VAT_AND_DISCOUNTS | unredeemedPriceSumWithVatAndDiscounts | Orders/Стоимость всех невыкупленных штук с НДС с учётом всех скидок | number
+RNPT | rnpt | Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP) | string
+RECEIPT_ID | receiptId | Orders/Receipt number | string
+RECEIPT_DATETIME | receiptDatetime | Orders/Receipt printing date | string
+ORGANIZATION | organization | Sales to businesses/Information about buyer/Organization name | string
+INN | inn | Sales to businesses/Information about buyer/INN (taxpayer identification number) | string
+KPP | kpp | Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) | string
+ORGANIZATION_JUR_ADDRESS | organizationJurAddress | Sales to businesses/Information about buyer/Legal address | string
+UKD_STATUS | ukdStatus | Sales to businesses/Electronic document management/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Electronic document management/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Electronic document management/UKD number | string
+CONSIGNMENT_NOTE_DATE | consignmentNoteDate | Sales to businesses/Paper document management/Packing list date | string
+CONSIGNMENT_NOTE_NUMBER | consignmentNoteNumber | Sales to businesses/Paper document management/Packing list number | string
+INVOICE_DATE | invoiceDate | Sales to businesses/Paper document management/Invoice date | string
+INVOICE_NUMBER | invoiceNumber | Sales to businesses/Paper document management/Invoice number | string
+ADJUSTMENT_INVOICE_DATE | adjustmentInvoiceDate | Sales to businesses/Paper document management/Adjustment invoice date | string
+ADJUSTMENT_INVOICE_NUMBER | adjustmentInvoiceNumber | Sales to businesses/Paper document management/Adjustment invoice number | string
+REDEEMED_PRICE | redeemedPrice | Sales to businesses/The cost of the purchased product | string
+UPD_STATUS | updStatus | Sales to businesses/Electronic document management/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Electronic document management/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Electronic document management/UPD number | string
+UPD_STATUS | updStatus | Sales to businesses/Documents/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Documents/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Documents/UPD number | string
+UKD_STATUS | ukdStatus | Sales to businesses/Documents/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Documents/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Documents/UKD number | string
+REDEEMED_PRICE | redeemedPrice | Sales to businesses/Documents/The cost of the purchased product | string
+CSV column name JSON column name XLSX column name Value type ORDER_ID orderId Orders/Order number integer
+YOUR_ORDER_ID yourOrderId Orders/Your order number string ORDER_TYPE orderType Orders/Order type string
+OFFER_NAME offerName Orders/Title string YOUR_SKU yourSku Orders/Your SKU string SHOP_SKU shopSku Orders/$
+string TRANSFERRED_TO_DELIVERY_COUNT transferredToDeliveryCount Orders/Number transferred for delivery, items
+integer UNREDEEMED_COUNT unredeemedCount Orders/Not redeemed, PCs. integer ORDER_CREATION_DATE orderCreationDate
+Orders/Order creation date string TRANSFERRED_TO_DELIVERY_DATE transferredToDeliveryDate Orders/Date goods were handed over for delivery
+string DELIVERY_DATE deliveryDate Orders/Product delivery date string UNREDEEMED_WAREHOUSE_OR_SC_ACCEPT_DATE
+unredeemedWarehouseOrScAcceptDate Orders/Date of acceptance of the non-purchase by the warehouse or sorting center
+string PAYMENT_TYPE paymentType Orders/Payment method string VAT vat Orders/VAT rate string PRICE_WITH_VAT_AND_NO_DISCOUNT
+priceWithVatAndNoDiscount Orders/The price includes VAT without discounts per piece. number SHOP_MARKETPLACE_DISCOUNT
+shopMarketplaceDiscount Orders/Your discount on the marketplace promotion is 1 pc. number SPASIBO_DISCOUNT
+spasiboDiscount Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. number YANDEX_PLUS_DISCOUNT
+yandexPlusDiscount Orders/Your discount on Yandex points.Advantages per 1 pc . number PRICE_WITH_VAT_AND_ALL_DISCOUNTS
+priceWithVatAndAllDiscounts Orders/Price with VAT, including all discounts per piece. number UNREDEEMED_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS
+unredeemedPriceSumWithVatAndNoDiscounts Orders/The cost of all non-purchased pieces with VAT excluding discounts
+number UNREDEEMED_DISCOUNT_SUM unredeemedDiscountSum Orders/The sum of all discounts for non-purchased pieces
+number UNREDEEMED_PRICE_SUM_WITH_VAT_AND_DISCOUNTS unredeemedPriceSumWithVatAndDiscounts Orders/Стоимость всех невыкупленных штук с НДС с учётом всех скидок
+number RNPT rnpt
+Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP)
+string RECEIPT_ID receiptId Orders/Receipt number string RECEIPT_DATETIME receiptDatetime Orders/Receipt printing date
+string ORGANIZATION organization Sales to businesses/Information about buyer/Organization name string
+INN inn Sales to businesses/Information about buyer/INN (taxpayer identification number) string KPP kpp
+Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) string ORGANIZATION_JUR_ADDRESS
+organizationJurAddress Sales to businesses/Information about buyer/Legal address string UKD_STATUS ukdStatus
+Sales to businesses/Electronic document management/UKD status string UKD_DATE ukdDate Sales to businesses/Electronic document management/UKD date
+string UKD_NUMBER ukdNumber Sales to businesses/Electronic document management/UKD number string CONSIGNMENT_NOTE_DATE
+consignmentNoteDate Sales to businesses/Paper document management/Packing list date string CONSIGNMENT_NOTE_NUMBER
+consignmentNoteNumber Sales to businesses/Paper document management/Packing list number string INVOICE_DATE
+invoiceDate Sales to businesses/Paper document management/Invoice date string INVOICE_NUMBER invoiceNumber
+Sales to businesses/Paper document management/Invoice number string ADJUSTMENT_INVOICE_DATE adjustmentInvoiceDate
+Sales to businesses/Paper document management/Adjustment invoice date string ADJUSTMENT_INVOICE_NUMBER
+adjustmentInvoiceNumber Sales to businesses/Paper document management/Adjustment invoice number string
+REDEEMED_PRICE redeemedPrice Sales to businesses/The cost of the purchased product string UPD_STATUS
+updStatus Sales to businesses/Electronic document management/UPD status string UPD_DATE updDate Sales to businesses/Electronic document management/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Electronic document management/UPD number string UPD_STATUS
+updStatus Sales to businesses/Documents/UPD status string UPD_DATE updDate Sales to businesses/Documents/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Documents/UPD number string UKD_STATUS ukdStatus Sales to businesses/Documents/UKD status
+string UKD_DATE ukdDate Sales to businesses/Documents/UKD date string UKD_NUMBER ukdNumber Sales to businesses/Documents/UKD number
+string REDEEMED_PRICE redeemedPrice Sales to businesses/Documents/The cost of the purchased product string
+
+CSV column name | JSON column name | XLSX column name | Value type
+ORDER_ID | orderId | Orders/Order number | integer
+YOUR_ORDER_ID | yourOrderId | Orders/Your order number | string
+ORDER_TYPE | orderType | Orders/Order type | string
+OFFER_NAME | offerName | Orders/Title | string
+YOUR_SKU | yourSku | Orders/Your SKU | string
+SHOP_SKU | shopSku | Orders/$ | string
+DELIVERED_COUNT | deliveredCount | Orders/Quantity, items | integer
+RETURNED_COUNT | returnedCount | Orders/Returned, items | integer
+ORDER_CREATION_DATE | orderCreationDate | Orders/Order creation date | string
+TRANSFERRED_TO_DELIVERY_DATE | transferredToDeliveryDate | Orders/Date goods were handed over for delivery | string
+DELIVERY_DATE | deliveryDate | Orders/Product delivery date | string
+RETURN_WAREHOUSE_OR_SC_ACCEPT_DATE | returnWarehouseOrScAcceptDate | Orders/Date of issue of the refund to you | string
+PAYMENT_TYPE | paymentType | Orders/Payment method | string
+VAT | vat | Orders/VAT rate | string
+PRICE_WITH_VAT_AND_NO_DISCOUNT | priceWithVatAndNoDiscount | Orders/The price includes VAT without discounts per piece. | number
+SHOP_MARKETPLACE_DISCOUNT | shopMarketplaceDiscount | Orders/Your discount on the marketplace promotion is 1 pc. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Orders/Your discount on Savings bonuses is only (per piece) for 1 piece. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Orders/Your discount on Yandex points.Advantages per 1 pc . | number
+PRICE_WITH_VAT_AND_ALL_DISCOUNTS | priceWithVatAndAllDiscounts | Orders/Price with VAT, including all discounts per piece. | number
+RETURN_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS | returnPriceSumWithVatAndNoDiscounts | Orders/The cost of all returned pieces with VAT excluding discounts | number
+RETURN_DISCOUNT_SUM | returnDiscountSum | Orders/The sum of all discounts for returned pieces | number
+RETURN_PRICE_SUM_WITH_VAT_AND_DISCOUNTS | returnPriceSumWithVatAndDiscounts | Orders/The cost of all returned pieces with VAT, including all discounts | number
+ORGANIZATION | organization | Sales to businesses/Information about buyer/Organization name | string
+INN | inn | Sales to businesses/Information about buyer/INN (taxpayer identification number) | string
+KPP | kpp | Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) | string
+ORGANIZATION_JUR_ADDRESS | organizationJurAddress | Sales to businesses/Information about buyer/Legal address | string
+UPD_STATUS | updStatus | Sales to businesses/Documents/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Documents/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Documents/UPD number | string
+UKD_STATUS | ukdStatus | Sales to businesses/Documents/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Documents/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Documents/UKD number | string
+REDEEMED_PRICE | redeemedPrice | Sales to businesses/Documents/The cost of the purchased product | number
+UPD_STATUS | updStatus | Sales to businesses/Electronic document management/UPD status | string
+UPD_DATE | updDate | Sales to businesses/Electronic document management/UPD date | string
+UPD_NUMBER | updNumber | Sales to businesses/Electronic document management/UPD number | string
+UKD_STATUS | ukdStatus | Sales to businesses/Electronic document management/UKD status | string
+UKD_DATE | ukdDate | Sales to businesses/Electronic document management/UKD date | string
+UKD_NUMBER | ukdNumber | Sales to businesses/Electronic document management/UKD number | string
+CONSIGNMENT_NOTE_DATE | consignmentNoteDate | Sales to businesses/Paper document management/Packing list date | string
+CONSIGNMENT_NOTE_NUMBER | consignmentNoteNumber | Sales to businesses/Paper document management/Packing list number | string
+INVOICE_DATE | invoiceDate | Sales to businesses/Paper document management/Invoice date | string
+INVOICE_NUMBER | invoiceNumber | Sales to businesses/Paper document management/Invoice number | string
+ADJUSTMENT_INVOICE_DATE | adjustmentInvoiceDate | Sales to businesses/Paper document management/Adjustment invoice date | string
+ADJUSTMENT_INVOICE_NUMBER | adjustmentInvoiceNumber | Sales to businesses/Paper document management/Adjustment invoice number | string
+REDEEMED_PRICE | redeemedPrice | Sales to businesses/The cost of the purchased product | number
+RNPT | rnpt | Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP) | string
+RECEIPT_ID | receiptId | Orders/Receipt number | string
+RECEIPT_DATETIME | receiptDatetime | Orders/Receipt printing date | string CSV column name JSON column name
+XLSX column name Value type ORDER_ID orderId Orders/Order number integer YOUR_ORDER_ID yourOrderId Orders/Your order number
+string ORDER_TYPE orderType Orders/Order type string OFFER_NAME offerName Orders/Title string YOUR_SKU
+yourSku Orders/Your SKU string SHOP_SKU shopSku Orders/$ string DELIVERED_COUNT deliveredCount Orders/Quantity, items
+integer RETURNED_COUNT returnedCount Orders/Returned, items integer ORDER_CREATION_DATE orderCreationDate
+Orders/Order creation date string TRANSFERRED_TO_DELIVERY_DATE transferredToDeliveryDate Orders/Date goods were handed over for delivery
+string DELIVERY_DATE deliveryDate Orders/Product delivery date string RETURN_WAREHOUSE_OR_SC_ACCEPT_DATE
+returnWarehouseOrScAcceptDate Orders/Date of issue of the refund to you string PAYMENT_TYPE paymentType
+Orders/Payment method string VAT vat Orders/VAT rate string PRICE_WITH_VAT_AND_NO_DISCOUNT priceWithVatAndNoDiscount
+Orders/The price includes VAT without discounts per piece. number SHOP_MARKETPLACE_DISCOUNT shopMarketplaceDiscount
+Orders/Your discount on the marketplace promotion is 1 pc. number SPASIBO_DISCOUNT spasiboDiscount Orders/Your discount on Savings bonuses is only (per piece) for 1 piece.
+number YANDEX_PLUS_DISCOUNT yandexPlusDiscount Orders/Your discount on Yandex points.Advantages per 1 pc .
+number PRICE_WITH_VAT_AND_ALL_DISCOUNTS priceWithVatAndAllDiscounts Orders/Price with VAT, including all discounts per piece.
+number RETURN_PRICE_SUM_WITH_VAT_AND_NO_DISCOUNTS returnPriceSumWithVatAndNoDiscounts Orders/The cost of all returned pieces with VAT excluding discounts
+number RETURN_DISCOUNT_SUM returnDiscountSum Orders/The sum of all discounts for returned pieces number
+RETURN_PRICE_SUM_WITH_VAT_AND_DISCOUNTS returnPriceSumWithVatAndDiscounts Orders/The cost of all returned pieces with VAT, including all discounts
+number ORGANIZATION organization Sales to businesses/Information about buyer/Organization name string
+INN inn Sales to businesses/Information about buyer/INN (taxpayer identification number) string KPP kpp
+Sales to businesses/Information about buyer/KPP (Tax Registration Reason Code) string ORGANIZATION_JUR_ADDRESS
+organizationJurAddress Sales to businesses/Information about buyer/Legal address string UPD_STATUS updStatus
+Sales to businesses/Documents/UPD status string UPD_DATE updDate Sales to businesses/Documents/UPD date
+string UPD_NUMBER updNumber Sales to businesses/Documents/UPD number string UKD_STATUS ukdStatus Sales to businesses/Documents/UKD status
+string UKD_DATE ukdDate Sales to businesses/Documents/UKD date string UKD_NUMBER ukdNumber Sales to businesses/Documents/UKD number
+string REDEEMED_PRICE redeemedPrice Sales to businesses/Documents/The cost of the purchased product number
+UPD_STATUS updStatus Sales to businesses/Electronic document management/UPD status string UPD_DATE updDate
+Sales to businesses/Electronic document management/UPD date string UPD_NUMBER updNumber Sales to businesses/Electronic document management/UPD number
+string UKD_STATUS ukdStatus Sales to businesses/Electronic document management/UKD status string UKD_DATE
+ukdDate Sales to businesses/Electronic document management/UKD date string UKD_NUMBER ukdNumber Sales to businesses/Electronic document management/UKD number
+string CONSIGNMENT_NOTE_DATE consignmentNoteDate Sales to businesses/Paper document management/Packing list date
+string CONSIGNMENT_NOTE_NUMBER consignmentNoteNumber Sales to businesses/Paper document management/Packing list number
+string INVOICE_DATE invoiceDate Sales to businesses/Paper document management/Invoice date string INVOICE_NUMBER
+invoiceNumber Sales to businesses/Paper document management/Invoice number string ADJUSTMENT_INVOICE_DATE
+adjustmentInvoiceDate Sales to businesses/Paper document management/Adjustment invoice date string ADJUSTMENT_INVOICE_NUMBER
+adjustmentInvoiceNumber Sales to businesses/Paper document management/Adjustment invoice number string
+REDEEMED_PRICE redeemedPrice Sales to businesses/The cost of the purchased product number RNPT rnpt
+Orders/Registration number of the customs declaration or the Registration Number of Batch of Products subject to tracking (RNBP)
+string RECEIPT_ID receiptId Orders/Receipt number string RECEIPT_DATETIME receiptDatetime Orders/Receipt printing date
+string
+
+⚙️ Limit:100 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/reports/goods-realization/generate
+
+https://api.partner.market.yandex.ru/v2/reports/goods-realization/generate
+
+Query parameters
+
+Name | Description
+format | Type: stringThe format of the report or document.
+Report format:FILE— the spreadsheet file (XLSX).CSV— A ZIP archive with CSV files for each report sheet.JSON— A ZIP archive with JSON files for each report sheet.Default:FILEEnum:FILE,CSV,JSON
+Name Description format Type: string The format of the report or document.
+Report format:
+
+• FILE— the spreadsheet file (XLSX).
+
+FILE
+• CSV— A ZIP archive with CSV files for each report sheet.
+
+CSV
+• JSON— A ZIP archive with JSON files for each report sheet.
+
+JSON Default:FILE
+
+FILE Enum:FILE,CSV,JSON
+
+FILE
+
+CSV
+
+JSON
+
+Body
+
+{
+"campaignId": 1,
+"year": 2025,
+"month": 12
+}
+
+{
+"campaignId": 1,
+"year": 2025,
+"month": 12
+}
+
+Name | Description
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+month | Type: integerThe month number.Min value:1Max value:12
+year | Type: integerYear. Name Description campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 month Type: integer The month number. Min value:1
+
+1 Max value:12
+
+12 year Type: integer Year.
+
+Responses
+200 OK
+In response, you receive an identifier that allows you to find out the generation status and download the finished report.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+{
+"status": "OK",
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectestimatedGenerationTimeType: integerExpected generation time in milliseconds.reportIdType: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:exampleThe ID that will be needed to track the generation status and receive the finished report or document.Example{"reportId":"example","estimatedGenerationTime":0}Example{"result":{"reportId":"example","estimatedGenerationTime":0}}
+
+result | Type: objectestimatedGenerationTimeType: integerExpected generation time in milliseconds.reportIdType: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:exampleThe ID that will be needed to track the generation status and receive the finished report or document.Example{"reportId":"example","estimatedGenerationTime":0} | estimatedGenerationTime | Type: integerExpected generation time in milliseconds. | reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+estimatedGenerationTime | Type: integerExpected generation time in milliseconds.
+reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+result
+
+estimatedGenerationTime | Type: integerExpected generation time in milliseconds.
+reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+estimatedGenerationTime Type: integer Expected generation time in milliseconds. reportId Type: string
+The ID that will be needed to track the generation status and receive the finished report or document.
+Example:example
+
+example
+The ID that will be needed to track the generation status and receive the finished report or document.
+
+{
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+
+{
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+
+{
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+{
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

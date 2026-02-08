@@ -6,9 +6,10 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "postgresql://yandex_user:yandex_password@postgres:5432/yandex_market"
     
-    # Yandex Market API
+    # Yandex Market Business API
     YANDEX_MARKET_API_TOKEN: Optional[str] = None
-    YANDEX_MARKET_CAMPAIGN_ID: Optional[str] = None
+    YANDEX_BUSINESS_ID: Optional[str] = None
+    YANDEX_MARKET_CAMPAIGN_ID: Optional[str] = None  # Legacy - kept for backwards compatibility
     YANDEX_MARKET_API_URL: str = "https://api.partner.market.yandex.ru"
     
     # Email Configuration
@@ -28,10 +29,6 @@ class Settings(BaseSettings):
     
     # Public URL for media files (used when uploading to Yandex)
     PUBLIC_URL: str = "http://localhost:8000"
-    
-    # Telegram Bot Configuration
-    TELEGRAM_BOT_TOKEN: Optional[str] = None
-    TELEGRAM_CHAT_ID: Optional[str] = None  # Your Telegram chat ID for notifications
     
     class Config:
         env_file = ".env"

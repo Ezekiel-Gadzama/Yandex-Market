@@ -1,0 +1,77 @@
+Questions and answers about products
+Yandex Market API It allows you to receive questions about products and answers to them, as well as add, edit, and delete store responses.
+
+Get questions about products
+Get questions about the seller's products by sending a requestPOST v1/businesses/{businessId}/goods-questions. To return questions about certain products, in the parameterofferIdssend their IDs.
+
+offerIds The results are returned page by page, one page contains no more than 50 questions.
+
+Get questions that need to be answered
+Get the questions that need to be answered by using a queryPOST v1/businesses/{businessId}/goods-questions, where pass the valuefalsein the parameteranswered.
+
+false
+
+answered
+To leave a response, send the ID of the question to be answered and the text of the response in the request.POST v1/businesses/{businessId}/goods-questions/updatewith the parameteroperationType: CREATEandparentEntityIdequal to the issue ID.
+
+operationType: CREATE
+
+parentEntityId
+
+Get answers to the question
+If you already know the question IDs, skip the step of getting them.
+
+• Get questions about the seller's products by sending a requestPOST v1/businesses/{businessId}/goods-questions.
+• Pass the issue ID in the request.POST v1/businesses/{businessId}/goods-questions/answersto see the answers to this question.
+The results are returned page by page, one page contains no more than 50 responses.
+
+Send an answer to a question
+If you already know the question IDs, skip the step of getting them.
+
+• Get questions about the seller's products by sending a requestPOST v1/businesses/{businessId}/goods-questions.
+• Send the ID of the question to be answered and the text of the response in the request.POST v1/businesses/{businessId}/goods-questions/updatewith the parameteroperationType: CREATEandparentEntityIdequal to the issue ID.
+
+operationType: CREATE
+
+parentEntityId
+
+Send a comment to the response
+If you already know the IDs of the questions and answers to the question, skip the steps to get them.
+
+• Get questions about the seller's products by sending a requestPOST v1/businesses/{businessId}/goods-questions.
+• Pass the issue ID in the request.POST v1/businesses/{businessId}/goods-questions/answersto see the answers to this question.
+• Send the ID of the response to add a comment to, and the text of the comment in the request.POST v1/businesses/{businessId}/goods-questions/updatewith the parameteroperationType: CREATEandparentEntityIdequal to the response ID.
+
+operationType: CREATE
+
+parentEntityId
+
+Edit your answer or comment
+Is it possible to change the response or comment?
+ParametercanModifyin the requestPOST v1/businesses/{businessId}/goods-questions/answersshows whether the seller can change the responses and comments.
+
+canModify
+If you already know the IDs of the questions and answers to the question, skip the steps to get them.
+
+• Get questions about the seller's products by sending a requestPOST v1/businesses/{businessId}/goods-questions.
+• Pass the issue ID in the request.POST v1/businesses/{businessId}/goods-questions/answersto find out the ID of the response or comment that needs to be changed.
+• Send the ID of this response or comment and the new text in the request.POST v1/businesses/{businessId}/goods-questions/updatewith the parameteroperationType: UPDATEandentityIdequal to the response or comment ID.
+
+operationType: UPDATE
+
+entityId
+
+Delete your reply or comment
+Can I delete a reply or comment?
+ParametercanModifyin the requestPOST v1/businesses/{businessId}/goods-questions/answersindicates whether the seller can delete replies and comments.
+
+canModify
+If you already know the IDs of the questions and answers to the question, skip the steps to get them.
+
+• Get questions about the seller's products by sending a requestPOST v1/businesses/{businessId}/goods-questions.
+• Pass the issue ID in the request.POST v1/businesses/{businessId}/goods-questions/answersto find out the ID of the response or comment to delete.
+• Pass the ID of this response or comment in the request.POST v1/businesses/{businessId}/goods-questions/updatewith the parameteroperationType: DELETEandentityIdequal to the response or comment ID.
+
+operationType: DELETE
+
+entityId

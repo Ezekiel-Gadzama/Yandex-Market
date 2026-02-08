@@ -1,0 +1,1448 @@
+Setting prices for products in a specific store
+The method is available for models:FBY,FBS,ExpressandDBS.
+
+• pricing —Manage prices
+• all-methods — Full account management
+Sets the prices of the goods in the store. To get the Market's recommendations regarding prices, make a requestPOST v2/businesses/{businessId}/offers/recommendations.
+The method is only for individual stores
+This method is available to you if it is possible to set unique prices in individual stores in the seller's office on the Market. How to check it — in the methodPOST v2/businesses/{businessId}/settingsin the parameteronlyDefaultPricethe value is returnedfalse.
+
+onlyDefaultPrice
+
+false
+Otherwise, use the price management method that applies in all stores., —POST v2/businesses/{businessId}/offer-prices/updates.
+The data in the catalog is not updated instantly It takes up to a few minutes.
+
+⚙️ Limit:10,000 items per minute
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/offer-prices/updates
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/offer-prices/updates
+
+Path parameters
+
+Name | Description
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+Name Description campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1
+
+Body
+
+{
+"offers": [
+{
+"offerId": "example",
+"price": {
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+},
+"id": "example",
+"shopSku": "example"
+}
+]
+}
+
+{
+"offers": [
+{
+"offerId": "example",
+"price": {
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+},
+"id": "example",
+"shopSku": "example"
+}
+]
+}
+
+Name | Description
+offers | Type: object[]idType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplepriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0}shopSkuType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleThe list of products.Min items:1Max items:2000Example[{"offerId":"example","price":{"value":0,"discountBase":0,"currencyId":"RUR","vat":0},"id":"example","shopSku":"example"}] | id | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | price | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true | value | Type: numberThe price of the product.Min value:0Exclusive min:true | vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available. | shopSku | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+id | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+price | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true | value | Type: numberThe price of the product.Min value:0Exclusive min:true | vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+shopSku | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+Name Description offers
+
+id | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+price | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true | value | Type: numberThe price of the product.Min value:0Exclusive min:true | vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+shopSku | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+id Type: string Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example offerId Type: string Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example price
+
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+currencyId Type: string Currency codes:
+
+• RUR— the Russian ruble.
+
+RUR
+• UAH— the Ukrainian hryvnia.
+
+UAH
+• BYR— the Belarusian ruble.
+
+BYR
+• KZT— Kazakhstani tenge.
+
+KZT
+• UZS— Uzbek sum.
+
+UZS
+Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+
+RUR
+
+USD
+
+EUR
+
+UAH
+
+AUD
+
+GBP
+
+BYR
+
+BYN
+
+DKK
+
+ISK
+
+KZT
+
+CAD
+
+CNY
+
+NOK
+
+XDR
+
+SGD
+
+TRY
+
+SEK
+
+CHF
+
+JPY
+
+AZN
+
+ALL
+
+DZD
+
+AOA
+
+ARS
+
+AMD
+
+AFN
+
+BHD
+
+BGN
+
+BOB
+
+BWP
+
+BND
+
+BRL
+
+BIF
+
+HUF
+
+VEF
+
+KPW
+
+VND
+
+GMD
+
+GHS
+
+GNF
+
+HKD
+
+GEL
+
+AED
+
+EGP
+
+ZMK
+
+ILS
+
+INR
+
+IDR
+
+JOD
+
+IQD
+
+IRR
+
+YER
+
+QAR
+
+KES
+
+KGS
+
+COP
+
+CDF
+
+CRC
+
+KWD
+
+CUP
+
+LAK
+
+LVL
+
+SLL
+
+LBP
+
+LYD
+
+SZL
+
+LTL
+
+MUR
+
+MRO
+
+MKD
+
+MWK
+
+MGA
+
+MYR
+
+MAD
+
+MXN
+
+MZN
+
+MDL
+
+MNT
+
+NPR
+
+NGN
+
+NIO
+
+NZD
+
+OMR
+
+PKR
+
+PYG
+
+PEN
+
+PLN
+
+KHR
+
+SAR
+
+RON
+
+SCR
+
+SYP
+
+SKK
+
+SOS
+
+SDG
+
+SRD
+
+TJS
+
+THB
+
+TWD
+
+BDT
+
+TZS
+
+TND
+
+TMM
+
+UGX
+
+UZS
+
+UYU
+
+PHP
+
+DJF
+
+XAF
+
+XOF
+
+HRK
+
+CZK
+
+CLP
+
+LKR
+
+EEK
+
+ETB
+
+RSD
+
+ZAR
+
+KRW
+
+NAD
+
+TL
+
+UE discountBase Type: number The crossed-out price. The number must be an integer. You can specify a price with a discount from 5 to 99%.
+Pass this parameter every time the price is updated if you provide a discount on the product. Min value:0
+
+0 Exclusive min:true
+
+true value Type: number The price of the product. Min value:0
+
+0 Exclusive min:true
+
+true vat Type: integer The VAT identifier used for the product:
+
+• 2— 10% VAT. For example, it is used in the sale of certain food and medical products.
+
+2
+• 5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.
+
+5
+• 6— VAT is not charged, it is used only for certain types of services.
+
+6
+• 7— VAT 20%. Basic VAT from 2019 to January 1, 2026.
+
+7
+• 10— VAT is 5%. VAT for the simplified taxation system (USN).
+
+10
+• 11— VAT is 7%. VAT for the simplified taxation system (USN).
+
+11
+• 14— VAT is 22%. Basic VAT starting from January 1, 2026.
+
+14 If the parameter is omitted, the VAT set in the cabinet is used. For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+The price includes the discount, currency, and the time of the last update.
+
+{
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+}
+
+{
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+}
+shopSku Type: string Your SKU — the product ID in your system.
+Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example The list of products. Min items:1
+
+1 Max items:2000
+
+2000
+
+[
+{
+"offerId": "example",
+"price": {
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+},
+"id": "example",
+"shopSku": "example"
+}
+]
+
+[
+{
+"offerId": "example",
+"price": {
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+},
+"id": "example",
+"shopSku": "example"
+}
+]
+
+Responses
+200 OK
+The market has accepted information about the new prices.
+
+Body
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+400 Bad Request
+The request contains incorrect data.Learn more about errors when working with prices
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+423 Locked
+The specified method cannot be applied to the resource.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

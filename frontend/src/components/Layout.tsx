@@ -6,7 +6,11 @@ import {
   Mail, 
   Settings,
   Menu,
-  X
+  X,
+  Users,
+  Send,
+  FileText,
+  Star
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -18,7 +22,11 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Products', href: '/products', icon: Package },
   { name: 'Orders', href: '/orders', icon: ShoppingCart },
-  { name: 'Email Templates', href: '/email-templates', icon: Mail },
+  { name: 'Activation Templates', href: '/activation-templates', icon: Mail },
+  { name: 'Reviews', href: '/reviews', icon: Star },
+  { name: 'Clients', href: '/clients', icon: Users },
+  { name: 'Marketing Emails', href: '/marketing-emails', icon: Send },
+  { name: 'Documentations', href: '/documentations', icon: FileText },
   { name: 'Settings', href: '/settings', icon: Settings },
 ]
 

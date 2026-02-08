@@ -1,0 +1,26 @@
+Authorization
+To work with Yandex.Market via the API, you need to get API-Key- a token. We do not recommend using an OAuth token, as this authorization method is outdated.
+Do I need to switch to immediately Api-Key- a token?
+You can use the already generated OAuth token until the end of its validity period or immediately switch to working with API-Key- a token.
+How to do it During the transition period from one token to another, you can transfer both:
+
+• How to transmit API-Key-token
+• How to transfer an OAuth token
+
+Tokens Yandex Market API
+
+| Api-Key | OAuth(outdated)
+Binding | To the account where the token was created. | To the user who created the token.
+Method of receipt | In the seller's office on the Market.Instruction manual | By creating an OAuth application.Instruction manual
+Access to stores | All shops are in the cabinet. | Only those that the user has access to.
+Is it possible to configure access to certain groups of methods | Yes.Instruction manual | No.
+Transmission header | Api-Key.How to transfer a token | Authorization.How to transfer a token
+The validity period of the token | Unlimited. | 1 year. Api-Key OAuth(outdated) Binding To the account where the token was created.
+To the user who created the token. Method of receipt In the seller's office on the Market.Instruction manual
+By creating an OAuth application.Instruction manual Access to stores All shops are in the cabinet. Only those that the user has access to.
+Is it possible to configure access to certain groups of methods Yes.Instruction manual No. Transmission header
+Api-Key.How to transfer a token
+
+Api-Key Authorization.How to transfer a token
+
+Authorization The validity period of the token Unlimited. 1 year.

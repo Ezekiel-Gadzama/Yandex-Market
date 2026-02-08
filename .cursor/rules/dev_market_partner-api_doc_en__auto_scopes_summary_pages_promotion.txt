@@ -1,0 +1,62 @@
+Product promotion
+The name of the access in the OpenAPI specification: promotion.
+
+Stocks
+
+Method | Method description
+POST v2/businesses/{businessId}/promos | Getting a list of shares
+POST v2/businesses/{businessId}/promos/offers | Getting a list of products that participate or may participate in the promotion
+POST v2/businesses/{businessId}/promos/offers/update | Adding products to a promotion or changing their prices
+POST v2/businesses/{businessId}/promos/offers/delete | Removing products from the promotion Method Method description
+POST v2/businesses/{businessId}/promos Getting a list of shares POST v2/businesses/{businessId}/promos/offers
+Getting a list of products that participate or may participate in the promotion POST v2/businesses/{businessId}/promos/offers/update
+Adding products to a promotion or changing their prices POST v2/businesses/{businessId}/promos/offers/delete
+Removing products from the promotion
+
+Reports and documents
+
+Method | Method description
+POST v2/reports/key-indicators/generate | Report on key indicators
+POST v2/reports/competitors-position/generate | Competitive Position Report
+POST v2/reports/united-orders/generate | Order Report
+POST v2/reports/goods-prices/generate | The Prices Report
+POST v2/reports/shows-boost/generate | Impression Boost Report
+POST v2/reports/boost-consolidated/generate | Sales Boost Report
+POST v2/reports/shelf-statistics/generate | Shelf Report
+POST v2/reports/banners-statistics/generate | Coverage Promotion Report Method Method description POST v2/reports/key-indicators/generate
+Report on key indicators POST v2/reports/competitors-position/generate Competitive Position Report POST v2/reports/united-orders/generate
+Order Report POST v2/reports/goods-prices/generate The Prices Report POST v2/reports/shows-boost/generate
+Impression Boost Report POST v2/reports/boost-consolidated/generate Sales Boost Report POST v2/reports/shelf-statistics/generate
+Shelf Report POST v2/reports/banners-statistics/generate Coverage Promotion Report
+
+Sales Boost
+
+Method | Method description
+PUT v2/businesses/{businessId}/bids | Enabling a sales boost and setting bids
+POST v2/businesses/{businessId}/bids/info | Information about the set rates
+POST v2/businesses/{businessId}/bids/recommendations | Recommended bids for specified products Method
+Method description PUT v2/businesses/{businessId}/bids Enabling a sales boost and setting bids POST v2/businesses/{businessId}/bids/info
+Information about the set rates POST v2/businesses/{businessId}/bids/recommendations Recommended bids for specified products
+
+Viewing additional information
+
+Method | Method description
+GET v2/campaigns | User's Store List
+GET v2/campaigns/{campaignId} | Store Information
+POST v2/businesses/{businessId}/settings | Cabinet Settings
+GET v2/campaigns/{campaignId}/settings | Store Settings
+POST v2/categories/tree | The category tree
+GET v2/reports/info/{reportId} | Getting a given report or document
+GET v2/warehouses | Market Warehouse IDs
+POST v2/auth/token | Getting information about the authorization token
+GET v2/delivery/services | Directory of delivery services
+POST v2/regions/countries | List of valid country codes
+GET v2/regions | Search for regions by their name
+GET v2/regions/{regionId} | Information about the region
+GET v2/regions/{regionId}/children | Information about child regions Method Method description GET v2/campaigns
+User's Store List GET v2/campaigns/{campaignId} Store Information POST v2/businesses/{businessId}/settings
+Cabinet Settings GET v2/campaigns/{campaignId}/settings Store Settings POST v2/categories/tree The category tree
+GET v2/reports/info/{reportId} Getting a given report or document GET v2/warehouses Market Warehouse IDs
+POST v2/auth/token Getting information about the authorization token GET v2/delivery/services Directory of delivery services
+POST v2/regions/countries List of valid country codes GET v2/regions Search for regions by their name
+GET v2/regions/{regionId} Information about the region GET v2/regions/{regionId}/children Information about child regions

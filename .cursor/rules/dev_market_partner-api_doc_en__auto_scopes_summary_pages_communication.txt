@@ -1,0 +1,70 @@
+Customer communication
+The name of the access in the OpenAPI specification: communication.
+
+Reports and documents
+
+Method | Method description
+POST v2/reports/goods-feedback/generate | Product Reviews Report Method Method description POST v2/reports/goods-feedback/generate
+Product Reviews Report
+
+Product Reviews
+
+Method | Method description
+POST v2/businesses/{businessId}/goods-feedback | Getting reviews of the seller's products
+POST v2/businesses/{businessId}/goods-feedback/comments | Getting comments on a review
+POST v2/businesses/{businessId}/goods-feedback/comments/update | Adding a new or changing a created comment
+POST v2/businesses/{businessId}/goods-feedback/skip-reaction | Skipping reactions to reviews
+POST v2/businesses/{businessId}/goods-feedback/comments/delete | Deleting a review comment Method Method description
+POST v2/businesses/{businessId}/goods-feedback Getting reviews of the seller's products POST v2/businesses/{businessId}/goods-feedback/comments
+Getting comments on a review POST v2/businesses/{businessId}/goods-feedback/comments/update Adding a new or changing a created comment
+POST v2/businesses/{businessId}/goods-feedback/skip-reaction Skipping reactions to reviews POST v2/businesses/{businessId}/goods-feedback/comments/delete
+Deleting a review comment
+
+Questions and answers about products
+
+Method | Method description
+POST v1/businesses/{businessId}/goods-questions | Getting questions about the seller's products
+POST v1/businesses/{businessId}/goods-questions/answers | Getting answers to a question
+POST v1/businesses/{businessId}/goods-questions/update | Creating, editing, and deleting a response or comment
+Method Method description POST v1/businesses/{businessId}/goods-questions Getting questions about the seller's products
+POST v1/businesses/{businessId}/goods-questions/answers Getting answers to a question POST v1/businesses/{businessId}/goods-questions/update
+Creating, editing, and deleting a response or comment
+
+Chats
+
+Method | Method description
+POST v2/businesses/{businessId}/chats/history | Getting the chat message history
+GET v2/businesses/{businessId}/chat | Getting a chat by ID
+POST v2/businesses/{businessId}/chats | Getting available chats
+GET v2/businesses/{businessId}/chats/message | Receiving a chat message
+POST v2/businesses/{businessId}/chats/new | Creating a new chat with a customer
+POST v2/businesses/{businessId}/chats/message | Sending a message to a chat
+POST v2/businesses/{businessId}/chats/file/send | Sending a file to a chat Method Method description
+POST v2/businesses/{businessId}/chats/history Getting the chat message history GET v2/businesses/{businessId}/chat
+Getting a chat by ID POST v2/businesses/{businessId}/chats Getting available chats GET v2/businesses/{businessId}/chats/message
+Receiving a chat message POST v2/businesses/{businessId}/chats/new Creating a new chat with a customer
+POST v2/businesses/{businessId}/chats/message Sending a message to a chat POST v2/businesses/{businessId}/chats/file/send
+Sending a file to a chat
+
+Viewing additional information
+
+Method | Method description
+GET v2/campaigns | User's Store List
+GET v2/campaigns/{campaignId} | Store Information
+POST v2/businesses/{businessId}/settings | Cabinet Settings
+GET v2/campaigns/{campaignId}/settings | Store Settings
+POST v2/categories/tree | The category tree
+GET v2/reports/info/{reportId} | Getting a given report or document
+GET v2/warehouses | Market Warehouse IDs
+POST v2/auth/token | Getting information about the authorization token
+GET v2/delivery/services | Directory of delivery services
+POST v2/regions/countries | List of valid country codes
+GET v2/regions | Search for regions by their name
+GET v2/regions/{regionId} | Information about the region
+GET v2/regions/{regionId}/children | Information about child regions Method Method description GET v2/campaigns
+User's Store List GET v2/campaigns/{campaignId} Store Information POST v2/businesses/{businessId}/settings
+Cabinet Settings GET v2/campaigns/{campaignId}/settings Store Settings POST v2/categories/tree The category tree
+GET v2/reports/info/{reportId} Getting a given report or document GET v2/warehouses Market Warehouse IDs
+POST v2/auth/token Getting information about the authorization token GET v2/delivery/services Directory of delivery services
+POST v2/regions/countries List of valid country codes GET v2/regions Search for regions by their name
+GET v2/regions/{regionId} Information about the region GET v2/regions/{regionId}/children Information about child regions

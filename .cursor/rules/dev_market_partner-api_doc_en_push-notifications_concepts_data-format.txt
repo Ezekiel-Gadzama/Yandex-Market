@@ -1,0 +1,30 @@
+Request and response data format
+The Market's requests to the store use only data in the JSON format. The store's response data must be presented in the same format.
+The data format is specified in the HTTP header.Content-Type: application/json.
+
+Content-Type: application/json Required encoding of the request and response: UTF-8.
+
+{
+"notificationType": "PING",
+"time": "2025-01-16T10:09:49.759084017Z"
+}
+
+{
+"notificationType": "PING",
+"time": "2025-01-16T10:09:49.759084017Z"
+}
+
+{
+"version": "1.0.0",
+"name": "name",
+"time": "2025-01-16T10:09:49.759084017Z"
+}
+
+{
+"version": "1.0.0",
+"name": "name",
+"time": "2025-01-16T10:09:49.759084017Z"
+}
+
+Find out more
+Description of the JSON format

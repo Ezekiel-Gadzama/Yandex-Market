@@ -1,0 +1,61 @@
+How to receive reports and documents
+Yandex Market API allows you to receive reports and documents.Their types
+Generation takes time, so first you need to make a request for the generation itself, and then to receive the finished report or document.
+
+How to order a report or document
+Make a request that matches the type of report or document you need. In the request, set the settings and filters, and specify the format in which you want to get the result. The available formats are specified in the description of each method.
+
+Type of report or document | How to start generation
+Closing documents | POST v2/reports/closure-documents/generate
+Assembly Sheet | POST v2/reports/documents/shipment-list/generate
+A file with product barcodes | POST v1/reports/documents/barcodes/generate
+Sales Analytics Report | POST v2/reports/shows-sales/generate
+Impression Boost Report | POST v2/reports/shows-boost/generate
+Sales Boost Report | POST v2/reports/boost-consolidated/generate
+Sales Geography Report | POST v2/reports/sales-geography/generate
+Report on the movement of goods | POST v2/reports/goods-movement/generate
+Order Report | POST v2/reports/united-orders/generate
+Jewelry Order Report | POST v2/reports/jewelry-fiscal/generate
+Report on key indicators | POST v2/reports/key-indicators/generate
+Competitive Position Report | POST v2/reports/competitors-position/generate
+Report on non-purchases and refunds | POST v2/reports/united-returns/generate
+Turnover Report | POST v2/reports/goods-turnover/generate
+Warehouse balance report | POST v2/reports/stocks-on-warehouses/generate
+Product Reviews Report | POST v2/reports/goods-feedback/generate
+Coverage Promotion Report | POST v2/reports/banners-statistics/generate
+Payment report:about payments for the period;about the payment order;about Yandex. Market points. | POST v2/reports/united-netting/generate
+Shelf Report | POST v2/reports/shelf-statistics/generate
+Implementation Report | POST v2/reports/goods-realization/generate
+Report on the cost of services:by the date of service accrual;by the date of the act's formation. | POST v2/reports/united-marketplace-services/generate
+Report on convergence with closing documents | POST v2/reports/closure-documents/detalization/generate
+The Prices Report | POST v2/reports/goods-prices/generate
+Labels for all boxes in multiple orders | POST v2/reports/documents/labels/generate Type of report or document
+How to start generation Closing documents POST v2/reports/closure-documents/generate Assembly Sheet POST v2/reports/documents/shipment-list/generate
+A file with product barcodes POST v1/reports/documents/barcodes/generate Sales Analytics Report POST v2/reports/shows-sales/generate
+Impression Boost Report POST v2/reports/shows-boost/generate Sales Boost Report POST v2/reports/boost-consolidated/generate
+Sales Geography Report POST v2/reports/sales-geography/generate Report on the movement of goods POST v2/reports/goods-movement/generate
+Order Report POST v2/reports/united-orders/generate Jewelry Order Report POST v2/reports/jewelry-fiscal/generate
+Report on key indicators POST v2/reports/key-indicators/generate Competitive Position Report POST v2/reports/competitors-position/generate
+Report on non-purchases and refunds POST v2/reports/united-returns/generate Turnover Report POST v2/reports/goods-turnover/generate
+Warehouse balance report POST v2/reports/stocks-on-warehouses/generate Product Reviews Report POST v2/reports/goods-feedback/generate
+Coverage Promotion Report POST v2/reports/banners-statistics/generate Payment report:
+
+• about payments for the period;
+• about the payment order;
+• about Yandex. Market points.
+POST v2/reports/united-netting/generate Shelf Report POST v2/reports/shelf-statistics/generate Implementation Report
+POST v2/reports/goods-realization/generate Report on the cost of services:
+
+• by the date of service accrual;
+• by the date of the act's formation.
+POST v2/reports/united-marketplace-services/generate Report on convergence with closing documents POST v2/reports/closure-documents/detalization/generate
+The Prices Report POST v2/reports/goods-prices/generate Labels for all boxes in multiple orders POST v2/reports/documents/labels/generate
+
+How do I know if a report or document is ready?
+Make a requestGET v2/reports/info/{reportId}.
+You will receive the status of the report or document generation and the approximate time remaining until the generation is completed.
+
+How to get a ready-made report or document
+After the generation time is over, repeat the request.GET v2/reports/info/{reportId}.If the report or document has been generated, you will receive a link to download it.{% note warning "Link expiration date" %}The link is relevant60 minutesfrom the moment of receiving the response. With each requestGET /v2/reports/info/{reportId}a new signed link is generated, which has a limited validity period.Recommendation for integrations:immediately after receiving the link, download the report and save it to yourself. Do not save the link for later use. — it will become invalid after the expiration date.
+
+GET /v2/reports/info/{reportId}

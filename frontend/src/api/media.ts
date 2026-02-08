@@ -1,12 +1,19 @@
 import apiClient from './client'
 
+export interface UploadedFile {
+  url: string
+  type: 'image' | 'video' | 'file'
+  name: string
+}
+
 export const mediaApi = {
-  uploadImages: async (files: File[]) => {
+  // Unified upload function - accepts any file type
+  uploadFiles: async (files: File[]): Promise<UploadedFile[]> => {
     const formData = new FormData()
     files.forEach(file => {
       formData.append('files', file)
     })
-    const response = await apiClient.post<string[]>('/media/upload/images', formData, {
+    const response = await apiClient.post<UploadedFile[]>('/media/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -14,17 +21,15 @@ export const mediaApi = {
     return response.data
   },
   
+  // Legacy functions for backward compatibility (deprecated - use uploadFiles)
+  uploadImages: async (files: File[]) => {
+    const result = await mediaApi.uploadFiles(files)
+    return result.map(f => f.url)
+  },
+  
   uploadVideos: async (files: File[]) => {
-    const formData = new FormData()
-    files.forEach(file => {
-      formData.append('files', file)
-    })
-    const response = await apiClient.post<string[]>('/media/upload/videos', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-    return response.data
+    const result = await mediaApi.uploadFiles(files)
+    return result.map(f => f.url)
   },
   
   getMediaUrl: (path: string) => {

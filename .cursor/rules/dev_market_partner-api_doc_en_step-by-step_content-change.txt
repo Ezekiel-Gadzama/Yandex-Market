@@ -1,0 +1,56 @@
+Changing categorical characteristics
+You can use the API to manage the content on product cards. — This includes transmitting characteristics specific to a specific product category.
+
+The products belong to a new category for the store
+
+• Get the information that you previously provided for product cards, as well as card statuses and recommendations for filling them out usingPOST v2/businesses/{businessId}/offer-cards.In response, you will receive the following:Which categories the products belong to on the Market. The Market determines the product category automatically based on the data provided by you.What is the status of the product cards?Transmitted product characteristics.Recommendations for filling out the cards.How to use the recommendations
+Get the information that you previously provided for product cards, as well as card statuses and recommendations for filling them out usingPOST v2/businesses/{businessId}/offer-cards.
+In response, you will receive the following:
+
+• Which categories the products belong to on the Market. The Market determines the product category automatically based on the data provided by you.
+• What is the status of the product cards?
+• Transmitted product characteristics.
+• Recommendations for filling out the cards.How to use the recommendations
+• For eachleaf categoryrequest a list of required characteristics usingPOST v2/category/{categoryId}/parameters.For characteristics that have units of measurement, in the parameterunitThey will return:acceptable values (units);default value (defaultUnitId).
+For eachleaf categoryrequest a list of required characteristics usingPOST v2/category/{categoryId}/parameters.
+For characteristics that have units of measurement, in the parameterunitThey will return:
+
+unit
+
+• acceptable values (units);
+
+units
+• default value (defaultUnitId).
+
+defaultUnitId
+• Compare the characteristics expected by Yandex.Market with the characteristics available in the store's database.Example.For soup plates, the Market expects, among others, the "Color for filter" characteristic. In the store's database, the same characteristic is called "Color". You need to set up the integration so that:the value of the "Color" characteristic was transmitted to the Market as the "Color for filter" characteristic;Each value of the "Color" characteristic was assigned an acceptable value of the "Color for filter" characteristic.
+Compare the characteristics expected by Yandex.Market with the characteristics available in the store's database.
+Example.For soup plates, the Market expects, among others, the "Color for filter" characteristic. In the store's database, the same characteristic is called "Color". You need to set up the integration so that:
+
+• the value of the "Color" characteristic was transmitted to the Market as the "Color for filter" characteristic;
+• Each value of the "Color" characteristic was assigned an acceptable value of the "Color for filter" characteristic.
+• Transmit the product characteristics usingPOST v2/businesses/{businessId}/offer-cards/update.Always convey the full set of characteristics.Passing empty values will erase what was entered on the cards earlier.If necessary, change the identifier of the unit of measurement of characteristics. — parameterunitIdinparameterValues. If it is not passed, the default units of measurement will be used (defaultUnitId).Before formingparameterValues, check out the"Transfer of characteristic values"— it describes typical cases, limitations, and examples.
+Transmit the product characteristics usingPOST v2/businesses/{businessId}/offer-cards/update. Always convey the full set of characteristics.
+Passing empty values will erase what was entered on the cards earlier.
+If necessary, change the identifier of the unit of measurement of characteristics. — parameterunitIdinparameterValues. If it is not passed, the default units of measurement will be used (defaultUnitId).
+
+unitId
+
+parameterValues
+
+defaultUnitId
+Before formingparameterValues, check out the"Transfer of characteristic values"— it describes typical cases, limitations, and examples.
+
+parameterValues
+
+The products belong to a well-known and customized category
+Follow the instructions for the new category, but skip the step of configuring the comparison of Market and store characteristics.
+
+How to check and update the comparison of characteristics on the Market and in the store
+The lists of characteristics required for products of various categories do not remain unchanged. Gadgets have additional functions, new materials are becoming fashionable. Sometimes the Market simply makes a more detailed list of characteristics on the product card. — to make it easier for customers to compare and choose.
+For each of the configured categories, check regularly whether the mapping needs to be updated. Also read the instructions
+
+• Adding and editing products
+• Yandex.Market recommendations for cards
+• Managing goods in the archive
+A category that has no children.

@@ -1,0 +1,1426 @@
+View prices for specified products in a specific store
+The method is available for models:FBY,FBS,ExpressandDBS.
+
+• pricing —Manage prices
+• pricing:read-only —View prices
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns a list of prices for the specified products in the store. The method is only for individual stores
+Use this method only if the cabinet has unique prices in individual stores. To view the prices that are valid in all stores, usePOST v2/businesses/{businessId}/offer-mappings.
+
+⚙️ Limit:150,000 items per minute
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/offer-prices
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/offer-prices
+
+Path parameters
+
+Name | Description
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+Name Description campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1
+
+Query parameters
+
+Name | Description
+limit | Type: integerThe number of values per page.Min value:1
+page_token | Type: stringID of the results page.If the parameter is omitted, the first page is returned.We recommend transmitting the value of the output parameternextPageToken, received during the last request.If setpage_tokenand the request has parameterspageandpageSizethey are ignored.Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+Name Description limit Type: integer The number of values per page. Min value:1
+
+1 page_token Type: string ID of the results page. If the parameter is omitted, the first page is returned.
+We recommend transmitting the value of the output parameternextPageToken, received during the last request.
+
+nextPageToken If setpage_tokenand the request has parameterspageandpageSizethey are ignored.
+
+page_token
+
+page
+
+pageSize Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+
+eyBuZXh0SWQ6IDIzNDIgfQ==
+
+Body
+
+{
+"offerIds": [
+"example"
+]
+}
+
+{
+"offerIds": [
+"example"
+]
+}
+
+Name | Description
+offerIds | Type: string[] | nullList SKU.This list is returned only in its entirety.If you are requesting information on specific SKU, do not fill in:page_tokenlimitMin items:1Max items:2000Unique items:trueExample["example"]
+Name Description offerIds Type: string[] | null List SKU. This list is returned only in its entirety.
+If you are requesting information on specific SKU, do not fill in:
+
+• page_token
+
+page_token
+• limit
+
+limit Min items:1
+
+1 Max items:2000
+
+2000 Unique items:true
+
+true
+
+[
+"example"
+]
+
+[
+"example"
+]
+
+Responses
+200 OK
+A list of products with prices set for a given store.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"offers": [
+{
+"offerId": "example",
+"price": {},
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+{
+"status": "OK",
+"result": {
+"offers": [
+{
+"offerId": "example",
+"price": {},
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectoffersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplepriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0}updatedAtType: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00ZThe price list page.Example[{"offerId":"example","price":{"value":0,"discountBase":0,"currencyId":"RUR","vat":0},"updatedAt":"2025-01-01T00:00:00Z"}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}List of prices.Example{"offers":[{"offerId":"example","price":{"value":0,"discountBase":0,"currencyId":"RUR","vat":0},"updatedAt":"2025-01-01T00:00:00Z"}],"paging":{"nextPageToken":"example"}}Example{"result":{"offers":[{"offerId":"example","price":{"value":0,"discountBase":0,"currencyId":"RUR","vat":0},"updatedAt":"2025-01-01T00:00:00Z"}],"paging":{"nextPageToken":"example"}}}
+
+result | Type: objectoffersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplepriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0}updatedAtType: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00ZThe price list page.Example[{"offerId":"example","price":{"value":0,"discountBase":0,"currencyId":"RUR","vat":0},"updatedAt":"2025-01-01T00:00:00Z"}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}List of prices.Example{"offers":[{"offerId":"example","price":{"value":0,"discountBase":0,"currencyId":"RUR","vat":0},"updatedAt":"2025-01-01T00:00:00Z"}],"paging":{"nextPageToken":"example"}} | offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplepriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0}updatedAtType: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00ZThe price list page.Example[{"offerId":"example","price":{"value":0,"discountBase":0,"currencyId":"RUR","vat":0},"updatedAt":"2025-01-01T00:00:00Z"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | price | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true | value | Type: numberThe price of the product.Min value:0Exclusive min:true | vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available. | updatedAt | Type: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00Z | paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplepriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0}updatedAtType: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00ZThe price list page.Example[{"offerId":"example","price":{"value":0,"discountBase":0,"currencyId":"RUR","vat":0},"updatedAt":"2025-01-01T00:00:00Z"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | price | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true | value | Type: numberThe price of the product.Min value:0Exclusive min:true | vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available. | updatedAt | Type: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00Z
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+price | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true | value | Type: numberThe price of the product.Min value:0Exclusive min:true | vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+updatedAt | Type: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00Z
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example result
+
+offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplepriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0}updatedAtType: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00ZThe price list page.Example[{"offerId":"example","price":{"value":0,"discountBase":0,"currencyId":"RUR","vat":0},"updatedAt":"2025-01-01T00:00:00Z"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | price | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true | value | Type: numberThe price of the product.Min value:0Exclusive min:true | vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available. | updatedAt | Type: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00Z
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+price | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true | value | Type: numberThe price of the product.Min value:0Exclusive min:true | vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+updatedAt | Type: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00Z
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example offers
+
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+price | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEdiscountBaseType: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:truevalueType: numberThe price of the product.Min value:0Exclusive min:truevatType: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.The price includes the discount, currency, and the time of the last update.Example{"value":0,"discountBase":0,"currencyId":"RUR","vat":0} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true | value | Type: numberThe price of the product.Min value:0Exclusive min:true | vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+updatedAt | Type: string<date-time>Date and time of the last price update.Example:2025-01-01T00:00:00Z
+offerId Type: string Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example price
+
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+discountBase | Type: numberThe crossed-out price.The number must be an integer. You can specify a price with a discount from 5 to 99%.Pass this parameter every time the price is updated if you provide a discount on the product.Min value:0Exclusive min:true
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+vat | Type: integerThe VAT identifier used for the product:2— 10% VAT. For example, it is used in the sale of certain food and medical products.5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.6— VAT is not charged, it is used only for certain types of services.7— VAT 20%. Basic VAT from 2019 to January 1, 2026.10— VAT is 5%. VAT for the simplified taxation system (USN).11— VAT is 7%. VAT for the simplified taxation system (USN).14— VAT is 22%. Basic VAT starting from January 1, 2026.If the parameter is omitted, the VAT set in the cabinet is used.For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+currencyId Type: string Currency codes:
+
+• RUR— the Russian ruble.
+
+RUR
+• UAH— the Ukrainian hryvnia.
+
+UAH
+• BYR— the Belarusian ruble.
+
+BYR
+• KZT— Kazakhstani tenge.
+
+KZT
+• UZS— Uzbek sum.
+
+UZS
+Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+
+RUR
+
+USD
+
+EUR
+
+UAH
+
+AUD
+
+GBP
+
+BYR
+
+BYN
+
+DKK
+
+ISK
+
+KZT
+
+CAD
+
+CNY
+
+NOK
+
+XDR
+
+SGD
+
+TRY
+
+SEK
+
+CHF
+
+JPY
+
+AZN
+
+ALL
+
+DZD
+
+AOA
+
+ARS
+
+AMD
+
+AFN
+
+BHD
+
+BGN
+
+BOB
+
+BWP
+
+BND
+
+BRL
+
+BIF
+
+HUF
+
+VEF
+
+KPW
+
+VND
+
+GMD
+
+GHS
+
+GNF
+
+HKD
+
+GEL
+
+AED
+
+EGP
+
+ZMK
+
+ILS
+
+INR
+
+IDR
+
+JOD
+
+IQD
+
+IRR
+
+YER
+
+QAR
+
+KES
+
+KGS
+
+COP
+
+CDF
+
+CRC
+
+KWD
+
+CUP
+
+LAK
+
+LVL
+
+SLL
+
+LBP
+
+LYD
+
+SZL
+
+LTL
+
+MUR
+
+MRO
+
+MKD
+
+MWK
+
+MGA
+
+MYR
+
+MAD
+
+MXN
+
+MZN
+
+MDL
+
+MNT
+
+NPR
+
+NGN
+
+NIO
+
+NZD
+
+OMR
+
+PKR
+
+PYG
+
+PEN
+
+PLN
+
+KHR
+
+SAR
+
+RON
+
+SCR
+
+SYP
+
+SKK
+
+SOS
+
+SDG
+
+SRD
+
+TJS
+
+THB
+
+TWD
+
+BDT
+
+TZS
+
+TND
+
+TMM
+
+UGX
+
+UZS
+
+UYU
+
+PHP
+
+DJF
+
+XAF
+
+XOF
+
+HRK
+
+CZK
+
+CLP
+
+LKR
+
+EEK
+
+ETB
+
+RSD
+
+ZAR
+
+KRW
+
+NAD
+
+TL
+
+UE discountBase Type: number The crossed-out price. The number must be an integer. You can specify a price with a discount from 5 to 99%.
+Pass this parameter every time the price is updated if you provide a discount on the product. Min value:0
+
+0 Exclusive min:true
+
+true value Type: number The price of the product. Min value:0
+
+0 Exclusive min:true
+
+true vat Type: integer The VAT identifier used for the product:
+
+• 2— 10% VAT. For example, it is used in the sale of certain food and medical products.
+
+2
+• 5— 0% VAT. For example, it is used for the sale of goods exported in the customs procedure of export, or for the provision of services for the international transportation of goods.
+
+5
+• 6— VAT is not charged, it is used only for certain types of services.
+
+6
+• 7— VAT 20%. Basic VAT from 2019 to January 1, 2026.
+
+7
+• 10— VAT is 5%. VAT for the simplified taxation system (USN).
+
+10
+• 11— VAT is 7%. VAT for the simplified taxation system (USN).
+
+11
+• 14— VAT is 22%. Basic VAT starting from January 1, 2026.
+
+14 If the parameter is omitted, the VAT set in the cabinet is used. For sellers Market Yandex Gotransfer and receipt of VAT is not available.
+The price includes the discount, currency, and the time of the last update.
+
+{
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+}
+
+{
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+}
+updatedAt Type: string<date-time>
+Date and time of the last price update. Example:2025-01-01T00:00:00Z
+
+2025-01-01T00:00:00Z The price list page.
+
+[
+{
+"offerId": "example",
+"price": {
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+},
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+]
+
+[
+{
+"offerId": "example",
+"price": {
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+},
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+]
+
+paging
+
+nextPageToken | Type: stringID of the next results page.Example:example nextPageToken Type: string ID of the next results page.
+Example:example
+
+example The ID of the next page.
+
+{
+"nextPageToken": "example"
+}
+
+{
+"nextPageToken": "example"
+}
+List of prices.
+
+{
+"offers": [
+{
+"offerId": "example",
+"price": {
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+},
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+
+{
+"offers": [
+{
+"offerId": "example",
+"price": {
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+},
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+
+{
+"result": {
+"offers": [
+{
+"offerId": "example",
+"price": {
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+},
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+{
+"result": {
+"offers": [
+{
+"offerId": "example",
+"price": {
+"value": 0,
+"discountBase": 0,
+"currencyId": "RUR",
+"vat": 0
+},
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

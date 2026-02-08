@@ -1,0 +1,1290 @@
+Getting a list of products that participate or may participate in the promotion
+The method is available forall models. Not yet available for Market Yandex Go sellers.
+
+• pricing —Manage prices
+• pricing:read-only —View prices
+• promotion —Product promotion
+• promotion:read-only —View promotion information
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns a list of products that participate or may participate in the promotion. The terms of participation in the promotions may change
+For example,maxPromoPrice.
+
+maxPromoPrice The set prices will not change. —priceandpromoPrice.
+
+price
+
+promoPrice
+
+⚙️ Limit:10,000 requests per hour, no more than 500 items per request
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/promos/offers
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/promos/offers
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Query parameters
+
+Name | Description
+limit | Type: integerThe number of values per page.Min value:1
+page_token | Type: stringID of the results page.If the parameter is omitted, the first page is returned.We recommend transmitting the value of the output parameternextPageToken, received during the last request.If setpage_tokenand the request has parameterspageandpageSizethey are ignored.Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+Name Description limit Type: integer The number of values per page. Min value:1
+
+1 page_token Type: string ID of the results page. If the parameter is omitted, the first page is returned.
+We recommend transmitting the value of the output parameternextPageToken, received during the last request.
+
+nextPageToken If setpage_tokenand the request has parameterspageandpageSizethey are ignored.
+
+page_token
+
+page
+
+pageSize Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+
+eyBuZXh0SWQ6IDIzNDIgfQ==
+
+Body
+
+{
+"promoId": "example",
+"statusType": "MANUALLY_ADDED",
+"statuses": [
+"MANUALLY_ADDED"
+]
+}
+
+{
+"promoId": "example",
+"statusType": "MANUALLY_ADDED",
+"statuses": [
+"MANUALLY_ADDED"
+]
+}
+
+Name | Description
+promoId | Type: stringThe ID of the promotion.Example:example
+statuses | Type: string[] | nullFilter for products that can participate in the promotion. You can set multiple values.Min items:1Unique items:trueExample["MANUALLY_ADDED"]
+statusType | Type: stringFilter for products that are added to the promotion manually:MANUALLY_ADDED— products that were added manually.NOT_MANUALLY_ADDED— products that are not included in the promotion and those that are added automatically.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:MANUALLY_ADDED,NOT_MANUALLY_ADDED
+Name Description promoId Type: string The ID of the promotion. Example:example
+
+example statuses Type: string[] | null Filter for products that can participate in the promotion. You can set multiple values.
+Min items:1
+
+1 Unique items:true
+
+true
+
+[
+"MANUALLY_ADDED"
+]
+
+[
+"MANUALLY_ADDED"
+]
+statusType Type: string Filter for products that are added to the promotion manually:
+
+• MANUALLY_ADDED— products that were added manually.
+MANUALLY_ADDED— products that were added manually.
+
+MANUALLY_ADDED
+• NOT_MANUALLY_ADDED— products that are not included in the promotion and those that are added automatically.
+NOT_MANUALLY_ADDED— products that are not included in the promotion and those that are added automatically.
+
+NOT_MANUALLY_ADDED
+Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.
+Enum:MANUALLY_ADDED,NOT_MANUALLY_ADDED
+
+MANUALLY_ADDED
+
+NOT_MANUALLY_ADDED
+
+Responses
+200 OK
+A list of products that participate or may participate in the promotion.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"offers": [
+{
+"offerId": "example",
+"status": "AUTO",
+"params": {},
+"autoParticipatingDetails": {}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+{
+"status": "OK",
+"result": {
+"offers": [
+{
+"offerId": "example",
+"status": "AUTO",
+"params": {},
+"autoParticipatingDetails": {}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectoffersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleparamsType: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}}statusType: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOSautoParticipatingDetailsType: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]}Products that participate or may participate in the promotion.Example[{"offerId":"example","status":"AUTO","params":{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}},"autoParticipatingDetails":{"campaignIds":[1]}}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}A list of products that participate or may participate in the promotion.Example{"offers":[{"offerId":"example","status":"AUTO","params":{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}},"autoParticipatingDetails":{"campaignIds":[1]}}],"paging":{"nextPageToken":"example"}}Example{"result":{"offers":[{"offerId":"example","status":"AUTO","params":{"discountParams":{}},"autoParticipatingDetails":{"campaignIds":[null]}}],"paging":{"nextPageToken":"example"}}}
+
+result | Type: objectoffersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleparamsType: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}}statusType: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOSautoParticipatingDetailsType: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]}Products that participate or may participate in the promotion.Example[{"offerId":"example","status":"AUTO","params":{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}},"autoParticipatingDetails":{"campaignIds":[1]}}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}A list of products that participate or may participate in the promotion.Example{"offers":[{"offerId":"example","status":"AUTO","params":{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}},"autoParticipatingDetails":{"campaignIds":[1]}}],"paging":{"nextPageToken":"example"}} | offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleparamsType: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}}statusType: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOSautoParticipatingDetailsType: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]}Products that participate or may participate in the promotion.Example[{"offerId":"example","status":"AUTO","params":{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}},"autoParticipatingDetails":{"campaignIds":[1]}}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | params | Type: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}} | discountParams | Type: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0} | maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products. | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion. | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion. | status | Type: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOS | autoParticipatingDetails | Type: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]} | campaignIds | Type: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1] | paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleparamsType: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}}statusType: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOSautoParticipatingDetailsType: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]}Products that participate or may participate in the promotion.Example[{"offerId":"example","status":"AUTO","params":{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}},"autoParticipatingDetails":{"campaignIds":[1]}}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | params | Type: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}} | discountParams | Type: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0} | maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products. | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion. | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion. | status | Type: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOS | autoParticipatingDetails | Type: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]} | campaignIds | Type: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+params | Type: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}} | discountParams | Type: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0} | maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products. | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion. | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+discountParams | Type: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0} | maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products. | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion. | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.
+price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.
+promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+status | Type: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOS
+autoParticipatingDetails | Type: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]} | campaignIds | Type: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]
+campaignIds | Type: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example result
+
+offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleparamsType: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}}statusType: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOSautoParticipatingDetailsType: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]}Products that participate or may participate in the promotion.Example[{"offerId":"example","status":"AUTO","params":{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}},"autoParticipatingDetails":{"campaignIds":[1]}}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | params | Type: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}} | discountParams | Type: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0} | maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products. | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion. | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion. | status | Type: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOS | autoParticipatingDetails | Type: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]} | campaignIds | Type: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+params | Type: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}} | discountParams | Type: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0} | maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products. | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion. | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+discountParams | Type: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0} | maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products. | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion. | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.
+price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.
+promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+status | Type: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOS
+autoParticipatingDetails | Type: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]} | campaignIds | Type: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]
+campaignIds | Type: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example offers
+
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+params | Type: objectdiscountParamsType: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0}Product parameters in the promotion.The parameter that corresponds to the type of the promotion is returned.Example{"discountParams":{"price":0,"promoPrice":0,"maxPromoPrice":0}} | discountParams | Type: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0} | maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products. | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion. | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+discountParams | Type: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0} | maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products. | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion. | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.
+price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.
+promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+status | Type: stringProduct status in the promotion:AUTO— added automatically in all cabinet stores where the product is available for purchase.PARTIALLY_AUTO— added automatically for some stores.MANUAL— added manually.NOT_PARTICIPATING— does not participate in the promotion.RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOS
+autoParticipatingDetails | Type: objectcampaignIdsType: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]Information about the automatic product addition to the promotion.The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.Example{"campaignIds":[1]} | campaignIds | Type: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]
+campaignIds | Type: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]
+offerId Type: string Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example params
+
+discountParams | Type: objectmaxPromoPriceType: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.priceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.Example{"price":0,"promoPrice":0,"maxPromoPrice":0} | maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products. | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion. | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.
+price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.
+promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+discountParams
+
+maxPromoPrice | Type: integerThe maximum possible price to participate in the promotion.Indicated in rubles.It is refunded for all products.
+price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.It is refunded only if the product participates in the promotion.
+promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.It is refunded only if the product participates in the promotion.
+maxPromoPrice Type: integer The maximum possible price to participate in the promotion. Indicated in rubles.
+It is refunded for all products. price Type: integer Crossed out price — the price at which the product was sold before the promotion.
+Indicated in rubles. It is refunded only if the product participates in the promotion. promoPrice Type: integer
+Share price — the one you want to sell the product at. Indicated in rubles. It is refunded only if the product participates in the promotion.
+Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.
+
+DIRECT_DISCOUNT
+
+BLUE_FLASH
+
+{
+"price": 0,
+"promoPrice": 0,
+"maxPromoPrice": 0
+}
+
+{
+"price": 0,
+"promoPrice": 0,
+"maxPromoPrice": 0
+}
+Product parameters in the promotion. The parameter that corresponds to the type of the promotion is returned.
+
+{
+"discountParams": {
+"price": 0,
+"promoPrice": 0,
+"maxPromoPrice": 0
+}
+}
+
+{
+"discountParams": {
+"price": 0,
+"promoPrice": 0,
+"maxPromoPrice": 0
+}
+}
+status Type: string
+Product status in the promotion:
+
+• AUTO— added automatically in all cabinet stores where the product is available for purchase.
+AUTO— added automatically in all cabinet stores where the product is available for purchase.
+
+AUTO
+• PARTIALLY_AUTO— added automatically for some stores.
+PARTIALLY_AUTO— added automatically for some stores.
+
+PARTIALLY_AUTO
+• MANUAL— added manually.
+MANUAL— added manually.
+
+MANUAL
+• NOT_PARTICIPATING— does not participate in the promotion.
+NOT_PARTICIPATING— does not participate in the promotion.
+
+NOT_PARTICIPATING
+• RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.
+RENEWED— successfully transferred from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.
+
+RENEWED
+• RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.
+RENEW_FAILED— it was not possible to transfer from the previous "Bestsellers of the Market" promotion. Only for "Bestsellers of the Market" promotions.
+
+RENEW_FAILED
+• MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.
+MINIMUM_FOR_PROMOS— participates in an action with a pricemaxPromoPrice(minimum price set for shares, which corresponds to the thresholdmaxPromoPrice). Only for "Bestsellers of the Market" promotions.
+
+MINIMUM_FOR_PROMOS
+
+maxPromoPrice
+
+maxPromoPrice
+Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.
+Enum:AUTO,PARTIALLY_AUTO,MANUAL,NOT_PARTICIPATING,RENEWED,RENEW_FAILED,MINIMUM_FOR_PROMOS
+
+AUTO
+
+PARTIALLY_AUTO
+
+MANUAL
+
+NOT_PARTICIPATING
+
+RENEWED
+
+RENEW_FAILED
+
+MINIMUM_FOR_PROMOS autoParticipatingDetails
+
+campaignIds | Type: integer[] | nullThe campaign IDs of those stores where the product is added to the promotion automatically.Refunded if the product's status is in the promotion —PARTIALLY_AUTO.Min items:1Unique items:trueExample[1]
+campaignIds Type: integer[] | null The campaign IDs of those stores where the product is added to the promotion automatically.
+Refunded if the product's status is in the promotion —PARTIALLY_AUTO.
+
+PARTIALLY_AUTO Min items:1
+
+1 Unique items:true
+
+true
+
+[
+1
+]
+
+[
+1
+]
+Information about the automatic product addition to the promotion.
+The reasons why the product was not added automatically in other stores can be found in the seller's account on the Market on the promotion page.
+Read about the automatic and manual addition of products to the promotionin the Help of the Market for sellers.
+
+{
+"campaignIds": [
+1
+]
+}
+
+{
+"campaignIds": [
+1
+]
+}
+Products that participate or may participate in the promotion.
+
+[
+{
+"offerId": "example",
+"status": "AUTO",
+"params": {
+"discountParams": {
+"price": 0,
+"promoPrice": 0,
+"maxPromoPrice": 0
+}
+},
+"autoParticipatingDetails": {
+"campaignIds": [
+1
+]
+}
+}
+]
+
+[
+{
+"offerId": "example",
+"status": "AUTO",
+"params": {
+"discountParams": {
+"price": 0,
+"promoPrice": 0,
+"maxPromoPrice": 0
+}
+},
+"autoParticipatingDetails": {
+"campaignIds": [
+1
+]
+}
+}
+]
+
+paging
+
+nextPageToken | Type: stringID of the next results page.Example:example nextPageToken Type: string ID of the next results page.
+Example:example
+
+example The ID of the next page.
+
+{
+"nextPageToken": "example"
+}
+
+{
+"nextPageToken": "example"
+}
+A list of products that participate or may participate in the promotion.
+
+{
+"offers": [
+{
+"offerId": "example",
+"status": "AUTO",
+"params": {
+"discountParams": {
+"price": 0,
+"promoPrice": 0,
+"maxPromoPrice": 0
+}
+},
+"autoParticipatingDetails": {
+"campaignIds": [
+1
+]
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+
+{
+"offers": [
+{
+"offerId": "example",
+"status": "AUTO",
+"params": {
+"discountParams": {
+"price": 0,
+"promoPrice": 0,
+"maxPromoPrice": 0
+}
+},
+"autoParticipatingDetails": {
+"campaignIds": [
+1
+]
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+
+{
+"result": {
+"offers": [
+{
+"offerId": "example",
+"status": "AUTO",
+"params": {
+"discountParams": {}
+},
+"autoParticipatingDetails": {
+"campaignIds": [
+null
+]
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+{
+"result": {
+"offers": [
+{
+"offerId": "example",
+"status": "AUTO",
+"params": {
+"discountParams": {}
+},
+"autoParticipatingDetails": {
+"campaignIds": [
+null
+]
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+400 Bad Request
+The request contains incorrect data.Learn more about errors when working with stocks
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version. In the methodPOST v2/businesses/{businessId}/offer-prices/updates.
+
+Was the article helpful?

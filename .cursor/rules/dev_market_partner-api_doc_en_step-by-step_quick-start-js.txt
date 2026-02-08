@@ -1,0 +1,213 @@
+Launching integration in JavaScript
+This guide will help you set up the simplest test integration in JavaScript from scratch for store requests to the Market. You will be able to request a list of stores and receive a response.
+You will need a Node.js and Java version 11 or higher Set them up in advance. How to install Node.js
+How to install Java
+
+Download OpenAPI-specification
+
+• Open the folder where you want to save the specification. In this manual, it will be referred to as<project_directory>.
+Open the folder where you want to save the specification. In this manual, it will be referred to as<project_directory>.
+
+<project_directory>
+• Run the command prompt in it.
+Run the command prompt in it.
+• Write a command:git clone https://github.com/yandex-market/yandex-market-partner-api.git
+Write a command:
+
+git clone https://github.com/yandex-market/yandex-market-partner-api.git
+
+git clone https://github.com/yandex-market/yandex-market-partner-api.git
+
+• Downloadthe Market specification with GitHub.
+• Unzip the archive to the folder where you want to save the specification. In this manual, it will be referred to as<project_directory>.
+
+<project_directory>
+
+Generate a client
+
+• Open the folderyandex-market-partner-api, which appeared in the previous step.
+
+yandex-market-partner-api
+• Run the command prompt in it.
+• Write a command:
+
+npx @openapitools/openapi-generator-cli generate -i <path_to_openapi.yaml> -g javascript -o <output_path>
+
+npx @openapitools/openapi-generator-cli generate -i <path_to_openapi.yaml> -g javascript -o <output_path>
+
+As aoutput pathspecify the folder where your project will be located.
+Ifopenapitoolsis not installed yet, please accept the installation. In the folderoutput paththe client's files will appear.
+
+Note: ExampleLet's say you downloaded an archive and unpacked it. The specification is in the folder<project_directory>/yandex-market-partner-api.Do you want to place the project in a folder<project_directory>/market-integration.1. Open the folder<project_directory>/yandex-market-partner-api.2. Run the command prompt in it.3. In the console that opens, write:npx @openapitools/openapi-generator-cli generate -i openapi/openapi.yaml -g javascript -o ../market-integration4. If you are prompted to install the generator, enterYand clickEnter.
+Example
+Let's say you downloaded an archive and unpacked it. The specification is in the folder<project_directory>/yandex-market-partner-api.
+
+<project_directory>/yandex-market-partner-api Do you want to place the project in a folder<project_directory>/market-integration.
+
+<project_directory>/market-integration 1. Open the folder<project_directory>/yandex-market-partner-api.
+
+<project_directory>/yandex-market-partner-api 2. Run the command prompt in it. 3. In the console that opens, write:
+
+npx @openapitools/openapi-generator-cli generate -i openapi/openapi.yaml -g javascript -o ../market-integration
+
+npx @openapitools/openapi-generator-cli generate -i openapi/openapi.yaml -g javascript -o ../market-integration
+
+4. If you are prompted to install the generator, enterYand clickEnter.
+
+Create a project
+
+• Open the folder where the client's files are located. In the example above, this is<project_directory>/market-integration.
+Open the folder where the client's files are located. In the example above, this is<project_directory>/market-integration.
+
+<project_directory>/market-integration
+• Run the command prompt in it.
+Run the command prompt in it.
+• Write a command:npm install
+npm run build
+Write a command:
+
+npm install
+npm run build
+
+npm install
+npm run build
+
+Prepare the data for access
+Get an authorization token byInstructions.
+
+Make a request
+To performGET v2/campaigns:
+
+• Open the created project in the IDE.
+Open the created project in the IDE.
+• Create in the root of the project (folder<project_directory>/market-integration) fileindex.js.
+Create in the root of the project (folder<project_directory>/market-integration) fileindex.js.
+
+<project_directory>/market-integration
+
+index.js
+• Create an instanceCampaignsApiand refer to the methodgetCampaigns. To do this, write toindex.jshere is the code:const{CampaignsApi} =require('./dist');constcampaignsApi =newCampaignsApi();
+campaignsApi.apiClient.authentications['ApiKey'].apiKey='<token>';
+
+campaignsApi.getCampaigns(undefined,function(error, data) {console.log(JSON.stringify(data,null,4));
+});As a<token>use the token you received in the previous step.
+Create an instanceCampaignsApiand refer to the methodgetCampaigns. To do this, write toindex.jshere is the code:
+
+CampaignsApi
+
+getCampaigns
+
+index.js
+
+const { CampaignsApi } = require('./dist');
+
+const campaignsApi = new CampaignsApi();
+campaignsApi.apiClient.authentications['ApiKey'].apiKey = '<token>';
+
+campaignsApi.getCampaigns(undefined, function (error, data) {
+console.log(JSON.stringify(data, null, 4));
+});
+
+const { CampaignsApi } = require('./dist');
+
+const campaignsApi = new CampaignsApi();
+campaignsApi.apiClient.authentications['ApiKey'].apiKey = '<token>';
+
+campaignsApi.getCampaigns(undefined, function (error, data) {
+console.log(JSON.stringify(data, null, 4));
+});
+
+As a<token>use the token you received in the previous step.
+
+<token>
+• Write to the consolenode index.js.
+Write to the consolenode index.js.
+
+node index.js
+The console will display the result of the query: the names of all stores, placement models, IDs, and more:
+
+{
+"campaigns": [
+{
+"domain": "Shop 1",
+"id": 12345678,
+"clientId": 87654321,
+"business": {
+"id": 123456,
+"name": "My shop"
+},
+"placementType": "FBS"
+},
+{
+"domain": "Shop 2",
+"id": 23456789,
+"clientId": 98765432,
+"business": {
+"id": 123456,
+"name": "My shop"
+},
+"placementType": "DBS"
+},
+{
+"domain": "GoodShop",
+"id": 34567891,
+"clientId": 19876543,
+"business": {
+"id": 123456,
+"name": "My shop"
+},
+"placementType": "FBY"
+},
+],
+"pager": {
+"total": 3,
+"from": 1,
+"to": 3,
+"currentPage": 1,
+"pagesCount": 1,
+"pageSize": 3
+}
+}
+
+{
+"campaigns": [
+{
+"domain": "Shop 1",
+"id": 12345678,
+"clientId": 87654321,
+"business": {
+"id": 123456,
+"name": "My shop"
+},
+"placementType": "FBS"
+},
+{
+"domain": "Shop 2",
+"id": 23456789,
+"clientId": 98765432,
+"business": {
+"id": 123456,
+"name": "My shop"
+},
+"placementType": "DBS"
+},
+{
+"domain": "GoodShop",
+"id": 34567891,
+"clientId": 19876543,
+"business": {
+"id": 123456,
+"name": "My shop"
+},
+"placementType": "FBY"
+},
+],
+"pager": {
+"total": 3,
+"from": 1,
+"to": 3,
+"currentPage": 1,
+"pagesCount": 1,
+"pageSize": 3
+}
+}

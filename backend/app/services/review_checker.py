@@ -1,12 +1,11 @@
 """
-Service to periodically check for new reviews and send Telegram notifications
+Service to periodically check for new reviews
 """
 import asyncio
 from datetime import datetime
 from typing import List, Dict, Set
 from app.database import SessionLocal
 from app.services.yandex_api import YandexMarketAPI
-from app.services.telegram_bot import telegram_bot
 
 
 class ReviewChecker:
@@ -32,7 +31,6 @@ class ReviewChecker:
                 review_id = review.get("id")
                 if review_id:
                     self.last_checked_reviews.add(review_id)
-                    await telegram_bot.send_review_notification(review, "product")
             
             # Check shop reviews
             shop_reviews = yandex_api.get_shop_reviews(limit=50)
@@ -45,7 +43,6 @@ class ReviewChecker:
                 review_id = review.get("id")
                 if review_id:
                     self.last_checked_shop_reviews.add(review_id)
-                    await telegram_bot.send_review_notification(review, "shop")
             
             if new_product_reviews or new_shop_reviews:
                 print(f"[Review Checker] Found {len(new_product_reviews)} new product reviews and {len(new_shop_reviews)} new shop reviews")

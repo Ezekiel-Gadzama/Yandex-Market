@@ -1,0 +1,68 @@
+Processing orders from legal entities
+Features of working with such orders — in requestsPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersorPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes:
+
+• Transfer the marking codes in the system to "Honest Sign", if such labeling is provided for the product.
+Transfer the marking codes in the system to "Honest Sign", if such labeling is provided for the product.
+• When selling goodsfrom abroadspecify:Batch registration number —rnpt.Number of the cargo customs declaration —gtd.Country of manufacture code —countryCode.How to get
+When selling goodsfrom abroadspecify:
+
+• Batch registration number —rnpt.
+
+rnpt
+• Number of the cargo customs declaration —gtd.
+
+gtd
+• Country of manufacture code —countryCode.How to get
+
+countryCode
+Through the API, you can also get information about the buyer, who is a legal entity, and about the documents for his order:
+
+• UPD;
+• UKD;
+• the waybill;
+• the invoice;
+• the adjustment invoice.
+
+How to determine that an order is from a legal entity
+Call the methodPOST v1/businesses/{businessId}/orders. Signs of an order from a legal entity:
+
+• inorderthe nested parameter is returnedbuyerand the fieldtypewith the type of payerBUSINESS;
+
+order
+
+buyer
+
+type
+
+BUSINESS
+• parameterpaymentMethodwill return with the valueB2B_ACCOUNT_PREPAYMENT(the organization has paid for the order) orB2B_ACCOUNT_POSTPAYMENT(the organization will pay for the order after delivery).
+
+paymentMethod
+
+B2B_ACCOUNT_PREPAYMENT
+
+B2B_ACCOUNT_POSTPAYMENT
+Please note that the parametersshipmentDateandshipmentTimeThey will not be returned until the delivery date is agreed with the buyer.
+
+shipmentDate
+
+shipmentTime
+
+How to get customer information
+You can receive the data only if the order is in the statusPROCESSING,DELIVERY,PICKUPorDELIVERED.
+
+PROCESSING
+
+DELIVERY
+
+PICKUP
+
+DELIVERED
+To find out the buyer's information, make a requestPOST v2/campaigns/{campaignId}/orders/{orderId}/business-buyer.
+
+How to get information about documents
+You can receive the data after the order status changes.DELIVERED.
+
+DELIVERED
+To request information about the documents, make a requestPOST v2/campaigns/{campaignId}/orders/{orderId}/documents.
+«Честный знак» — государственная система маркировки и отслеживания товаров.Узнать больше

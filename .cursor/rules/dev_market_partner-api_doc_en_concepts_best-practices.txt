@@ -1,0 +1,105 @@
+Best practices for integrating with Yandex Market API for sellers
+This page is intended for developers and technical specialists who create, maintain or support integrations with Yandex Market API.
+Purpose of the article — help build integration with Yandex Market API, which works steadily under load and ensures safe processing of store data.
+
+General principles of integration
+
+• Request only the data that the current scenario needs.
+• Follow the request limits and distribute the load evenly over time.
+• Use API notifications instead of frequent method polling.
+• Track the error rate by integration methods and scenarios
+• Design the integration based on security requirements
+
+Working with API methods
+Design the integration to be resilient to change
+
+• Process only the fields that the script needs, and skip unfamiliar elements and fields.
+• Do not rely on the order of the fields, be guided by their names.
+• For enumerations (statuses, types, and so on), provide a default value for unknown values and prevent them from falling due to a parsing error.
+• Update the client models regularly with the latest information.Specifications OpenAPI: use the latest version of the specificationwith GitHubto reassemble the client
+• Follow the API news inupdate historyand notes about the obsolescence of methods in the documentation and specifications
+• Plan to switch to new methods until the outdated ones are completely disabled to avoid integration failures.
+
+Request only the necessary data
+
+• Use method filters based on change time, statuses, and entity types.
+• Adjust the samples to specific scenarios, rather than requesting the full data set from the method.
+• Try to optimize the integration so that you don't have to make unnecessary API requests.
+Examples:
+
+• Viewing products in the cabinet
+• List of orders
+
+Reliability, errors, and limits
+Separate 4xx and 5xx and set up repeats
+
+• Set up replays for 5xx responses and network failures
+• Pause between repetitions, increase their duration exponentially, and add a small random delay with each repetition.
+• Do not repeat 4xx responses: correct the cause of the client error instead of resending the request.
+• As the share of 4xx grows, check the correctness of the queries: parameters, data schema, and relevance of the methods used.
+Description of errors returned Yandex Market API
+
+Configure network settings for integration
+
+• Set sufficient connection and read timeouts — insufficient timeouts can lead to 499 errors (Client Closed Request)
+• Use a rate limiter or task queue to evenly distribute requests over time, avoid traffic spikes, and avoid exceeding limits.
+Description of working with limits
+
+Enable logging and error monitoring
+
+• Log information about method calls: status, headers, and request and response bodies
+• Keep a unique request ID.traceparentto search in the sectionRequest logs— This will help you and the Yandex.Market support service quickly find a specific query for analysis.
+
+traceparent
+• Group errors by type (400 — incorrect parameters, 401/403 — authorization and access rights, 404 — missing resources, 420 — exceeding limits, and so on), track their share over time, and build a dashboard with errors by method and type to quickly notice spikes.
+• Set up alerts based on error thresholds (for example, a 404 increase for a specific method) to receive notifications and take action before a failure starts affecting the store's operation.
+
+Authorization and security
+Use an up-to-date authorization scheme and minimal access rights
+
+• Use the authorization schemeApi‑Keyfor seller integrations
+• Limit key access to the minimum required for operation.
+• Create separate onesApi‑Keyfor different integrations, and configure the minimum necessary accesses for each to limit possible damage in case of leakage.
+• To receive notifications, make sure that requests come only from trusted Yandex IP addresses.List of trusted IP addresses
+How to set up an Api Key Access to methods by Api Key
+
+Ensure the safe storage and use of keys
+
+• Keep authorization keys and tokens in secret repositories, do not add them to the source code, logs and correspondence.
+• Regularly review the list of active keys, delete unused ones, and change keys when changing contractors or integrators.
+
+Best practices for scenarios
+Orders
+
+• To receive changed orders, use the update time parameter and a limited interval.
+• Use filters based on creation time, statuses, and other parameters to receive only the necessary orders for a specific scenario.
+• Use API notifications for order events instead of frequent requests.
+Receiving orders
+
+Balances and prices
+
+• Send information on changed positions regularly.
+• Send only the changed items, not the full range.
+• Group changes into batch requests of acceptable size and avoid large numbers of small requests.
+• Synchronize balances and prices from a single data source to avoid discrepancies between sales channels.
+Transfer of leftovers
+
+Assortment and product cards
+
+• Use a large enough pagination to avoid performing thousands of short queries.
+• Schedule updates for business needs, not more often than is actually required.
+• When adding and changing the assortment, be sure to check the list of errors.results.errorsand commentsresults.warningsin the response: if there are errors, changes for all transferred items will not be applied.
+
+Reports and analytics
+
+• For analytics over long periods, use asynchronous reports.
+• Plan the generation and download of reports on a schedule, distribute queries evenly over time, and save the result locally until the next regeneration.
+• Request only those types of reports and only for those stores that the seller's scenarios really need.
+• Please note that the structure and content of reports may change without prior notice: a new column may appear or the name of the sheet may change.
+
+Notifications
+
+• Confirm receipt of the notification with a quick response.
+• Send further event processing to the queue and execute it asynchronously.
+• Send an error in the response if the notification is not accepted.
+How to work with notifications

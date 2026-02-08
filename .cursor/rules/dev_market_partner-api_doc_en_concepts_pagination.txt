@@ -1,0 +1,90 @@
+Pagination in requests to Yandex Market API for sellers
+Some queries do not return the result in its entirety, but page by page. To get the full result, run several consecutive queries. — in each new request, pass a parameter with the next page of results.
+Depending on which parameter needs to be passed, pagination can be of two types:
+
+• with the page ID — parameterpage_token;
+
+page_token
+• with the page number — parameterpage.
+
+page If both types of pagination are available in the method, usepage ID(page_token), not her number.
+
+page_token
+
+Pagination with the page ID
+Examples of methods:
+
+• POST v2/businesses/{businessId}/offer-cards
+• POST v2/campaigns/{campaignId}/offer-prices
+• GET v2/campaigns/{campaignId}/returns
+• POST v1/businesses/{businessId}/orders
+To get the full result:
+
+• Make a request where:Don't pass it onpage_token.If desired, sendlimit. Then this parameter will need to be passed in each subsequent request.The response will return the parameterpaging.
+Make a request where:
+
+• Don't pass it onpage_token.
+
+page_token
+• If desired, sendlimit. Then this parameter will need to be passed in each subsequent request.
+
+limit The response will return the parameterpaging.
+
+paging
+• If inpagingthe parameter returnednextPageTokenso, there is the next page of the result. Repeat the request, where pass the valuenextPageTokenin the parameterpage_token.Parameter valuenextPageTokenThis is not a page number, but a string that needs to be passed in the request.If there is no parameter, then the last page is returned. Make more requestsno need.
+If inpagingthe parameter returnednextPageTokenso, there is the next page of the result. Repeat the request, where pass the valuenextPageTokenin the parameterpage_token.
+
+paging
+
+nextPageToken
+
+nextPageToken
+
+page_token Parameter valuenextPageToken
+
+nextPageToken This is not a page number, but a string that needs to be passed in the request. If there is no parameter, then the last page is returned. Make more requestsno need.
+• Keep executing requests until it returnsnextPageToken.
+Keep executing requests until it returnsnextPageToken.
+
+nextPageToken Some methods in the parameterpagingThey are returningprevPageToken
+
+paging
+
+prevPageToken This is the ID of the previous results page.
+To get the previous page, pass its ID in the parameterpage_token. For the first pageprevPageTokenIt doesn't come back.
+
+page_token
+
+prevPageToken
+
+Pagination with the page number
+Some of the methods with this type of pagination are already outdated The rest will be marked obsolete in the future.
+Examples of methods:
+
+• GET v2/campaigns
+• GET v2/regions/{regionId}/children
+To get the full result:
+
+• Make a request where:Don't pass it onpage.If desired, sendpageSize. Then this parameter will need to be passed in each subsequent request.The response will return the parameterpagerwith the number of result pagespagesCount.
+Make a request where:
+
+• Don't pass it onpage.
+
+page
+• If desired, sendpageSize. Then this parameter will need to be passed in each subsequent request.
+
+pageSize The response will return the parameterpagerwith the number of result pagespagesCount.
+
+pager
+
+pagesCount
+• If inpagesCountmore than one page returned, repeat the requests — in the parameterpagesend the page numbers (2,3and to the last one).
+If inpagesCountmore than one page returned, repeat the requests — in the parameterpagesend the page numbers (2,3and to the last one).
+
+pagesCount
+
+page
+
+2
+
+3

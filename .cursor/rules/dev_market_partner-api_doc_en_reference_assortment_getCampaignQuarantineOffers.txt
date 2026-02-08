@@ -1,0 +1,1929 @@
+List of quarantined products by price in the store
+The method is available forall models.
+
+• pricing —Manage prices
+• pricing:read-only —View prices
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns a list of products that are in quarantine at the price set in the specified store.
+Check the price of each of the quarantined items. If there is no error and the price is correct, confirm it with a request.POST v2/campaigns/{campaignId}/price-quarantine/confirm. If the price is really wrong, set the correct price using a query.POST v2/campaigns/{campaignId}/offer-prices/updates.
+What is quarantine?
+A product is quarantined if its price changes too sharply or differs too much from the market price.More detailed
+Filters can be used in the request. The results are returned page by page.
+
+⚙️ Limit:10,000 requests per minute
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/price-quarantine
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/price-quarantine
+
+Path parameters
+
+Name | Description
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+Name Description campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1
+
+Query parameters
+
+Name | Description
+limit | Type: integerThe number of values per page.Min value:1
+page_token | Type: stringID of the results page.If the parameter is omitted, the first page is returned.We recommend transmitting the value of the output parameternextPageToken, received during the last request.If setpage_tokenand the request has parameterspageandpageSizethey are ignored.Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+Name Description limit Type: integer The number of values per page. Min value:1
+
+1 page_token Type: string ID of the results page. If the parameter is omitted, the first page is returned.
+We recommend transmitting the value of the output parameternextPageToken, received during the last request.
+
+nextPageToken If setpage_tokenand the request has parameterspageandpageSizethey are ignored.
+
+page_token
+
+page
+
+pageSize Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+
+eyBuZXh0SWQ6IDIzNDIgfQ==
+
+Body
+
+{
+"offerIds": [
+"example"
+],
+"cardStatuses": [
+"HAS_CARD_CAN_NOT_UPDATE"
+],
+"categoryIds": [
+0
+],
+"vendorNames": [
+"example"
+],
+"tags": [
+"example"
+]
+}
+
+{
+"offerIds": [
+"example"
+],
+"cardStatuses": [
+"HAS_CARD_CAN_NOT_UPDATE"
+],
+"categoryIds": [
+0
+],
+"vendorNames": [
+"example"
+],
+"tags": [
+"example"
+]
+}
+
+Name | Description
+cardStatuses | Type: string[] | nullFilter by card status.What is a product card?Min items:1Unique items:trueExample["HAS_CARD_CAN_NOT_UPDATE"]
+categoryIds | Type: integer[] | nullFilter by category on the Market.Min items:1Unique items:trueExample[0]
+offerIds | Type: string[] | nullThe IDs of the products that information is needed about.⚠️ Do not use this field at the same time as filters based on card statuses, categories, brands, or tags. If you want to use filters, leave the field empty.Min items:1Max items:500Unique items:trueExample["example"]
+tags | Type: string[] | nullFilter by tags.Min items:1Unique items:trueExample["example"]
+vendorNames | Type: string[] | nullFilter by brand.Min items:1Unique items:trueExample["example"] Name
+Description cardStatuses Type: string[] | null Filter by card status. What is a product card? Min items:1
+
+1 Unique items:true
+
+true
+
+[
+"HAS_CARD_CAN_NOT_UPDATE"
+]
+
+[
+"HAS_CARD_CAN_NOT_UPDATE"
+]
+categoryIds Type: integer[] | null Filter by category on the Market.
+Min items:1
+
+1 Unique items:true
+
+true
+
+[
+0
+]
+
+[
+0
+]
+offerIds Type: string[] | null
+The IDs of the products that information is needed about.⚠️ Do not use this field at the same time as filters based on card statuses, categories, brands, or tags. If you want to use filters, leave the field empty.
+Min items:1
+
+1 Max items:500
+
+500 Unique items:true
+
+true
+
+[
+"example"
+]
+
+[
+"example"
+]
+tags Type: string[] | null Filter by tags. Min items:1
+
+1 Unique items:true
+
+true
+
+[
+"example"
+]
+
+[
+"example"
+]
+vendorNames Type: string[] | null Filter by brand. Min items:1
+
+1 Unique items:true
+
+true
+
+[
+"example"
+]
+
+[
+"example"
+]
+
+Responses
+200 OK
+The list of products in quarantine.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"paging": {
+"nextPageToken": "example"
+},
+"offers": [
+{
+"offerId": "example",
+"currentPrice": {},
+"lastValidPrice": {},
+"verdicts": [
+null
+]
+}
+]
+}
+}
+
+{
+"status": "OK",
+"result": {
+"paging": {
+"nextPageToken": "example"
+},
+"offers": [
+{
+"offerId": "example",
+"currentPrice": {},
+"lastValidPrice": {},
+"verdicts": [
+null
+]
+}
+]
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectoffersType: object[]currentPriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"}lastValidPriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"}offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleverdictsType: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}]The page of the list of products in quarantine.Example[{"offerId":"example","currentPrice":{"value":0,"currencyId":"RUR"},"lastValidPrice":{"value":0,"currencyId":"RUR"},"verdicts":[{"type":"PRICE_CHANGE","params":[{}]}]}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}The list of products in quarantine.Example{"paging":{"nextPageToken":"example"},"offers":[{"offerId":"example","currentPrice":{"value":0,"currencyId":"RUR"},"lastValidPrice":{"value":0,"currencyId":"RUR"},"verdicts":[{"type":"PRICE_CHANGE","params":[null]}]}]}Example{"result":{"paging":{"nextPageToken":"example"},"offers":[{"offerId":"example","currentPrice":{"value":0,"currencyId":"RUR"},"lastValidPrice":{"value":0,"currencyId":"RUR"},"verdicts":[{}]}]}}
+
+result | Type: objectoffersType: object[]currentPriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"}lastValidPriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"}offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleverdictsType: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}]The page of the list of products in quarantine.Example[{"offerId":"example","currentPrice":{"value":0,"currencyId":"RUR"},"lastValidPrice":{"value":0,"currencyId":"RUR"},"verdicts":[{"type":"PRICE_CHANGE","params":[{}]}]}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}The list of products in quarantine.Example{"paging":{"nextPageToken":"example"},"offers":[{"offerId":"example","currentPrice":{"value":0,"currencyId":"RUR"},"lastValidPrice":{"value":0,"currencyId":"RUR"},"verdicts":[{"type":"PRICE_CHANGE","params":[null]}]}]} | offers | Type: object[]currentPriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"}lastValidPriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"}offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleverdictsType: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}]The page of the list of products in quarantine.Example[{"offerId":"example","currentPrice":{"value":0,"currencyId":"RUR"},"lastValidPrice":{"value":0,"currencyId":"RUR"},"verdicts":[{"type":"PRICE_CHANGE","params":[{}]}]}] | currentPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true | lastValidPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | verdicts | Type: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}] | params | Type: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}] | name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY | value | Type: stringThe value of the parameter.Example:example | type | Type: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO | paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+offers | Type: object[]currentPriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"}lastValidPriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"}offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleverdictsType: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}]The page of the list of products in quarantine.Example[{"offerId":"example","currentPrice":{"value":0,"currencyId":"RUR"},"lastValidPrice":{"value":0,"currencyId":"RUR"},"verdicts":[{"type":"PRICE_CHANGE","params":[{}]}]}] | currentPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true | lastValidPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | verdicts | Type: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}] | params | Type: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}] | name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY | value | Type: stringThe value of the parameter.Example:example | type | Type: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO
+currentPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+lastValidPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+verdicts | Type: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}] | params | Type: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}] | name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY | value | Type: stringThe value of the parameter.Example:example | type | Type: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO
+params | Type: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}] | name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY | value | Type: stringThe value of the parameter.Example:example
+name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY
+value | Type: stringThe value of the parameter.Example:example
+type | Type: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example result
+
+offers | Type: object[]currentPriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"}lastValidPriceType: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"}offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleverdictsType: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}]The page of the list of products in quarantine.Example[{"offerId":"example","currentPrice":{"value":0,"currencyId":"RUR"},"lastValidPrice":{"value":0,"currencyId":"RUR"},"verdicts":[{"type":"PRICE_CHANGE","params":[{}]}]}] | currentPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true | lastValidPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | verdicts | Type: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}] | params | Type: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}] | name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY | value | Type: stringThe value of the parameter.Example:example | type | Type: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO
+currentPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+lastValidPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+verdicts | Type: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}] | params | Type: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}] | name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY | value | Type: stringThe value of the parameter.Example:example | type | Type: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO
+params | Type: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}] | name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY | value | Type: stringThe value of the parameter.Example:example
+name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY
+value | Type: stringThe value of the parameter.Example:example
+type | Type: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example offers
+
+currentPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+lastValidPrice | Type: objectcurrencyIdType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEvalueType: numberThe price of the product.Min value:0Exclusive min:trueThe price of the product.Example{"value":0,"currencyId":"RUR"} | currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | value | Type: numberThe price of the product.Min value:0Exclusive min:true
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+value | Type: numberThe price of the product.Min value:0Exclusive min:true
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+verdicts | Type: object[]paramsType: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}]typeType: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMOThe reasons for the product being quarantined.Min items:1Example[{"type":"PRICE_CHANGE","params":[{"name":"CURRENT_PRICE","value":"example"}]}] | params | Type: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}] | name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY | value | Type: stringThe value of the parameter.Example:example | type | Type: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO
+params | Type: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}] | name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY | value | Type: stringThe value of the parameter.Example:example
+name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY
+value | Type: stringThe value of the parameter.Example:example
+type | Type: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO
+currentPrice
+
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+value | Type: numberThe price of the product.Min value:0Exclusive min:true currencyId Type: string Currency codes:
+
+• RUR— the Russian ruble.
+
+RUR
+• UAH— the Ukrainian hryvnia.
+
+UAH
+• BYR— the Belarusian ruble.
+
+BYR
+• KZT— Kazakhstani tenge.
+
+KZT
+• UZS— Uzbek sum.
+
+UZS
+Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+
+RUR
+
+USD
+
+EUR
+
+UAH
+
+AUD
+
+GBP
+
+BYR
+
+BYN
+
+DKK
+
+ISK
+
+KZT
+
+CAD
+
+CNY
+
+NOK
+
+XDR
+
+SGD
+
+TRY
+
+SEK
+
+CHF
+
+JPY
+
+AZN
+
+ALL
+
+DZD
+
+AOA
+
+ARS
+
+AMD
+
+AFN
+
+BHD
+
+BGN
+
+BOB
+
+BWP
+
+BND
+
+BRL
+
+BIF
+
+HUF
+
+VEF
+
+KPW
+
+VND
+
+GMD
+
+GHS
+
+GNF
+
+HKD
+
+GEL
+
+AED
+
+EGP
+
+ZMK
+
+ILS
+
+INR
+
+IDR
+
+JOD
+
+IQD
+
+IRR
+
+YER
+
+QAR
+
+KES
+
+KGS
+
+COP
+
+CDF
+
+CRC
+
+KWD
+
+CUP
+
+LAK
+
+LVL
+
+SLL
+
+LBP
+
+LYD
+
+SZL
+
+LTL
+
+MUR
+
+MRO
+
+MKD
+
+MWK
+
+MGA
+
+MYR
+
+MAD
+
+MXN
+
+MZN
+
+MDL
+
+MNT
+
+NPR
+
+NGN
+
+NIO
+
+NZD
+
+OMR
+
+PKR
+
+PYG
+
+PEN
+
+PLN
+
+KHR
+
+SAR
+
+RON
+
+SCR
+
+SYP
+
+SKK
+
+SOS
+
+SDG
+
+SRD
+
+TJS
+
+THB
+
+TWD
+
+BDT
+
+TZS
+
+TND
+
+TMM
+
+UGX
+
+UZS
+
+UYU
+
+PHP
+
+DJF
+
+XAF
+
+XOF
+
+HRK
+
+CZK
+
+CLP
+
+LKR
+
+EEK
+
+ETB
+
+RSD
+
+ZAR
+
+KRW
+
+NAD
+
+TL
+
+UE value Type: number The price of the product. Min value:0
+
+0 Exclusive min:true
+
+true The price of the product.
+
+{
+"value": 0,
+"currencyId": "RUR"
+}
+
+{
+"value": 0,
+"currencyId": "RUR"
+}
+lastValidPrice
+
+currencyId | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+value | Type: numberThe price of the product.Min value:0Exclusive min:true currencyId Type: string Currency codes:
+
+• RUR— the Russian ruble.
+
+RUR
+• UAH— the Ukrainian hryvnia.
+
+UAH
+• BYR— the Belarusian ruble.
+
+BYR
+• KZT— Kazakhstani tenge.
+
+KZT
+• UZS— Uzbek sum.
+
+UZS
+Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+
+RUR
+
+USD
+
+EUR
+
+UAH
+
+AUD
+
+GBP
+
+BYR
+
+BYN
+
+DKK
+
+ISK
+
+KZT
+
+CAD
+
+CNY
+
+NOK
+
+XDR
+
+SGD
+
+TRY
+
+SEK
+
+CHF
+
+JPY
+
+AZN
+
+ALL
+
+DZD
+
+AOA
+
+ARS
+
+AMD
+
+AFN
+
+BHD
+
+BGN
+
+BOB
+
+BWP
+
+BND
+
+BRL
+
+BIF
+
+HUF
+
+VEF
+
+KPW
+
+VND
+
+GMD
+
+GHS
+
+GNF
+
+HKD
+
+GEL
+
+AED
+
+EGP
+
+ZMK
+
+ILS
+
+INR
+
+IDR
+
+JOD
+
+IQD
+
+IRR
+
+YER
+
+QAR
+
+KES
+
+KGS
+
+COP
+
+CDF
+
+CRC
+
+KWD
+
+CUP
+
+LAK
+
+LVL
+
+SLL
+
+LBP
+
+LYD
+
+SZL
+
+LTL
+
+MUR
+
+MRO
+
+MKD
+
+MWK
+
+MGA
+
+MYR
+
+MAD
+
+MXN
+
+MZN
+
+MDL
+
+MNT
+
+NPR
+
+NGN
+
+NIO
+
+NZD
+
+OMR
+
+PKR
+
+PYG
+
+PEN
+
+PLN
+
+KHR
+
+SAR
+
+RON
+
+SCR
+
+SYP
+
+SKK
+
+SOS
+
+SDG
+
+SRD
+
+TJS
+
+THB
+
+TWD
+
+BDT
+
+TZS
+
+TND
+
+TMM
+
+UGX
+
+UZS
+
+UYU
+
+PHP
+
+DJF
+
+XAF
+
+XOF
+
+HRK
+
+CZK
+
+CLP
+
+LKR
+
+EEK
+
+ETB
+
+RSD
+
+ZAR
+
+KRW
+
+NAD
+
+TL
+
+UE value Type: number The price of the product. Min value:0
+
+0 Exclusive min:true
+
+true The price of the product.
+
+{
+"value": 0,
+"currencyId": "RUR"
+}
+
+{
+"value": 0,
+"currencyId": "RUR"
+}
+offerId Type: string Your SKU — the product ID in your system.
+Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example verdicts
+
+params | Type: object[]nameType: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCYvalueType: stringThe value of the parameter.Example:exampleThe price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.Example[{"name":"CURRENT_PRICE","value":"example"}] | name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY | value | Type: stringThe value of the parameter.Example:example
+name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY
+value | Type: stringThe value of the parameter.Example:example
+type | Type: stringTypes of quarantine:PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO
+params
+
+name | Type: stringThe name of the parameter for the reason for hiding the product by price.CURRENT_PRICE— the price that caused the product to be quarantined.LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).CURRENCY— currency.Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY
+value | Type: stringThe value of the parameter.Example:example name Type: string The name of the parameter for the reason for hiding the product by price.
+
+• CURRENT_PRICE— the price that caused the product to be quarantined.
+
+CURRENT_PRICE
+• LAST_VALID_PRICE— the last price before entering quarantine (only for quarantine typePRICE_CHANGE).
+
+LAST_VALID_PRICE
+
+PRICE_CHANGE
+• MIN_PRICE— quarantine threshold (only for quarantine typesLOW_PRICEandLOW_PRICE_PROMO).
+
+MIN_PRICE
+
+LOW_PRICE
+
+LOW_PRICE_PROMO
+• CURRENCY— currency.
+
+CURRENCY Enum:CURRENT_PRICE,LAST_VALID_PRICE,MIN_PRICE,CURRENCY
+
+CURRENT_PRICE
+
+LAST_VALID_PRICE
+
+MIN_PRICE
+
+CURRENCY value Type: string The value of the parameter. Example:example
+
+example
+The price that caused the product to be quarantined, and the values for comparison. The specific set of parameters depends on the type of quarantine.
+
+[
+{
+"name": "CURRENT_PRICE",
+"value": "example"
+}
+]
+
+[
+{
+"name": "CURRENT_PRICE",
+"value": "example"
+}
+]
+type Type: string Types of quarantine:
+
+• PRICE_CHANGE— the new price differs too much from the previous one. In the fieldparamsThere will be a new priceCURRENT_PRICEand the last price before being quarantinedLAST_VALID_PRICE.
+
+PRICE_CHANGE
+
+params
+
+CURRENT_PRICE
+
+LAST_VALID_PRICE
+• LOW_PRICE— the set price differs too much from the market price. In the fieldparamsthe price will be set by youCURRENT_PRICEand the quarantine thresholdMIN_PRICE.
+
+LOW_PRICE
+
+params
+
+CURRENT_PRICE
+
+MIN_PRICE
+• LOW_PRICE_PROMO— The price after applying the shares differs too much from the market price. In the fieldparamsthere will be a price after applying the sharesCURRENT_PRICEand the quarantine thresholdMIN_PRICE.
+
+LOW_PRICE_PROMO
+
+params
+
+CURRENT_PRICE
+
+MIN_PRICE Enum:PRICE_CHANGE,LOW_PRICE,LOW_PRICE_PROMO
+
+PRICE_CHANGE
+
+LOW_PRICE
+
+LOW_PRICE_PROMO The reasons for the product being quarantined. Min items:1
+
+1
+
+[
+{
+"type": "PRICE_CHANGE",
+"params": [
+{
+"name": "CURRENT_PRICE",
+"value": "example"
+}
+]
+}
+]
+
+[
+{
+"type": "PRICE_CHANGE",
+"params": [
+{
+"name": "CURRENT_PRICE",
+"value": "example"
+}
+]
+}
+]
+
+The page of the list of products in quarantine.
+
+[
+{
+"offerId": "example",
+"currentPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"lastValidPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"verdicts": [
+{
+"type": "PRICE_CHANGE",
+"params": [
+{}
+]
+}
+]
+}
+]
+
+[
+{
+"offerId": "example",
+"currentPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"lastValidPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"verdicts": [
+{
+"type": "PRICE_CHANGE",
+"params": [
+{}
+]
+}
+]
+}
+]
+
+paging
+
+nextPageToken | Type: stringID of the next results page.Example:example nextPageToken Type: string ID of the next results page.
+Example:example
+
+example The ID of the next page.
+
+{
+"nextPageToken": "example"
+}
+
+{
+"nextPageToken": "example"
+}
+The list of products in quarantine.
+
+{
+"paging": {
+"nextPageToken": "example"
+},
+"offers": [
+{
+"offerId": "example",
+"currentPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"lastValidPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"verdicts": [
+{
+"type": "PRICE_CHANGE",
+"params": [
+null
+]
+}
+]
+}
+]
+}
+
+{
+"paging": {
+"nextPageToken": "example"
+},
+"offers": [
+{
+"offerId": "example",
+"currentPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"lastValidPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"verdicts": [
+{
+"type": "PRICE_CHANGE",
+"params": [
+null
+]
+}
+]
+}
+]
+}
+
+{
+"result": {
+"paging": {
+"nextPageToken": "example"
+},
+"offers": [
+{
+"offerId": "example",
+"currentPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"lastValidPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"verdicts": [
+{}
+]
+}
+]
+}
+}
+
+{
+"result": {
+"paging": {
+"nextPageToken": "example"
+},
+"offers": [
+{
+"offerId": "example",
+"currentPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"lastValidPrice": {
+"value": 0,
+"currencyId": "RUR"
+},
+"verdicts": [
+{}
+]
+}
+]
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

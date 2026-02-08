@@ -1,0 +1,126 @@
+How order statuses change
+The status change diagram shows the stages that go through DBS-the order, and the logic of transitions between statuses. This will help you correlate the statuses of Yandex. Market and your system, set up integration with Yandex.Market correctly, and avoid transmitting unnecessary statuses and sub-statuses.
+Designations:
+
+• The diagram shows the order statuses and substates at each stage in the formatStatus of the Sub-status. For example,PROCESSING STARTED.List of substatesCANCELLEDsee the sectionSubstates when canceling an order.
+The diagram shows the order statuses and substates at each stage in the formatStatus of the Sub-status. For example,PROCESSING STARTED.
+
+Status of the Sub-status
+
+PROCESSING STARTED List of substatesCANCELLEDsee the sectionSubstates when canceling an order.
+
+CANCELLED
+• The arrows show the transitions between the stages, and their color — when this transition occurs:green — The store's status has changed.blue — The market has changed its status.orange — cancellation of an order by one of the parties;red — exceptional cases.
+The arrows show the transitions between the stages, and their color — when this transition occurs:
+
+• green — The store's status has changed.
+• blue — The market has changed its status.
+• orange — cancellation of an order by one of the parties;
+• red — exceptional cases.
+Transmit the statuses in the order in which they are described in the diagram. Otherwise, it will lead to an error.
+
+Decoding the scheme
+
+Status, sub-status, and stage description | Who is changing the status | Methods by which the status is changed or information about the order is received in this status
+PROCESSINGSTARTEDThe store is processing the order. | Yandex. Market | POST v1/businesses/{businessId}/ordersPOST notification
+DELIVERYDELIVERY_SERVICE_RECEIVEDThe order has been delivered. | Shop | POST v1/businesses/{businessId}/ordersPOST notificationPUT v2/campaigns/{campaignId}/orders/{orderId}/status
+DELIVERYUSER_RECEIVEDThe customer received the order.It is transmitted only when working through Yandex. Delivery. | Yandex. Market | POST v1/businesses/{businessId}/ordersPOST notification
+DELIVERYDELIVERY_USER_NOT_RECEIVEDThe delivery time has expired, and the customer has not received the order.Arbitration begins, as a result of which the order can be canceled or transferred to the statusDELIVERED DELIVERY_SERVICE_DELIVERED. | Yandex. Market | POST v1/businesses/{businessId}/ordersPOST notification
+PICKUPPICKUP_SERVICE_RECEIVEDThe order has been accepted at the PVZ. | Shop | PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+DELIVEREDDELIVERY_SERVICE_DELIVEREDThe order has been delivered.It is transmitted automatically when working via Yandex. Delivery.If you deliver on your own, change the status after the order is delivered. | Yandex. MarketShop | POST v1/businesses/{businessId}/ordersPOST notificationPUT v2/campaigns/{campaignId}/orders/{orderId}/status
+DELIVEREDDELIVERED_USER_NOT_RECEIVEDThe delivery time has expired, and the customer has not received the order.Arbitration begins, as a result of which the order can be canceled or remain in the same status. | Yandex. Market | POST v1/businesses/{businessId}/ordersPOST notification
+CANCELLEDSubstatesThe order has been cancelled.To cancel an order, pass the sub-statusSHOP_FAILED.If the order is in the statusDELIVERYorPICKUPand the buyer cancelled it,confirm the cancellation. | Yandex. MarketShopBuyer | POST v1/businesses/{businessId}/ordersPOST notificationPUT v2/campaigns/{campaignId}/orders/{orderId}/status
+Status, sub-status, and stage description Who is changing the status Methods by which the status is changed or information about the order is received in this status
+PROCESSINGSTARTED
+
+PROCESSING
+
+STARTED The store is processing the order. Yandex. Market POST v1/businesses/{businessId}/orders POST notification
+DELIVERYDELIVERY_SERVICE_RECEIVED
+
+DELIVERY
+
+DELIVERY_SERVICE_RECEIVED The order has been delivered. Shop POST v1/businesses/{businessId}/orders POST notification
+PUT v2/campaigns/{campaignId}/orders/{orderId}/status DELIVERYUSER_RECEIVED
+
+DELIVERY
+
+USER_RECEIVED The customer received the order. It is transmitted only when working through Yandex. Delivery.
+Yandex. Market POST v1/businesses/{businessId}/orders POST notification DELIVERYDELIVERY_USER_NOT_RECEIVED
+
+DELIVERY
+
+DELIVERY_USER_NOT_RECEIVED The delivery time has expired, and the customer has not received the order.
+Arbitration begins, as a result of which the order can be canceled or transferred to the statusDELIVERED DELIVERY_SERVICE_DELIVERED.
+
+DELIVERED DELIVERY_SERVICE_DELIVERED Yandex. Market POST v1/businesses/{businessId}/orders POST notification
+PICKUPPICKUP_SERVICE_RECEIVED
+
+PICKUP
+
+PICKUP_SERVICE_RECEIVED The order has been accepted at the PVZ. Shop PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+DELIVEREDDELIVERY_SERVICE_DELIVERED
+
+DELIVERED
+
+DELIVERY_SERVICE_DELIVERED The order has been delivered. It is transmitted automatically when working via Yandex. Delivery.
+If you deliver on your own, change the status after the order is delivered. Yandex. Market Shop POST v1/businesses/{businessId}/orders
+POST notification PUT v2/campaigns/{campaignId}/orders/{orderId}/status DELIVEREDDELIVERED_USER_NOT_RECEIVED
+
+DELIVERED
+
+DELIVERED_USER_NOT_RECEIVED The delivery time has expired, and the customer has not received the order.
+Arbitration begins, as a result of which the order can be canceled or remain in the same status. Yandex. Market
+POST v1/businesses/{businessId}/orders POST notification CANCELLEDSubstates
+
+CANCELLED The order has been cancelled. To cancel an order, pass the sub-statusSHOP_FAILED.
+
+SHOP_FAILED If the order is in the statusDELIVERYorPICKUPand the buyer cancelled it,confirm the cancellation.
+
+DELIVERY
+
+PICKUP Yandex. Market Shop Buyer POST v1/businesses/{businessId}/orders POST notification PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+
+Substates when canceling an order
+
+• RESERVATION_EXPIRED— The customer did not complete the reserved order within 10 minutes.
+
+RESERVATION_EXPIRED
+• USER_NOT_PAID— the buyer did not pay for the order (for the type of paymentPREPAID) for 30 minutes.
+
+USER_NOT_PAID
+
+PREPAID
+• USER_UNREACHABLE— couldn't contact the buyer.
+
+USER_UNREACHABLE
+• USER_CHANGED_MIND— the customer cancelled the order for personal reasons.
+
+USER_CHANGED_MIND
+• USER_REFUSED_DELIVERY— the buyer was not satisfied with the terms of delivery.
+
+USER_REFUSED_DELIVERY
+• USER_REFUSED_PRODUCT— the product did not fit the buyer.
+
+USER_REFUSED_PRODUCT
+• SHOP_FAILED— the store cannot complete the order.
+
+SHOP_FAILED
+• USER_REFUSED_QUALITY— the buyer was not satisfied with the quality of the product.
+
+USER_REFUSED_QUALITY
+• REPLACING_ORDER— the buyer decided to replace the product with another one on his own initiative.
+
+REPLACING_ORDER
+• PROCESSING_EXPIRED— the value is no longer used.
+
+PROCESSING_EXPIRED
+• PICKUP_EXPIRED— the storage period of the order in the PVZ has expired.
+
+PICKUP_EXPIRED
+• TOO_MANY_DELIVERY_DATE_CHANGES— the order has been postponed too many times.
+
+TOO_MANY_DELIVERY_DATE_CHANGES
+• DELIVERY_DATE_CHANGED_TOO_MUCH— the order has been postponed for too many days.
+
+DELIVERY_DATE_CHANGED_TOO_MUCH Other values may also be returned. You don't need to process them. PUT v2/campaigns/{campaignId}/orders/{orderId}/cancellation/accept

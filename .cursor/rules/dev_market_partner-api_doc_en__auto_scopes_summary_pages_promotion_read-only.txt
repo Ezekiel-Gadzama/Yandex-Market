@@ -1,0 +1,41 @@
+View promotion information
+The name of the access in the OpenAPI specification: promotion:read-only.
+
+Stocks
+
+Method | Method description
+POST v2/businesses/{businessId}/promos | Getting a list of shares
+POST v2/businesses/{businessId}/promos/offers | Getting a list of products that participate or may participate in the promotion
+Method Method description POST v2/businesses/{businessId}/promos Getting a list of shares POST v2/businesses/{businessId}/promos/offers
+Getting a list of products that participate or may participate in the promotion
+
+Sales Boost
+
+Method | Method description
+POST v2/businesses/{businessId}/bids/info | Information about the set rates
+POST v2/businesses/{businessId}/bids/recommendations | Recommended bids for specified products Method
+Method description POST v2/businesses/{businessId}/bids/info Information about the set rates POST v2/businesses/{businessId}/bids/recommendations
+Recommended bids for specified products
+
+Viewing additional information
+
+Method | Method description
+GET v2/campaigns | User's Store List
+GET v2/campaigns/{campaignId} | Store Information
+POST v2/businesses/{businessId}/settings | Cabinet Settings
+GET v2/campaigns/{campaignId}/settings | Store Settings
+POST v2/categories/tree | The category tree
+GET v2/reports/info/{reportId} | Getting a given report or document
+GET v2/warehouses | Market Warehouse IDs
+POST v2/auth/token | Getting information about the authorization token
+GET v2/delivery/services | Directory of delivery services
+POST v2/regions/countries | List of valid country codes
+GET v2/regions | Search for regions by their name
+GET v2/regions/{regionId} | Information about the region
+GET v2/regions/{regionId}/children | Information about child regions Method Method description GET v2/campaigns
+User's Store List GET v2/campaigns/{campaignId} Store Information POST v2/businesses/{businessId}/settings
+Cabinet Settings GET v2/campaigns/{campaignId}/settings Store Settings POST v2/categories/tree The category tree
+GET v2/reports/info/{reportId} Getting a given report or document GET v2/warehouses Market Warehouse IDs
+POST v2/auth/token Getting information about the authorization token GET v2/delivery/services Directory of delivery services
+POST v2/regions/countries List of valid country codes GET v2/regions Search for regions by their name
+GET v2/regions/{regionId} Information about the region GET v2/regions/{regionId}/children Information about child regions

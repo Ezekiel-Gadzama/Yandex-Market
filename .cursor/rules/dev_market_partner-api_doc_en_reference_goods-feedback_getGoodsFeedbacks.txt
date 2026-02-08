@@ -1,0 +1,1462 @@
+Getting reviews of the seller's products
+The method is available forall models.
+
+• communication —Customer communication
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns reviews of the seller's products using the specified filters.Exception:reviews that were deleted by customers or the Market.
+You can also set up API notifications.
+Yandex.Market will send yourequestwhen there is a new review. And full information about it can be obtained using this method.
+How to work with notifications The results are returned page by page, one page contains no more than 50 reviews.
+The reviews are arranged in the order of publication, so you can send a specific page ID topage_tokenif you have received it before.
+
+page_token
+
+⚙️ Limit:1,000 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/goods-feedback
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/goods-feedback
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Query parameters
+
+Name | Description
+limit | Type: integerThe number of values per page.Min value:1
+page_token | Type: stringID of the results page.If the parameter is omitted, the first page is returned.We recommend transmitting the value of the output parameternextPageToken, received during the last request.If setpage_tokenand the request has parameterspageandpageSizethey are ignored.Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+Name Description limit Type: integer The number of values per page. Min value:1
+
+1 page_token Type: string ID of the results page. If the parameter is omitted, the first page is returned.
+We recommend transmitting the value of the output parameternextPageToken, received during the last request.
+
+nextPageToken If setpage_tokenand the request has parameterspageandpageSizethey are ignored.
+
+page_token
+
+page
+
+pageSize Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+
+eyBuZXh0SWQ6IDIzNDIgfQ==
+
+Body
+
+{
+"feedbackIds": [
+0
+],
+"dateTimeFrom": "2020-02-02T14:30:30+03:00",
+"dateTimeTo": "2020-02-02T14:30:30+03:00",
+"reactionStatus": "ALL",
+"ratingValues": [
+0
+],
+"offerIds": [
+"example"
+],
+"paid": true
+}
+
+{
+"feedbackIds": [
+0
+],
+"dateTimeFrom": "2020-02-02T14:30:30+03:00",
+"dateTimeTo": "2020-02-02T14:30:30+03:00",
+"reactionStatus": "ALL",
+"ratingValues": [
+0
+],
+"offerIds": [
+"example"
+],
+"paid": true
+}
+
+Name | Description
+dateTimeFrom | Type: string<date-time>The beginning of the period. Not inclusive.If the parameter is omitted, the information is returned 6 months before the date specified indateTimeTodates.The maximum interval is 6 months.Example:2020-02-02T14:30:30+03:00
+dateTimeTo | Type: string<date-time>End of the period. Not inclusive.If the parameter is omitted, the current date is used.The maximum interval is 6 months.Example:2020-02-02T14:30:30+03:00
+feedbackIds | Type: integer[] | nullReview IDs.⚠️ Do not use this field at the same time as other filters. If you want to use them, leave the field empty.Min items:1Max items:50Unique items:trueExample[0]
+offerIds | Type: string[] | nullFilter by product ID.Min items:1Max items:20Unique items:trueExample["example"]
+paid | Type: booleanFilter reviews for Plus points.
+ratingValues | Type: integer[] | nullProduct evaluation.Min items:1Max items:5Unique items:trueExample[0]
+reactionStatus | Type: stringReview response status:ALL— all reviews.NEED_REACTION— reviews to respond to.Enum:ALL,NEED_REACTION
+Name Description dateTimeFrom Type: string<date-time> The beginning of the period. Not inclusive.
+If the parameter is omitted, the information is returned 6 months before the date specified indateTimeTodates.
+
+dateTimeTo The maximum interval is 6 months. Example:2020-02-02T14:30:30+03:00
+
+2020-02-02T14:30:30+03:00 dateTimeTo Type: string<date-time> End of the period. Not inclusive. If the parameter is omitted, the current date is used.
+The maximum interval is 6 months. Example:2020-02-02T14:30:30+03:00
+
+2020-02-02T14:30:30+03:00 feedbackIds Type: integer[] | null Review IDs.
+⚠️ Do not use this field at the same time as other filters. If you want to use them, leave the field empty.
+Min items:1
+
+1 Max items:50
+
+50 Unique items:true
+
+true
+
+[
+0
+]
+
+[
+0
+]
+offerIds Type: string[] | null Filter by product ID. Min items:1
+
+1 Max items:20
+
+20 Unique items:true
+
+true
+
+[
+"example"
+]
+
+[
+"example"
+]
+paid Type: boolean Filter reviews for Plus points. ratingValues Type: integer[] | null
+Product evaluation. Min items:1
+
+1 Max items:5
+
+5 Unique items:true
+
+true
+
+[
+0
+]
+
+[
+0
+]
+reactionStatus Type: string Review response status:
+
+• ALL— all reviews.
+ALL— all reviews.
+
+ALL
+• NEED_REACTION— reviews to respond to.
+NEED_REACTION— reviews to respond to.
+
+NEED_REACTION Enum:ALL,NEED_REACTION
+
+ALL
+
+NEED_REACTION
+
+Responses
+200 OK
+A list of reviews.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"feedbacks": [
+{
+"feedbackId": 0,
+"createdAt": "2025-01-01T00:00:00Z",
+"needReaction": true,
+"identifiers": {},
+"author": "example",
+"description": {},
+"media": {},
+"statistics": {}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+{
+"status": "OK",
+"result": {
+"feedbacks": [
+{
+"feedbackId": 0,
+"createdAt": "2025-01-01T00:00:00Z",
+"needReaction": true,
+"identifiers": {},
+"author": "example",
+"description": {},
+"media": {},
+"statistics": {}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectfeedbacksType: object[]createdAtType: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00ZfeedbackIdType: integerThe review ID.identifiersType: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"}needReactionType: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update.statisticsType: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}authorType: stringThe name of the review author.Example:exampledescriptionType: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"}mediaType: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]}A list of reviews.Example[{"feedbackId":0,"createdAt":"2025-01-01T00:00:00Z","needReaction":true,"identifiers":{"orderId":0,"offerId":"example"},"author":"example","description":{"advantages":"example","disadvantages":"example","comment":"example"},"media":{"photos":["example"],"videos":["example"]},"statistics":{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}A list of product reviews.Example{"feedbacks":[{"feedbackId":0,"createdAt":"2025-01-01T00:00:00Z","needReaction":true,"identifiers":{"orderId":0,"offerId":"example"},"author":"example","description":{"advantages":"example","disadvantages":"example","comment":"example"},"media":{"photos":["example"],"videos":["example"]},"statistics":{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}}],"paging":{"nextPageToken":"example"}}Example{"result":{"feedbacks":[{"feedbackId":0,"createdAt":"2025-01-01T00:00:00Z","needReaction":true,"identifiers":{"orderId":0,"offerId":"example"},"author":"example","description":{"advantages":"example","disadvantages":"example","comment":"example"},"media":{"photos":[null],"videos":[null]},"statistics":{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}}],"paging":{"nextPageToken":"example"}}}
+
+result | Type: objectfeedbacksType: object[]createdAtType: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00ZfeedbackIdType: integerThe review ID.identifiersType: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"}needReactionType: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update.statisticsType: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}authorType: stringThe name of the review author.Example:exampledescriptionType: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"}mediaType: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]}A list of reviews.Example[{"feedbackId":0,"createdAt":"2025-01-01T00:00:00Z","needReaction":true,"identifiers":{"orderId":0,"offerId":"example"},"author":"example","description":{"advantages":"example","disadvantages":"example","comment":"example"},"media":{"photos":["example"],"videos":["example"]},"statistics":{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}A list of product reviews.Example{"feedbacks":[{"feedbackId":0,"createdAt":"2025-01-01T00:00:00Z","needReaction":true,"identifiers":{"orderId":0,"offerId":"example"},"author":"example","description":{"advantages":"example","disadvantages":"example","comment":"example"},"media":{"photos":["example"],"videos":["example"]},"statistics":{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}}],"paging":{"nextPageToken":"example"}} | feedbacks | Type: object[]createdAtType: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00ZfeedbackIdType: integerThe review ID.identifiersType: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"}needReactionType: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update.statisticsType: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}authorType: stringThe name of the review author.Example:exampledescriptionType: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"}mediaType: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]}A list of reviews.Example[{"feedbackId":0,"createdAt":"2025-01-01T00:00:00Z","needReaction":true,"identifiers":{"orderId":0,"offerId":"example"},"author":"example","description":{"advantages":"example","disadvantages":"example","comment":"example"},"media":{"photos":["example"],"videos":["example"]},"statistics":{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}}] | createdAt | Type: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00Z | feedbackId | Type: integerThe review ID. | identifiers | Type: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"} | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | orderId | Type: integerThe order ID on the Market. | needReaction | Type: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update. | statistics | Type: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0} | commentsCount | Type: integerThe number of comments on the review.Only responses to reviews are counted, not child comments. | rating | Type: integerProduct evaluation.Min value:1Max value:5 | paidAmount | Type: integerThe number of Plus points that the author received for the review. | recommended | Type: booleanWhether this product is recommended. | author | Type: stringThe name of the review author.Example:example | description | Type: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"} | advantages | Type: stringDescription of the advantages of the product in the review.Example:example | comment | Type: stringA comment in the review.Example:example | disadvantages | Type: stringDescription of the disadvantages of the product in the review.Example:example | media | Type: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]} | photos | Type: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"] | videos | Type: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"] | paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+feedbacks | Type: object[]createdAtType: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00ZfeedbackIdType: integerThe review ID.identifiersType: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"}needReactionType: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update.statisticsType: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}authorType: stringThe name of the review author.Example:exampledescriptionType: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"}mediaType: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]}A list of reviews.Example[{"feedbackId":0,"createdAt":"2025-01-01T00:00:00Z","needReaction":true,"identifiers":{"orderId":0,"offerId":"example"},"author":"example","description":{"advantages":"example","disadvantages":"example","comment":"example"},"media":{"photos":["example"],"videos":["example"]},"statistics":{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}}] | createdAt | Type: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00Z | feedbackId | Type: integerThe review ID. | identifiers | Type: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"} | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | orderId | Type: integerThe order ID on the Market. | needReaction | Type: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update. | statistics | Type: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0} | commentsCount | Type: integerThe number of comments on the review.Only responses to reviews are counted, not child comments. | rating | Type: integerProduct evaluation.Min value:1Max value:5 | paidAmount | Type: integerThe number of Plus points that the author received for the review. | recommended | Type: booleanWhether this product is recommended. | author | Type: stringThe name of the review author.Example:example | description | Type: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"} | advantages | Type: stringDescription of the advantages of the product in the review.Example:example | comment | Type: stringA comment in the review.Example:example | disadvantages | Type: stringDescription of the disadvantages of the product in the review.Example:example | media | Type: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]} | photos | Type: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"] | videos | Type: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]
+createdAt | Type: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00Z
+feedbackId | Type: integerThe review ID.
+identifiers | Type: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"} | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | orderId | Type: integerThe order ID on the Market.
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+orderId | Type: integerThe order ID on the Market.
+needReaction | Type: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update.
+statistics | Type: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0} | commentsCount | Type: integerThe number of comments on the review.Only responses to reviews are counted, not child comments. | rating | Type: integerProduct evaluation.Min value:1Max value:5 | paidAmount | Type: integerThe number of Plus points that the author received for the review. | recommended | Type: booleanWhether this product is recommended.
+commentsCount | Type: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.
+rating | Type: integerProduct evaluation.Min value:1Max value:5
+paidAmount | Type: integerThe number of Plus points that the author received for the review.
+recommended | Type: booleanWhether this product is recommended.
+author | Type: stringThe name of the review author.Example:example
+description | Type: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"} | advantages | Type: stringDescription of the advantages of the product in the review.Example:example | comment | Type: stringA comment in the review.Example:example | disadvantages | Type: stringDescription of the disadvantages of the product in the review.Example:example
+advantages | Type: stringDescription of the advantages of the product in the review.Example:example
+comment | Type: stringA comment in the review.Example:example
+disadvantages | Type: stringDescription of the disadvantages of the product in the review.Example:example
+media | Type: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]} | photos | Type: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"] | videos | Type: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]
+photos | Type: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]
+videos | Type: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example result
+
+feedbacks | Type: object[]createdAtType: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00ZfeedbackIdType: integerThe review ID.identifiersType: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"}needReactionType: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update.statisticsType: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}authorType: stringThe name of the review author.Example:exampledescriptionType: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"}mediaType: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]}A list of reviews.Example[{"feedbackId":0,"createdAt":"2025-01-01T00:00:00Z","needReaction":true,"identifiers":{"orderId":0,"offerId":"example"},"author":"example","description":{"advantages":"example","disadvantages":"example","comment":"example"},"media":{"photos":["example"],"videos":["example"]},"statistics":{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0}}] | createdAt | Type: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00Z | feedbackId | Type: integerThe review ID. | identifiers | Type: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"} | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | orderId | Type: integerThe order ID on the Market. | needReaction | Type: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update. | statistics | Type: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0} | commentsCount | Type: integerThe number of comments on the review.Only responses to reviews are counted, not child comments. | rating | Type: integerProduct evaluation.Min value:1Max value:5 | paidAmount | Type: integerThe number of Plus points that the author received for the review. | recommended | Type: booleanWhether this product is recommended. | author | Type: stringThe name of the review author.Example:example | description | Type: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"} | advantages | Type: stringDescription of the advantages of the product in the review.Example:example | comment | Type: stringA comment in the review.Example:example | disadvantages | Type: stringDescription of the disadvantages of the product in the review.Example:example | media | Type: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]} | photos | Type: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"] | videos | Type: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]
+createdAt | Type: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00Z
+feedbackId | Type: integerThe review ID.
+identifiers | Type: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"} | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | orderId | Type: integerThe order ID on the Market.
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+orderId | Type: integerThe order ID on the Market.
+needReaction | Type: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update.
+statistics | Type: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0} | commentsCount | Type: integerThe number of comments on the review.Only responses to reviews are counted, not child comments. | rating | Type: integerProduct evaluation.Min value:1Max value:5 | paidAmount | Type: integerThe number of Plus points that the author received for the review. | recommended | Type: booleanWhether this product is recommended.
+commentsCount | Type: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.
+rating | Type: integerProduct evaluation.Min value:1Max value:5
+paidAmount | Type: integerThe number of Plus points that the author received for the review.
+recommended | Type: booleanWhether this product is recommended.
+author | Type: stringThe name of the review author.Example:example
+description | Type: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"} | advantages | Type: stringDescription of the advantages of the product in the review.Example:example | comment | Type: stringA comment in the review.Example:example | disadvantages | Type: stringDescription of the disadvantages of the product in the review.Example:example
+advantages | Type: stringDescription of the advantages of the product in the review.Example:example
+comment | Type: stringA comment in the review.Example:example
+disadvantages | Type: stringDescription of the disadvantages of the product in the review.Example:example
+media | Type: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]} | photos | Type: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"] | videos | Type: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]
+photos | Type: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]
+videos | Type: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example feedbacks
+
+createdAt | Type: string<date-time>The date and time when the review was created.Example:2025-01-01T00:00:00Z
+feedbackId | Type: integerThe review ID.
+identifiers | Type: objectofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleorderIdType: integerThe order ID on the Market.IDs that are associated with the review.Example{"orderId":0,"offerId":"example"} | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | orderId | Type: integerThe order ID on the Market.
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+orderId | Type: integerThe order ID on the Market.
+needReaction | Type: booleanWhether the review has been read.Takes the valuefalseIf the store:I read the review in the seller's office on the Market.Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update.
+statistics | Type: objectcommentsCountType: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.ratingType: integerProduct evaluation.Min value:1Max value:5paidAmountType: integerThe number of Plus points that the author received for the review.recommendedType: booleanWhether this product is recommended.Statistical information about the review.Example{"rating":1,"commentsCount":0,"recommended":true,"paidAmount":0} | commentsCount | Type: integerThe number of comments on the review.Only responses to reviews are counted, not child comments. | rating | Type: integerProduct evaluation.Min value:1Max value:5 | paidAmount | Type: integerThe number of Plus points that the author received for the review. | recommended | Type: booleanWhether this product is recommended.
+commentsCount | Type: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.
+rating | Type: integerProduct evaluation.Min value:1Max value:5
+paidAmount | Type: integerThe number of Plus points that the author received for the review.
+recommended | Type: booleanWhether this product is recommended.
+author | Type: stringThe name of the review author.Example:example
+description | Type: objectadvantagesType: stringDescription of the advantages of the product in the review.Example:examplecommentType: stringA comment in the review.Example:exampledisadvantagesType: stringDescription of the disadvantages of the product in the review.Example:exampleThe text part of the review.Example{"advantages":"example","disadvantages":"example","comment":"example"} | advantages | Type: stringDescription of the advantages of the product in the review.Example:example | comment | Type: stringA comment in the review.Example:example | disadvantages | Type: stringDescription of the disadvantages of the product in the review.Example:example
+advantages | Type: stringDescription of the advantages of the product in the review.Example:example
+comment | Type: stringA comment in the review.Example:example
+disadvantages | Type: stringDescription of the disadvantages of the product in the review.Example:example
+media | Type: objectphotosType: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]videosType: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]Photos and videos.Example{"photos":["example"],"videos":["example"]} | photos | Type: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"] | videos | Type: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"]
+photos | Type: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]
+videos | Type: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"] createdAt
+Type: string<date-time> The date and time when the review was created. Example:2025-01-01T00:00:00Z
+
+2025-01-01T00:00:00Z feedbackId Type: integer The review ID. identifiers
+
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+orderId | Type: integerThe order ID on the Market. offerId Type: string Your SKU — the product ID in your system.
+Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example orderId Type: integer The order ID on the Market. IDs that are associated with the review.
+
+{
+"orderId": 0,
+"offerId": "example"
+}
+
+{
+"orderId": 0,
+"offerId": "example"
+}
+needReaction Type: boolean Whether the review has been read.
+Takes the valuefalseIf the store:
+
+false
+
+• I read the review in the seller's office on the Market.
+• Marked the review as read — methodPOST v2/businesses/{businessId}/goods-feedback/skip-reaction.
+• Left a comment on the review — methodPOST v2/businesses/{businessId}/goods-feedback/comments/update.
+statistics
+
+commentsCount | Type: integerThe number of comments on the review.Only responses to reviews are counted, not child comments.
+rating | Type: integerProduct evaluation.Min value:1Max value:5
+paidAmount | Type: integerThe number of Plus points that the author received for the review.
+recommended | Type: booleanWhether this product is recommended. commentsCount Type: integer The number of comments on the review.
+Only responses to reviews are counted, not child comments. rating Type: integer Product evaluation. Min value:1
+
+1 Max value:5
+
+5 paidAmount Type: integer The number of Plus points that the author received for the review. recommended
+Type: boolean Whether this product is recommended. Statistical information about the review.
+
+{
+"rating": 1,
+"commentsCount": 0,
+"recommended": true,
+"paidAmount": 0
+}
+
+{
+"rating": 1,
+"commentsCount": 0,
+"recommended": true,
+"paidAmount": 0
+}
+author Type: string
+The name of the review author. Example:example
+
+example description
+
+advantages | Type: stringDescription of the advantages of the product in the review.Example:example
+comment | Type: stringA comment in the review.Example:example
+disadvantages | Type: stringDescription of the disadvantages of the product in the review.Example:example
+advantages Type: string Description of the advantages of the product in the review. Example:example
+
+example comment Type: string A comment in the review. Example:example
+
+example disadvantages Type: string Description of the disadvantages of the product in the review. Example:example
+
+example The text part of the review.
+
+{
+"advantages": "example",
+"disadvantages": "example",
+"comment": "example"
+}
+
+{
+"advantages": "example",
+"disadvantages": "example",
+"comment": "example"
+}
+media
+
+photos | Type: string[] | nullLinks to photos.Min items:1Unique items:trueExample["example"]
+videos | Type: string[] | nullLinks to the video.Min items:1Unique items:trueExample["example"] photos
+Type: string[] | null Links to photos. Min items:1
+
+1 Unique items:true
+
+true
+
+[
+"example"
+]
+
+[
+"example"
+]
+videos Type: string[] | null Links to the video. Min items:1
+
+1 Unique items:true
+
+true
+
+[
+"example"
+]
+
+[
+"example"
+]
+Photos and videos.
+
+{
+"photos": [
+"example"
+],
+"videos": [
+"example"
+]
+}
+
+{
+"photos": [
+"example"
+],
+"videos": [
+"example"
+]
+}
+A list of reviews.
+
+[
+{
+"feedbackId": 0,
+"createdAt": "2025-01-01T00:00:00Z",
+"needReaction": true,
+"identifiers": {
+"orderId": 0,
+"offerId": "example"
+},
+"author": "example",
+"description": {
+"advantages": "example",
+"disadvantages": "example",
+"comment": "example"
+},
+"media": {
+"photos": [
+"example"
+],
+"videos": [
+"example"
+]
+},
+"statistics": {
+"rating": 1,
+"commentsCount": 0,
+"recommended": true,
+"paidAmount": 0
+}
+}
+]
+
+[
+{
+"feedbackId": 0,
+"createdAt": "2025-01-01T00:00:00Z",
+"needReaction": true,
+"identifiers": {
+"orderId": 0,
+"offerId": "example"
+},
+"author": "example",
+"description": {
+"advantages": "example",
+"disadvantages": "example",
+"comment": "example"
+},
+"media": {
+"photos": [
+"example"
+],
+"videos": [
+"example"
+]
+},
+"statistics": {
+"rating": 1,
+"commentsCount": 0,
+"recommended": true,
+"paidAmount": 0
+}
+}
+]
+
+paging
+
+nextPageToken | Type: stringID of the next results page.Example:example nextPageToken Type: string ID of the next results page.
+Example:example
+
+example The ID of the next page.
+
+{
+"nextPageToken": "example"
+}
+
+{
+"nextPageToken": "example"
+}
+A list of product reviews.
+
+{
+"feedbacks": [
+{
+"feedbackId": 0,
+"createdAt": "2025-01-01T00:00:00Z",
+"needReaction": true,
+"identifiers": {
+"orderId": 0,
+"offerId": "example"
+},
+"author": "example",
+"description": {
+"advantages": "example",
+"disadvantages": "example",
+"comment": "example"
+},
+"media": {
+"photos": [
+"example"
+],
+"videos": [
+"example"
+]
+},
+"statistics": {
+"rating": 1,
+"commentsCount": 0,
+"recommended": true,
+"paidAmount": 0
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+
+{
+"feedbacks": [
+{
+"feedbackId": 0,
+"createdAt": "2025-01-01T00:00:00Z",
+"needReaction": true,
+"identifiers": {
+"orderId": 0,
+"offerId": "example"
+},
+"author": "example",
+"description": {
+"advantages": "example",
+"disadvantages": "example",
+"comment": "example"
+},
+"media": {
+"photos": [
+"example"
+],
+"videos": [
+"example"
+]
+},
+"statistics": {
+"rating": 1,
+"commentsCount": 0,
+"recommended": true,
+"paidAmount": 0
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+
+{
+"result": {
+"feedbacks": [
+{
+"feedbackId": 0,
+"createdAt": "2025-01-01T00:00:00Z",
+"needReaction": true,
+"identifiers": {
+"orderId": 0,
+"offerId": "example"
+},
+"author": "example",
+"description": {
+"advantages": "example",
+"disadvantages": "example",
+"comment": "example"
+},
+"media": {
+"photos": [
+null
+],
+"videos": [
+null
+]
+},
+"statistics": {
+"rating": 1,
+"commentsCount": 0,
+"recommended": true,
+"paidAmount": 0
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+{
+"result": {
+"feedbacks": [
+{
+"feedbackId": 0,
+"createdAt": "2025-01-01T00:00:00Z",
+"needReaction": true,
+"identifiers": {
+"orderId": 0,
+"offerId": "example"
+},
+"author": "example",
+"description": {
+"advantages": "example",
+"disadvantages": "example",
+"comment": "example"
+},
+"media": {
+"photos": [
+null
+],
+"videos": [
+null
+]
+},
+"statistics": {
+"rating": 1,
+"commentsCount": 0,
+"recommended": true,
+"paidAmount": 0
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

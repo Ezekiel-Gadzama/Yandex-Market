@@ -1,0 +1,1109 @@
+Receipt of documents on the application for delivery, export or disposal
+The method is available for theFBYmodel.
+
+• supplies-management:read-only —View FBY requests
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns the application documents.
+
+⚙️ Limit:1,000 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/supply-requests/documents
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/supply-requests/documents
+
+Path parameters
+
+Name | Description
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+Name Description campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1
+
+Body
+
+{
+"requestId": 1
+}
+
+{
+"requestId": 1
+}
+
+Name | Description
+requestId | Type: integerThe application ID.Used only in the APIIt will not be possible to find applications in the seller's account on the Market. To do this, usemarketplaceRequestIdorwarehouseRequestId.Min value:1
+Name Description requestId Type: integer The application ID. Used only in the API
+It will not be possible to find applications in the seller's account on the Market. To do this, usemarketplaceRequestIdorwarehouseRequestId.
+
+marketplaceRequestId
+
+warehouseRequestId Min value:1
+
+1
+
+Responses
+200 OK
+A list of documents and links to them.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"documents": [
+{
+"type": "SUPPLY",
+"url": "example",
+"createdAt": "2025-01-01T00:00:00Z"
+}
+]
+}
+}
+
+{
+"status": "OK",
+"result": {
+"documents": [
+{
+"type": "SUPPLY",
+"url": "example",
+"createdAt": "2025-01-01T00:00:00Z"
+}
+]
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectdocumentsType: object[]createdAtType: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00ZtypeType: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACTurlType: stringMin length:1Max length:2000Example:exampleA list of documents.Min items:0Example[{"type":"SUPPLY","url":"example","createdAt":"2025-01-01T00:00:00Z"}]Information about the application documents.Example{"documents":[{"type":"SUPPLY","url":"example","createdAt":"2025-01-01T00:00:00Z"}]}Example{"result":{"documents":[{"type":"SUPPLY","url":"example","createdAt":"2025-01-01T00:00:00Z"}]}}
+
+result | Type: objectdocumentsType: object[]createdAtType: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00ZtypeType: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACTurlType: stringMin length:1Max length:2000Example:exampleA list of documents.Min items:0Example[{"type":"SUPPLY","url":"example","createdAt":"2025-01-01T00:00:00Z"}]Information about the application documents.Example{"documents":[{"type":"SUPPLY","url":"example","createdAt":"2025-01-01T00:00:00Z"}]} | documents | Type: object[]createdAtType: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00ZtypeType: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACTurlType: stringMin length:1Max length:2000Example:exampleA list of documents.Min items:0Example[{"type":"SUPPLY","url":"example","createdAt":"2025-01-01T00:00:00Z"}] | createdAt | Type: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00Z | type | Type: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACT | url | Type: stringMin length:1Max length:2000Example:example
+documents | Type: object[]createdAtType: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00ZtypeType: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACTurlType: stringMin length:1Max length:2000Example:exampleA list of documents.Min items:0Example[{"type":"SUPPLY","url":"example","createdAt":"2025-01-01T00:00:00Z"}] | createdAt | Type: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00Z | type | Type: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACT | url | Type: stringMin length:1Max length:2000Example:example
+createdAt | Type: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00Z
+type | Type: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACT
+url | Type: stringMin length:1Max length:2000Example:example result
+
+documents | Type: object[]createdAtType: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00ZtypeType: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACTurlType: stringMin length:1Max length:2000Example:exampleA list of documents.Min items:0Example[{"type":"SUPPLY","url":"example","createdAt":"2025-01-01T00:00:00Z"}] | createdAt | Type: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00Z | type | Type: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACT | url | Type: stringMin length:1Max length:2000Example:example
+createdAt | Type: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00Z
+type | Type: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACT
+url | Type: stringMin length:1Max length:2000Example:example documents
+
+createdAt | Type: string<date-time>The date and time when the document was created.Example:2025-01-01T00:00:00Z
+type | Type: stringDocument type:Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACT
+url | Type: stringMin length:1Max length:2000Example:example createdAt Type: string<date-time> The date and time when the document was created.
+Example:2025-01-01T00:00:00Z
+
+2025-01-01T00:00:00Z type Type: string Document type:
+
+• Documents that the store uploadsSUPPLY— the list of products.ADDITIONAL_SUPPLY— the list of products in the additional delivery.VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.TRANSFER— a list of items for recycling.WITHDRAW— the list of goods for export.
+Documents that the store uploads
+
+• SUPPLY— the list of products.
+
+SUPPLY
+• ADDITIONAL_SUPPLY— the list of products in the additional delivery.
+
+ADDITIONAL_SUPPLY
+• VIRTUAL_DISTRIBUTION_CENTER_SUPPLY— list of products inmulti-delivery.
+
+VIRTUAL_DISTRIBUTION_CENTER_SUPPLY
+• TRANSFER— a list of items for recycling.
+
+TRANSFER
+• WITHDRAW— the list of goods for export.
+
+WITHDRAW
+• Delivery of goodsVALIDATION_ERRORS— errors in the delivery of goods.CARGO_UNITS— labels for cargo locations.
+Delivery of goods
+
+• VALIDATION_ERRORS— errors in the delivery of goods.
+
+VALIDATION_ERRORS
+• CARGO_UNITS— labels for cargo locations.
+
+CARGO_UNITS
+• Additional delivery and rejected goodsADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.
+Additional delivery and rejected goods
+
+• ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS— products that are suitable for additional delivery.
+
+ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS
+• ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS— export of rejected goods.
+
+ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS
+• Labeling of goodsINBOUND_UTD— incoming UPDATE.OUTBOUND_UTD— outgoing UPD.IDENTIFIERS— product labeling codes.CIS_FACT— accepted products with labeling codes.ITEMS_WITH_CISES— products that need labeling.REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.RNPT_FACT— accepted goods with the batch registration number (RNPT).
+Labeling of goods
+
+• INBOUND_UTD— incoming UPDATE.
+
+INBOUND_UTD
+• OUTBOUND_UTD— outgoing UPD.
+
+OUTBOUND_UTD
+• IDENTIFIERS— product labeling codes.
+
+IDENTIFIERS
+• CIS_FACT— accepted products with labeling codes.
+
+CIS_FACT
+• ITEMS_WITH_CISES— products that need labeling.
+
+ITEMS_WITH_CISES
+• REPORT_OF_WITHDRAW_WITH_CISES— marked goods for export from the warehouse.
+
+REPORT_OF_WITHDRAW_WITH_CISES
+• SECONDARY_ACCEPTANCE_CISES— marked goods that are accepted after secondary acceptance.
+
+SECONDARY_ACCEPTANCE_CISES
+• RNPT_FACT— accepted goods with the batch registration number (RNPT).
+
+RNPT_FACT
+• ActsACT_OF_WITHDRAW— the return certificate.ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.ACT_OF_DISCREPANCY— the act of discrepancies.SECONDARY_RECEPTION_ACT— the act of secondary acceptance.
+Acts
+
+• ACT_OF_WITHDRAW— the return certificate.
+
+ACT_OF_WITHDRAW
+• ANOMALY_CONTAINERS_WITHDRAW_ACT— the act of withdrawal of the rejected goods.
+
+ANOMALY_CONTAINERS_WITHDRAW_ACT
+• ACT_OF_WITHDRAW_FROM_STORAGE— the act of debiting from responsible storage.
+
+ACT_OF_WITHDRAW_FROM_STORAGE
+• ACT_OF_RECEPTION_TRANSFER— acceptance and transfer certificate.
+
+ACT_OF_RECEPTION_TRANSFER
+• ACT_OF_DISCREPANCY— the act of discrepancies.
+
+ACT_OF_DISCREPANCY
+• SECONDARY_RECEPTION_ACT— the act of secondary acceptance.
+
+SECONDARY_RECEPTION_ACT
+Enum:SUPPLY,ADDITIONAL_SUPPLY,VIRTUAL_DISTRIBUTION_CENTER_SUPPLY,TRANSFER,INBOUND_UTD,OUTBOUND_UTD,ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS,ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS,VALIDATION_ERRORS,WITHDRAW,ACT_OF_WITHDRAW,ANOMALY_CONTAINERS_WITHDRAW_ACT,ACT_OF_WITHDRAW_FROM_STORAGE,ACT_OF_RECEPTION_TRANSFER,ACT_OF_DISCREPANCY,SECONDARY_RECEPTION_ACT,CARGO_UNITS,IDENTIFIERS,CIS_FACT,ITEMS_WITH_CISES,REPORT_OF_WITHDRAW_WITH_CISES,SECONDARY_ACCEPTANCE_CISES,RNPT_FACT
+
+SUPPLY
+
+ADDITIONAL_SUPPLY
+
+VIRTUAL_DISTRIBUTION_CENTER_SUPPLY
+
+TRANSFER
+
+INBOUND_UTD
+
+OUTBOUND_UTD
+
+ADDITIONAL_SUPPLY_ACCEPTABLE_GOODS
+
+ADDITIONAL_SUPPLY_UNACCEPTABLE_GOODS
+
+VALIDATION_ERRORS
+
+WITHDRAW
+
+ACT_OF_WITHDRAW
+
+ANOMALY_CONTAINERS_WITHDRAW_ACT
+
+ACT_OF_WITHDRAW_FROM_STORAGE
+
+ACT_OF_RECEPTION_TRANSFER
+
+ACT_OF_DISCREPANCY
+
+SECONDARY_RECEPTION_ACT
+
+CARGO_UNITS
+
+IDENTIFIERS
+
+CIS_FACT
+
+ITEMS_WITH_CISES
+
+REPORT_OF_WITHDRAW_WITH_CISES
+
+SECONDARY_ACCEPTANCE_CISES
+
+RNPT_FACT url Type: string Min length:1
+
+1 Max length:2000
+
+2000 Example:example
+
+example A list of documents. Min items:0
+
+0
+
+[
+{
+"type": "SUPPLY",
+"url": "example",
+"createdAt": "2025-01-01T00:00:00Z"
+}
+]
+
+[
+{
+"type": "SUPPLY",
+"url": "example",
+"createdAt": "2025-01-01T00:00:00Z"
+}
+]
+Information about the application documents.
+
+{
+"documents": [
+{
+"type": "SUPPLY",
+"url": "example",
+"createdAt": "2025-01-01T00:00:00Z"
+}
+]
+}
+
+{
+"documents": [
+{
+"type": "SUPPLY",
+"url": "example",
+"createdAt": "2025-01-01T00:00:00Z"
+}
+]
+}
+
+{
+"result": {
+"documents": [
+{
+"type": "SUPPLY",
+"url": "example",
+"createdAt": "2025-01-01T00:00:00Z"
+}
+]
+}
+}
+
+{
+"result": {
+"documents": [
+{
+"type": "SUPPLY",
+"url": "example",
+"createdAt": "2025-01-01T00:00:00Z"
+}
+]
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version. Read about what it is inYandex.Market Help for sellers.
+
+Was the article helpful?

@@ -1,0 +1,25 @@
+Input data format
+Input data structures of the method POST passed in the request body. Input data format — JSON. The format of the input data is specified in the HTTP header.Content-Type:application/json.
+
+Content-Type
+
+application/json
+The input data format must matchthe response format. Therefore, in the titleContent-Typeset the same format as in the header.Acceptor in URL request (extension.json).
+
+Content-Type
+
+Accept
+
+.json Required encoding of the request: UTF-8.
+If the request does not specify a headerContent-TypeThe Market automatically detects the data format. The service returns the HTTP status400 Bad Requestin the following cases:
+
+Content-Type
+
+400 Bad Request
+
+• the transmitted data is invalid.
+• the data structure contains errors.
+• the request body uses an incorrect encoding (other than UTF-8).
+
+Find out more
+Description of the JSON format

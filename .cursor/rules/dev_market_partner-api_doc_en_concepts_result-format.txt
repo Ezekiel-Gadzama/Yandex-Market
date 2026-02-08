@@ -1,0 +1,27 @@
+Response format
+Yandex Market API returns UTF-8 encoded responses for sellers. Responses can only be in JSON format.
+To set the response format, specify in URL request the selected format after the method name. For example, as a result of executing the following query, you will receive a list of products in the catalog in JSON format:
+
+GET https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/offer-mapping-entries.json
+
+GET https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/offer-mapping-entries.json
+
+You can also specify the response format when calling methods using the HTTP header.Accept. Possible header value:application/json.
+
+Accept
+
+application/json
+The response format must matchthe format of the input data. Therefore, in the titleAcceptor in URL request (extension.json) set the same format as in the headerContent-Type.
+
+Accept
+
+.json
+
+Content-Type
+When calling DELETE-the standard format of the result must be specified to ensure compatibility with libraries that are used to work with data.
+Some Market systems remove spaces at the beginning and end of a line. For example, the string" example "can be saved as"example".
+
+" example "
+
+"example"
+If you have lines with such spaces, consider this feature. For example, remove spaces before passing lines to Yandex.Market and before data reconciliation.

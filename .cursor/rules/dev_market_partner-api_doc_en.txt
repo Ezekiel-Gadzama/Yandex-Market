@@ -1,0 +1,36 @@
+Yandex Market API for sellers
+Yandex Market API It helps sellers manage assortment and prices, process orders, update balances, and solve many other tasks.
+
+How to set up integration
+
+• Read the pageCreation and use API-Key-tokens. It tells you how to log in to access resources.
+Read the pageCreation and use API-Key-tokens. It tells you how to log in to access resources.
+• Read itconnection instructions OpenAPI-Specifications.
+Read itconnection instructions OpenAPI-Specifications.
+• For sellers of the Yandex Go Market:Read the instructionsHow to work with Yandex Market API.
+For sellers of the Yandex Go Market:Read the instructionsHow to work with Yandex Market API.
+• See the sectionStep-by-step instructions— if there are instructions for your task, start with it.
+See the sectionStep-by-step instructions— if there are instructions for your task, start with it.
+• Openoverview of API methodsfor the desired model and select the ones that are needed to solve the problem.
+Openoverview of API methodsfor the desired model and select the ones that are needed to solve the problem.
+• Read the detailed description of each method and implement the integration.
+Read the detailed description of each method and implement the integration.
+• If necessary, enable API notifications and Yandex.Market will send you a request with information about theeventwhen it happens.This is an optional integration. However, with the help of notifications, you will be able to quickly respond to changes in orders, non-purchases and refunds, as well as to requests for cancellation of the order.How to enable API notifications
+If necessary, enable API notifications and Yandex.Market will send you a request with information about theeventwhen it happens.
+This is an optional integration. However, with the help of notifications, you will be able to quickly respond to changes in orders, non-purchases and refunds, as well as to requests for cancellation of the order.
+How to enable API notifications
+Events for which Yandex.Market sends notifications:creating a new order;changing the order;changing the order status;creating a new chat with a customer;adding a new chat message;the beginning of the dispute;ending the dispute;creating a new product review;creating a new review comment;creating an order cancellation request;order cancellation;creating a new non-purchase or refund;changing the non-purchase or refund status.Notifications will also be sent for test orders.
+
+• creating a new order;
+• changing the order;
+• changing the order status;
+• creating a new chat with a customer;
+• adding a new chat message;
+• the beginning of the dispute;
+• ending the dispute;
+• creating a new product review;
+• creating a new review comment;
+• creating an order cancellation request;
+• order cancellation;
+• creating a new non-purchase or refund;
+• changing the non-purchase or refund status.

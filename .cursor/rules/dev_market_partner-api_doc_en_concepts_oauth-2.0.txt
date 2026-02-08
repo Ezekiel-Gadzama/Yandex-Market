@@ -1,0 +1,92 @@
+Authorization using an OAuth token We do not recommend using an OAuth token, as this authorization method is outdated.
+You can use the already generated token until the end of its validity period or create API-Key- a token.How to do it
+
+Creating and using an OAuth token
+The OAuth 2.0 protocol is used for authorization. To work with Yandex.Market via the API:
+
+• Create an application on the oauth website.yandex.ru. If you already have an app with accessmarket:partner-api, you don't need to create a new one — You can use one for all stores and business accounts.
+
+market:partner-api
+• Create a token in the name of an employee who has access to the store's data.
+• Insert the token into the headers of Market requests.
+
+Create an application
+
+• Log in to the Yandex account that your system will use to access Yandex Market API.Pay attention to the account selection.This must be an account:Which the business will not lose access to.Who will not lose access to the business — for example, when an employee is fired.It is best to use an account protected by two-factor authentication and owned by the business owner.You will need to receive the token again.If the Yandex ID user who created it is:It will log out from all devices in the Yandex account.will change the password;enables or disables two-factor authentication.it will restore access.For more information about token revocation, seeYandex ID Help.
+Log in to the Yandex account that your system will use to access Yandex Market API. Pay attention to the account selection.
+This must be an account:
+
+• Which the business will not lose access to.
+• Who will not lose access to the business — for example, when an employee is fired.
+You will need to receive the token again. If the Yandex ID user who created it is:
+
+• It will log out from all devices in the Yandex account.
+• will change the password;
+• enables or disables two-factor authentication.
+• it will restore access.
+For more information about token revocation, seeYandex ID Help.
+• Open the pageoauth.yandex.ru/client/new/api. ⚠️ Use this particular link. If you just click the create application button on the Yandex ID website, nothing will work.
+Open the pageoauth.yandex.ru/client/new/api. ⚠️ Use this particular link. If you just click the create application button on the Yandex ID website, nothing will work.
+• In the fieldThe name of your servicewrite whatever you want. If you have many applications and it is important for you to navigate them, enter the business name.
+In the fieldThe name of your servicewrite whatever you want. If you have many applications and it is important for you to navigate them, enter the business name.
+• Specify the email address for communication.
+Specify the email address for communication.
+• In theData Accessfield, entermarket:partner-apiand selectYandex.Market API / Product search for partnersin the drop-down list.Why can't I see the "Data Access" field?You probably didn't follow the link.oauth.yandex.ru/client/new, and clicked the create application button on the Yandex ID website. You need exactly the application creation form that opens via the link.
+In theData Accessfield, entermarket:partner-apiand selectYandex.Market API / Product search for partnersin the drop-down list.
+
+market:partner-api Why can't I see the "Data Access" field?
+You probably didn't follow the link.oauth.yandex.ru/client/new, and clicked the create application button on the Yandex ID website. You need exactly the application creation form that opens via the link.
+• ClickCreate an application.
+ClickCreate an application.
+• Complete the verification using your Public Services account.
+Complete the verification using your Public Services account.
+
+Create a token
+After creating the application, you need to get a token. Is it possible to use an account other than the one used to create the app to receive the token?
+May. It must also meet the same requirements. If the Yandex ID for which the token is issued loses access to the business, the API will stop working.
+
+• Openoauth.yandex.ruand click on the created app to access the Market.
+Openoauth.yandex.ruand click on the created app to access the Market.
+• Copy itClientIDthis application.
+Copy itClientIDthis application.
+• Insert the identifier in this link:https://oauth.yandex.ru/authorize?response_type=token&client_id=<ClientID>It will turn out something like this:https://oauth.yandex.ru/authorize?response_type=token&client_id=5473335а275a5nb8e2648q12n8r378l7
+Insert the identifier in this link:
+
+https://oauth.yandex.ru/authorize?response_type=token&client_id=<ClientID>
+
+https://oauth.yandex.ru/authorize?response_type=token&client_id=<ClientID>
+It will turn out something like this:
+
+https://oauth.yandex.ru/authorize?response_type=token&client_id=5473335а275a5nb8e2648q12n8r378l7
+
+https://oauth.yandex.ru/authorize?response_type=token&client_id=5473335а275a5nb8e2648q12n8r378l7
+
+• Click on the resulting link. If a window appearsThe service has not been verified yet, complete the verification using your account on Public Services.
+Click on the resulting link. If a window appearsThe service has not been verified yet, complete the verification using your account on Public Services.
+• Confirm the login.
+Confirm the login.
+• Copy the token.
+Copy the token. This token is valid for a year When the year comes to an end, create API-Key- a token.How to do it
+
+Transfer the token
+Insert the received token into the headerAuthorizationaccording to the following scheme:
+
+Authorization
+
+Authorization: Bearer <token>
+
+Authorization: Bearer <token>
+As a result, the title will look like this:
+
+Authorization: Bearer y0_BfRRRRRV2L8sWWvNkSNNNNSrLHaNXg4cCMswFbL6MWab9lktL2KPsMw
+
+Authorization: Bearer y0_BfRRRRRV2L8sWWvNkSNNNNSrLHaNXg4cCMswFbL6MWab9lktL2KPsMw
+
+If the request is received without a header with a valid token, the Market returns an error.401 Unauthorized.
+
+401 Unauthorized
+
+It may be useful
+
+• Help from the Yandex ID authorization service
+• Description of errors returned Yandex Market API

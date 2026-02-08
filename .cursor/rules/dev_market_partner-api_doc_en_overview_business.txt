@@ -1,0 +1,143 @@
+Methods common to all models
+Offices and shops
+
+Method | Method description
+POST v2/​businesses/​{businessId}/​settings | Cabinet Settings Method Method description POST v2/​businesses/​{businessId}/​settings
+Cabinet Settings
+
+Products
+
+Method | Method description
+POST v2/​businesses/​{businessId}/​offer-mappings/​update | Adding products to the catalog and changing information about them
+POST v1/​businesses/​{businessId}/​offer-mappings/​barcodes/​generate | Barcode generation
+POST v2/​businesses/​{businessId}/​offer-cards | Getting information about the fullness of store cards
+POST v2/​businesses/​{businessId}/​offer-cards/​update | Editing product category characteristics
+POST v2/​businesses/​{businessId}/​offer-mappings | Information about the products in the catalog
+POST v2/​businesses/​{businessId}/​offer-mappings/​delete | Removing products from the catalog
+POST v2/​businesses/​{businessId}/​offer-mappings/​archive | Adding products to the archive
+POST v2/​businesses/​{businessId}/​offer-mappings/​unarchive | Deleting products from the archive Method
+Method description POST v2/​businesses/​{businessId}/​offer-mappings/​update Adding products to the catalog and changing information about them
+POST v1/​businesses/​{businessId}/​offer-mappings/​barcodes/​generate Barcode generation POST v2/​businesses/​{businessId}/​offer-cards
+Getting information about the fullness of store cards POST v2/​businesses/​{businessId}/​offer-cards/​update
+Editing product category characteristics POST v2/​businesses/​{businessId}/​offer-mappings Information about the products in the catalog
+POST v2/​businesses/​{businessId}/​offer-mappings/​delete Removing products from the catalog POST v2/​businesses/​{businessId}/​offer-mappings/​archive
+Adding products to the archive POST v2/​businesses/​{businessId}/​offer-mappings/​unarchive Deleting products from the archive
+
+Prices
+
+Method | Method description
+POST v2/​tariffs/​calculate | Service Cost Calculator
+POST v2/​businesses/​{businessId}/​offer-prices/​updates | Setting product prices for all stores
+POST v2/​businesses/​{businessId}/​offer-prices | View prices for specified products in all stores
+POST v2/​businesses/​{businessId}/​offers/​recommendations | Yandex.Market's recommendations regarding prices
+POST v2/​businesses/​{businessId}/​price-quarantine | List of quarantined products by price in the cabinet
+POST v2/​businesses/​{businessId}/​price-quarantine/​confirm | Removing an item from quarantine based on the price in the cabinet
+Method Method description POST v2/​tariffs/​calculate Service Cost Calculator POST v2/​businesses/​{businessId}/​offer-prices/​updates
+Setting product prices for all stores POST v2/​businesses/​{businessId}/​offer-prices View prices for specified products in all stores
+POST v2/​businesses/​{businessId}/​offers/​recommendations Yandex.Market's recommendations regarding prices
+POST v2/​businesses/​{businessId}/​price-quarantine List of quarantined products by price in the cabinet
+POST v2/​businesses/​{businessId}/​price-quarantine/​confirm Removing an item from quarantine based on the price in the cabinet
+
+Stocks
+
+Method | Method description
+POST v2/​businesses/​{businessId}/​promos | Getting a list of shares
+POST v2/​businesses/​{businessId}/​promos/​offers | Getting a list of products that participate or may participate in the promotion
+POST v2/​businesses/​{businessId}/​promos/​offers/​update | Adding products to a promotion or changing their prices
+POST v2/​businesses/​{businessId}/​promos/​offers/​delete | Removing products from the promotion Method
+Method description POST v2/​businesses/​{businessId}/​promos Getting a list of shares POST v2/​businesses/​{businessId}/​promos/​offers
+Getting a list of products that participate or may participate in the promotion POST v2/​businesses/​{businessId}/​promos/​offers/​update
+Adding products to a promotion or changing their prices POST v2/​businesses/​{businessId}/​promos/​offers/​delete
+Removing products from the promotion
+
+Orders
+
+Method | Method description
+POST v1/​businesses/​{businessId}/​orders | Information about orders in the cabinet Method Method description
+POST v1/​businesses/​{businessId}/​orders Information about orders in the cabinet
+
+Reports and documents
+
+Method | Method description
+POST v2/​reports/​shows-sales/​generate | Sales Analytics Report
+POST v2/​reports/​sales-geography/​generate | Sales Geography Report
+POST v2/​reports/​key-indicators/​generate | Report on key indicators
+POST v2/​reports/​competitors-position/​generate | Competitive Position Report
+POST v2/​reports/​united-orders/​generate | Order Report
+POST v2/​reports/​goods-prices/​generate | The Prices Report
+POST v2/​reports/​goods-feedback/​generate | Product Reviews Report
+POST v2/​reports/​jewelry-fiscal/​generate | Jewelry Order Report
+POST v2/​reports/​goods-realization/​generate | Implementation Report
+POST v2/​reports/​united-netting/​generate | Payment Report
+POST v2/​reports/​shows-boost/​generate | Impression Boost Report
+POST v2/​reports/​boost-consolidated/​generate | Sales Boost Report
+POST v2/​reports/​shelf-statistics/​generate | Shelf Report
+POST v2/​reports/​banners-statistics/​generate | Coverage Promotion Report Method Method description
+POST v2/​reports/​shows-sales/​generate Sales Analytics Report POST v2/​reports/​sales-geography/​generate
+Sales Geography Report POST v2/​reports/​key-indicators/​generate Report on key indicators POST v2/​reports/​competitors-position/​generate
+Competitive Position Report POST v2/​reports/​united-orders/​generate Order Report POST v2/​reports/​goods-prices/​generate
+The Prices Report POST v2/​reports/​goods-feedback/​generate Product Reviews Report POST v2/​reports/​jewelry-fiscal/​generate
+Jewelry Order Report POST v2/​reports/​goods-realization/​generate Implementation Report POST v2/​reports/​united-netting/​generate
+Payment Report POST v2/​reports/​shows-boost/​generate Impression Boost Report POST v2/​reports/​boost-consolidated/​generate
+Sales Boost Report POST v2/​reports/​shelf-statistics/​generate Shelf Report POST v2/​reports/​banners-statistics/​generate
+Coverage Promotion Report
+
+Product Reviews
+
+Method | Method description
+POST v2/​businesses/​{businessId}/​goods-feedback | Getting reviews of the seller's products
+POST v2/​businesses/​{businessId}/​goods-feedback/​comments | Getting comments on a review
+POST v2/​businesses/​{businessId}/​goods-feedback/​comments/​update | Adding a new or changing a created comment
+POST v2/​businesses/​{businessId}/​goods-feedback/​skip-reaction | Skipping reactions to reviews
+POST v2/​businesses/​{businessId}/​goods-feedback/​comments/​delete | Deleting a review comment Method
+Method description POST v2/​businesses/​{businessId}/​goods-feedback Getting reviews of the seller's products
+POST v2/​businesses/​{businessId}/​goods-feedback/​comments Getting comments on a review POST v2/​businesses/​{businessId}/​goods-feedback/​comments/​update
+Adding a new or changing a created comment POST v2/​businesses/​{businessId}/​goods-feedback/​skip-reaction
+Skipping reactions to reviews POST v2/​businesses/​{businessId}/​goods-feedback/​comments/​delete Deleting a review comment
+
+Questions and answers about products
+
+Method | Method description
+POST v1/​businesses/​{businessId}/​goods-questions | Getting questions about the seller's products
+POST v1/​businesses/​{businessId}/​goods-questions/​answers | Getting answers to a question
+POST v1/​businesses/​{businessId}/​goods-questions/​update | Creating, editing, and deleting a response or comment
+Method Method description POST v1/​businesses/​{businessId}/​goods-questions Getting questions about the seller's products
+POST v1/​businesses/​{businessId}/​goods-questions/​answers Getting answers to a question POST v1/​businesses/​{businessId}/​goods-questions/​update
+Creating, editing, and deleting a response or comment
+
+Sales Boost
+
+Method | Method description
+PUT v2/​businesses/​{businessId}/​bids | Enabling a sales boost and setting bids
+POST v2/​businesses/​{businessId}/​bids/​info | Information about the set rates
+POST v2/​businesses/​{businessId}/​bids/​recommendations | Recommended bids for specified products Method
+Method description PUT v2/​businesses/​{businessId}/​bids Enabling a sales boost and setting bids POST v2/​businesses/​{businessId}/​bids/​info
+Information about the set rates POST v2/​businesses/​{businessId}/​bids/​recommendations Recommended bids for specified products
+
+Quality index
+
+Method | Method description
+POST v2/​businesses/​{businessId}/​ratings/​quality | Store Quality Index Method Method description POST v2/​businesses/​{businessId}/​ratings/​quality
+Store Quality Index
+
+Chats
+
+Method | Method description
+POST v2/​businesses/​{businessId}/​chats/​history | Getting the chat message history
+GET v2/​businesses/​{businessId}/​chat | Getting a chat by ID
+POST v2/​businesses/​{businessId}/​chats | Getting available chats
+GET v2/​businesses/​{businessId}/​chats/​message | Receiving a chat message
+POST v2/​businesses/​{businessId}/​chats/​new | Creating a new chat with a customer
+POST v2/​businesses/​{businessId}/​chats/​message | Sending a message to a chat
+POST v2/​businesses/​{businessId}/​chats/​file/​send | Sending a file to a chat Method Method description
+POST v2/​businesses/​{businessId}/​chats/​history Getting the chat message history GET v2/​businesses/​{businessId}/​chat
+Getting a chat by ID POST v2/​businesses/​{businessId}/​chats Getting available chats GET v2/​businesses/​{businessId}/​chats/​message
+Receiving a chat message POST v2/​businesses/​{businessId}/​chats/​new Creating a new chat with a customer
+POST v2/​businesses/​{businessId}/​chats/​message Sending a message to a chat POST v2/​businesses/​{businessId}/​chats/​file/​send
+Sending a file to a chat
+
+Warehouses
+
+Method | Method description
+POST v2/​businesses/​{businessId}/​warehouses | List of warehouses Method Method description POST v2/​businesses/​{businessId}/​warehouses
+List of warehouses

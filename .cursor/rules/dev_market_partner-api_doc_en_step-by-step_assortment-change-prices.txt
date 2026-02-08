@@ -1,0 +1,39 @@
+How to change product prices
+You can change the price that is valid in all stores, or the price for an individual store.
+The method is available to youPOST v2/campaigns/{campaignId}/offer-prices/updatesif there is an opportunity to set unique prices in individual stores in the seller's office on the Market. How to check it — in the methodPOST v2/businesses/{businessId}/settingsin the parameteronlyDefaultPricethe value is returnedfalse.
+
+onlyDefaultPrice
+
+false
+Otherwise, use the price management method that applies in all stores., —POST v2/businesses/{businessId}/offer-prices/updates.
+Too sudden a price change will result in the product falling into thequarantine
+Quarantine is necessary so that the product does not end up in the window with the wrong price due to a technical error.
+The quarantine threshold can be set in the cabinet. Read about how to do this.in the Help of the Market for sellers.
+
+• To find out the cost of Yandex.Market services for specific products, pass their parameters in the request.POST v2/tariffs/calculate.
+To find out the cost of Yandex.Market services for specific products, pass their parameters in the request.POST v2/tariffs/calculate.
+• Send the new prices for all stores using a requestPOST v2/businesses/{businessId}/offer-prices/updates.How to get the set prices
+Send the new prices for all stores using a requestPOST v2/businesses/{businessId}/offer-prices/updates.
+How to get the set prices
+• Transfer the VAT if necessary — parametervatin the requestPOST v2/campaigns/{campaignId}/offers/update.
+Transfer the VAT if necessary — parametervatin the requestPOST v2/campaigns/{campaignId}/offers/update.
+
+vat
+• Make sure that none of the products are quarantined using a request.POST v2/businesses/{businessId}/price-quarantine.
+Make sure that none of the products are quarantined using a request.POST v2/businesses/{businessId}/price-quarantine.
+• If the quarantine is not empty, check the prices of the goods. Incorrectly set prices for all stores can be corrected with a request.POST v2/businesses/{businessId}/offer-prices/updates.
+If the quarantine is not empty, check the prices of the goods. Incorrectly set prices for all stores can be corrected with a request.POST v2/businesses/{businessId}/offer-prices/updates.
+• After only the correct prices remain in quarantine, confirm them with a request.POST v2/businesses/{businessId}/price-quarantine/confirm. If false alarms of quarantine occur frequently, consider changing its threshold byInstructions.
+After only the correct prices remain in quarantine, confirm them with a request.POST v2/businesses/{businessId}/price-quarantine/confirm. If false alarms of quarantine occur frequently, consider changing its threshold byInstructions.
+
+• To find out the cost of Yandex.Market services for specific products, pass their parameters in the request.POST v2/tariffs/calculate.
+To find out the cost of Yandex.Market services for specific products, pass their parameters in the request.POST v2/tariffs/calculate.
+• Send new prices for a specific store using a requestPOST v2/campaigns/{campaignId}/offer-prices/updates.How to get the set prices
+Send new prices for a specific store using a requestPOST v2/campaigns/{campaignId}/offer-prices/updates.
+How to get the set prices
+• Make sure that none of the products are quarantined using a request.POST v2/campaigns/{campaignId}/price-quarantine.
+Make sure that none of the products are quarantined using a request.POST v2/campaigns/{campaignId}/price-quarantine.
+• If the quarantine is not empty, check the prices of the goods. Incorrectly set prices for a particular store can be corrected with a request.POST v2/campaigns/{campaignId}/offer-prices/updates.
+If the quarantine is not empty, check the prices of the goods. Incorrectly set prices for a particular store can be corrected with a request.POST v2/campaigns/{campaignId}/offer-prices/updates.
+• After only the correct prices remain in quarantine, confirm them with a request.POST v2/campaigns/{campaignId}/price-quarantine/confirm. If false alarms of quarantine occur frequently, consider changing its threshold byInstructions.
+After only the correct prices remain in quarantine, confirm them with a request.POST v2/campaigns/{campaignId}/price-quarantine/confirm. If false alarms of quarantine occur frequently, consider changing its threshold byInstructions.

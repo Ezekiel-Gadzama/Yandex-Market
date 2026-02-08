@@ -1,10 +1,36 @@
 import { useState } from 'react'
-import { useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { settingsApi, AppSettingsUpdate } from '../api/settings'
 import { syncApi } from '../api/sync'
-import { RefreshCw, CheckCircle } from 'lucide-react'
+import { RefreshCw, CheckCircle, Save, Edit2, X, AlertCircle } from 'lucide-react'
 
 export default function Settings() {
   const [syncStatus, setSyncStatus] = useState<string>('')
+  const [isEditing, setIsEditing] = useState(false)
+  const [notification, setNotification] = useState<{ isOpen: boolean; type: 'success' | 'error'; message: string }>({ isOpen: false, type: 'success', message: '' })
+  const queryClient = useQueryClient()
+
+  const showNotification = (type: 'success' | 'error', message: string) => {
+    setNotification({ isOpen: true, type, message })
+    // Auto-close after 4 seconds
+    setTimeout(() => setNotification(prev => ({ ...prev, isOpen: false })), 4000)
+  }
+
+  const { data: settings, isLoading: settingsLoading } = useQuery({
+    queryKey: ['app-settings'],
+    queryFn: () => settingsApi.get(),
+  })
+
+  const updateSettingsMutation = useMutation({
+    mutationFn: (data: AppSettingsUpdate) => settingsApi.update(data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['app-settings'] })
+      showNotification('success', 'Settings saved successfully!')
+    },
+    onError: () => {
+      showNotification('error', 'Failed to save settings. Please try again.')
+    },
+  })
 
   const syncAllMutation = useMutation({
     mutationFn: (force: boolean) => syncApi.syncAll(force),
@@ -12,6 +38,8 @@ export default function Settings() {
       setSyncStatus(
         `Synced ${data.products_synced} products (Created: ${data.products_created}, Updated: ${data.products_updated})`
       )
+      // Invalidate orders query to refresh the UI with latest data
+      queryClient.invalidateQueries({ queryKey: ['orders'] })
       if (data.errors.length > 0) {
         setSyncStatus((prev) => prev + ` Errors: ${data.errors.length}`)
       }
@@ -20,6 +48,31 @@ export default function Settings() {
       setSyncStatus('Sync failed. Please check your Yandex Market API configuration.')
     },
   })
+
+  const handleConfigSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    
+    const data: AppSettingsUpdate = {
+      yandex_api_token: (formData.get('yandex_api_token') as string) || undefined,
+      yandex_business_id: (formData.get('yandex_business_id') as string) || undefined,
+      yandex_campaign_id: (formData.get('yandex_campaign_id') as string) || undefined,
+      smtp_host: (formData.get('smtp_host') as string) || undefined,
+      smtp_port: formData.get('smtp_port') ? parseInt(formData.get('smtp_port') as string) : undefined,
+      smtp_password: (formData.get('smtp_password') as string) || undefined,
+      from_email: (formData.get('from_email') as string) || undefined,
+      secret_key: (formData.get('secret_key') as string) || undefined,
+      processing_time_min: formData.get('processing_time_min') ? parseInt(formData.get('processing_time_min') as string) : undefined,
+      processing_time_max: formData.get('processing_time_max') ? parseInt(formData.get('processing_time_max') as string) : undefined,
+      maximum_wait_time_value: formData.get('maximum_wait_time_value') ? parseInt(formData.get('maximum_wait_time_value') as string) : undefined,
+      maximum_wait_time_unit: (formData.get('maximum_wait_time_unit') as string) || undefined,
+      working_hours_text: (formData.get('working_hours_text') as string) || undefined,
+      company_email: (formData.get('company_email') as string) || undefined,
+      auto_activation_enabled: formData.get('auto_activation_enabled') === 'on',
+    }
+    
+    updateSettingsMutation.mutate(data)
+  }
 
   return (
     <div>
@@ -78,59 +131,423 @@ export default function Settings() {
           )}
         </div>
 
-        {/* Webhook Configuration */}
+        {/* Configuration Form */}
         <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Webhook Configuration (Real-time Orders)</h2>
-          <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-            <p className="text-sm text-blue-800 font-medium mb-2">Webhook URL for Yandex Market:</p>
-            <code className="block text-xs bg-white p-2 rounded border border-blue-200 break-all">
-              {typeof window !== 'undefined' ? window.location.origin.replace(':3000', ':8000') : 'http://localhost:8000'}/api/webhooks/yandex-market/orders
-            </code>
-            <p className="text-xs text-blue-700 mt-2">
-              Configure this URL in Yandex Market Partner Dashboard → API and modules → API notifications → Order notifications
-            </p>
-            <p className="text-xs text-blue-700 mt-1">
-              When configured, orders will be received instantly instead of waiting for the 5-minute sync.
-            </p>
+          <div className="flex justify-between items-center mb-4">
+            <div>
+              <h2 className="text-lg font-medium text-gray-900">Application Configuration</h2>
+              <p className="text-sm text-gray-600 mt-1">
+                Configure API credentials, SMTP settings, and other application parameters. Database values override .env file settings.
+              </p>
+            </div>
+            {!isEditing && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+              >
+                <Edit2 className="h-4 w-4 mr-2" />
+                Edit Configuration
+              </button>
+            )}
           </div>
-        </div>
+          
+          {settingsLoading ? (
+            <div className="text-center py-4">Loading settings...</div>
+          ) : settings ? (
+            <form onSubmit={(e) => {
+              if (!isEditing) {
+                e.preventDefault()
+                return
+              }
+              handleConfigSubmit(e)
+              setIsEditing(false)
+            }} className="space-y-6">
+              {/* Yandex Market API */}
+              <div>
+                <h3 className="text-md font-medium text-gray-900 mb-3">Yandex Market API</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      API Token
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="yandex_api_token"
+                        placeholder="Your Yandex Market API Token"
+                        defaultValue={settings.yandex_api_token || ''}
+                        autoComplete="off"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.yandex_api_token || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Business ID <span className="text-red-500">*</span>
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="yandex_business_id"
+                        placeholder="216649209"
+                        defaultValue={settings.yandex_business_id || ''}
+                        autoComplete="off"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.yandex_business_id || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">Required for Business API</p>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Campaign ID <span className="text-gray-400">(Legacy)</span>
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="yandex_campaign_id"
+                        placeholder="148991046"
+                        defaultValue={settings.yandex_campaign_id || ''}
+                        autoComplete="off"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.yandex_campaign_id || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-        {/* API Configuration Info */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">API Configuration</h2>
-          <p className="text-sm text-gray-600 mb-4">
-            Your Yandex Market API credentials are configured in the backend <code className="bg-gray-100 px-2 py-1 rounded">.env</code> file.
-            The values shown below are examples - your actual credentials are stored securely on the backend.
-          </p>
-          <div className="bg-gray-50 p-4 rounded-md font-mono text-sm">
-            <div>YANDEX_MARKET_API_TOKEN=*** (configured)</div>
-            <div>YANDEX_MARKET_CAMPAIGN_ID=*** (configured)</div>
-            <div>YANDEX_MARKET_API_URL=https://api.partner.market.yandex.ru</div>
-            <div className="mt-2 text-xs text-green-600">✓ API credentials are configured in .env file</div>
-            <div className="mt-1 text-xs text-gray-600">To update: Edit backend/.env file and restart backend container</div>
-          </div>
-        </div>
+              {/* SMTP Settings */}
+              <div>
+                <h3 className="text-md font-medium text-gray-900 mb-3">SMTP Settings (Optional)</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      SMTP Host
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="smtp_host"
+                        placeholder="smtp.gmail.com"
+                        defaultValue={settings.smtp_host || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.smtp_host || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      SMTP Port
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="smtp_port"
+                        placeholder="587"
+                        defaultValue={settings.smtp_port || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.smtp_port || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      SMTP Password
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="password"
+                        name="smtp_password"
+                        placeholder="App Password"
+                        defaultValue={settings.smtp_password || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.smtp_password ? '••••••••••••' : <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      From Email
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="email"
+                        name="from_email"
+                        placeholder="noreply@example.com"
+                        defaultValue={settings.from_email || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.from_email || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
 
-        {/* Email Configuration Info */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Email Configuration (Optional)</h2>
-          <p className="text-sm text-gray-600 mb-4">
-            <strong>Note:</strong> Yandex Market automatically sends activation emails when you complete orders via API.
-            SMTP settings are only needed if you want to send additional/custom emails to customers.
-          </p>
-          <p className="text-sm text-gray-600 mb-4">
-            Configure SMTP settings in the backend <code className="bg-gray-100 px-2 py-1 rounded">.env</code> file (optional):
-          </p>
-          <div className="bg-gray-50 p-4 rounded-md font-mono text-sm">
-            <div>SMTP_HOST=smtp.gmail.com</div>
-            <div>SMTP_PORT=587</div>
-            <div>SMTP_USER=your_email@gmail.com</div>
-            <div>SMTP_PASSWORD=your_app_password</div>
-            <div>FROM_EMAIL=noreply@market.yandex.ru</div>
-            <div className="mt-2 text-xs text-gray-500">Leave empty if you only use Yandex Market's automatic emails</div>
-          </div>
+              {/* Security */}
+              <div>
+                <h3 className="text-md font-medium text-gray-900 mb-3">Security</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Secret Key
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="password"
+                        name="secret_key"
+                        placeholder="Application Secret Key"
+                        defaultValue={settings.secret_key || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.secret_key ? '••••••••••••' : <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Email Message Settings */}
+              <div>
+                <h3 className="text-md font-medium text-gray-900 mb-3">Email Message Settings</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Processing Time Min (minutes)
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="processing_time_min"
+                        placeholder="20"
+                        defaultValue={settings.processing_time_min || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.processing_time_min || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Processing Time Max (minutes)
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="number"
+                        name="processing_time_max"
+                        placeholder="30"
+                        defaultValue={settings.processing_time_max || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.processing_time_max || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Maximum Wait Time (Optional)
+                    </label>
+                    {isEditing ? (
+                      <>
+                        <div className="grid grid-cols-2 gap-2">
+                          <input
+                            type="number"
+                            name="maximum_wait_time_value"
+                            min="1"
+                            placeholder="6"
+                            defaultValue={settings.maximum_wait_time_value || ''}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                          <select
+                            name="maximum_wait_time_unit"
+                            defaultValue={settings.maximum_wait_time_unit || 'hours'}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          >
+                            <option value="minutes">Minutes</option>
+                            <option value="hours">Hours</option>
+                            <option value="days">Days</option>
+                            <option value="weeks">Weeks</option>
+                          </select>
+                        </div>
+                        <p className="mt-1 text-xs text-gray-500">
+                          Leave empty to omit maximum wait time from activation emails
+                        </p>
+                      </>
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.maximum_wait_time_value 
+                          ? `${settings.maximum_wait_time_value} ${settings.maximum_wait_time_unit || 'hours'}`
+                          : <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Company Email
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="email"
+                        name="company_email"
+                        placeholder="support@example.com"
+                        defaultValue={settings.company_email || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.company_email || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="md:col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Working Hours Text
+                    </label>
+                    {isEditing ? (
+                      <textarea
+                        name="working_hours_text"
+                        rows={2}
+                        placeholder="We are open seven days a week from 10:00 AM to 12:00 AM Moscow time."
+                        defaultValue={settings.working_hours_text || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900 whitespace-pre-wrap">
+                        {settings.working_hours_text || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+
+              {/* Order Activation Settings */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Order Activation Settings</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Configure how orders are activated when they come in.
+                </p>
+                
+                <div className="space-y-4">
+                  {isEditing ? (
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="auto_activation_enabled"
+                        defaultChecked={settings.auto_activation_enabled}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">Enable Automatic Activation</span>
+                    </label>
+                  ) : (
+                    <div className="flex items-center">
+                      <div className={`h-4 w-4 rounded border-2 flex items-center justify-center ${
+                        settings.auto_activation_enabled ? 'bg-gray-400 border-gray-400' : 'bg-gray-200 border-gray-300'
+                      }`}>
+                        {settings.auto_activation_enabled && (
+                          <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className="ml-2 text-sm text-gray-500">Enable Automatic Activation</span>
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-500 ml-6">
+                    {settings.auto_activation_enabled 
+                      ? "Orders will automatically be completed and activation codes sent to Yandex Market when they arrive. No need to manually click 'Send Activation'."
+                      : "Orders will be fulfilled locally but you'll need to manually click 'Send Activation' to complete them on Yandex Market."}
+                  </p>
+                </div>
+              </div>
+
+              {isEditing && (
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => setIsEditing(false)}
+                    className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+                  >
+                    <X className="h-4 w-4 mr-2" />
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={updateSettingsMutation.isPending}
+                    className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    <Save className="h-5 w-5 mr-2" />
+                    {updateSettingsMutation.isPending ? 'Saving...' : 'Save Configuration'}
+                  </button>
+                </div>
+              )}
+            </form>
+          ) : (
+            <div className="text-center py-4 text-red-600">Failed to load settings</div>
+          )}
         </div>
       </div>
+
+      {/* Notification Popup */}
+      {notification.isOpen && (
+        <div className="fixed top-4 right-4 z-[60] animate-in slide-in-from-top">
+          <div className={`flex items-center gap-3 px-5 py-4 rounded-lg shadow-lg border ${
+            notification.type === 'success'
+              ? 'bg-green-50 border-green-200 text-green-800'
+              : 'bg-red-50 border-red-200 text-red-800'
+          }`}>
+            {notification.type === 'success' ? (
+              <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+            ) : (
+              <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
+            )}
+            <span className="text-sm font-medium">{notification.message}</span>
+            <button
+              onClick={() => setNotification(prev => ({ ...prev, isOpen: false }))}
+              className="ml-2 text-gray-400 hover:text-gray-600"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

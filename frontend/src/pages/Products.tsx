@@ -1,159 +1,153 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { productsApi, Product, ProductCreate } from '../api/products'
-import { productTemplatesApi, ProductTemplate } from '../api/productTemplates'
-import { productVariantsApi, ProductVariant } from '../api/productVariants'
+import { productsApi, Product, ProductUpdate } from '../api/products'
+import { activationTemplatesApi } from '../api/activationTemplates'
+import { documentationsApi } from '../api/documentations'
 import { reviewsApi } from '../api/reviews'
 import { mediaApi } from '../api/media'
-import { Eye, Trash2, Plus, X, FileText, Star } from 'lucide-react'
+import { Eye, X, Star, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react'
 
 export default function Products() {
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null)
   const [showViewModal, setShowViewModal] = useState(false)
-  const [showAddModal, setShowAddModal] = useState(false)
-  const [showTemplateModal, setShowTemplateModal] = useState(false)
-  const [selectedTemplate, setSelectedTemplate] = useState<ProductTemplate | null>(null)
-  const [useTemplateDefaults, setUseTemplateDefaults] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
-  const [templateName, setTemplateName] = useState('')
+  const [statusFilter, setStatusFilter] = useState<string>('')
+  const [viewingDoc, setViewingDoc] = useState<number | null>(null)
+  const [viewingTemplate, setViewingTemplate] = useState<number | null>(null)
+  const [notification, setNotification] = useState<{ isOpen: boolean; type: 'success' | 'error'; message: string }>({ isOpen: false, type: 'success', message: '' })
+  const [refreshSuccess, setRefreshSuccess] = useState(false)
   const queryClient = useQueryClient()
 
-  const { data: products, isLoading: productsLoading } = useQuery({
-    queryKey: ['products'],
-    queryFn: () => productsApi.getAll(),
+  const showNotification = (type: 'success' | 'error', message: string) => {
+    setNotification({ isOpen: true, type, message })
+    // Auto-close after 4 seconds
+    setTimeout(() => setNotification(prev => ({ ...prev, isOpen: false })), 4000)
+  }
+
+  const { data: products, isLoading: productsLoading, refetch: refetchProducts } = useQuery({
+    queryKey: ['products', statusFilter, searchTerm],
+    queryFn: () => productsApi.getAll({
+      is_active: statusFilter === 'active' ? true : statusFilter === 'inactive' ? false : undefined,
+      search: searchTerm || undefined,
+    }),
   })
 
-  const { data: templates } = useQuery({
-    queryKey: ['product-templates'],
-    queryFn: () => productTemplatesApi.getAll(),
+  // Fetch all documentations and templates for the table
+  const { data: allDocumentations } = useQuery({
+    queryKey: ['documentations'],
+    queryFn: () => documentationsApi.getAll(),
   })
 
-  const { isLoading: fullDetailsLoading } = useQuery({
+  const { data: allTemplates } = useQuery({
+    queryKey: ['activation-templates'],
+    queryFn: () => activationTemplatesApi.getAll(),
+  })
+  
+
+  const updateProductMutation = useMutation({
+    mutationFn: ({ id, data }: { id: number; data: ProductUpdate }) => productsApi.update(id, data),
+    onSuccess: (updatedProduct) => {
+      queryClient.invalidateQueries({ queryKey: ['products'] })
+      queryClient.invalidateQueries({ queryKey: ['product-full', viewingProduct?.id] })
+      // Update viewingProduct state with the updated product data
+      if (viewingProduct && viewingProduct.id === updatedProduct.id) {
+        setViewingProduct(updatedProduct)
+      }
+      showNotification('success', 'Product updated successfully on Yandex Market!')
+    },
+    onError: (error: any) => {
+      showNotification('error', 'Failed to update product: ' + (error?.response?.data?.detail || error.message))
+    },
+  })
+
+  const { data: fullProductDetails, isLoading: fullDetailsLoading } = useQuery({
     queryKey: ['product-full', viewingProduct?.id],
-    queryFn: () => productsApi.getFullDetails(viewingProduct!.id),
-    enabled: !!viewingProduct && showViewModal,
-  })
-
-  const createMutation = useMutation({
-    mutationFn: (data: ProductCreate) => productsApi.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] })
-      setShowAddModal(false)
-      resetForm()
+    queryFn: async () => {
+      const data = await productsApi.getFullDetails(viewingProduct!.id)
+      console.log('=== FULL PRODUCT API RESPONSE (PROCESSED - includes local DB fields) ===')
+      console.log(JSON.stringify(data, null, 3))
+      console.log('=== RAW YANDEX DATA ONLY (from yandex_full_data field) ===')
+      if (data.yandex_full_data) {
+        console.log(JSON.stringify(data.yandex_full_data, null, 2))
+      } else {
+        console.log('No yandex_full_data found - check backend logs for raw Yandex API response')
+      }
+      console.log('=== END OF API RESPONSE ===')
+      console.log('NOTE: Check backend terminal/logs for the actual raw Yandex API response')
+      return data
     },
+    enabled: !!viewingProduct && showViewModal && viewingProduct.id > 0, // Only fetch if product ID is valid
   })
 
-  const deleteMutation = useMutation({
-    mutationFn: (id: number) => productsApi.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] })
-    },
-  })
 
-  const createTemplateMutation = useMutation({
-    mutationFn: (data: { name: string; template_data: Record<string, any> }) =>
-      productTemplatesApi.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['product-templates'] })
-      setShowTemplateModal(false)
-      setTemplateName('')
-      alert('Template created successfully!')
-    },
-  })
 
-  const filteredProducts = products?.filter((p) =>
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
-  )
+  // Products are already filtered by backend, no need for additional filtering
+  const filteredProducts = products
 
   const handleViewProduct = async (product: Product) => {
     setViewingProduct(product)
     setShowViewModal(true)
   }
 
-  const handleCreateTemplate = () => {
-    if (!viewingProduct || !templateName.trim()) {
-      alert('Please enter a template name')
-      return
-    }
-    
-    // Create template from current product
-    const templateData: Record<string, any> = {
-      name: viewingProduct.name,
-      description: viewingProduct.description,
-      product_type: viewingProduct.product_type,
-      cost_price: viewingProduct.cost_price,
-      selling_price: viewingProduct.selling_price,
-      supplier_url: viewingProduct.supplier_url,
-      supplier_name: viewingProduct.supplier_name,
-      yandex_model: viewingProduct.yandex_model,
-      yandex_category_id: viewingProduct.yandex_category_id,
-      yandex_category_path: viewingProduct.yandex_category_path,
-      yandex_brand: viewingProduct.yandex_brand,
-      yandex_platform: viewingProduct.yandex_platform,
-      yandex_localization: viewingProduct.yandex_localization,
-      yandex_publication_type: viewingProduct.yandex_publication_type,
-      yandex_activation_territory: viewingProduct.yandex_activation_territory,
-      yandex_edition: viewingProduct.yandex_edition,
-      yandex_series: viewingProduct.yandex_series,
-      yandex_age_restriction: viewingProduct.yandex_age_restriction,
-      yandex_activation_instructions: viewingProduct.yandex_activation_instructions,
-      original_price: viewingProduct.original_price,
-      discount_percentage: viewingProduct.discount_percentage,
-      yandex_images: viewingProduct.yandex_images || [],
-      yandex_videos: viewingProduct.yandex_videos || [],
-    }
-    
-    createTemplateMutation.mutate({
-      name: templateName,
-      template_data: templateData,
-    })
-  }
 
-  const handleSelectTemplate = (template: ProductTemplate | null) => {
-    setSelectedTemplate(template)
-  }
-
-  const resetForm = () => {
-    setSelectedTemplate(null)
-    setUseTemplateDefaults(true)
-  }
-
-  const handleAddProduct = () => {
-    resetForm()
-    setShowAddModal(true)
-  }
-
-  if (productsLoading) {
-    return <div className="text-center py-12">Loading products...</div>
-  }
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Products</h1>
-        <button
-          onClick={handleAddProduct}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-        >
-          <Plus className="h-5 w-5 mr-2" />
-          Add Product
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={async () => {
+              setRefreshSuccess(false)
+              await refetchProducts()
+              setRefreshSuccess(true)
+              setTimeout(() => setRefreshSuccess(false), 2000)
+            }}
+            disabled={productsLoading}
+            className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+            title="Refresh products"
+          >
+            {refreshSuccess ? (
+              <>
+                <CheckCircle className="h-4 w-4 mr-2 text-green-600" />
+                <span className="text-green-600">✓</span>
+              </>
+            ) : (
+              <>
+                <RefreshCw className={`h-4 w-4 mr-2 ${productsLoading ? 'animate-spin' : ''}`} />
+                Refresh
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Search */}
-      <div className="mb-6">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full max-w-md px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
+      {/* Search and Filters */}
+      <div className="mb-6 flex flex-col sm:flex-row gap-4">
+        <div className="flex-1">
+          <input
+            type="text"
+            placeholder="Search products by name, description, or activation key..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
       </div>
 
       {/* Products Table */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
+        <div className="overflow-x-auto">
+          <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -166,7 +160,16 @@ export default function Products() {
                 Price
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Cost
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Status
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Docs
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                Activation
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Actions
@@ -174,7 +177,11 @@ export default function Products() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {filteredProducts && filteredProducts.length > 0 ? (
+            {productsLoading ? (
+              <tr>
+                <td colSpan={8} className="px-6 py-4 text-center">Loading...</td>
+              </tr>
+            ) : filteredProducts && filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
                 <tr key={product.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -184,7 +191,24 @@ export default function Products() {
                     <span className="text-sm text-gray-500 capitalize">{product.product_type}</span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">₽{product.selling_price.toLocaleString('ru-RU')}</div>
+                    <div className="text-sm text-gray-900">
+                      ₽{(() => {
+                        // Try to get price from Yandex data first
+                        const yandexPrice = product.yandex_full_data?.basicPrice?.value || 
+                                          product.yandex_full_data?.campaignPrice?.value ||
+                                          product.yandex_full_data?.price
+                        return (yandexPrice || product.selling_price || 0).toLocaleString('ru-RU')
+                      })()}
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">
+                      {product.cost_price && product.cost_price > 0 ? (
+                        `₽${product.cost_price.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
@@ -192,6 +216,30 @@ export default function Products() {
                     }`}>
                       {product.is_active ? 'Active' : 'Inactive'}
                     </span>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    {product.documentation_id ? (
+                      <button
+                        onClick={() => setViewingDoc(product.documentation_id!)}
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        {allDocumentations?.find(d => d.id === product.documentation_id)?.name || `Doc #${product.documentation_id}`}
+                      </button>
+                    ) : (
+                      <span className="text-gray-400">—</span>
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    {product.email_template_id ? (
+                      <button
+                        onClick={() => setViewingTemplate(product.email_template_id!)}
+                        className="text-blue-600 hover:text-blue-800 underline"
+                      >
+                        {allTemplates?.find(t => t.id === product.email_template_id)?.name || `Template #${product.email_template_id}`}
+                      </button>
+                    ) : (
+                      <span className="text-gray-400">—</span>
+                    )}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     <div className="flex space-x-2">
@@ -202,75 +250,75 @@ export default function Products() {
                       >
                         <Eye className="h-5 w-5" />
                       </button>
-                      <button
-                        onClick={() => {
-                          if (confirm('Are you sure you want to delete this product?')) {
-                            deleteMutation.mutate(product.id)
-                          }
-                        }}
-                        className="text-red-600 hover:text-red-900"
-                        title="Delete"
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </button>
                     </div>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
+                <td colSpan={8} className="px-6 py-4 text-center text-gray-500">
                   No products found
                 </td>
               </tr>
             )}
           </tbody>
         </table>
+        </div>
       </div>
 
       {/* View Product Modal */}
       {showViewModal && viewingProduct && (
         <ProductViewModal
           product={viewingProduct}
+          fullDetails={fullProductDetails}
           isLoading={fullDetailsLoading}
           onClose={() => {
             setShowViewModal(false)
             setViewingProduct(null)
           }}
-          onCreateTemplate={() => setShowTemplateModal(true)}
+          onUpdateProduct={(id, data) => updateProductMutation.mutate({ id, data })}
         />
       )}
 
-      {/* Create Template Modal */}
-      {showTemplateModal && viewingProduct && (
-        <CreateTemplateModal
-          product={viewingProduct}
-          templateName={templateName}
-          onTemplateNameChange={setTemplateName}
-          onCreate={handleCreateTemplate}
-          onClose={() => {
-            setShowTemplateModal(false)
-            setTemplateName('')
-          }}
-          isLoading={createTemplateMutation.isPending}
+
+      {/* Documentation View Modal */}
+      {viewingDoc && (
+        <DocumentationViewModal
+          docId={viewingDoc}
+          onClose={() => setViewingDoc(null)}
         />
       )}
 
-      {/* Add Product Modal */}
-      {showAddModal && (
-        <AddProductModal
-          templates={templates || []}
-          selectedTemplate={selectedTemplate}
-          useTemplateDefaults={useTemplateDefaults}
-          onTemplateSelect={handleSelectTemplate}
-          onUseDefaultsChange={setUseTemplateDefaults}
-          onSubmit={(data) => createMutation.mutate(data)}
-          onClose={() => {
-            setShowAddModal(false)
-            resetForm()
-          }}
-          isLoading={createMutation.isPending}
+      {/* Activation Template View Modal */}
+      {viewingTemplate && (
+        <ActivationTemplateViewModal
+          templateId={viewingTemplate}
+          onClose={() => setViewingTemplate(null)}
         />
+      )}
+
+      {/* Notification Popup */}
+      {notification.isOpen && (
+        <div className="fixed top-4 right-4 z-[60] animate-in slide-in-from-top">
+          <div className={`flex items-center gap-3 px-5 py-4 rounded-lg shadow-lg border ${
+            notification.type === 'success'
+              ? 'bg-green-50 border-green-200 text-green-800'
+              : 'bg-red-50 border-red-200 text-red-800'
+          }`}>
+            {notification.type === 'success' ? (
+              <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+            ) : (
+              <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
+            )}
+            <span className="text-sm font-medium">{notification.message}</span>
+            <button
+              onClick={() => setNotification(prev => ({ ...prev, isOpen: false }))}
+              className="ml-2 text-gray-400 hover:text-gray-600"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
       )}
     </div>
   )
@@ -279,22 +327,40 @@ export default function Products() {
 // Product View Modal Component
 function ProductViewModal({
   product,
+  fullDetails,
   isLoading,
   onClose,
-  onCreateTemplate,
+  onUpdateProduct,
 }: {
   product: Product
+  fullDetails?: any
   isLoading: boolean
   onClose: () => void
-  onCreateTemplate: () => void
+  onUpdateProduct: (id: number, data: ProductUpdate) => void
 }) {
-  const [activeTab, setActiveTab] = useState<'details' | 'variants' | 'reviews'>('details')
+  const [activeTab, setActiveTab] = useState<'details' | 'reviews'>('details')
   
-  const { data: variants } = useQuery({
-    queryKey: ['product-variants', product.id],
-    queryFn: () => productVariantsApi.getProductVariants(product.id),
-    enabled: !!product.id,
-  })
+  // Extract medias from yandex_full_data
+  const getMedias = () => {
+    const pictures = fullDetails?.yandex_full_data?.pictures || fullDetails?.yandex_full_data?.images || []
+    const videos = fullDetails?.yandex_full_data?.videos || []
+    
+    // Combine into unified medias array with type indicator
+    const medias: Array<{url: string, type: 'image' | 'video'}> = []
+    if (Array.isArray(pictures)) {
+      pictures.forEach((url: string) => {
+        if (url) medias.push({ url, type: 'image' })
+      })
+    }
+    if (Array.isArray(videos)) {
+      videos.forEach((url: string) => {
+        if (url) medias.push({ url, type: 'video' })
+      })
+    }
+    return medias
+  }
+  
+  const medias = getMedias()
   
   const { data: reviewsData } = useQuery({
     queryKey: ['product-reviews', product.yandex_market_id],
@@ -309,17 +375,11 @@ function ProductViewModal({
   })
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-10 mx-auto p-5 border w-full max-w-5xl shadow-lg rounded-md bg-white max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
+      <div className="relative top-10 mx-auto p-5 border w-full max-w-5xl shadow-lg rounded-md bg-white max-h-[90vh] flex flex-col">
+        {/* Sticky Header */}
+        <div className="flex justify-between items-center mb-4 sticky top-0 bg-white z-10 pb-2 border-b">
           <h3 className="text-2xl font-bold text-gray-900">Product Details</h3>
           <div className="flex space-x-2">
-            <button
-              onClick={onCreateTemplate}
-              className="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
-            >
-              <FileText className="h-4 w-4 mr-2" />
-              Create Template
-            </button>
             <button
               onClick={onClose}
               className="text-gray-400 hover:text-gray-600"
@@ -343,16 +403,6 @@ function ProductViewModal({
               Details
             </button>
             <button
-              onClick={() => setActiveTab('variants')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
-                activeTab === 'variants'
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              Variants ({variants?.length || 0})
-            </button>
-            <button
               onClick={() => setActiveTab('reviews')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
                 activeTab === 'reviews'
@@ -374,7 +424,7 @@ function ProductViewModal({
         {isLoading ? (
           <div className="text-center py-8">Loading full details...</div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-6 flex-1 overflow-y-auto">
             {activeTab === 'details' && (
               <>
             {/* Basic Information */}
@@ -393,6 +443,28 @@ function ProductViewModal({
                   <label className="block text-sm font-medium text-gray-700">Description</label>
                   <p className="mt-1 text-sm text-gray-900">{product.description || 'N/A'}</p>
                 </div>
+                {product.product_type === 'digital' && (
+                  <div className="col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Activation Template</label>
+                    <EmailTemplateSelector
+                      productId={product.id}
+                      currentTemplateId={product.email_template_id}
+                      onUpdate={(templateId) => {
+                        onUpdateProduct(product.id, { email_template_id: templateId ?? null })
+                      }}
+                    />
+                  </div>
+                )}
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Documentation</label>
+                  <DocumentationSelector
+                    productId={product.id}
+                    currentDocumentationId={product.documentation_id}
+                    onUpdate={(documentationId) => {
+                      onUpdateProduct(product.id, { documentation_id: documentationId ?? null })
+                    }}
+                  />
+                </div>
               </div>
             </div>
 
@@ -401,114 +473,226 @@ function ProductViewModal({
               <h4 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Pricing</h4>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Cost Price</label>
-                  <p className="mt-1 text-sm text-gray-900">₽{product.cost_price.toLocaleString('ru-RU')}</p>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Cost Price (₽)</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    defaultValue={product.cost_price}
+                    onChange={(e) => {
+                      const newCostPrice = parseFloat(e.target.value) || 0
+                      onUpdateProduct(product.id, { cost_price: newCostPrice })
+                    }}
+                    className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Selling Price</label>
-                  <p className="mt-1 text-sm text-gray-900">₽{product.selling_price.toLocaleString('ru-RU')}</p>
+                  <p className="mt-1 text-sm text-gray-900">
+                    ₽{(() => {
+                      const yandexPrice = fullDetails?.yandex_full_data?.basicPrice?.value || 
+                                        fullDetails?.yandex_full_data?.campaignPrice?.value ||
+                                        fullDetails?.yandex_full_data?.price
+                      return (yandexPrice || product.selling_price || 0).toLocaleString('ru-RU')
+                    })()}
+                  </p>
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700">Profit</label>
-                  <p className="mt-1 text-sm text-green-600">₽{product.profit.toLocaleString('ru-RU')} ({product.profit_percentage.toFixed(2)}%)</p>
+                  <p className="mt-1 text-sm text-green-600">
+                    {(() => {
+                      // Calculate profit using actual selling price from Yandex data
+                      const actualSellingPrice = fullDetails?.yandex_full_data?.basicPrice?.value || 
+                                                fullDetails?.yandex_full_data?.campaignPrice?.value ||
+                                                fullDetails?.yandex_full_data?.price ||
+                                                product.selling_price || 0
+                      const actualCostPrice = product.cost_price || 0
+                      const actualProfit = actualSellingPrice - actualCostPrice
+                      const actualProfitPercentage = actualCostPrice > 0 
+                        ? (actualProfit / actualCostPrice) * 100 
+                        : (actualSellingPrice > 0 ? 100 : 0)
+                      return `₽${actualProfit.toLocaleString('ru-RU')} (${actualProfitPercentage.toFixed(2)}%)`
+                    })()}
+                  </p>
                 </div>
-                {product.original_price && (
+                {(fullDetails?.yandex_full_data?.oldPrice || fullDetails?.yandex_full_data?.original_price) && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700">Original Price / Discount</label>
                     <p className="mt-1 text-sm text-gray-900">
-                      ₽{product.original_price.toLocaleString('ru-RU')} 
-                      {product.discount_percentage ? ` (-${product.discount_percentage.toFixed(0)}%)` : ''}
+                      ₽{(fullDetails.yandex_full_data.oldPrice || fullDetails.yandex_full_data.original_price).toLocaleString('ru-RU')} 
+                      {fullDetails.yandex_full_data.discount_percentage ? ` (-${fullDetails.yandex_full_data.discount_percentage.toFixed(0)}%)` : ''}
                     </p>
                   </div>
                 )}
               </div>
             </div>
 
-            {/* Yandex Market Details */}
+            {/* Media Section */}
             <div>
-              <h4 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Yandex Market Details</h4>
-              <div className="grid grid-cols-2 gap-4">
-                {product.yandex_brand && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Brand</label>
-                    <p className="mt-1 text-sm text-gray-900">{product.yandex_brand}</p>
-                  </div>
-                )}
-                {product.yandex_platform && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Platform</label>
-                    <p className="mt-1 text-sm text-gray-900">{product.yandex_platform}</p>
-                  </div>
-                )}
-                {product.yandex_category_path && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Category</label>
-                    <p className="mt-1 text-sm text-gray-900">{product.yandex_category_path}</p>
-                  </div>
-                )}
-                {product.yandex_localization && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Localization</label>
-                    <p className="mt-1 text-sm text-gray-900">{product.yandex_localization}</p>
-                  </div>
-                )}
-                {product.yandex_edition && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Edition</label>
-                    <p className="mt-1 text-sm text-gray-900">{product.yandex_edition}</p>
-                  </div>
-                )}
-                {product.yandex_series && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700">Series</label>
-                    <p className="mt-1 text-sm text-gray-900">{product.yandex_series}</p>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Media */}
-            {(product.yandex_images && product.yandex_images.length > 0) || 
-             (product.yandex_videos && product.yandex_videos.length > 0) ? (
-              <div>
-                <h4 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Media</h4>
-                {product.yandex_images && product.yandex_images.length > 0 && (
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Images</label>
-                    <div className="grid grid-cols-4 gap-2">
-                      {product.yandex_images.map((img, idx) => (
+              <h4 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Media</h4>
+              {medias.length > 0 ? (
+                <div className="grid grid-cols-4 gap-4">
+                  {medias.map((media, idx) => (
+                    <div key={idx} className="relative group">
+                      {media.type === 'image' ? (
                         <img
-                          key={idx}
-                          src={mediaApi.getMediaUrl(img)}
-                          alt={`Product image ${idx + 1}`}
+                          src={media.url.startsWith('http') ? media.url : mediaApi.getMediaUrl(media.url)}
+                          alt={`Product media ${idx + 1}`}
                           className="w-full h-32 object-cover rounded border"
                         />
-                      ))}
-                    </div>
-                  </div>
-                )}
-                {product.yandex_videos && product.yandex_videos.length > 0 && (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Videos</label>
-                    <div className="grid grid-cols-4 gap-2">
-                      {product.yandex_videos.map((vid, idx) => (
+                      ) : (
                         <video
-                          key={idx}
-                          src={mediaApi.getMediaUrl(vid)}
+                          src={media.url.startsWith('http') ? media.url : mediaApi.getMediaUrl(media.url)}
                           className="w-full h-32 object-cover rounded border"
                           controls
                         />
-                      ))}
+                      )}
                     </div>
-                  </div>
-                )}
+                  ))}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">No media available</p>
+              )}
+            </div>
+
+            {/* Product Parameters */}
+            {fullDetails?.yandex_full_data?.parameterValues && Array.isArray(fullDetails.yandex_full_data.parameterValues) && (
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Product Parameters</h4>
+                <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                  {fullDetails.yandex_full_data.parameterValues.map((param: any, idx: number) => {
+                    // Create readable field names based on parameterId and value
+                    const getFieldName = (paramId: number, value: string): string => {
+                      // Map common parameter IDs to readable names
+                      const paramNameMap: Record<number, string> = {
+                        7351754: 'Usage Terms',
+                        16382542: 'Activation Instructions',
+                        17942745: 'Physical Delivery Required',
+                        24915630: 'Platform Compatibility',
+                        27140631: 'Not Applicable',
+                        33453610: 'Supported Devices',
+                        33663230: 'Quantity',
+                        37693330: 'Product Type',
+                        37810090: 'Count',
+                        37821410: 'Duration (Months)',
+                        37919770: 'Auto-renewal',
+                        37919810: 'Region',
+                        37948770: 'Online Cinema',
+                        37949750: 'Available Countries',
+                        37951450: 'Age Rating',
+                        37972050: 'Service Name',
+                        37978150: 'Subscription Period',
+                        37978250: 'Payment Type',
+                        50882075: 'Brand/Service',
+                        57046341: 'Plan Details',
+                        200: 'Category',
+                      }
+                      
+                      // Check if value contains specific keywords for better naming
+                      if (value && typeof value === 'string') {
+                        const lowerValue = value.toLowerCase()
+                        if (lowerValue.includes('online cinema')) return 'Online Cinema'
+                        if (lowerValue.includes('mobile device')) return 'Mobile Devices'
+                        if (lowerValue.includes('pc')) return 'PC Compatibility'
+                        if (lowerValue.includes('smart tv')) return 'Smart TV Support'
+                        if (lowerValue.includes('android')) return 'Android Support'
+                        if (lowerValue.includes('ios')) return 'iOS Support'
+                        if (lowerValue.includes('windows')) return 'Windows Support'
+                        if (lowerValue.includes('macos')) return 'macOS Support'
+                        if (lowerValue.includes('electronic key')) return 'Product Type'
+                        if (lowerValue.includes('month')) return 'Subscription Duration'
+                        if (lowerValue.includes('countries')) return 'Available Countries'
+                        if (lowerValue.includes('age') || lowerValue.includes('rating')) return 'Age Rating'
+                      }
+                      
+                      return paramNameMap[paramId] || `Parameter ${paramId}`
+                    }
+                    
+                    const fieldName = getFieldName(param.parameterId, param.value)
+                    const displayValue = param.value || (param.valueId ? `ID: ${param.valueId}` : 'N/A')
+                    
+                    return (
+                      <div key={idx} className="bg-white p-3 rounded border border-gray-200">
+                        <div className="font-medium text-sm text-gray-700 mb-1">{fieldName}</div>
+                        <div className="text-sm text-gray-900">{displayValue}</div>
+                        {param.valueId && (
+                          <div className="text-xs text-gray-500 mt-1">Value ID: {param.valueId}</div>
+                        )}
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
-            ) : null}
-              </>
             )}
-            
-            {activeTab === 'variants' && (
-              <ProductVariantsTab productId={product.id} variants={variants || []} />
+
+            {/* Yandex Market Fields */}
+            {fullDetails?.yandex_full_data && (
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Yandex Market Fields</h4>
+                <div className="bg-gray-50 p-4 rounded-lg space-y-3">
+                  {Object.entries(fullDetails.yandex_full_data).map(([key, value]) => {
+                    // Skip already displayed fields and parameterValues (shown in Product Parameters section)
+                    const displayedFields = ['name', 'description', 'price', 'availability', 'id', 'sku', 'parameterValues']
+                    if (displayedFields.includes(key)) return null
+                    
+                    // Handle nested objects (like basicPrice, campaignPrice)
+                    if (value && typeof value === 'object' && !Array.isArray(value) && value !== null) {
+                      return (
+                        <div key={key} className="border-b border-gray-200 pb-3">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="font-medium text-sm text-gray-700 capitalize">
+                              {key.replace(/_/g, ' ')}:
+                            </div>
+                          </div>
+                          <div className="ml-4 space-y-2 bg-white p-3 rounded border">
+                            {Object.entries(value as Record<string, any>).map(([subKey, subValue]) => {
+                              return (
+                                <div key={subKey} className="flex items-start gap-2">
+                                  <div className="w-1/3 font-medium text-xs text-gray-600 capitalize pt-1">
+                                    {subKey.replace(/_/g, ' ')}:
+                                  </div>
+                                  <div className="w-2/3">
+                                    <div className="text-sm text-gray-900 break-words">
+                                      {typeof subValue === 'object' && subValue !== null ? (
+                                        <pre className="text-xs bg-gray-50 p-2 rounded border overflow-auto max-h-32">
+                                          {JSON.stringify(subValue, null, 2)}
+                                        </pre>
+                                      ) : (
+                                        <span>{String(subValue || 'N/A')}</span>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        </div>
+                      )
+                    }
+                    
+                    // Handle simple values (read-only)
+                    return (
+                      <div key={key} className="flex items-start gap-2 border-b border-gray-200 pb-3">
+                        <div className="w-1/3 font-medium text-sm text-gray-700 capitalize pt-2">
+                          {key.replace(/_/g, ' ')}:
+                        </div>
+                        <div className="w-2/3">
+                          <div className="flex-1 text-sm text-gray-900 break-words">
+                            {typeof value === 'object' && value !== null ? (
+                              <pre className="text-xs bg-white p-2 rounded border overflow-auto max-h-32">
+                                {JSON.stringify(value, null, 2)}
+                              </pre>
+                            ) : (
+                              <span>{String(value || 'N/A')}</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+              </>
             )}
             
             {activeTab === 'reviews' && (
@@ -521,109 +705,6 @@ function ProductViewModal({
           </div>
         )}
       </div>
-    </div>
-  )
-}
-
-// Product Variants Tab Component
-function ProductVariantsTab({ productId, variants }: { productId: number; variants: ProductVariant[] }) {
-  const [showAddVariant, setShowAddVariant] = useState(false)
-  const queryClient = useQueryClient()
-  
-  const createVariantMutation = useMutation({
-    mutationFn: (data: any) => productVariantsApi.createVariant(productId, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['product-variants', productId] })
-      setShowAddVariant(false)
-    },
-  })
-  
-  const deleteVariantMutation = useMutation({
-    mutationFn: (variantId: number) => productVariantsApi.deleteVariant(variantId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['product-variants', productId] })
-    },
-  })
-  
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-4">
-        <h4 className="text-lg font-semibold text-gray-800">Product Variants</h4>
-        <button
-          onClick={() => setShowAddVariant(true)}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Variant
-        </button>
-      </div>
-      
-      {variants.length > 0 ? (
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Variant Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Platform</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Territory</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Price</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {variants.map((variant) => (
-                <tr key={variant.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {variant.variant_name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {variant.platform || 'N/A'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {variant.activation_territory || 'N/A'}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    ₽{variant.selling_price.toLocaleString('ru-RU')}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      variant.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {variant.is_active ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <button
-                      onClick={() => {
-                        if (confirm('Are you sure you want to delete this variant?')) {
-                          deleteVariantMutation.mutate(variant.id)
-                        }
-                      }}
-                      className="text-red-600 hover:text-red-900"
-                    >
-                      <Trash2 className="h-5 w-5" />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <div className="text-center py-8 text-gray-500">
-          No variants found. Click "Add Variant" to create one.
-        </div>
-      )}
-      
-      {showAddVariant && (
-        <AddVariantModal
-          productId={productId}
-          onSubmit={(data) => createVariantMutation.mutate(data)}
-          onClose={() => setShowAddVariant(false)}
-          isLoading={createVariantMutation.isPending}
-        />
-      )}
     </div>
   )
 }
@@ -641,13 +722,17 @@ function ProductReviewsTab({
   const [replyingTo, setReplyingTo] = useState<string | null>(null)
   const [replyText, setReplyText] = useState('')
   
+  const queryClient = useQueryClient()
+  
   const replyMutation = useMutation({
     mutationFn: ({ reviewId, text }: { reviewId: string; text: string }) =>
       reviewsApi.replyToProductReview(reviewId, text),
     onSuccess: () => {
       setReplyingTo(null)
       setReplyText('')
-      // Refresh reviews
+      // Refresh reviews and rating
+      queryClient.invalidateQueries({ queryKey: ['product-reviews', productId] })
+      queryClient.invalidateQueries({ queryKey: ['product-rating', productId] })
     },
   })
   
@@ -770,497 +855,229 @@ function ProductReviewsTab({
   )
 }
 
-// Add Variant Modal Component
-function AddVariantModal({
+// Email Template Selector Component
+function EmailTemplateSelector({
   productId: _productId,
-  onSubmit,
-  onClose,
-  isLoading,
+  currentTemplateId,
+  onUpdate,
 }: {
   productId: number
-  onSubmit: (data: any) => void
-  onClose: () => void
-  isLoading: boolean
+  currentTemplateId?: number
+  onUpdate: (templateId?: number) => void
 }) {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    
-    const data = {
-      variant_name: formData.get('variant_name') as string,
-      edition: formData.get('edition') as string || undefined,
-      platform: formData.get('platform') as string || undefined,
-      activation_territory: formData.get('activation_territory') as string || undefined,
-      localization: formData.get('localization') as string || undefined,
-      selling_price: parseFloat(formData.get('selling_price') as string),
-      original_price: formData.get('original_price') ? parseFloat(formData.get('original_price') as string) : undefined,
-      cost_price: parseFloat(formData.get('cost_price') as string),
-      stock_quantity: parseInt(formData.get('stock_quantity') as string) || 0,
-      is_active: (formData.get('is_active') as string) === 'true',
-    }
-    
-    onSubmit(data)
-  }
+  const { data: emailTemplates } = useQuery({
+    queryKey: ['activation-templates'],
+    queryFn: () => activationTemplatesApi.getAll(),
+  })
   
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-20 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">Add Product Variant</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X className="h-6 w-6" />
-          </button>
-        </div>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Variant Name *</label>
-            <input
-              type="text"
-              name="variant_name"
-              required
-              placeholder="e.g., Enhanced Edition•Kazakhstan•PC"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Edition</label>
-              <input
-                type="text"
-                name="edition"
-                placeholder="e.g., Enhanced Edition"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Platform</label>
-              <input
-                type="text"
-                name="platform"
-                placeholder="e.g., PC, PlayStation 4, PlayStation 5"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Activation Territory</label>
-              <input
-                type="text"
-                name="activation_territory"
-                placeholder="e.g., Kazakhstan, all countries"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Localization</label>
-              <input
-                type="text"
-                name="localization"
-                placeholder="e.g., Russian subtitles and interface"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Selling Price (₽) *</label>
-              <input
-                type="number"
-                name="selling_price"
-                step="0.01"
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Cost Price (₽) *</label>
-              <input
-                type="number"
-                name="cost_price"
-                step="0.01"
-                required
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Original Price (₽)</label>
-              <input
-                type="number"
-                name="original_price"
-                step="0.01"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Stock Quantity</label>
-              <input
-                type="number"
-                name="stock_quantity"
-                defaultValue={0}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-          
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                name="is_active"
-                value="true"
-                defaultChecked
-                className="mr-2"
-              />
-              <span className="text-sm text-gray-700">Active</span>
-            </label>
-          </div>
-          
-          <div className="flex justify-end space-x-3 pt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-            >
-              {isLoading ? 'Creating...' : 'Create Variant'}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+    <>
+      <select
+        value={currentTemplateId || ''}
+        onChange={(e) => {
+          const templateId = e.target.value ? parseInt(e.target.value) : undefined
+          onUpdate(templateId)
+        }}
+        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="">No Template</option>
+        {emailTemplates?.map((template) => (
+          <option key={template.id} value={template.id}>
+            {template.name}
+          </option>
+        ))}
+      </select>
+      <p className="mt-1 text-xs text-gray-500">
+        Select an activation template to use when sending activation codes for this product
+      </p>
+    </>
   )
 }
 
-// Create Template Modal Component
-function CreateTemplateModal({
-  product,
-  templateName,
-  onTemplateNameChange,
-  onCreate,
-  onClose,
-  isLoading,
+// Documentation Selector Component (for view mode)
+function DocumentationSelector({
+  productId: _productId,
+  currentDocumentationId,
+  onUpdate,
 }: {
-  product: Product
-  templateName: string
-  onTemplateNameChange: (name: string) => void
-  onCreate: () => void
-  onClose: () => void
-  isLoading: boolean
+  productId: number
+  currentDocumentationId?: number
+  onUpdate: (documentationId?: number) => void
 }) {
+  const { data: documentations } = useQuery({
+    queryKey: ['documentations'],
+    queryFn: () => documentationsApi.getAll(),
+  })
+  
+  return (
+    <>
+      <select
+        value={currentDocumentationId || ''}
+        onChange={(e) => {
+          const documentationId = e.target.value ? parseInt(e.target.value) : undefined
+          onUpdate(documentationId)
+        }}
+        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+      >
+        <option value="">No Documentation</option>
+        {documentations?.map((doc) => (
+          <option key={doc.id} value={doc.id}>
+            {doc.name}
+          </option>
+        ))}
+      </select>
+      <p className="mt-1 text-xs text-gray-500">
+        Select documentation to help staff fulfill orders for this product
+      </p>
+    </>
+  )
+}
+
+// Documentation View Modal
+function DocumentationViewModal({
+  docId,
+  onClose,
+}: {
+  docId: number
+  onClose: () => void
+}) {
+  const { data: doc, isLoading } = useQuery({
+    queryKey: ['documentation', docId],
+    queryFn: () => documentationsApi.get(docId),
+    enabled: !!docId,
+  })
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div className="relative top-10 mx-auto p-5 border w-full max-w-3xl shadow-lg rounded-md bg-white">
+          <div className="text-center py-8">Loading...</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!doc) {
+    return null
+  }
+
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-20 mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">Create Template from Product</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
-            <X className="h-6 w-6" />
-          </button>
-        </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Template Name</label>
-          <input
-            type="text"
-            value={templateName}
-            onChange={(e) => onTemplateNameChange(e.target.value)}
-            placeholder="Enter template name..."
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-        <div className="text-sm text-gray-600 mb-4">
-          This will create a template based on "{product.name}" with all its current settings.
-        </div>
-        <div className="flex justify-end space-x-3">
+      <div className="relative top-10 mx-auto p-5 border w-full max-w-3xl shadow-lg rounded-md bg-white max-h-[90vh] flex flex-col">
+        <div className="flex justify-between items-center mb-4 sticky top-0 bg-white z-10 pb-2 border-b">
+          <h3 className="text-2xl font-bold text-gray-900">Documentation: {doc.name}</h3>
           <button
             onClick={onClose}
-            className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+            className="text-gray-400 hover:text-gray-600"
           >
-            Cancel
-          </button>
-          <button
-            onClick={onCreate}
-            disabled={!templateName.trim() || isLoading}
-            className="px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-          >
-            {isLoading ? 'Creating...' : 'Create Template'}
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-// Add Product Modal Component
-function AddProductModal({
-  templates,
-  selectedTemplate,
-  useTemplateDefaults,
-  onTemplateSelect,
-  onUseDefaultsChange,
-  onSubmit,
-  onClose,
-  isLoading,
-}: {
-  templates: ProductTemplate[]
-  selectedTemplate: ProductTemplate | null
-  useTemplateDefaults: boolean
-  onTemplateSelect: (template: ProductTemplate | null) => void
-  onUseDefaultsChange: (use: boolean) => void
-  onSubmit: (data: ProductCreate) => void
-  onClose: () => void
-  isLoading: boolean
-}) {
-  return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-      <div className="relative top-10 mx-auto p-5 border w-full max-w-4xl shadow-lg rounded-md bg-white max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-medium text-gray-900">Add Product</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
             <X className="h-6 w-6" />
           </button>
         </div>
-        
-        {/* Template Selection */}
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-          <label className="block text-sm font-medium text-gray-700 mb-2">Use Template (Optional)</label>
-          <select
-            value={selectedTemplate?.id || ''}
-            onChange={(e) => {
-              const template = templates.find(t => t.id === parseInt(e.target.value))
-              onTemplateSelect(template || null)
-            }}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">No Template</option>
-            {templates.map((template) => (
-              <option key={template.id} value={template.id}>
-                {template.name}
-              </option>
-            ))}
-          </select>
-          
-          {selectedTemplate && (
-            <div className="mt-3">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  checked={useTemplateDefaults}
-                  onChange={(e) => onUseDefaultsChange(e.target.checked)}
-                  className="mr-2"
-                />
-                <span className="text-sm text-gray-700">Auto-fill with template defaults</span>
-              </label>
-              {!useTemplateDefaults && (
-                <p className="text-xs text-gray-500 mt-1">
-                  Unchecked: Template fields will be cleared. You can manually fill them.
-                </p>
-              )}
+        <div className="flex-1 overflow-y-auto">
+          {doc.description && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+              <p className="text-sm text-gray-900">{doc.description}</p>
+            </div>
+          )}
+          {doc.type === 'file' && doc.file_url && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">File</label>
+              <a
+                href={doc.file_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                {doc.file_url.split('/').pop() || 'View File'}
+              </a>
+            </div>
+          )}
+          {doc.type === 'link' && doc.link_url && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Link</label>
+              <a
+                href={doc.link_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 hover:text-blue-800 underline"
+              >
+                {doc.link_url}
+              </a>
+            </div>
+          )}
+          {doc.type === 'text' && doc.content && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-1">Content</label>
+              <div className="text-sm text-gray-900 whitespace-pre-wrap bg-gray-50 p-4 rounded border">
+                {doc.content}
+              </div>
             </div>
           )}
         </div>
-
-        <form onSubmit={(e) => {
-          e.preventDefault()
-          const formData = new FormData(e.currentTarget)
-          const data: ProductCreate = {
-            name: formData.get('name') as string,
-            description: formData.get('description') as string || undefined,
-            product_type: (formData.get('product_type') as 'digital' | 'physical') || 'digital',
-            cost_price: parseFloat(formData.get('cost_price') as string),
-            selling_price: parseFloat(formData.get('selling_price') as string),
-            supplier_url: formData.get('supplier_url') as string || undefined,
-            supplier_name: formData.get('supplier_name') as string || undefined,
-            yandex_model: formData.get('yandex_model') as string || 'DBS',
-            yandex_category_id: formData.get('yandex_category_id') as string || undefined,
-            yandex_category_path: formData.get('yandex_category_path') as string || undefined,
-            yandex_brand: formData.get('yandex_brand') as string || undefined,
-            yandex_platform: formData.get('yandex_platform') as string || undefined,
-            yandex_localization: formData.get('yandex_localization') as string || undefined,
-            yandex_publication_type: formData.get('yandex_publication_type') as string || undefined,
-            yandex_activation_territory: formData.get('yandex_activation_territory') as string || 'all countries',
-            yandex_edition: formData.get('yandex_edition') as string || undefined,
-            yandex_series: formData.get('yandex_series') as string || undefined,
-            yandex_age_restriction: formData.get('yandex_age_restriction') as string || undefined,
-            original_price: formData.get('original_price') ? parseFloat(formData.get('original_price') as string) : undefined,
-            discount_percentage: formData.get('discount_percentage') ? parseFloat(formData.get('discount_percentage') as string) : undefined,
-            is_active: (formData.get('is_active') as string) === 'true',
-          }
-          onSubmit(data)
-        }} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="md:col-span-2">
-              <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1">Basic Information</h4>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Name *</label>
-              <input
-                type="text"
-                name="name"
-                required
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.name : ''}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Type *</label>
-              <select
-                name="product_type"
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.product_type || 'digital' : 'digital'}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              >
-                <option value="digital">Digital</option>
-                <option value="physical">Physical</option>
-              </select>
-            </div>
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700">Description</label>
-              <textarea
-                name="description"
-                rows={3}
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.description : ''}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            
-            <div className="md:col-span-2">
-              <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1 mt-4">Pricing</h4>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Cost Price (₽) *</label>
-              <input
-                type="number"
-                name="cost_price"
-                step="0.01"
-                required
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.cost_price : ''}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Selling Price (₽) *</label>
-              <input
-                type="number"
-                name="selling_price"
-                step="0.01"
-                required
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.selling_price : ''}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Original Price (₽)</label>
-              <input
-                type="number"
-                name="original_price"
-                step="0.01"
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.original_price : ''}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Discount (%)</label>
-              <input
-                type="number"
-                name="discount_percentage"
-                step="0.01"
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.discount_percentage : ''}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            
-            <div className="md:col-span-2">
-              <h4 className="text-md font-semibold text-gray-800 mb-2 border-b pb-1 mt-4">Yandex Market Details</h4>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Model *</label>
-              <input
-                type="text"
-                name="yandex_model"
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.yandex_model || 'DBS' : 'DBS'}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Brand</label>
-              <input
-                type="text"
-                name="yandex_brand"
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.yandex_brand : ''}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Platform</label>
-              <input
-                type="text"
-                name="yandex_platform"
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.yandex_platform : ''}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Localization</label>
-              <input
-                type="text"
-                name="yandex_localization"
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.yandex_localization : ''}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Edition</label>
-              <input
-                type="text"
-                name="yandex_edition"
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.yandex_edition : ''}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Activation Territory</label>
-              <input
-                type="text"
-                name="yandex_activation_territory"
-                defaultValue={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.yandex_activation_territory || 'all countries' : 'all countries'}
-                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2"
-              />
-            </div>
-            <div className="md:col-span-2">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  name="is_active"
-                  value="true"
-                  defaultChecked={selectedTemplate && useTemplateDefaults ? selectedTemplate.template_data?.is_active !== false : true}
-                  className="mr-2"
-                />
-                <span className="text-sm text-gray-700">Active</span>
-              </label>
-            </div>
-          </div>
-          
-          <div className="flex justify-end space-x-3 pt-4 border-t">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="px-4 py-2 border border-transparent rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
-            >
-              {isLoading ? 'Creating...' : 'Create Product'}
-            </button>
-          </div>
-        </form>
       </div>
     </div>
   )
 }
+
+// Activation Template View Modal
+function ActivationTemplateViewModal({
+  templateId,
+  onClose,
+}: {
+  templateId: number
+  onClose: () => void
+}) {
+  const { data: template, isLoading } = useQuery({
+    queryKey: ['activation-template', templateId],
+    queryFn: () => activationTemplatesApi.getById(templateId),
+    enabled: !!templateId,
+  })
+
+  if (isLoading) {
+    return (
+      <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div className="relative top-10 mx-auto p-5 border w-full max-w-3xl shadow-lg rounded-md bg-white">
+          <div className="text-center py-8">Loading...</div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!template) {
+    return null
+  }
+
+  return (
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+      <div className="relative top-10 mx-auto p-5 border w-full max-w-3xl shadow-lg rounded-md bg-white max-h-[90vh] flex flex-col">
+        <div className="flex justify-between items-center mb-4 sticky top-0 bg-white z-10 pb-2 border-b">
+          <h3 className="text-2xl font-bold text-gray-900">Activation Template: {template.name}</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600"
+          >
+            <X className="h-6 w-6" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto">
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Body</label>
+            <div className="text-sm text-gray-900 whitespace-pre-wrap bg-gray-50 p-4 rounded border">
+              {template.body}
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Settings</label>
+            <div className="text-sm text-gray-900 space-y-1">
+              <p>Random Key: {template.random_key ? 'Yes' : 'No'}</p>
+              <p>Required Login: {template.required_login ? 'Yes' : 'No'}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Add Product Modal removed - products can only be synced from Yandex Market

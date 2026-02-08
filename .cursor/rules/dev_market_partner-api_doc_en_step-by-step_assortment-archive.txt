@@ -1,0 +1,17 @@
+Managing goods in the archive
+You can archive your products so that they disappear from the storefronts in all stores. You cannot send an item stored in a Market warehouse to the archive.
+First, such goods need to be sold or exported.
+
+• To archive products, use a requestPOST v2/businesses/{businessId}/offer-mappings/archive. If the items could not be archived, they will be returned in the request response.
+To archive products, use a requestPOST v2/businesses/{businessId}/offer-mappings/archive. If the items could not be archived, they will be returned in the request response.
+• To view the products in the archive, use a filter.archivedin the requestPOST v2/businesses/{businessId}/offer-mappings.
+To view the products in the archive, use a filter.archivedin the requestPOST v2/businesses/{businessId}/offer-mappings.
+
+archived
+• To restore an item from the archive, use a requestPOST v2/businesses/{businessId}/offer-mappings/unarchive.
+To restore an item from the archive, use a requestPOST v2/businesses/{businessId}/offer-mappings/unarchive.
+Also read the instructions
+
+• Adding and editing products
+• Changing categorical characteristics
+• Yandex.Market recommendations for cards

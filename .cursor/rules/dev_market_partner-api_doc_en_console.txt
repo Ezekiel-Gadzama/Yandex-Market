@@ -1,0 +1,33 @@
+How to use the console
+There are two tabs on the description page for each request.:InfoandConsole. The console allows you to manually make requests and see what the Market responds to.
+You can't send integration names in the console.
+Therefore, the integration type is displayed on the logs page for such requests.Documentation Console, not its name.
+Learn more about working with logs
+
+How to log in to the dashboard
+
+• Click the buttonAuthorization.
+Click the buttonAuthorization.
+• Select the token you are using, —apiKeyoroauth2.
+Select the token you are using, —apiKeyoroauth2.
+• Enter the token in the format:ACMA:I4c4CxCSYaI41RSC2uYWP2qj3Rhhm4knMiBEga5K:151c0664— for Api-Key;Bearer y0_BfRRRRRV2L8sWWvNkSNNNNSrLHaNXg4cCMswFbL6MWab9lktL2KPsMw— for OAuth.
+Enter the token in the format:
+
+• ACMA:I4c4CxCSYaI41RSC2uYWP2qj3Rhhm4knMiBEga5K:151c0664— for Api-Key;
+ACMA:I4c4CxCSYaI41RSC2uYWP2qj3Rhhm4knMiBEga5K:151c0664— for Api-Key;
+
+ACMA:I4c4CxCSYaI41RSC2uYWP2qj3Rhhm4knMiBEga5K:151c0664
+• Bearer y0_BfRRRRRV2L8sWWvNkSNNNNSrLHaNXg4cCMswFbL6MWab9lktL2KPsMw— for OAuth.
+Bearer y0_BfRRRRRV2L8sWWvNkSNNNNSrLHaNXg4cCMswFbL6MWab9lktL2KPsMw— for OAuth.
+
+Bearer y0_BfRRRRRV2L8sWWvNkSNNNNSrLHaNXg4cCMswFbL6MWab9lktL2KPsMw Learn more about getting and using the token:
+
+• API-Key
+• OAuth 2.0
+
+To send a request
+All requests sent to the console and its responses — real If, for example, you try to cancel an existing order — It's really going to be canceled.
+
+• Open the page with the description of the required method and go to the tabConsole.
+• Fill inPath params,Header paramsandBody. If you need a description of the parameter, go back to theInfotab and see it there. — The data you have already entered will not be lost.
+• ClickSend.

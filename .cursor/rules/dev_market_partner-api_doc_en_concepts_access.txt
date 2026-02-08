@@ -1,0 +1,28 @@
+Access to software methodsApi-Key
+To allow employees to perform only the methods they need for their work, create a token with access to certain groups of methods.
+How to do it
+
+What types of access are available
+List of access rights based on the transmitted Api-Key-the token can be obtained using the methodPOST v2/auth/token.
+
+Access | The name of the access in the OpenAPI specification
+Full account management | all-methods
+View all data | all-methods:read-only
+Order processing and inventory | inventory-and-order-processing
+View order information | inventory-and-order-processing:read-only
+Manage prices | pricing
+View prices | pricing:read-only
+Manage products and cards | offers-and-cards-management
+View products and cards | offers-and-cards-management:read-only
+Product promotion | promotion
+View promotion information | promotion:read-only
+View financial data and reports | finance-and-accounting
+Customer communication | communication
+Store settings | settings-management
+View FBY requests | supplies-management:read-only Access The name of the access in the OpenAPI specification
+Full account management all-methods View all data all-methods:read-only Order processing and inventory
+inventory-and-order-processing View order information inventory-and-order-processing:read-only Manage prices
+pricing View prices pricing:read-only Manage products and cards offers-and-cards-management View products and cards
+offers-and-cards-management:read-only Product promotion promotion View promotion information promotion:read-only
+View financial data and reports finance-and-accounting Customer communication communication Store settings
+settings-management View FBY requests supplies-management:read-only All requests to the Market All requests to receive and view data

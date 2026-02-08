@@ -1,0 +1,1592 @@
+Order preparation
+The method is available for models:FBS,ExpressandDBS.
+
+• inventory-and-order-processing —Order processing and inventory
+• all-methods — Full account management
+It is also suitable for DBS
+The request is designed to work with FBS-orders, but you can use it for processing DBS- orders, if it is convenient.
+Allows you to perform three operations:
+
+• send information about the distribution of goods by boxes to the Market;
+• send the labeling codes for the products to the Market;
+• remove an item from the order if it is not in stock.
+If you need to fix something in the transmitted data, just repeat the request. — This can be done as many times as you want before the order status is changed.Ready for shipment. ⚠️ If you change the layout after printing and pasting the labels, do not forget to reprint them and paste them again.
+In this request, you need to send the Market a list of boxes and specify which products are in each of them. There are two types of boxes:
+
+• Containing the entire product.Such a box can contain any number of items of any kind.
+Containing the entire product.Such a box can contain any number of items of any kind.
+• Containing a part of the product.Such boxes contain one part of one product. For example, one contains an external air conditioner unit, and the other — the indoor unit.
+Containing a part of the product.Such boxes contain one part of one product. For example, one contains an external air conditioner unit, and the other — the indoor unit.
+⚠️ One box cannot contain both the whole goods and parts of the goods. Labeling of goods in the system«Честный ЗНАК»optional for orders from individuals
+For business orders, you still need to send the labeling codes.
+If the order contains products subject to labeling, the corresponding unique codes must be provided in the request.What is labeling?
+The following types of codes are accepted:
+
+• Codes in the system«Честный ЗНАК»or«ASL BELGISI»(for sellers Market Yandex Go).
+• WIN for jewelry.
+• RNPT and GTD for imported traceable goods.
+For each item in the order that requires labeling, you need to provide a list of codes. — one for each item. For example, if there are two pairs of slippers and one pair of shoes in the order, you will get a list of two codes for the first position and a list of one code for the second.
+If the product is traveling in several boxes, the labeling code must be transmitted for each of them.
+If you work according to the model FBS, EXPRESS
+For orders that contain jewelry or products marked in the system «Честный ЗНАК», conversion to the statusREADY_TO_SHIPbecomes available only when:
+
+READY_TO_SHIP
+
+• You will transfer it to Yandex.Market УИНы for each piece of jewelry in the order and the codes in the system «Честный ЗНАК» for all products in the order that require this marking.
+• All marking codes will be successfully verified.How to get verification statuses
+To remove an item from an order:
+
+• Add to the requestallowRemove: true.
+
+allowRemove: true
+• Transfer the distribution to boxes without the item to be removed.
+Deletion cannot be undone
+This operation is irreversible: the buyer will immediately receive a notification, and the order composition will change.
+To delete an entire position, do not pass the correspondingOrderBoxLayoutItemDTO. To reduce the quantity of the product, pass the reduced value in the fieldfullCount.
+
+OrderBoxLayoutItemDTO
+
+fullCount You cannot delete or reduce the quantity of an item if it:
+
+• added by special offer;
+• amounts to 99% of the order value;
+• the only product in the order.
+If you cannot ship such an item, cancel the order. To do this, send a request using the methodPUT v2/campaigns/{campaignId}/orders/{orderId}/statusand send the order statusCANCELLEDwith the reason for cancellationSHOP_FAILED.
+
+CANCELLED
+
+SHOP_FAILED You can't increase the order
+You cannot use a query to increase the number of identical items, add new items to an order, or replace one item with another.
+
+Examples
+This is what the request will look like if they are traveling in the same box:
+
+• three units of the same product that require labeling;
+• one unit of another product that does not require labeling.
+
+{
+"boxes": [
+{
+"items": [
+{
+"id": 123456,
+"fullCount": 3,
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+},
+{
+"cis": "010304109478gftJ14545762!\u001dhGt264"
+},
+{
+"cis": "010304109478fRs28323ks23!\u001dhet201"
+}
+]
+},
+{
+"id": 654321,
+"fullCount": 1
+}
+]
+}
+]
+}
+
+{
+"boxes": [
+{
+"items": [
+{
+"id": 123456,
+"fullCount": 3,
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+},
+{
+"cis": "010304109478gftJ14545762!\u001dhGt264"
+},
+{
+"cis": "010304109478fRs28323ks23!\u001dhet201"
+}
+]
+},
+{
+"id": 654321,
+"fullCount": 1
+}
+]
+}
+]
+}
+
+This is what the request will look like if the product comes in two boxes:
+
+{
+"boxes": [
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 1,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+},
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 2,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+}
+]
+}
+
+{
+"boxes": [
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 1,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+},
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 2,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+}
+]
+}
+
+This is what the request will look like if each of the two identical products travels in two boxes:
+
+{
+"boxes": [
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 1,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+},
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 2,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+},
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 1,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+},
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 2,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+}
+]
+}
+
+{
+"boxes": [
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 1,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+},
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 2,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+},
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 1,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+},
+{
+"items": [
+{
+"id": 123456,
+"partialCount": {
+"current": 2,
+"total": 2
+},
+"instances": [
+{
+"cis": "01030410947874432155Qbag!\u001d93Zjqw"
+}
+]
+}
+]
+}
+]
+}
+
+This is what the request will look like if two different products are placed in different boxes:
+
+{
+"boxes": [
+{
+"items": [
+{
+"id": 123456,
+"fullCount": 1
+}
+]
+},
+{
+"items": [
+{
+"id": 654321,
+"fullCount": 1
+}
+]
+}
+]
+}
+
+{
+"boxes": [
+{
+"items": [
+{
+"id": 123456,
+"fullCount": 1
+}
+]
+},
+{
+"items": [
+{
+"id": 654321,
+"fullCount": 1
+}
+]
+}
+]
+}
+
+⚙️ Limit:100,000 requests per hour
+
+Request
+PUT
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/orders/{orderId}/boxes
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/orders/{orderId}/boxes
+
+Path parameters
+
+Name | Description
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+orderId | Type: integerThe order ID. Name Description campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 orderId Type: integer The order ID.
+
+Body
+
+{
+"boxes": [
+{
+"items": [
+{
+"id": 0,
+"fullCount": 1,
+"partialCount": {},
+"instances": [
+null
+]
+}
+]
+}
+],
+"allowRemove": false
+}
+
+{
+"boxes": [
+{
+"items": [
+{
+"id": 0,
+"fullCount": 1,
+"partialCount": {},
+"instances": [
+null
+]
+}
+]
+}
+],
+"allowRemove": false
+}
+
+Name | Description
+boxes | Type: object[]itemsType: object[]idType: integerThe product ID in the order.It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems.fullCountType: integerThe number of items in a box.Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.Min value:1instancesType: object[]cisType: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:examplecountryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUgtdType: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:examplernptType: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:exampleuinType: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:exampleTransmitted marking codes.Min items:1Example[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}]partialCountType: objectcurrentType: integerThe part number, starting from 1.Min value:1totalType: integerThe total number of parts the product is divided into.Min value:2Information about the part of the product in the box.Example{"current":1,"total":2}The list of products in the box.If there is a part of a large product in the box, there can be only one item in the list.Min items:1Example[{"id":0,"fullCount":1,"partialCount":{"current":1,"total":2},"instances":[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}]}]A list of boxes.Min items:1Example[{"items":[{"id":0,"fullCount":1,"partialCount":{"current":1,"total":2},"instances":[{}]}]}] | items | Type: object[]idType: integerThe product ID in the order.It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems.fullCountType: integerThe number of items in a box.Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.Min value:1instancesType: object[]cisType: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:examplecountryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUgtdType: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:examplernptType: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:exampleuinType: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:exampleTransmitted marking codes.Min items:1Example[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}]partialCountType: objectcurrentType: integerThe part number, starting from 1.Min value:1totalType: integerThe total number of parts the product is divided into.Min value:2Information about the part of the product in the box.Example{"current":1,"total":2}The list of products in the box.If there is a part of a large product in the box, there can be only one item in the list.Min items:1Example[{"id":0,"fullCount":1,"partialCount":{"current":1,"total":2},"instances":[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}]}] | id | Type: integerThe product ID in the order.It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems. | fullCount | Type: integerThe number of items in a box.Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.Min value:1 | instances | Type: object[]cisType: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:examplecountryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUgtdType: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:examplernptType: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:exampleuinType: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:exampleTransmitted marking codes.Min items:1Example[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}] | cis | Type: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:example | countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU | gtd | Type: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:example | rnpt | Type: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:example | uin | Type: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:example | partialCount | Type: objectcurrentType: integerThe part number, starting from 1.Min value:1totalType: integerThe total number of parts the product is divided into.Min value:2Information about the part of the product in the box.Example{"current":1,"total":2} | current | Type: integerThe part number, starting from 1.Min value:1 | total | Type: integerThe total number of parts the product is divided into.Min value:2
+items | Type: object[]idType: integerThe product ID in the order.It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems.fullCountType: integerThe number of items in a box.Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.Min value:1instancesType: object[]cisType: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:examplecountryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUgtdType: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:examplernptType: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:exampleuinType: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:exampleTransmitted marking codes.Min items:1Example[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}]partialCountType: objectcurrentType: integerThe part number, starting from 1.Min value:1totalType: integerThe total number of parts the product is divided into.Min value:2Information about the part of the product in the box.Example{"current":1,"total":2}The list of products in the box.If there is a part of a large product in the box, there can be only one item in the list.Min items:1Example[{"id":0,"fullCount":1,"partialCount":{"current":1,"total":2},"instances":[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}]}] | id | Type: integerThe product ID in the order.It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems. | fullCount | Type: integerThe number of items in a box.Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.Min value:1 | instances | Type: object[]cisType: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:examplecountryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUgtdType: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:examplernptType: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:exampleuinType: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:exampleTransmitted marking codes.Min items:1Example[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}] | cis | Type: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:example | countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU | gtd | Type: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:example | rnpt | Type: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:example | uin | Type: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:example | partialCount | Type: objectcurrentType: integerThe part number, starting from 1.Min value:1totalType: integerThe total number of parts the product is divided into.Min value:2Information about the part of the product in the box.Example{"current":1,"total":2} | current | Type: integerThe part number, starting from 1.Min value:1 | total | Type: integerThe total number of parts the product is divided into.Min value:2
+id | Type: integerThe product ID in the order.It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems.
+fullCount | Type: integerThe number of items in a box.Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.Min value:1
+instances | Type: object[]cisType: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:examplecountryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUgtdType: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:examplernptType: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:exampleuinType: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:exampleTransmitted marking codes.Min items:1Example[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}] | cis | Type: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:example | countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU | gtd | Type: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:example | rnpt | Type: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:example | uin | Type: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:example
+cis | Type: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:example
+countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU
+gtd | Type: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:example
+rnpt | Type: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:example
+uin | Type: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:example
+partialCount | Type: objectcurrentType: integerThe part number, starting from 1.Min value:1totalType: integerThe total number of parts the product is divided into.Min value:2Information about the part of the product in the box.Example{"current":1,"total":2} | current | Type: integerThe part number, starting from 1.Min value:1 | total | Type: integerThe total number of parts the product is divided into.Min value:2
+current | Type: integerThe part number, starting from 1.Min value:1
+total | Type: integerThe total number of parts the product is divided into.Min value:2
+allowRemove | Type: booleanPass it ontrueif you are going to remove some of the items from the order.Default:false
+Name Description boxes
+
+items | Type: object[]idType: integerThe product ID in the order.It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems.fullCountType: integerThe number of items in a box.Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.Min value:1instancesType: object[]cisType: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:examplecountryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUgtdType: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:examplernptType: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:exampleuinType: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:exampleTransmitted marking codes.Min items:1Example[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}]partialCountType: objectcurrentType: integerThe part number, starting from 1.Min value:1totalType: integerThe total number of parts the product is divided into.Min value:2Information about the part of the product in the box.Example{"current":1,"total":2}The list of products in the box.If there is a part of a large product in the box, there can be only one item in the list.Min items:1Example[{"id":0,"fullCount":1,"partialCount":{"current":1,"total":2},"instances":[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}]}] | id | Type: integerThe product ID in the order.It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems. | fullCount | Type: integerThe number of items in a box.Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.Min value:1 | instances | Type: object[]cisType: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:examplecountryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUgtdType: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:examplernptType: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:exampleuinType: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:exampleTransmitted marking codes.Min items:1Example[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}] | cis | Type: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:example | countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU | gtd | Type: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:example | rnpt | Type: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:example | uin | Type: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:example | partialCount | Type: objectcurrentType: integerThe part number, starting from 1.Min value:1totalType: integerThe total number of parts the product is divided into.Min value:2Information about the part of the product in the box.Example{"current":1,"total":2} | current | Type: integerThe part number, starting from 1.Min value:1 | total | Type: integerThe total number of parts the product is divided into.Min value:2
+id | Type: integerThe product ID in the order.It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems.
+fullCount | Type: integerThe number of items in a box.Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.Min value:1
+instances | Type: object[]cisType: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:examplecountryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUgtdType: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:examplernptType: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:exampleuinType: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:exampleTransmitted marking codes.Min items:1Example[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}] | cis | Type: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:example | countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU | gtd | Type: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:example | rnpt | Type: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:example | uin | Type: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:example
+cis | Type: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:example
+countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU
+gtd | Type: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:example
+rnpt | Type: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:example
+uin | Type: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:example
+partialCount | Type: objectcurrentType: integerThe part number, starting from 1.Min value:1totalType: integerThe total number of parts the product is divided into.Min value:2Information about the part of the product in the box.Example{"current":1,"total":2} | current | Type: integerThe part number, starting from 1.Min value:1 | total | Type: integerThe total number of parts the product is divided into.Min value:2
+current | Type: integerThe part number, starting from 1.Min value:1
+total | Type: integerThe total number of parts the product is divided into.Min value:2 items
+
+id | Type: integerThe product ID in the order.It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems.
+fullCount | Type: integerThe number of items in a box.Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.Min value:1
+instances | Type: object[]cisType: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:examplecountryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUgtdType: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:examplernptType: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:exampleuinType: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:exampleTransmitted marking codes.Min items:1Example[{"cis":"example","uin":"example","rnpt":"example","gtd":"example","countryCode":"RU"}] | cis | Type: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:example | countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU | gtd | Type: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:example | rnpt | Type: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:example | uin | Type: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:example
+cis | Type: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:example
+countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU
+gtd | Type: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:example
+rnpt | Type: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:example
+uin | Type: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:example
+partialCount | Type: objectcurrentType: integerThe part number, starting from 1.Min value:1totalType: integerThe total number of parts the product is divided into.Min value:2Information about the part of the product in the box.Example{"current":1,"total":2} | current | Type: integerThe part number, starting from 1.Min value:1 | total | Type: integerThe total number of parts the product is divided into.Min value:2
+current | Type: integerThe part number, starting from 1.Min value:1
+total | Type: integerThe total number of parts the product is divided into.Min value:2 id Type: integer
+The product ID in the order. It comes in the response of the methodPOST v1/businesses/{businessId}/orders— parameteridinitems.
+
+id
+
+items fullCount Type: integer The number of items in a box.
+Use this field if there are whole items in the box that are not divided into parts. Do not use this field at the same time aspartialCount.
+
+partialCount Min value:1
+
+1 instances
+
+cis | Type: stringIdentification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).Do not escape the slash in the separator character code.\u001d✅01030410947874432155Qbag!\u001d93Zjqw❌01030410947874432155Qbag!\\u001d93ZjqwEscape slashes and quotation marks in other places according to the JSON rules.:\\and\"Example:example
+countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU
+gtd | Type: stringCargo customs declaration.It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.Example:example
+rnpt | Type: stringThe registration number of the product batch.It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.Example:example
+uin | Type: stringThe unique identification number of the jewelry.It is a 16-digit number.Example:example
+cis Type: string
+Identification codeproduct units in the system"An honest SIGN"or«ASL BELGISI»(for sellers of the Yandex Go Market).
+Do not escape the slash in the separator character code.\u001d
+
+\u001d ✅01030410947874432155Qbag!\u001d93Zjqw
+
+01030410947874432155Qbag!\u001d93Zjqw ❌01030410947874432155Qbag!\\u001d93Zjqw
+
+01030410947874432155Qbag!\\u001d93Zjqw Escape slashes and quotation marks in other places according to the JSON rules.:\\and\"
+
+\\
+
+\" Example:example
+
+example countryCode Type: string The country of manufacture is in the ISO 3166-1 alpha-2 format.How to get
+Min length:2
+
+2 Max length:2
+
+2 Pattern:^[A-Z]{2}$
+
+^[A-Z]{2}$ Example:RU
+
+RU gtd Type: string Cargo customs declaration. It is a string of three numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX.
+The first part — the code of the customs office that registered the declaration for imported goods. Further — date and number of the declaration.
+Example:example
+
+example rnpt Type: string The registration number of the product batch. It is a string of four numbers separated by a slash: XXXXXXXXXX/XXXXXXXX/XXXXXXXX/XXX.
+The first part — the code of the customs office that registered the declaration for the shipment. Further — the date, number of the declaration and the number of the marked product in the declaration.
+Example:example
+
+example uin Type: string The unique identification number of the jewelry. It is a 16-digit number. Example:example
+
+example Transmitted marking codes. Min items:1
+
+1
+
+[
+{
+"cis": "example",
+"uin": "example",
+"rnpt": "example",
+"gtd": "example",
+"countryCode": "RU"
+}
+]
+
+[
+{
+"cis": "example",
+"uin": "example",
+"rnpt": "example",
+"gtd": "example",
+"countryCode": "RU"
+}
+]
+
+partialCount
+
+current | Type: integerThe part number, starting from 1.Min value:1
+total | Type: integerThe total number of parts the product is divided into.Min value:2 current Type: integer
+The part number, starting from 1. Min value:1
+
+1 total Type: integer The total number of parts the product is divided into. Min value:2
+
+2 Information about the part of the product in the box.
+
+{
+"current": 1,
+"total": 2
+}
+
+{
+"current": 1,
+"total": 2
+}
+The list of products in the box. If there is a part of a large product in the box, there can be only one item in the list.
+Min items:1
+
+1
+
+[
+{
+"id": 0,
+"fullCount": 1,
+"partialCount": {
+"current": 1,
+"total": 2
+},
+"instances": [
+{
+"cis": "example",
+"uin": "example",
+"rnpt": "example",
+"gtd": "example",
+"countryCode": "RU"
+}
+]
+}
+]
+
+[
+{
+"id": 0,
+"fullCount": 1,
+"partialCount": {
+"current": 1,
+"total": 2
+},
+"instances": [
+{
+"cis": "example",
+"uin": "example",
+"rnpt": "example",
+"gtd": "example",
+"countryCode": "RU"
+}
+]
+}
+]
+
+A list of boxes. Min items:1
+
+1
+
+[
+{
+"items": [
+{
+"id": 0,
+"fullCount": 1,
+"partialCount": {
+"current": 1,
+"total": 2
+},
+"instances": [
+{}
+]
+}
+]
+}
+]
+
+[
+{
+"items": [
+{
+"id": 0,
+"fullCount": 1,
+"partialCount": {
+"current": 1,
+"total": 2
+},
+"instances": [
+{}
+]
+}
+]
+}
+]
+
+allowRemove Type: boolean Pass it ontrueif you are going to remove some of the items from the order.
+
+true Default:false
+
+false
+
+Responses
+200 OK
+In response, you will receive the transmitted layout with the box IDs. — you will need them to request shortcuts.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"boxes": [
+{}
+]
+}
+}
+
+{
+"status": "OK",
+"result": {
+"boxes": [
+{}
+]
+}
+}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectboxesType: object[]A list of boxes.Example[{"items":[{"id":0,"fullCount":1,"partialCount":{},"instances":[null]}],"boxId":0}]Distribution of goods by boxes.Example{"boxes":[{"items":[{}],"boxId":0}]}Example{"result":{"boxes":[{"items":[null],"boxId":0}]}}
+
+result | Type: objectboxesType: object[]A list of boxes.Example[{"items":[{"id":0,"fullCount":1,"partialCount":{},"instances":[null]}],"boxId":0}]Distribution of goods by boxes.Example{"boxes":[{"items":[{}],"boxId":0}]} | boxes | Type: object[]A list of boxes.Example[{"items":[{"id":0,"fullCount":1,"partialCount":{},"instances":[null]}],"boxId":0}]
+boxes | Type: object[]A list of boxes.Example[{"items":[{"id":0,"fullCount":1,"partialCount":{},"instances":[null]}],"boxId":0}]
+result
+
+boxes | Type: object[]A list of boxes.Example[{"items":[{"id":0,"fullCount":1,"partialCount":{},"instances":[null]}],"boxId":0}]
+boxes Type: object[] A list of boxes.
+
+[
+{
+"items": [
+{
+"id": 0,
+"fullCount": 1,
+"partialCount": {},
+"instances": [
+null
+]
+}
+],
+"boxId": 0
+}
+]
+
+[
+{
+"items": [
+{
+"id": 0,
+"fullCount": 1,
+"partialCount": {},
+"instances": [
+null
+]
+}
+],
+"boxId": 0
+}
+]
+
+Distribution of goods by boxes.
+
+{
+"boxes": [
+{
+"items": [
+{}
+],
+"boxId": 0
+}
+]
+}
+
+{
+"boxes": [
+{
+"items": [
+{}
+],
+"boxId": 0
+}
+]
+}
+
+{
+"result": {
+"boxes": [
+{
+"items": [
+null
+],
+"boxId": 0
+}
+]
+}
+}
+
+{
+"result": {
+"boxes": [
+{
+"items": [
+null
+],
+"boxId": 0
+}
+]
+}
+}
+
+400 Bad Request
+The request contains incorrect data.Learn more about errors when working with orders
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+Meaningcismust match the regular expression^(?=.{1,256}$)\u001D?(\(?01\)?\d{14}\(?21\)?([!-~]{6,8}|[!-~]{13}|[!-~]{20})(\u001D\(?240\)?.{1,30})?\u001D\(?9[1,3]\)?.+)$.Without the cryptotail —^(?=[!-~]{1,256}$)(\(?01\)?\d{14}\(?21\)?(.{6,8}|.{13}|.{20}))$.
+
+cis
+
+^(?=.{1,256}$)\u001D?(\(?01\)?\d{14}\(?21\)?([!-~]{6,8}|[!-~]{13}|[!-~]{20})(\u001D\(?240\)?.{1,30})?\u001D\(?9[1,3]\)?.+)$
+
+^(?=[!-~]{1,256}$)(\(?01\)?\d{14}\(?21\)?(.{6,8}|.{13}|.{20}))$
+
+Was the article helpful?

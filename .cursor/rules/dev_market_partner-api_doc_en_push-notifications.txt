@@ -1,0 +1,181 @@
+API notifications are not related to push-api — the old scheme of working with Yandex. Market.
+
+How to work with notifications
+You can enable API notifications and Yandex.Market will send you a request.POST notificationwith information aboutthe eventevery time it happens.
+This is an optional integration, you don't have to enable notifications. However, with their help, you will be able to quickly respond to changes in orders, non-purchases and refunds, as well as to requests for cancellation of the order.
+The market exchanges data only with stores that operate over HTTPS using an SSL certificate. It must be signed by an official certification authority, a self-signed certificate will not work. Information about certification authorities can be found on the Internet.
+Check each request against IP address ranges.
+The security of your integration depends on it. — this way you will make sure that the request came from Yandex.Market.
+Ranges of IP addresses used by the Market:
+
+• 5.45.207.0/25
+• 141.8.142.0/25
+• 5.255.253.0/25
+
+Enabling integration
+To receive notifications from Yandex.Market:
+
+• In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+• Click the buttonEnable notifications.
+Click the buttonEnable notifications.
+• Specify the notification name — you will only need it to search for the notification in the list.
+Specify the notification name — you will only need it to search for the notification in the list.
+• Select whether you are setting up notifications for your merchant profile or store:Notifications are comingThe role required to configure the notificationWhat are the roles?officefor all cabinet storescabinet owner or cabinet managershopfor a specific storeany role other than a content manager
+Select whether you are setting up notifications for your merchant profile or store:
+
+| Notifications are coming | The role required to configure the notificationWhat are the roles?
+office | for all cabinet stores | cabinet owner or cabinet manager
+shop | for a specific store | any role other than a content manager Notifications are coming The role required to configure the notification
+What are the roles? office for all cabinet stores cabinet owner or cabinet manager shop for a specific store
+any role other than a content manager
+• Select the types of notifications you want to receive:NotificationComes for the cabinetIt comes for the storecreating an order✔️✔️changing the order✔️✔️changing the order status✔️✔️order cancellation✔️✔️creating an order cancellation request✔️✔️making a refund or non-purchase✔️✔️changing the refund or non-purchase status✔️✔️new review✔️new review comment✔️new chat with the buyer✔️new message in the chat✔️the beginning of the dispute✔️ending the dispute✔️⚠️ If order-related notifications are configured for the merchant profile, they are also sent by FBY- orders.
+Select the types of notifications you want to receive:
+
+Notification | Comes for the cabinet | It comes for the store
+creating an order | ✔️ | ✔️
+changing the order | ✔️ | ✔️
+changing the order status | ✔️ | ✔️
+order cancellation | ✔️ | ✔️
+creating an order cancellation request | ✔️ | ✔️
+making a refund or non-purchase | ✔️ | ✔️
+changing the refund or non-purchase status | ✔️ | ✔️
+new review | ✔️ |
+new review comment | ✔️ |
+new chat with the buyer | ✔️ |
+new message in the chat | ✔️ |
+the beginning of the dispute | ✔️ |
+ending the dispute | ✔️ |
+⚠️ If order-related notifications are configured for the merchant profile, they are also sent by FBY- orders.
+• Enter the link where Yandex.Market will send notifications. Specify it in its entirety, including the HTTPS protocol.
+Enter the link where Yandex.Market will send notifications. Specify it in its entirety, including the HTTPS protocol.
+• Click the buttonPlug. The created notifications will appear in the dashboard immediately, but they will start arriving.within 2 minutes.
+Click the buttonPlug. The created notifications will appear in the dashboard immediately, but they will start arriving.within 2 minutes.
+
+Checking the integration
+To check the functionality of the integration, yandex.Market will send a requestPOST notificationwhere there will be a verification notification in the body with the typePING.
+
+PING
+
+{
+"notificationType": "PING",
+"time": "2025-01-16T10:09:49.759084017Z"
+}
+
+{
+"notificationType": "PING",
+"time": "2025-01-16T10:09:49.759084017Z"
+}
+
+Return the response with the code200and information about notification processing within 10 seconds. Integration will not be enabled if another code, incorrect or insufficient data is transmitted.Possible errors
+
+200
+
+{
+"version": "1.0.0",
+"name": "name",
+"time": "2025-01-16T10:09:49.759084017Z"
+}
+
+{
+"version": "1.0.0",
+"name": "name",
+"time": "2025-01-16T10:09:49.759084017Z"
+}
+
+Response to the request
+The response time is 10 seconds.
+
+• If the request was correct, return the code200with information about notification processing.Response body
+If the request was correct, return the code200with information about notification processing.Response body
+
+200
+• If the Market has sent an incorrect notification, return the code.400with a description of the error. The market will analyze such responses and refine the API on its part.Response body
+If the Market has sent an incorrect notification, return the code.400with a description of the error. The market will analyze such responses and refine the API on its part.Response body
+
+400
+• If a technical error has occurred on your side, please return the code.500.Response body
+If a technical error has occurred on your side, please return the code.500.Response body
+
+500
+Detailed information on requests and responses, including errors, can be viewed in the seller's account on the Market. — click on your account icon →Settingsand in the menu on the left, selectAPIs and modules→ tabNotification Log. Read more about this in the sectionRequest logs.
+Possible errors
+
+The store's API is not responding
+If the store does not meet the ten-second timeout or the requestPOST notificationreturns an error except400, Market:
+
+400
+
+• It stops sending other notifications until it receives a suitable response to the problematic request.
+It stops sending other notifications until it receives a suitable response to the problematic request.
+• Repeats the problematic query:Every minute for the first hour.Every 15 minutes during the first day.Then once an hour.
+Repeats the problematic query:
+
+• Every minute for the first hour.
+• Every 15 minutes during the first day.
+• Then once an hour.
+If the store's API is unavailable within 14 days of sending the first notification, the store is disabled.from integration, but continues to post and sell products. Yandex.Market will cancel all notifications that it could not send before disconnecting, and will not send new ones.
+To continue receiving notifications, connect them again. For more information on how to do this, seeNotification Management.
+
+Notification Management
+After changing the notification
+The information in the dashboard will be updated immediately, but notifications will start coming or turn off.within 2 minutes.
+You can edit the name and types of notifications, as well as the link to send them. To do this:
+
+• In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+• Find the notification you need, tap the three dots next to it and selectEdit.
+Find the notification you need, tap the three dots next to it and selectEdit.
+• Change the required information.
+Change the required information.
+• ClickPlug.
+ClickPlug. You can disable sending notifications without deleting them. To do this:
+
+• In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+• Find the notification you need, tap the three dots next to it and selectUnplug.
+Find the notification you need, tap the three dots next to it and selectUnplug. To make the disabled notification work again:
+
+• In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+• Find the notification you need, tap the three dots next to it and selectPlug.
+Find the notification you need, tap the three dots next to it and selectPlug.
+• If notifications were disabled by Yandex.Market, you will receive a request.POST notificationwhere there will be a verification notification in the body with the typePING. Return the response with the code200and information about the notification processing within 10 seconds.
+If notifications were disabled by Yandex.Market, you will receive a request.POST notificationwhere there will be a verification notification in the body with the typePING. Return the response with the code200and information about the notification processing within 10 seconds.
+
+PING
+
+200
+To avoid creating notifications for the store from scratch, duplicate the settings you have already created for another store:
+
+• In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+• Find the notification you need, tap the three dots next to it and selectDuplicate settings.
+Find the notification you need, tap the three dots next to it and selectDuplicate settings.
+• Specify the desired store.
+Specify the desired store.
+• ClickDuplicate.
+ClickDuplicate. To delete a notification:
+
+• In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabAPI notifications.
+• Find the notification you need, tap the three dots next to it and selectRemove.
+Find the notification you need, tap the three dots next to it and selectRemove.
+• Confirm the deletion.
+Confirm the deletion.
+Events for which Yandex.Market sends notifications:creating a new order;changing the order;changing the order status;creating a new chat with a customer;adding a new chat message;the beginning of the dispute;ending the dispute;creating a new product review;creating a new review comment;creating an order cancellation request;order cancellation;creating a new non-purchase or refund;changing the non-purchase or refund status.Notifications will also be sent for test orders.
+
+• creating a new order;
+• changing the order;
+• changing the order status;
+• creating a new chat with a customer;
+• adding a new chat message;
+• the beginning of the dispute;
+• ending the dispute;
+• creating a new product review;
+• creating a new review comment;
+• creating an order cancellation request;
+• order cancellation;
+• creating a new non-purchase or refund;
+• changing the non-purchase or refund status.
+Addresses from 5.45.207.0 to 5.45.207.127 Addresses from 141.8.142.0 to 141.8.142.127 Addresses from 5.255.253.0 to 5.255.253.127

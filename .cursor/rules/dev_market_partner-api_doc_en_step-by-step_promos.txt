@@ -1,0 +1,46 @@
+Stock management
+Yandex Market API allows you to receive information about Market promotions and participate in them.
+
+Add products to the promotion
+You already know the IDs of the list of stocks and products. Skip the steps to get them.
+
+• Get a list of Yandex.Market shares using a requestPOST v2/businesses/{businessId}/promos.
+• Pass the stock ID in the requestPOST v2/businesses/{businessId}/promos/offersto find out which products can participate in the promotion.
+• Make a requestPOST v2/businesses/{businessId}/promos/offers/update, where pass the ID of the promotion and the products that need to be added.
+
+Change the price of products that have already been added to the promotion
+You already know the IDs of the list of stocks and products. Skip the steps to get them.
+
+• Get a list of Yandex.Market shares using a requestPOST v2/businesses/{businessId}/promos.
+• Pass the promotion ID and the parameterstatusTypewith the valueMANUALLY_ADDEDin the requestPOST v2/businesses/{businessId}/promos/offersto find out which products have been added to the promotion.
+
+statusType
+
+MANUALLY_ADDED
+• Pass it on SKU products and their new prices — requestPOST v2/businesses/{businessId}/promos/offers/update.
+
+Remove products from the promotion
+You already know the IDs of the list of stocks and products. Skip the steps to get them.
+
+• Get a list of Yandex.Market shares using a requestPOST v2/businesses/{businessId}/promos.
+Get a list of Yandex.Market shares using a requestPOST v2/businesses/{businessId}/promos.
+• Pass the promotion ID and the parameterstatusTypewith the valueMANUALLY_ADDEDin the requestPOST v2/businesses/{businessId}/promos/offersto find out which products have been added to the promotion.
+Pass the promotion ID and the parameterstatusTypewith the valueMANUALLY_ADDEDin the requestPOST v2/businesses/{businessId}/promos/offersto find out which products have been added to the promotion.
+
+statusType
+
+MANUALLY_ADDED
+• Make a requestPOST v2/businesses/{businessId}/promos/offers/deleteto remove from the promotion:all products — parameterdeleteAllOfferswith the valuetrue;some products — parameterofferIds.
+Make a requestPOST v2/businesses/{businessId}/promos/offers/deleteto remove from the promotion:
+
+• all products — parameterdeleteAllOfferswith the valuetrue;
+
+deleteAllOffers
+
+true
+• some products — parameterofferIds.
+
+offerIds
+
+View the results of participation in the promotion
+You can download a report with all orders that contain products sold under the promotion. For information on how to receive reports, seestep-by-step instructions.

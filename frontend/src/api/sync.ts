@@ -10,21 +10,21 @@ export interface SyncResult {
 
 export const syncApi = {
   syncAll: async (force: boolean = false) => {
-    const response = await apiClient.post<SyncResult>('/sync/', null, {
+    const response = await apiClient.post<SyncResult>('sync/', null, {
       params: { force }
     })
     return response.data
   },
   
   syncProducts: async (force: boolean = false) => {
-    const response = await apiClient.post<SyncResult>('/sync/products', null, {
+    const response = await apiClient.post<SyncResult>('sync/products/', null, {
       params: { force }
     })
     return response.data
   },
   
   syncOrders: async () => {
-    const response = await apiClient.post('/sync/orders')
+    const response = await apiClient.post('sync/orders/')
     return response.data
   },
 }

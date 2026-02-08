@@ -1,0 +1,975 @@
+Orders that affected the quality index
+The method is available for models:FBS,ExpressandDBS.
+
+• inventory-and-order-processing —Order processing and inventory
+• inventory-and-order-processing:read-only —View order information
+• settings-management —Store settings
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns a list of orders that affected the store's quality index. To find out the value of the quality index, make a requestPOST v2/businesses/{businessId}/ratings/quality.
+
+⚙️ Limit:100,000 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/ratings/quality/details
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/ratings/quality/details
+
+Path parameters
+
+Name | Description
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+Name Description campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1
+
+Responses
+200 OK
+Information about orders that affected the quality index.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"affectedOrders": [
+{
+"orderId": 0,
+"description": "example",
+"componentType": "DBS_CANCELLATION_RATE"
+}
+]
+}
+}
+
+{
+"status": "OK",
+"result": {
+"affectedOrders": [
+{
+"orderId": 0,
+"description": "example",
+"componentType": "DBS_CANCELLATION_RATE"
+}
+]
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectaffectedOrdersType: object[]componentTypeType: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATEdescriptionType: stringDescription of the problem.Example:exampleorderIdType: integerThe order ID.Min value:0A list of orders that affected the quality index.Example[{"orderId":0,"description":"example","componentType":"DBS_CANCELLATION_RATE"}]Information about orders that affected the quality index.Example{"affectedOrders":[{"orderId":0,"description":"example","componentType":"DBS_CANCELLATION_RATE"}]}Example{"result":{"affectedOrders":[{"orderId":0,"description":"example","componentType":"DBS_CANCELLATION_RATE"}]}}
+
+result | Type: objectaffectedOrdersType: object[]componentTypeType: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATEdescriptionType: stringDescription of the problem.Example:exampleorderIdType: integerThe order ID.Min value:0A list of orders that affected the quality index.Example[{"orderId":0,"description":"example","componentType":"DBS_CANCELLATION_RATE"}]Information about orders that affected the quality index.Example{"affectedOrders":[{"orderId":0,"description":"example","componentType":"DBS_CANCELLATION_RATE"}]} | affectedOrders | Type: object[]componentTypeType: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATEdescriptionType: stringDescription of the problem.Example:exampleorderIdType: integerThe order ID.Min value:0A list of orders that affected the quality index.Example[{"orderId":0,"description":"example","componentType":"DBS_CANCELLATION_RATE"}] | componentType | Type: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATE | description | Type: stringDescription of the problem.Example:example | orderId | Type: integerThe order ID.Min value:0
+affectedOrders | Type: object[]componentTypeType: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATEdescriptionType: stringDescription of the problem.Example:exampleorderIdType: integerThe order ID.Min value:0A list of orders that affected the quality index.Example[{"orderId":0,"description":"example","componentType":"DBS_CANCELLATION_RATE"}] | componentType | Type: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATE | description | Type: stringDescription of the problem.Example:example | orderId | Type: integerThe order ID.Min value:0
+componentType | Type: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATE
+description | Type: stringDescription of the problem.Example:example
+orderId | Type: integerThe order ID.Min value:0 result
+
+affectedOrders | Type: object[]componentTypeType: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATEdescriptionType: stringDescription of the problem.Example:exampleorderIdType: integerThe order ID.Min value:0A list of orders that affected the quality index.Example[{"orderId":0,"description":"example","componentType":"DBS_CANCELLATION_RATE"}] | componentType | Type: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATE | description | Type: stringDescription of the problem.Example:example | orderId | Type: integerThe order ID.Min value:0
+componentType | Type: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATE
+description | Type: stringDescription of the problem.Example:example
+orderId | Type: integerThe order ID.Min value:0 affectedOrders
+
+componentType | Type: stringThe components of the quality index.For the model DBS:DBS_CANCELLATION_RATE— the percentage of cancelled items.DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.For models FBS and Express:FBS_CANCELLATION_RATE— the percentage of cancelled items.FBS_LATE_SHIP_RATE— the percentage of orders shipped late.Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATE
+description | Type: stringDescription of the problem.Example:example
+orderId | Type: integerThe order ID.Min value:0 componentType Type: string The components of the quality index.
+For the model DBS:
+
+• DBS_CANCELLATION_RATE— the percentage of cancelled items.
+
+DBS_CANCELLATION_RATE
+• DBS_LATE_DELIVERY_RATE— the percentage of orders delivered after the scheduled date.
+
+DBS_LATE_DELIVERY_RATE For models FBS and Express:
+
+• FBS_CANCELLATION_RATE— the percentage of cancelled items.
+
+FBS_CANCELLATION_RATE
+• FBS_LATE_SHIP_RATE— the percentage of orders shipped late.
+
+FBS_LATE_SHIP_RATE Enum:DBS_CANCELLATION_RATE,DBS_LATE_DELIVERY_RATE,FBS_CANCELLATION_RATE,FBS_LATE_SHIP_RATE
+
+DBS_CANCELLATION_RATE
+
+DBS_LATE_DELIVERY_RATE
+
+FBS_CANCELLATION_RATE
+
+FBS_LATE_SHIP_RATE description Type: string Description of the problem. Example:example
+
+example orderId Type: integer The order ID. Min value:0
+
+0 A list of orders that affected the quality index.
+
+[
+{
+"orderId": 0,
+"description": "example",
+"componentType": "DBS_CANCELLATION_RATE"
+}
+]
+
+[
+{
+"orderId": 0,
+"description": "example",
+"componentType": "DBS_CANCELLATION_RATE"
+}
+]
+
+Information about orders that affected the quality index.
+
+{
+"affectedOrders": [
+{
+"orderId": 0,
+"description": "example",
+"componentType": "DBS_CANCELLATION_RATE"
+}
+]
+}
+
+{
+"affectedOrders": [
+{
+"orderId": 0,
+"description": "example",
+"componentType": "DBS_CANCELLATION_RATE"
+}
+]
+}
+
+{
+"result": {
+"affectedOrders": [
+{
+"orderId": 0,
+"description": "example",
+"componentType": "DBS_CANCELLATION_RATE"
+}
+]
+}
+}
+
+{
+"result": {
+"affectedOrders": [
+{
+"orderId": 0,
+"description": "example",
+"componentType": "DBS_CANCELLATION_RATE"
+}
+]
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

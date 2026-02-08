@@ -1,0 +1,1508 @@
+Getting information about a single shipment
+The method is available for theFBSmodel.
+
+• inventory-and-order-processing —Order processing and inventory
+• inventory-and-order-processing:read-only —View order information
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns information about the shipment by its identifier.
+
+⚙️ Limit:100 requests per hour
+
+Request
+GET
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}
+
+Path parameters
+
+Name | Description
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+shipmentId | Type: integerShipment ID.Min value:1 Name Description campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 shipmentId Type: integer Shipment ID. Min value:1
+
+1
+
+Query parameters
+
+Name | Description
+cancelledOrders | Type: booleanWhether to refund cancelled orders.Default value:true. If you do not need to refund cancelled orders, pass the valuefalse.Default:true
+Name Description cancelledOrders Type: boolean Whether to refund cancelled orders. Default value:true. If you do not need to refund cancelled orders, pass the valuefalse.
+
+true
+
+false Default:true
+
+true
+
+Responses
+200 OK
+The found shipment.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"id": 1,
+"planIntervalFrom": "2017-11-21T00:00:00+03:00",
+"planIntervalTo": "2017-11-21T00:00:00+03:00",
+"shipmentType": "IMPORT",
+"warehouse": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"warehouseTo": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"externalId": "example",
+"deliveryService": {
+"id": 0,
+"name": "example"
+},
+"palletsCount": {
+"planned": 0,
+"fact": 0
+},
+"orderIds": [
+1
+],
+"draftCount": 0,
+"plannedCount": 0,
+"factCount": 0,
+"signature": {
+"signed": true
+},
+"currentStatus": {
+"status": "OUTBOUND_CREATED",
+"description": "example",
+"updateTime": "2017-11-21T00:00:00+03:00"
+},
+"availableActions": [
+"CONFIRM"
+]
+}
+}
+
+{
+"status": "OK",
+"result": {
+"id": 1,
+"planIntervalFrom": "2017-11-21T00:00:00+03:00",
+"planIntervalTo": "2017-11-21T00:00:00+03:00",
+"shipmentType": "IMPORT",
+"warehouse": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"warehouseTo": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"externalId": "example",
+"deliveryService": {
+"id": 0,
+"name": "example"
+},
+"palletsCount": {
+"planned": 0,
+"fact": 0
+},
+"orderIds": [
+1
+],
+"draftCount": 0,
+"plannedCount": 0,
+"factCount": 0,
+"signature": {
+"signed": true
+},
+"currentStatus": {
+"status": "OUTBOUND_CREATED",
+"description": "example",
+"updateTime": "2017-11-21T00:00:00+03:00"
+},
+"availableActions": [
+"CONFIRM"
+]
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectAll of 2 typesType: objectdraftCountType: integerThe number of orders that the Market has scheduled for shipment.Min value:0factCountType: integerThe number of orders accepted at the sorting center or reception point.Min value:0idType: integerShipment ID.Min value:1orderIdsType: integer[]The IDs of the orders in the shipment.Unique items:trueExample[1]planIntervalFromType: string<date-time>The beginning of the scheduled shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00planIntervalToType: string<date-time>The end of the planned shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00plannedCountType: integerThe number of orders that the Market has confirmed for shipment.Min value:0signatureType: objectsignedType: booleanHas the acceptance certificate been signed?Information about the signature of the acceptance certificate.Example{"signed":true}deliveryServiceType: objectidType: integerThe delivery service ID.nameType: stringThe name of the delivery service.Example:exampleThe delivery service.Example{"id":0,"name":"example"}externalIdType: stringThe shipment ID in your system. If you haven't passed the ID yet, the ID from the parameter will be returned.id.Example:examplepalletsCountType: objectfactType: integerThe number of pallets accepted at the sorting center.Min value:0plannedType: integerThe number of pallets specified by the seller.Min value:0The number of pallets in the shipment.Example{"planned":0,"fact":0}shipmentTypeType: stringShipping method of orders:IMPORT— you bring your orders to the selected sorting center or order acceptance point on your own.WITHDRAW— you ship orders from your warehouse to Yandex Market couriers.Enum:IMPORT,WITHDRAWwarehouseType: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"}warehouseToType: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"}Shipping information.Example{"id":1,"planIntervalFrom":"2017-11-21T00:00:00+03:00","planIntervalTo":"2017-11-21T00:00:00+03:00","shipmentType":"IMPORT","warehouse":{"id":1,"name":"example","address":"example"},"warehouseTo":{"id":1,"name":"example","address":"example"},"externalId":"example","deliveryService":{"id":0,"name":"example"},"palletsCount":{"planned":0,"fact":0},"orderIds":[1],"draftCount":0,"plannedCount":0,"factCount":0,"signature":{"signed":true}}Type: objectavailableActionsType: string[]Available actions on the shipment.Unique items:trueExample["CONFIRM"]currentStatusType: objectdescriptionType: stringDescription of the shipment status.Example:examplestatusType: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERRORupdateTimeType: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00Shipment status.Example{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"}Shipping information.Example{"currentStatus":{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"},"availableActions":["CONFIRM"]}Shipping information.Example{"id":1,"planIntervalFrom":"2017-11-21T00:00:00+03:00","planIntervalTo":"2017-11-21T00:00:00+03:00","shipmentType":"IMPORT","warehouse":{"id":1,"name":"example","address":"example"},"warehouseTo":{"id":1,"name":"example","address":"example"},"externalId":"example","deliveryService":{"id":0,"name":"example"},"palletsCount":{"planned":0,"fact":0},"orderIds":[1],"draftCount":0,"plannedCount":0,"factCount":0,"signature":{"signed":true},"currentStatus":{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"},"availableActions":["CONFIRM"]}Example{"result":{"id":1,"planIntervalFrom":"2017-11-21T00:00:00+03:00","planIntervalTo":"2017-11-21T00:00:00+03:00","shipmentType":"IMPORT","warehouse":{"id":1,"name":"example","address":"example"},"warehouseTo":{"id":1,"name":"example","address":"example"},"externalId":"example","deliveryService":{"id":0,"name":"example"},"palletsCount":{"planned":0,"fact":0},"orderIds":[1],"draftCount":0,"plannedCount":0,"factCount":0,"signature":{"signed":true},"currentStatus":{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"},"availableActions":["CONFIRM"]}}
+
+result | Type: objectAll of 2 typesType: objectdraftCountType: integerThe number of orders that the Market has scheduled for shipment.Min value:0factCountType: integerThe number of orders accepted at the sorting center or reception point.Min value:0idType: integerShipment ID.Min value:1orderIdsType: integer[]The IDs of the orders in the shipment.Unique items:trueExample[1]planIntervalFromType: string<date-time>The beginning of the scheduled shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00planIntervalToType: string<date-time>The end of the planned shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00plannedCountType: integerThe number of orders that the Market has confirmed for shipment.Min value:0signatureType: objectsignedType: booleanHas the acceptance certificate been signed?Information about the signature of the acceptance certificate.Example{"signed":true}deliveryServiceType: objectidType: integerThe delivery service ID.nameType: stringThe name of the delivery service.Example:exampleThe delivery service.Example{"id":0,"name":"example"}externalIdType: stringThe shipment ID in your system. If you haven't passed the ID yet, the ID from the parameter will be returned.id.Example:examplepalletsCountType: objectfactType: integerThe number of pallets accepted at the sorting center.Min value:0plannedType: integerThe number of pallets specified by the seller.Min value:0The number of pallets in the shipment.Example{"planned":0,"fact":0}shipmentTypeType: stringShipping method of orders:IMPORT— you bring your orders to the selected sorting center or order acceptance point on your own.WITHDRAW— you ship orders from your warehouse to Yandex Market couriers.Enum:IMPORT,WITHDRAWwarehouseType: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"}warehouseToType: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"}Shipping information.Example{"id":1,"planIntervalFrom":"2017-11-21T00:00:00+03:00","planIntervalTo":"2017-11-21T00:00:00+03:00","shipmentType":"IMPORT","warehouse":{"id":1,"name":"example","address":"example"},"warehouseTo":{"id":1,"name":"example","address":"example"},"externalId":"example","deliveryService":{"id":0,"name":"example"},"palletsCount":{"planned":0,"fact":0},"orderIds":[1],"draftCount":0,"plannedCount":0,"factCount":0,"signature":{"signed":true}}Type: objectavailableActionsType: string[]Available actions on the shipment.Unique items:trueExample["CONFIRM"]currentStatusType: objectdescriptionType: stringDescription of the shipment status.Example:examplestatusType: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERRORupdateTimeType: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00Shipment status.Example{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"}Shipping information.Example{"currentStatus":{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"},"availableActions":["CONFIRM"]}Shipping information.Example{"id":1,"planIntervalFrom":"2017-11-21T00:00:00+03:00","planIntervalTo":"2017-11-21T00:00:00+03:00","shipmentType":"IMPORT","warehouse":{"id":1,"name":"example","address":"example"},"warehouseTo":{"id":1,"name":"example","address":"example"},"externalId":"example","deliveryService":{"id":0,"name":"example"},"palletsCount":{"planned":0,"fact":0},"orderIds":[1],"draftCount":0,"plannedCount":0,"factCount":0,"signature":{"signed":true},"currentStatus":{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"},"availableActions":["CONFIRM"]} | draftCount | Type: integerThe number of orders that the Market has scheduled for shipment.Min value:0 | factCount | Type: integerThe number of orders accepted at the sorting center or reception point.Min value:0 | id | Type: integerShipment ID.Min value:1 | orderIds | Type: integer[]The IDs of the orders in the shipment.Unique items:trueExample[1] | planIntervalFrom | Type: string<date-time>The beginning of the scheduled shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00 | planIntervalTo | Type: string<date-time>The end of the planned shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00 | plannedCount | Type: integerThe number of orders that the Market has confirmed for shipment.Min value:0 | signature | Type: objectsignedType: booleanHas the acceptance certificate been signed?Information about the signature of the acceptance certificate.Example{"signed":true} | signed | Type: booleanHas the acceptance certificate been signed? | deliveryService | Type: objectidType: integerThe delivery service ID.nameType: stringThe name of the delivery service.Example:exampleThe delivery service.Example{"id":0,"name":"example"} | id | Type: integerThe delivery service ID. | name | Type: stringThe name of the delivery service.Example:example | externalId | Type: stringThe shipment ID in your system. If you haven't passed the ID yet, the ID from the parameter will be returned.id.Example:example | palletsCount | Type: objectfactType: integerThe number of pallets accepted at the sorting center.Min value:0plannedType: integerThe number of pallets specified by the seller.Min value:0The number of pallets in the shipment.Example{"planned":0,"fact":0} | fact | Type: integerThe number of pallets accepted at the sorting center.Min value:0 | planned | Type: integerThe number of pallets specified by the seller.Min value:0 | shipmentType | Type: stringShipping method of orders:IMPORT— you bring your orders to the selected sorting center or order acceptance point on your own.WITHDRAW— you ship orders from your warehouse to Yandex Market couriers.Enum:IMPORT,WITHDRAW | warehouse | Type: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"} | id | Type: integerThe ID of the shipping warehouse.Min value:1 | address | Type: stringThe address of the shipping warehouse.Example:example | name | Type: stringThe name of the shipping warehouse.Example:example | warehouseTo | Type: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"} | id | Type: integerThe ID of the shipping warehouse.Min value:1 | address | Type: stringThe address of the shipping warehouse.Example:example | name | Type: stringThe name of the shipping warehouse.Example:example | availableActions | Type: string[]Available actions on the shipment.Unique items:trueExample["CONFIRM"] | currentStatus | Type: objectdescriptionType: stringDescription of the shipment status.Example:examplestatusType: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERRORupdateTimeType: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00Shipment status.Example{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"} | description | Type: stringDescription of the shipment status.Example:example | status | Type: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERROR | updateTime | Type: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+draftCount | Type: integerThe number of orders that the Market has scheduled for shipment.Min value:0
+factCount | Type: integerThe number of orders accepted at the sorting center or reception point.Min value:0
+id | Type: integerShipment ID.Min value:1
+orderIds | Type: integer[]The IDs of the orders in the shipment.Unique items:trueExample[1]
+planIntervalFrom | Type: string<date-time>The beginning of the scheduled shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+planIntervalTo | Type: string<date-time>The end of the planned shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+plannedCount | Type: integerThe number of orders that the Market has confirmed for shipment.Min value:0
+signature | Type: objectsignedType: booleanHas the acceptance certificate been signed?Information about the signature of the acceptance certificate.Example{"signed":true} | signed | Type: booleanHas the acceptance certificate been signed?
+signed | Type: booleanHas the acceptance certificate been signed?
+deliveryService | Type: objectidType: integerThe delivery service ID.nameType: stringThe name of the delivery service.Example:exampleThe delivery service.Example{"id":0,"name":"example"} | id | Type: integerThe delivery service ID. | name | Type: stringThe name of the delivery service.Example:example
+id | Type: integerThe delivery service ID.
+name | Type: stringThe name of the delivery service.Example:example
+externalId | Type: stringThe shipment ID in your system. If you haven't passed the ID yet, the ID from the parameter will be returned.id.Example:example
+palletsCount | Type: objectfactType: integerThe number of pallets accepted at the sorting center.Min value:0plannedType: integerThe number of pallets specified by the seller.Min value:0The number of pallets in the shipment.Example{"planned":0,"fact":0} | fact | Type: integerThe number of pallets accepted at the sorting center.Min value:0 | planned | Type: integerThe number of pallets specified by the seller.Min value:0
+fact | Type: integerThe number of pallets accepted at the sorting center.Min value:0
+planned | Type: integerThe number of pallets specified by the seller.Min value:0
+shipmentType | Type: stringShipping method of orders:IMPORT— you bring your orders to the selected sorting center or order acceptance point on your own.WITHDRAW— you ship orders from your warehouse to Yandex Market couriers.Enum:IMPORT,WITHDRAW
+warehouse | Type: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"} | id | Type: integerThe ID of the shipping warehouse.Min value:1 | address | Type: stringThe address of the shipping warehouse.Example:example | name | Type: stringThe name of the shipping warehouse.Example:example
+id | Type: integerThe ID of the shipping warehouse.Min value:1
+address | Type: stringThe address of the shipping warehouse.Example:example
+name | Type: stringThe name of the shipping warehouse.Example:example
+warehouseTo | Type: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"} | id | Type: integerThe ID of the shipping warehouse.Min value:1 | address | Type: stringThe address of the shipping warehouse.Example:example | name | Type: stringThe name of the shipping warehouse.Example:example
+id | Type: integerThe ID of the shipping warehouse.Min value:1
+address | Type: stringThe address of the shipping warehouse.Example:example
+name | Type: stringThe name of the shipping warehouse.Example:example
+availableActions | Type: string[]Available actions on the shipment.Unique items:trueExample["CONFIRM"]
+currentStatus | Type: objectdescriptionType: stringDescription of the shipment status.Example:examplestatusType: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERRORupdateTimeType: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00Shipment status.Example{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"} | description | Type: stringDescription of the shipment status.Example:example | status | Type: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERROR | updateTime | Type: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+description | Type: stringDescription of the shipment status.Example:example
+status | Type: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERROR
+updateTime | Type: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+result Type: object
+
+• Type: objectdraftCountType: integerThe number of orders that the Market has scheduled for shipment.Min value:0factCountType: integerThe number of orders accepted at the sorting center or reception point.Min value:0idType: integerShipment ID.Min value:1orderIdsType: integer[]The IDs of the orders in the shipment.Unique items:trueExample[1]planIntervalFromType: string<date-time>The beginning of the scheduled shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00planIntervalToType: string<date-time>The end of the planned shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00plannedCountType: integerThe number of orders that the Market has confirmed for shipment.Min value:0signatureType: objectsignedType: booleanHas the acceptance certificate been signed?Information about the signature of the acceptance certificate.Example{"signed":true}deliveryServiceType: objectidType: integerThe delivery service ID.nameType: stringThe name of the delivery service.Example:exampleThe delivery service.Example{"id":0,"name":"example"}externalIdType: stringThe shipment ID in your system. If you haven't passed the ID yet, the ID from the parameter will be returned.id.Example:examplepalletsCountType: objectfactType: integerThe number of pallets accepted at the sorting center.Min value:0plannedType: integerThe number of pallets specified by the seller.Min value:0The number of pallets in the shipment.Example{"planned":0,"fact":0}shipmentTypeType: stringShipping method of orders:IMPORT— you bring your orders to the selected sorting center or order acceptance point on your own.WITHDRAW— you ship orders from your warehouse to Yandex Market couriers.Enum:IMPORT,WITHDRAWwarehouseType: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"}warehouseToType: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"}Shipping information.Example{"id":1,"planIntervalFrom":"2017-11-21T00:00:00+03:00","planIntervalTo":"2017-11-21T00:00:00+03:00","shipmentType":"IMPORT","warehouse":{"id":1,"name":"example","address":"example"},"warehouseTo":{"id":1,"name":"example","address":"example"},"externalId":"example","deliveryService":{"id":0,"name":"example"},"palletsCount":{"planned":0,"fact":0},"orderIds":[1],"draftCount":0,"plannedCount":0,"factCount":0,"signature":{"signed":true}}
+Type: object
+
+draftCount | Type: integerThe number of orders that the Market has scheduled for shipment.Min value:0
+factCount | Type: integerThe number of orders accepted at the sorting center or reception point.Min value:0
+id | Type: integerShipment ID.Min value:1
+orderIds | Type: integer[]The IDs of the orders in the shipment.Unique items:trueExample[1]
+planIntervalFrom | Type: string<date-time>The beginning of the scheduled shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+planIntervalTo | Type: string<date-time>The end of the planned shipping interval.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+plannedCount | Type: integerThe number of orders that the Market has confirmed for shipment.Min value:0
+signature | Type: objectsignedType: booleanHas the acceptance certificate been signed?Information about the signature of the acceptance certificate.Example{"signed":true} | signed | Type: booleanHas the acceptance certificate been signed?
+signed | Type: booleanHas the acceptance certificate been signed?
+deliveryService | Type: objectidType: integerThe delivery service ID.nameType: stringThe name of the delivery service.Example:exampleThe delivery service.Example{"id":0,"name":"example"} | id | Type: integerThe delivery service ID. | name | Type: stringThe name of the delivery service.Example:example
+id | Type: integerThe delivery service ID.
+name | Type: stringThe name of the delivery service.Example:example
+externalId | Type: stringThe shipment ID in your system. If you haven't passed the ID yet, the ID from the parameter will be returned.id.Example:example
+palletsCount | Type: objectfactType: integerThe number of pallets accepted at the sorting center.Min value:0plannedType: integerThe number of pallets specified by the seller.Min value:0The number of pallets in the shipment.Example{"planned":0,"fact":0} | fact | Type: integerThe number of pallets accepted at the sorting center.Min value:0 | planned | Type: integerThe number of pallets specified by the seller.Min value:0
+fact | Type: integerThe number of pallets accepted at the sorting center.Min value:0
+planned | Type: integerThe number of pallets specified by the seller.Min value:0
+shipmentType | Type: stringShipping method of orders:IMPORT— you bring your orders to the selected sorting center or order acceptance point on your own.WITHDRAW— you ship orders from your warehouse to Yandex Market couriers.Enum:IMPORT,WITHDRAW
+warehouse | Type: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"} | id | Type: integerThe ID of the shipping warehouse.Min value:1 | address | Type: stringThe address of the shipping warehouse.Example:example | name | Type: stringThe name of the shipping warehouse.Example:example
+id | Type: integerThe ID of the shipping warehouse.Min value:1
+address | Type: stringThe address of the shipping warehouse.Example:example
+name | Type: stringThe name of the shipping warehouse.Example:example
+warehouseTo | Type: objectidType: integerThe ID of the shipping warehouse.Min value:1addressType: stringThe address of the shipping warehouse.Example:examplenameType: stringThe name of the shipping warehouse.Example:exampleInformation about the shipping warehouse.Example{"id":1,"name":"example","address":"example"} | id | Type: integerThe ID of the shipping warehouse.Min value:1 | address | Type: stringThe address of the shipping warehouse.Example:example | name | Type: stringThe name of the shipping warehouse.Example:example
+id | Type: integerThe ID of the shipping warehouse.Min value:1
+address | Type: stringThe address of the shipping warehouse.Example:example
+name | Type: stringThe name of the shipping warehouse.Example:example draftCount Type: integer The number of orders that the Market has scheduled for shipment.
+Min value:0
+
+0 factCount Type: integer The number of orders accepted at the sorting center or reception point. Min value:0
+
+0 id Type: integer Shipment ID. Min value:1
+
+1 orderIds Type: integer[] The IDs of the orders in the shipment. Unique items:true
+
+true
+
+[
+1
+]
+
+[
+1
+]
+planIntervalFrom Type: string<date-time> The beginning of the scheduled shipping interval. Date format: ISO 8601 with an offset relative to UTC.
+Example:2017-11-21T00:00:00+03:00
+
+2017-11-21T00:00:00+03:00 planIntervalTo Type: string<date-time> The end of the planned shipping interval.
+Date format: ISO 8601 with an offset relative to UTC. Example:2017-11-21T00:00:00+03:00
+
+2017-11-21T00:00:00+03:00 plannedCount Type: integer The number of orders that the Market has confirmed for shipment.
+Min value:0
+
+0 signature
+
+signed | Type: booleanHas the acceptance certificate been signed? signed Type: boolean Has the acceptance certificate been signed?
+Information about the signature of the acceptance certificate.
+
+{
+"signed": true
+}
+
+{
+"signed": true
+}
+deliveryService
+
+id | Type: integerThe delivery service ID.
+name | Type: stringThe name of the delivery service.Example:example id Type: integer The delivery service ID.
+name Type: string The name of the delivery service. Example:example
+
+example The delivery service.
+
+{
+"id": 0,
+"name": "example"
+}
+
+{
+"id": 0,
+"name": "example"
+}
+externalId Type: string
+The shipment ID in your system. If you haven't passed the ID yet, the ID from the parameter will be returned.id.
+
+id Example:example
+
+example palletsCount
+
+fact | Type: integerThe number of pallets accepted at the sorting center.Min value:0
+planned | Type: integerThe number of pallets specified by the seller.Min value:0 fact Type: integer The number of pallets accepted at the sorting center.
+Min value:0
+
+0 planned Type: integer The number of pallets specified by the seller. Min value:0
+
+0 The number of pallets in the shipment.
+
+{
+"planned": 0,
+"fact": 0
+}
+
+{
+"planned": 0,
+"fact": 0
+}
+shipmentType Type: string Shipping method of orders:
+
+• IMPORT— you bring your orders to the selected sorting center or order acceptance point on your own.
+
+IMPORT
+• WITHDRAW— you ship orders from your warehouse to Yandex Market couriers.
+
+WITHDRAW Enum:IMPORT,WITHDRAW
+
+IMPORT
+
+WITHDRAW warehouse
+
+id | Type: integerThe ID of the shipping warehouse.Min value:1
+address | Type: stringThe address of the shipping warehouse.Example:example
+name | Type: stringThe name of the shipping warehouse.Example:example id Type: integer The ID of the shipping warehouse.
+Min value:1
+
+1 address Type: string The address of the shipping warehouse. Example:example
+
+example name Type: string The name of the shipping warehouse. Example:example
+
+example Information about the shipping warehouse.
+
+{
+"id": 1,
+"name": "example",
+"address": "example"
+}
+
+{
+"id": 1,
+"name": "example",
+"address": "example"
+}
+warehouseTo
+
+id | Type: integerThe ID of the shipping warehouse.Min value:1
+address | Type: stringThe address of the shipping warehouse.Example:example
+name | Type: stringThe name of the shipping warehouse.Example:example id Type: integer The ID of the shipping warehouse.
+Min value:1
+
+1 address Type: string The address of the shipping warehouse. Example:example
+
+example name Type: string The name of the shipping warehouse. Example:example
+
+example Information about the shipping warehouse.
+
+{
+"id": 1,
+"name": "example",
+"address": "example"
+}
+
+{
+"id": 1,
+"name": "example",
+"address": "example"
+}
+Shipping information.
+
+{
+"id": 1,
+"planIntervalFrom": "2017-11-21T00:00:00+03:00",
+"planIntervalTo": "2017-11-21T00:00:00+03:00",
+"shipmentType": "IMPORT",
+"warehouse": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"warehouseTo": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"externalId": "example",
+"deliveryService": {
+"id": 0,
+"name": "example"
+},
+"palletsCount": {
+"planned": 0,
+"fact": 0
+},
+"orderIds": [
+1
+],
+"draftCount": 0,
+"plannedCount": 0,
+"factCount": 0,
+"signature": {
+"signed": true
+}
+}
+
+{
+"id": 1,
+"planIntervalFrom": "2017-11-21T00:00:00+03:00",
+"planIntervalTo": "2017-11-21T00:00:00+03:00",
+"shipmentType": "IMPORT",
+"warehouse": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"warehouseTo": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"externalId": "example",
+"deliveryService": {
+"id": 0,
+"name": "example"
+},
+"palletsCount": {
+"planned": 0,
+"fact": 0
+},
+"orderIds": [
+1
+],
+"draftCount": 0,
+"plannedCount": 0,
+"factCount": 0,
+"signature": {
+"signed": true
+}
+}
+
+• Type: objectavailableActionsType: string[]Available actions on the shipment.Unique items:trueExample["CONFIRM"]currentStatusType: objectdescriptionType: stringDescription of the shipment status.Example:examplestatusType: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERRORupdateTimeType: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00Shipment status.Example{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"}Shipping information.Example{"currentStatus":{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"},"availableActions":["CONFIRM"]}
+Type: object
+
+availableActions | Type: string[]Available actions on the shipment.Unique items:trueExample["CONFIRM"]
+currentStatus | Type: objectdescriptionType: stringDescription of the shipment status.Example:examplestatusType: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERRORupdateTimeType: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00Shipment status.Example{"status":"OUTBOUND_CREATED","description":"example","updateTime":"2017-11-21T00:00:00+03:00"} | description | Type: stringDescription of the shipment status.Example:example | status | Type: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERROR | updateTime | Type: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+description | Type: stringDescription of the shipment status.Example:example
+status | Type: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERROR
+updateTime | Type: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+availableActions Type: string[] Available actions on the shipment. Unique items:true
+
+true
+
+[
+"CONFIRM"
+]
+
+[
+"CONFIRM"
+]
+currentStatus
+
+description | Type: stringDescription of the shipment status.Example:example
+status | Type: stringShipment status:OUTBOUND_CREATED— It is being formed.OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.OUTBOUND_CONFIRMED— confirmed and ready to ship.OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.ACCEPTED— accepted at the sorting center or reception point.ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.FINISHED— completed.ERROR— cancelled due to an error.Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERROR
+updateTime | Type: string<date-time>The time of the last change in the shipment status.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+description Type: string Description of the shipment status. Example:example
+
+example status Type: string Shipment status:
+
+• OUTBOUND_CREATED— It is being formed.
+
+OUTBOUND_CREATED
+• OUTBOUND_READY_FOR_CONFIRMATION— it can be processed.
+
+OUTBOUND_READY_FOR_CONFIRMATION
+• OUTBOUND_CONFIRMED— confirmed and ready to ship.
+
+OUTBOUND_CONFIRMED
+• OUTBOUND_SIGNED— An electronic acceptance certificate has been signed for it.
+
+OUTBOUND_SIGNED
+• ACCEPTED— accepted at the sorting center or reception point.
+
+ACCEPTED
+• ACCEPTED_WITH_DISCREPANCIES— accepted with discrepancies.
+
+ACCEPTED_WITH_DISCREPANCIES
+• FINISHED— completed.
+
+FINISHED
+• ERROR— cancelled due to an error.
+
+ERROR
+Enum:OUTBOUND_CREATED,OUTBOUND_READY_FOR_CONFIRMATION,OUTBOUND_CONFIRMED,OUTBOUND_SIGNED,FINISHED,ACCEPTED,ACCEPTED_WITH_DISCREPANCIES,ERROR
+
+OUTBOUND_CREATED
+
+OUTBOUND_READY_FOR_CONFIRMATION
+
+OUTBOUND_CONFIRMED
+
+OUTBOUND_SIGNED
+
+FINISHED
+
+ACCEPTED
+
+ACCEPTED_WITH_DISCREPANCIES
+
+ERROR updateTime Type: string<date-time> The time of the last change in the shipment status. Date format: ISO 8601 with an offset relative to UTC.
+Example:2017-11-21T00:00:00+03:00
+
+2017-11-21T00:00:00+03:00 Shipment status.
+
+{
+"status": "OUTBOUND_CREATED",
+"description": "example",
+"updateTime": "2017-11-21T00:00:00+03:00"
+}
+
+{
+"status": "OUTBOUND_CREATED",
+"description": "example",
+"updateTime": "2017-11-21T00:00:00+03:00"
+}
+
+Shipping information.
+
+{
+"currentStatus": {
+"status": "OUTBOUND_CREATED",
+"description": "example",
+"updateTime": "2017-11-21T00:00:00+03:00"
+},
+"availableActions": [
+"CONFIRM"
+]
+}
+
+{
+"currentStatus": {
+"status": "OUTBOUND_CREATED",
+"description": "example",
+"updateTime": "2017-11-21T00:00:00+03:00"
+},
+"availableActions": [
+"CONFIRM"
+]
+}
+
+Shipping information.
+
+{
+"id": 1,
+"planIntervalFrom": "2017-11-21T00:00:00+03:00",
+"planIntervalTo": "2017-11-21T00:00:00+03:00",
+"shipmentType": "IMPORT",
+"warehouse": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"warehouseTo": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"externalId": "example",
+"deliveryService": {
+"id": 0,
+"name": "example"
+},
+"palletsCount": {
+"planned": 0,
+"fact": 0
+},
+"orderIds": [
+1
+],
+"draftCount": 0,
+"plannedCount": 0,
+"factCount": 0,
+"signature": {
+"signed": true
+},
+"currentStatus": {
+"status": "OUTBOUND_CREATED",
+"description": "example",
+"updateTime": "2017-11-21T00:00:00+03:00"
+},
+"availableActions": [
+"CONFIRM"
+]
+}
+
+{
+"id": 1,
+"planIntervalFrom": "2017-11-21T00:00:00+03:00",
+"planIntervalTo": "2017-11-21T00:00:00+03:00",
+"shipmentType": "IMPORT",
+"warehouse": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"warehouseTo": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"externalId": "example",
+"deliveryService": {
+"id": 0,
+"name": "example"
+},
+"palletsCount": {
+"planned": 0,
+"fact": 0
+},
+"orderIds": [
+1
+],
+"draftCount": 0,
+"plannedCount": 0,
+"factCount": 0,
+"signature": {
+"signed": true
+},
+"currentStatus": {
+"status": "OUTBOUND_CREATED",
+"description": "example",
+"updateTime": "2017-11-21T00:00:00+03:00"
+},
+"availableActions": [
+"CONFIRM"
+]
+}
+
+{
+"result": {
+"id": 1,
+"planIntervalFrom": "2017-11-21T00:00:00+03:00",
+"planIntervalTo": "2017-11-21T00:00:00+03:00",
+"shipmentType": "IMPORT",
+"warehouse": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"warehouseTo": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"externalId": "example",
+"deliveryService": {
+"id": 0,
+"name": "example"
+},
+"palletsCount": {
+"planned": 0,
+"fact": 0
+},
+"orderIds": [
+1
+],
+"draftCount": 0,
+"plannedCount": 0,
+"factCount": 0,
+"signature": {
+"signed": true
+},
+"currentStatus": {
+"status": "OUTBOUND_CREATED",
+"description": "example",
+"updateTime": "2017-11-21T00:00:00+03:00"
+},
+"availableActions": [
+"CONFIRM"
+]
+}
+}
+
+{
+"result": {
+"id": 1,
+"planIntervalFrom": "2017-11-21T00:00:00+03:00",
+"planIntervalTo": "2017-11-21T00:00:00+03:00",
+"shipmentType": "IMPORT",
+"warehouse": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"warehouseTo": {
+"id": 1,
+"name": "example",
+"address": "example"
+},
+"externalId": "example",
+"deliveryService": {
+"id": 0,
+"name": "example"
+},
+"palletsCount": {
+"planned": 0,
+"fact": 0
+},
+"orderIds": [
+1
+],
+"draftCount": 0,
+"plannedCount": 0,
+"factCount": 0,
+"signature": {
+"signed": true
+},
+"currentStatus": {
+"status": "OUTBOUND_CREATED",
+"description": "example",
+"updateTime": "2017-11-21T00:00:00+03:00"
+},
+"availableActions": [
+"CONFIRM"
+]
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

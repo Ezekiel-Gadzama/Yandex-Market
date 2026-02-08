@@ -1,0 +1,1187 @@
+Recommended bids for specified products
+The method is available forall models. Not yet available for Market Yandex Go sellers.
+
+• pricing —Manage prices
+• pricing:read-only —View prices
+• promotion —Product promotion
+• promotion:read-only —View promotion information
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns recommended bids for specified products, which provides your offers with a certain percentage of impressions and additional promotion tools.
+One recommended bid or several may be returned for a single product. In the second case, different bids are designed to achieve a different percentage of impressions and obtain additional promotion tools.
+If the product has just been added to the catalog, but is not yet on sale, there will be no recommended bid for it.
+A single request can contain a maximum of 1,500 products.
+
+⚙️ Limit:1,000 requests per minute
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/bids/recommendations
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/bids/recommendations
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Body
+
+{
+"skus": [
+"example"
+]
+}
+
+{
+"skus": [
+"example"
+]
+}
+
+Name | Description
+skus | Type: string[]A list of products for which you need to get recommendations on rates.Min items:1Max items:1500Unique items:trueExample["example"]
+Name Description skus Type: string[] A list of products for which you need to get recommendations on rates.
+Min items:1
+
+1 Max items:1500
+
+1500 Unique items:true
+
+true
+
+[
+"example"
+]
+
+[
+"example"
+]
+
+Responses
+200 OK
+Recommended bids for the specified products.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"recommendations": [
+{
+"sku": "example",
+"bid": 570,
+"bidRecommendations": [
+null
+],
+"priceRecommendations": [
+null
+]
+}
+]
+}
+}
+
+{
+"status": "OK",
+"result": {
+"recommendations": [
+{
+"sku": "example",
+"bid": 570,
+"bidRecommendations": [
+null
+],
+"priceRecommendations": [
+null
+]
+}
+]
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectrecommendationsType: object[]bidType: integerThe value of the bid.Min value:0Max value:9999skuType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplebidRecommendationsType: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}]priceRecommendationsType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}]A list of products with recommended rates.Example[{"sku":"example","bid":570,"bidRecommendations":[{"bid":570,"showPercent":0,"benefits":["BESTS"]}],"priceRecommendations":[{"campaignId":1,"price":1}]}]A list of products with recommended rates.Example{"recommendations":[{"sku":"example","bid":570,"bidRecommendations":[{"bid":570,"showPercent":0,"benefits":[null]}],"priceRecommendations":[{"campaignId":1,"price":1}]}]}Example{"result":{"recommendations":[{"sku":"example","bid":570,"bidRecommendations":[{}],"priceRecommendations":[{}]}]}}
+
+result | Type: objectrecommendationsType: object[]bidType: integerThe value of the bid.Min value:0Max value:9999skuType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplebidRecommendationsType: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}]priceRecommendationsType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}]A list of products with recommended rates.Example[{"sku":"example","bid":570,"bidRecommendations":[{"bid":570,"showPercent":0,"benefits":["BESTS"]}],"priceRecommendations":[{"campaignId":1,"price":1}]}]A list of products with recommended rates.Example{"recommendations":[{"sku":"example","bid":570,"bidRecommendations":[{"bid":570,"showPercent":0,"benefits":[null]}],"priceRecommendations":[{"campaignId":1,"price":1}]}]} | recommendations | Type: object[]bidType: integerThe value of the bid.Min value:0Max value:9999skuType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplebidRecommendationsType: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}]priceRecommendationsType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}]A list of products with recommended rates.Example[{"sku":"example","bid":570,"bidRecommendations":[{"bid":570,"showPercent":0,"benefits":["BESTS"]}],"priceRecommendations":[{"campaignId":1,"price":1}]}] | bid | Type: integerThe value of the bid.Min value:0Max value:9999 | sku | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | bidRecommendations | Type: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}] | bid | Type: integerThe value of the bid.Min value:0Max value:9999 | showPercent | Type: integerThe percentage of impressions.Min value:0Max value:100 | benefits | Type: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"] | priceRecommendations | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | price | Type: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1
+recommendations | Type: object[]bidType: integerThe value of the bid.Min value:0Max value:9999skuType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplebidRecommendationsType: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}]priceRecommendationsType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}]A list of products with recommended rates.Example[{"sku":"example","bid":570,"bidRecommendations":[{"bid":570,"showPercent":0,"benefits":["BESTS"]}],"priceRecommendations":[{"campaignId":1,"price":1}]}] | bid | Type: integerThe value of the bid.Min value:0Max value:9999 | sku | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | bidRecommendations | Type: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}] | bid | Type: integerThe value of the bid.Min value:0Max value:9999 | showPercent | Type: integerThe percentage of impressions.Min value:0Max value:100 | benefits | Type: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"] | priceRecommendations | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | price | Type: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1
+bid | Type: integerThe value of the bid.Min value:0Max value:9999
+sku | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+bidRecommendations | Type: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}] | bid | Type: integerThe value of the bid.Min value:0Max value:9999 | showPercent | Type: integerThe percentage of impressions.Min value:0Max value:100 | benefits | Type: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]
+bid | Type: integerThe value of the bid.Min value:0Max value:9999
+showPercent | Type: integerThe percentage of impressions.Min value:0Max value:100
+benefits | Type: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]
+priceRecommendations | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | price | Type: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+price | Type: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1
+result
+
+recommendations | Type: object[]bidType: integerThe value of the bid.Min value:0Max value:9999skuType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplebidRecommendationsType: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}]priceRecommendationsType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}]A list of products with recommended rates.Example[{"sku":"example","bid":570,"bidRecommendations":[{"bid":570,"showPercent":0,"benefits":["BESTS"]}],"priceRecommendations":[{"campaignId":1,"price":1}]}] | bid | Type: integerThe value of the bid.Min value:0Max value:9999 | sku | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | bidRecommendations | Type: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}] | bid | Type: integerThe value of the bid.Min value:0Max value:9999 | showPercent | Type: integerThe percentage of impressions.Min value:0Max value:100 | benefits | Type: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"] | priceRecommendations | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | price | Type: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1
+bid | Type: integerThe value of the bid.Min value:0Max value:9999
+sku | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+bidRecommendations | Type: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}] | bid | Type: integerThe value of the bid.Min value:0Max value:9999 | showPercent | Type: integerThe percentage of impressions.Min value:0Max value:100 | benefits | Type: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]
+bid | Type: integerThe value of the bid.Min value:0Max value:9999
+showPercent | Type: integerThe percentage of impressions.Min value:0Max value:100
+benefits | Type: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]
+priceRecommendations | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | price | Type: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+price | Type: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1
+recommendations
+
+bid | Type: integerThe value of the bid.Min value:0Max value:9999
+sku | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+bidRecommendations | Type: object[]bidType: integerThe value of the bid.Min value:0Max value:9999showPercentType: integerThe percentage of impressions.Min value:0Max value:100benefitsType: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]A list of recommended bids with the corresponding impression shares and available additional promotion tools.The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.Min items:1Example[{"bid":570,"showPercent":0,"benefits":["BESTS"]}] | bid | Type: integerThe value of the bid.Min value:0Max value:9999 | showPercent | Type: integerThe percentage of impressions.Min value:0Max value:100 | benefits | Type: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]
+bid | Type: integerThe value of the bid.Min value:0Max value:9999
+showPercent | Type: integerThe percentage of impressions.Min value:0Max value:100
+benefits | Type: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]
+priceRecommendations | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1priceType: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1Recommended prices.Min items:1Example[{"campaignId":1,"price":1}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | price | Type: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+price | Type: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1
+bid Type: integer The value of the bid. Min value:0
+
+0 Max value:9999
+
+9999 sku Type: string Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example bidRecommendations
+
+bid | Type: integerThe value of the bid.Min value:0Max value:9999
+showPercent | Type: integerThe percentage of impressions.Min value:0Max value:100
+benefits | Type: string[] | nullA list of available subsidies.To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.Min items:1Unique items:trueExample["BESTS"]
+bid Type: integer The value of the bid. Min value:0
+
+0 Max value:9999
+
+9999 showPercent Type: integer The percentage of impressions. Min value:0
+
+0 Max value:100
+
+100 benefits Type: string[] | null A list of available subsidies. To get the necessary promotion tool, set the bid that will be recommended for this tool or higher.
+Min items:1
+
+1 Unique items:true
+
+true
+
+[
+"BESTS"
+]
+
+[
+"BESTS"
+]
+
+A list of recommended bids with the corresponding impression shares and available additional promotion tools.
+The higher the bid, the greater the share of impressions it helps to get and the more additional promotion tools are available.
+Min items:1
+
+1
+
+[
+{
+"bid": 570,
+"showPercent": 0,
+"benefits": [
+"BESTS"
+]
+}
+]
+
+[
+{
+"bid": 570,
+"showPercent": 0,
+"benefits": [
+"BESTS"
+]
+}
+]
+priceRecommendations
+
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+price | Type: numberThe recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended pricesMin value:1
+campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 price Type: number
+The recommended price of the product. In order for the promotion to work well, the price of the product should not be higher than this value.More information about recommended prices
+Min value:1
+
+1 Recommended prices. Min items:1
+
+1
+
+[
+{
+"campaignId": 1,
+"price": 1
+}
+]
+
+[
+{
+"campaignId": 1,
+"price": 1
+}
+]
+A list of products with recommended rates.
+
+[
+{
+"sku": "example",
+"bid": 570,
+"bidRecommendations": [
+{
+"bid": 570,
+"showPercent": 0,
+"benefits": [
+"BESTS"
+]
+}
+],
+"priceRecommendations": [
+{
+"campaignId": 1,
+"price": 1
+}
+]
+}
+]
+
+[
+{
+"sku": "example",
+"bid": 570,
+"bidRecommendations": [
+{
+"bid": 570,
+"showPercent": 0,
+"benefits": [
+"BESTS"
+]
+}
+],
+"priceRecommendations": [
+{
+"campaignId": 1,
+"price": 1
+}
+]
+}
+]
+
+A list of products with recommended rates.
+
+{
+"recommendations": [
+{
+"sku": "example",
+"bid": 570,
+"bidRecommendations": [
+{
+"bid": 570,
+"showPercent": 0,
+"benefits": [
+null
+]
+}
+],
+"priceRecommendations": [
+{
+"campaignId": 1,
+"price": 1
+}
+]
+}
+]
+}
+
+{
+"recommendations": [
+{
+"sku": "example",
+"bid": 570,
+"bidRecommendations": [
+{
+"bid": 570,
+"showPercent": 0,
+"benefits": [
+null
+]
+}
+],
+"priceRecommendations": [
+{
+"campaignId": 1,
+"price": 1
+}
+]
+}
+]
+}
+
+{
+"result": {
+"recommendations": [
+{
+"sku": "example",
+"bid": 570,
+"bidRecommendations": [
+{}
+],
+"priceRecommendations": [
+{}
+]
+}
+]
+}
+}
+
+{
+"result": {
+"recommendations": [
+{
+"sku": "example",
+"bid": 570,
+"bidRecommendations": [
+{}
+],
+"priceRecommendations": [
+{}
+]
+}
+]
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

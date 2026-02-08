@@ -1,0 +1,114 @@
+Calling methods
+Requests to Yandex Market API transmitted over HTTPS, timeout — 10 seconds, Keep-Alive is not supported.
+
+<http_method> https://api.partner.market.yandex.ru/<version>/<resource>.<format>?<query_parameters>
+
+<http_method> https://api.partner.market.yandex.ru/<version>/<resource>.<format>?<query_parameters>
+
+Where:
+
+• <http_method>― DELETE, GET, POST or PUT.
+<http_method>― DELETE, GET, POST or PUT.
+
+<http_method>
+• <version>― the version of the specific method (v1, v2, v3, ...).The versions of the different methods are independent.The current version is listed on the page of this method.The version is specified in the path URL and it is mandatory.Be sure to specify the version if you haven't done this before.We will soon disable the ability to work with queries without specifying the version.
+<version>― the version of the specific method (v1, v2, v3, ...).
+
+<version>
+
+• The versions of the different methods are independent.
+The versions of the different methods are independent.
+• The current version is listed on the page of this method.
+The current version is listed on the page of this method.
+• The version is specified in the path URL and it is mandatory.Be sure to specify the version if you haven't done this before.We will soon disable the ability to work with queries without specifying the version.
+The version is specified in the path URL and it is mandatory. Be sure to specify the version if you haven't done this before.
+We will soon disable the ability to work with queries without specifying the version.
+• <resource>― URL the resource that the action is being performed on. The names of the resources are given in the description of the corresponding methods.Path parameters are passed here — data that differs depending on the store or cabinet.Examplehttps://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/{campaignId}— the path parameter where you specify your campaign ID.
+<resource>― URL the resource that the action is being performed on. The names of the resources are given in the description of the corresponding methods.
+
+<resource> Path parameters are passed here — data that differs depending on the store or cabinet.
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}
+/{campaignId}— the path parameter where you specify your campaign ID.
+
+/{campaignId}
+• <format>― this is an optional part of the request that affects the way the response is presented. The response format can be specified in the HTTP header.Accept. The data is transmitted in JSON format. The description of each method contains examples of requests and responses.
+<format>― this is an optional part of the request that affects the way the response is presented. The response format can be specified in the HTTP header.Accept. The data is transmitted in JSON format. The description of each method contains examples of requests and responses.
+
+<format>
+
+Accept
+• <query_parameters>― required and optional request parameters.This is where the key and its value are transmitted, which are needed to refine the request, filter and sort incoming information, and paginate.The request parameters are separated from URL A question mark is used, and an ampersand (&) is used between the key-value pairs.Examplehttps://api.partner.market.yandex.ru/v2/reports/shows-sales/generate?format=CSV?format=CSV— request parameter.
+<query_parameters>― required and optional request parameters.
+
+<query_parameters>
+This is where the key and its value are transmitted, which are needed to refine the request, filter and sort incoming information, and paginate.
+The request parameters are separated from URL A question mark is used, and an ampersand (&) is used between the key-value pairs.
+
+https://api.partner.market.yandex.ru/v2/reports/shows-sales/generate?format=CSV
+
+https://api.partner.market.yandex.ru/v2/reports/shows-sales/generate?format=CSV
+?format=CSV— request parameter.
+
+?format=CSV For sellers of the Yandex Go Market:also readinstructions.
+If an error occurs, processing of the request is stopped and information about it is returned.Types of errors and what to do about them
+
+How method versioning works
+The version refers to a specific method. Different methods may have different current versions (for example, one — v1, other — v3).
+
+Examples of the same method in different versions
+
+GET https://api.partner.market.yandex.ru/v1/campaigns
+GET https://api.partner.market.yandex.ru/v2/campaigns
+
+GET https://api.partner.market.yandex.ru/v1/campaigns
+GET https://api.partner.market.yandex.ru/v2/campaigns
+
+Herev1andv2— versions of the same method.../campaigns. They may differ in the composition of fields, validation rules, and available parameters.
+
+v1
+
+v2
+
+.../campaigns Note Method versionGET /v1/campaignsremoved from support and unavailable.
+
+GET /v1/campaigns
+
+How to select and fix a version
+
+• Open the page of the required method in the documentation — it shows the current version and the status of the previous ones.
+• Fix a specific version in the client and URL (do not use the "latest by default").
+• Keep track of announcements about new versions and plans to decommission old ones on the method page.
+
+Migration between versions
+
+• Examine the changes on the method page (what was added/changed/deleted).
+• Update the request/response schema and parameters for the new version.
+• Test your changes.
+• Switch the version to URL to a new one.
+• Monitor errors and metrics; if necessary, temporarily switch back to the previous version.
+
+Frequent questions
+
+• What happens if you specify a non-existent version?
+— The error will return404 Not Found. Specify a lowercase letterv, capital letterVIt will also result in an error.404.
+
+404 Not Found
+
+v
+
+V
+
+404
+• Where can I see which version is currently in use?
+— In URL your request: segmentv1/v2/v3on the way.
+
+v1
+
+v2
+
+v3
+• Does the version of all methods change at once?
+— No. Each method is independently versioned.

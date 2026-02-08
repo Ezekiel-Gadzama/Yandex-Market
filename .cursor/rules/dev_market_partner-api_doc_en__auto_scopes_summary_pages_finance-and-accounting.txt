@@ -1,0 +1,69 @@
+View financial data and reports
+The name of the access in the OpenAPI specification: finance-and-accounting.
+
+Prices
+
+Method | Method description
+POST v2/tariffs/calculate | Service Cost Calculator Method Method description POST v2/tariffs/calculate
+Service Cost Calculator
+
+Orders
+
+Method | Method description
+POST v1/businesses/{businessId}/orders | Information about orders in the cabinet Method Method description
+POST v1/businesses/{businessId}/orders Information about orders in the cabinet
+
+Reports and documents
+
+Method | Method description
+POST v2/reports/shows-sales/generate | Sales Analytics Report
+POST v2/reports/sales-geography/generate | Sales Geography Report
+POST v2/reports/key-indicators/generate | Report on key indicators
+POST v2/reports/competitors-position/generate | Competitive Position Report
+POST v2/reports/united-orders/generate | Order Report
+POST v2/reports/united-returns/generate | Report on non-purchases and refunds
+POST v2/reports/goods-prices/generate | The Prices Report
+POST v2/reports/goods-turnover/generate | Turnover Report
+POST v2/reports/jewelry-fiscal/generate | Jewelry Order Report
+POST v2/reports/goods-realization/generate | Implementation Report
+POST v2/reports/united-netting/generate | Payment Report
+POST v2/reports/united-marketplace-services/generate | Report on the cost of services
+POST v2/reports/closure-documents/generate | Closing documents
+POST v2/reports/closure-documents/detalization/generate | Report on convergence with closing documents
+POST v2/reports/shows-boost/generate | Impression Boost Report
+POST v2/reports/boost-consolidated/generate | Sales Boost Report
+POST v2/reports/shelf-statistics/generate | Shelf Report
+POST v2/reports/banners-statistics/generate | Coverage Promotion Report Method Method description POST v2/reports/shows-sales/generate
+Sales Analytics Report POST v2/reports/sales-geography/generate Sales Geography Report POST v2/reports/key-indicators/generate
+Report on key indicators POST v2/reports/competitors-position/generate Competitive Position Report POST v2/reports/united-orders/generate
+Order Report POST v2/reports/united-returns/generate Report on non-purchases and refunds POST v2/reports/goods-prices/generate
+The Prices Report POST v2/reports/goods-turnover/generate Turnover Report POST v2/reports/jewelry-fiscal/generate
+Jewelry Order Report POST v2/reports/goods-realization/generate Implementation Report POST v2/reports/united-netting/generate
+Payment Report POST v2/reports/united-marketplace-services/generate Report on the cost of services POST v2/reports/closure-documents/generate
+Closing documents POST v2/reports/closure-documents/detalization/generate Report on convergence with closing documents
+POST v2/reports/shows-boost/generate Impression Boost Report POST v2/reports/boost-consolidated/generate
+Sales Boost Report POST v2/reports/shelf-statistics/generate Shelf Report POST v2/reports/banners-statistics/generate
+Coverage Promotion Report
+
+Viewing additional information
+
+Method | Method description
+GET v2/campaigns | User's Store List
+GET v2/campaigns/{campaignId} | Store Information
+POST v2/businesses/{businessId}/settings | Cabinet Settings
+GET v2/campaigns/{campaignId}/settings | Store Settings
+POST v2/categories/tree | The category tree
+GET v2/reports/info/{reportId} | Getting a given report or document
+GET v2/warehouses | Market Warehouse IDs
+POST v2/auth/token | Getting information about the authorization token
+GET v2/delivery/services | Directory of delivery services
+POST v2/regions/countries | List of valid country codes
+GET v2/regions | Search for regions by their name
+GET v2/regions/{regionId} | Information about the region
+GET v2/regions/{regionId}/children | Information about child regions Method Method description GET v2/campaigns
+User's Store List GET v2/campaigns/{campaignId} Store Information POST v2/businesses/{businessId}/settings
+Cabinet Settings GET v2/campaigns/{campaignId}/settings Store Settings POST v2/categories/tree The category tree
+GET v2/reports/info/{reportId} Getting a given report or document GET v2/warehouses Market Warehouse IDs
+POST v2/auth/token Getting information about the authorization token GET v2/delivery/services Directory of delivery services
+POST v2/regions/countries List of valid country codes GET v2/regions Search for regions by their name
+GET v2/regions/{regionId} Information about the region GET v2/regions/{regionId}/children Information about child regions

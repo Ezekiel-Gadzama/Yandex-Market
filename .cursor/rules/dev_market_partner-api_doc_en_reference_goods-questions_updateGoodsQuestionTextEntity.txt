@@ -1,0 +1,1061 @@
+Creating, editing, and deleting a response or comment
+The method is available forall models.
+
+• communication —Customer communication
+• all-methods — Full account management
+Create, edit, and delete a response or comment.
+
+⚙️ Limit:1000 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v1/businesses/{businessId}/goods-questions/update
+
+https://api.partner.market.yandex.ru/v1/businesses/{businessId}/goods-questions/update
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Body
+
+{
+"entityId": {
+"id": 1,
+"type": "QUESTION"
+},
+"parentEntityId": {
+"id": 1,
+"type": "QUESTION"
+},
+"text": "example",
+"operationType": "UPDATE"
+}
+
+{
+"entityId": {
+"id": 1,
+"type": "QUESTION"
+},
+"parentEntityId": {
+"id": 1,
+"type": "QUESTION"
+},
+"text": "example",
+"operationType": "UPDATE"
+}
+
+Name | Description
+operationType | Type: stringOperation on a response or comment.UPDATE— update.CREATE— creature.DELETE— removal.Enum:UPDATE,CREATE,DELETE
+entityId | Type: objectidType: integerID of the question, answer, or comment.Min value:1typeType: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENTID of the question, answer, or comment.Example{"id":1,"type":"QUESTION"} | id | Type: integerID of the question, answer, or comment.Min value:1 | type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+id | Type: integerID of the question, answer, or comment.Min value:1
+type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+parentEntityId | Type: objectidType: integerID of the question, answer, or comment.Min value:1typeType: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENTID of the question, answer, or comment.Example{"id":1,"type":"QUESTION"} | id | Type: integerID of the question, answer, or comment.Min value:1 | type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+id | Type: integerID of the question, answer, or comment.Min value:1
+type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+text | Type: stringText content.Min length:1Max length:5000Example:example Name Description operationType
+Type: string Operation on a response or comment.
+
+• UPDATE— update.
+
+UPDATE
+• CREATE— creature.
+
+CREATE
+• DELETE— removal.
+
+DELETE Enum:UPDATE,CREATE,DELETE
+
+UPDATE
+
+CREATE
+
+DELETE entityId
+
+id | Type: integerID of the question, answer, or comment.Min value:1
+type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+id Type: integer ID of the question, answer, or comment. Min value:1
+
+1 type Type: string Type of entity:
+
+• QUESTION— a question about the product.
+
+QUESTION
+• ANSWER— the answer to the question.
+
+ANSWER
+• COMMENT— comment on the response.
+
+COMMENT Enum:QUESTION,ANSWER,COMMENT
+
+QUESTION
+
+ANSWER
+
+COMMENT ID of the question, answer, or comment.
+
+{
+"id": 1,
+"type": "QUESTION"
+}
+
+{
+"id": 1,
+"type": "QUESTION"
+}
+parentEntityId
+
+id | Type: integerID of the question, answer, or comment.Min value:1
+type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+id Type: integer ID of the question, answer, or comment. Min value:1
+
+1 type Type: string Type of entity:
+
+• QUESTION— a question about the product.
+
+QUESTION
+• ANSWER— the answer to the question.
+
+ANSWER
+• COMMENT— comment on the response.
+
+COMMENT Enum:QUESTION,ANSWER,COMMENT
+
+QUESTION
+
+ANSWER
+
+COMMENT ID of the question, answer, or comment.
+
+{
+"id": 1,
+"type": "QUESTION"
+}
+
+{
+"id": 1,
+"type": "QUESTION"
+}
+text Type: string Text content. Min length:1
+
+1 Max length:5000
+
+5000 Example:example
+
+example
+
+Responses
+200 OK
+Information about the created response or comment.
+Returned only during the creation operation (operationType=CREATE). When updating and deleting, an empty response is returned.
+
+operationType
+
+CREATE
+
+Body
+
+{
+"status": "OK",
+"result": {
+"entity": {
+"id": 1,
+"type": "QUESTION"
+}
+}
+}
+
+{
+"status": "OK",
+"result": {
+"entity": {
+"id": 1,
+"type": "QUESTION"
+}
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectentityType: objectidType: integerID of the question, answer, or comment.Min value:1typeType: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENTID of the question, answer, or comment.Example{"id":1,"type":"QUESTION"}Information about the created response or comment.Returned only for the creation request.Example{"entity":{"id":1,"type":"QUESTION"}}Example{"result":{"entity":{"id":1,"type":"QUESTION"}}}
+
+result | Type: objectentityType: objectidType: integerID of the question, answer, or comment.Min value:1typeType: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENTID of the question, answer, or comment.Example{"id":1,"type":"QUESTION"}Information about the created response or comment.Returned only for the creation request.Example{"entity":{"id":1,"type":"QUESTION"}} | entity | Type: objectidType: integerID of the question, answer, or comment.Min value:1typeType: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENTID of the question, answer, or comment.Example{"id":1,"type":"QUESTION"} | id | Type: integerID of the question, answer, or comment.Min value:1 | type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+entity | Type: objectidType: integerID of the question, answer, or comment.Min value:1typeType: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENTID of the question, answer, or comment.Example{"id":1,"type":"QUESTION"} | id | Type: integerID of the question, answer, or comment.Min value:1 | type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+id | Type: integerID of the question, answer, or comment.Min value:1
+type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+result
+
+entity | Type: objectidType: integerID of the question, answer, or comment.Min value:1typeType: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENTID of the question, answer, or comment.Example{"id":1,"type":"QUESTION"} | id | Type: integerID of the question, answer, or comment.Min value:1 | type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+id | Type: integerID of the question, answer, or comment.Min value:1
+type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+entity
+
+id | Type: integerID of the question, answer, or comment.Min value:1
+type | Type: stringType of entity:QUESTION— a question about the product.ANSWER— the answer to the question.COMMENT— comment on the response.Enum:QUESTION,ANSWER,COMMENT
+id Type: integer ID of the question, answer, or comment. Min value:1
+
+1 type Type: string Type of entity:
+
+• QUESTION— a question about the product.
+
+QUESTION
+• ANSWER— the answer to the question.
+
+ANSWER
+• COMMENT— comment on the response.
+
+COMMENT Enum:QUESTION,ANSWER,COMMENT
+
+QUESTION
+
+ANSWER
+
+COMMENT ID of the question, answer, or comment.
+
+{
+"id": 1,
+"type": "QUESTION"
+}
+
+{
+"id": 1,
+"type": "QUESTION"
+}
+Information about the created response or comment. Returned only for the creation request.
+
+{
+"entity": {
+"id": 1,
+"type": "QUESTION"
+}
+}
+
+{
+"entity": {
+"id": 1,
+"type": "QUESTION"
+}
+}
+
+{
+"result": {
+"entity": {
+"id": 1,
+"type": "QUESTION"
+}
+}
+}
+
+{
+"result": {
+"entity": {
+"id": 1,
+"type": "QUESTION"
+}
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

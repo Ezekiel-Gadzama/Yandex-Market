@@ -1,5 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
+from sqlalchemy import or_ as sql_or, func
 from typing import List
 from app.database import get_db
 from app import models, schemas
@@ -8,9 +9,23 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[schemas.EmailTemplate])
-def get_email_templates(db: Session = Depends(get_db)):
-    """Get all email templates"""
-    templates = db.query(models.EmailTemplate).all()
+def get_email_templates(
+    search: str = Query(None, description="Search by name or body"),
+    db: Session = Depends(get_db)
+):
+    """Get all email templates with optional search"""
+    query = db.query(models.EmailTemplate)
+    
+    if search:
+        search_term = f"%{search.lower()}%"
+        query = query.filter(
+            sql_or(
+                func.lower(models.EmailTemplate.name).like(search_term),
+                func.lower(models.EmailTemplate.body).like(search_term)
+            )
+        )
+    
+    templates = query.all()
     return templates
 
 

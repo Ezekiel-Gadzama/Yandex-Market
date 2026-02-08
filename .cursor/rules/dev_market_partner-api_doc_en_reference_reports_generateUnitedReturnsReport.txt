@@ -1,0 +1,983 @@
+The structure and content of the reports are subject to change without prior notice. For example, a new column may be added or the name of the sheet may change.
+
+Report on non-purchases and refunds
+The method is available for models:FBY,FBS,ExpressandDBS.
+
+• inventory-and-order-processing —Order processing and inventory
+• finance-and-accounting —View financial data and reports
+• all-methods — Full account management
+Starts the generation of a summary report on non-purchases and refunds for a specified period.What kind of report is this
+The report contains information about non-purchases and refunds for the specified period, as well as those that are ready to be issued.
+You can find out the generation status and get a link to the finished report using a request.GET v2/reports/info/{reportId}.
+Explanation of the report columns:
+
+CSV column name | JSON column name | XLSX column name | Value type
+BUSINESS_ID | businessId | Business information/Business account ID | integer
+MODEL | model | Business information/Operation models | string
+PARTNER_ID | partnerId | Business information/Store IDs | integer
+SHOP_NAME | shopName | Business information/Store names | string
+INN | inn | Business information/INN (taxpayer identification number) | string
+PLACEMENT_CONTRACT | placementContract | Business information/Agreement numbers for placement | string
+PROMOTION_CONTRACT | promotionContract | Business information/Agreement numbers for promotion | string
+ORDER_ID | orderId | Information about orders/Order or shipment number | integer
+PARTNER_ORDER_ID | partnerOrderId | Information about orders/Your order number | string
+PLACEMENT_DATE | placementDate | Information about orders/The date of the order | string
+SHOP_SKU | shopSku | Information about orders/Your SKU | string
+PRODUCT_NAME | productName | Information about orders/Product name | string
+COUNT | count | Information about orders/Quantity, pcs. | integer
+PRICE | price | Information about orders/Your price, pcs. | number
+MARKETPLACE_DISCOUNT | marketplaceDiscount | Information about orders/Marketplace discount, pcs. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Information about orders/Payment with Sberbank bonuses, pcs. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Information about orders/Payment with Yandex Plus points | number
+DELIVERY_SERVICE | deliveryService | Information about orders/Product delivery service | string
+TYPE | type | Information about refunds or non-purchases/Type | string
+RETURN_NUMBER | returnNumber | Information about refunds or non-purchases/Return Number | integer
+STATUS | status | Information about refunds or non-purchases/Status | string
+BOX_BARCODES | boxBarcodes | Information about refunds or non-purchases/Barcode boxes | string
+DATE_OF_RETURN_CREATION | dateOfReturnCreation | Information about refunds or non-purchases/Date of return or unpurchased | string
+DATE_READY_FOR_ISSUANCE | dateReadyForIssuance | Information about refunds or non-purchases/Date of readiness for issuance | string
+CHARGEABLE_STORAGE_DAYS_NUMBER | chargeableStorageDaysNumber | Information about refunds or non-purchases/How many days is it stored for a fee | integer
+DAYS_BEFORE_RECYCLING_QUEUE | daysBeforeRecyclingQueue | Information about refunds or non-purchases/Count days before being queued for disposal | integer
+DISPOSAL_TRANSFER_DATE | disposalTransferDate | Information about refunds or non-purchases/Date of transfer to disposal | string
+DISPENSING_PLACE | dispensingPlace | Information about refunds or non-purchases/Place of issue | string
+CSV column name JSON column name XLSX column name Value type BUSINESS_ID businessId Business information/Business account ID
+integer MODEL model Business information/Operation models string PARTNER_ID partnerId Business information/Store IDs
+integer SHOP_NAME shopName Business information/Store names string INN inn Business information/INN (taxpayer identification number)
+string PLACEMENT_CONTRACT placementContract Business information/Agreement numbers for placement string
+PROMOTION_CONTRACT promotionContract Business information/Agreement numbers for promotion string ORDER_ID
+orderId Information about orders/Order or shipment number integer PARTNER_ORDER_ID partnerOrderId Information about orders/Your order number
+string PLACEMENT_DATE placementDate Information about orders/The date of the order string SHOP_SKU shopSku
+Information about orders/Your SKU string PRODUCT_NAME productName Information about orders/Product name
+string COUNT count Information about orders/Quantity, pcs. integer PRICE price Information about orders/Your price, pcs.
+number MARKETPLACE_DISCOUNT marketplaceDiscount Information about orders/Marketplace discount, pcs. number
+SPASIBO_DISCOUNT spasiboDiscount Information about orders/Payment with Sberbank bonuses, pcs. number
+YANDEX_PLUS_DISCOUNT yandexPlusDiscount Information about orders/Payment with Yandex Plus points number
+DELIVERY_SERVICE deliveryService Information about orders/Product delivery service string TYPE type Information about refunds or non-purchases/Type
+string RETURN_NUMBER returnNumber Information about refunds or non-purchases/Return Number integer STATUS
+status Information about refunds or non-purchases/Status string BOX_BARCODES boxBarcodes Information about refunds or non-purchases/Barcode boxes
+string DATE_OF_RETURN_CREATION dateOfReturnCreation Information about refunds or non-purchases/Date of return or unpurchased
+string DATE_READY_FOR_ISSUANCE dateReadyForIssuance Information about refunds or non-purchases/Date of readiness for issuance
+string CHARGEABLE_STORAGE_DAYS_NUMBER chargeableStorageDaysNumber Information about refunds or non-purchases/How many days is it stored for a fee
+integer DAYS_BEFORE_RECYCLING_QUEUE daysBeforeRecyclingQueue Information about refunds or non-purchases/Count days before being queued for disposal
+integer DISPOSAL_TRANSFER_DATE disposalTransferDate Information about refunds or non-purchases/Date of transfer to disposal
+string DISPENSING_PLACE dispensingPlace Information about refunds or non-purchases/Place of issue string
+
+CSV column name | JSON column name | XLSX column name | Value type
+BUSINESS_ID | businessId | Business information/Business account ID | integer
+MODEL | model | Business information/Operation models | string
+PARTNER_ID | partnerId | Business information/Store IDs | integer
+SHOP_NAME | shopName | Business information/Store names | string
+INN | inn | Business information/INN (taxpayer identification number) | string
+PLACEMENT_CONTRACT | placementContract | Business information/Agreement numbers for placement | string
+PROMOTION_CONTRACT | promotionContract | Business information/Agreement numbers for promotion | string
+ORDER_ID | orderId | Information about orders/Order or shipment number | integer
+PARTNER_ORDER_ID | partnerOrderId | Information about orders/Your order number | string
+PLACEMENT_DATE | placementDate | Information about orders/The date of the order | string
+SHOP_SKU | shopSku | Information about orders/Your SKU | string
+PRODUCT_NAME | productName | Information about orders/Product name | string
+PRICE | price | Information about orders/Your price, pcs. | number
+MARKETPLACE_DISCOUNT | marketplaceDiscount | Information about orders/Marketplace discount, pcs. | number
+SPASIBO_DISCOUNT | spasiboDiscount | Information about orders/Payment with Sberbank bonuses, pcs. | number
+YANDEX_PLUS_DISCOUNT | yandexPlusDiscount | Information about orders/Payment with Yandex Plus points | number
+DELIVERY_SERVICE | deliveryService | Information about orders/Product delivery service | string
+TYPE | type | Information about refunds or non-purchases/Type | string
+COUNT | count | Information about refunds or non-purchases/Quantity, pcs. | integer
+COUNT_OF_FIT | countOfFit | Information about refunds or non-purchases/The number of suitable ones, pcs. | integer
+RETURN_NUMBER | returnNumber | Information about refunds or non-purchases/Return Number | integer
+STATUS | status | Information about refunds or non-purchases/Status | string
+BOX_BARCODES | boxBarcodes | Information about refunds or non-purchases/Barcode boxes | string
+DATE_OF_RETURN_CREATION | dateOfReturnCreation | Information about refunds or non-purchases/Date of return or unpurchased | string
+DATE_READY_FOR_ISSUANCE | dateReadyForIssuance | Information about refunds or non-purchases/Date of readiness for issuance | string
+CHARGEABLE_STORAGE_DAYS_NUMBER | chargeableStorageDaysNumber | Information about refunds or non-purchases/How many days is it stored for a fee | integer
+DAYS_BEFORE_RECYCLING_QUEUE | daysBeforeRecyclingQueue | Information about refunds or non-purchases/Count days before being queued for disposal | integer
+DISPOSAL_TRANSFER_DATE | disposalTransferDate | Information about refunds or non-purchases/Date of transfer to disposal | string
+DISPENSING_PLACE | dispensingPlace | Information about refunds or non-purchases/Place of issue | string
+RETURN_PICKED_DATE | returnPickedDate | Information about refunds or non-purchases/Date of issue to you or return to sale | string
+RETURN_LOST_DATE | returnLostDate | Information about refunds or non-purchases/Date of loss | string
+RETURN_REASON | returnReason | Information about refunds or non-purchases/The reason for the refund | string
+BUYER_COMMENT | buyerComment | Information about refunds or non-purchases/Buyer's comment | string CSV column name
+JSON column name XLSX column name Value type BUSINESS_ID businessId Business information/Business account ID
+integer MODEL model Business information/Operation models string PARTNER_ID partnerId Business information/Store IDs
+integer SHOP_NAME shopName Business information/Store names string INN inn Business information/INN (taxpayer identification number)
+string PLACEMENT_CONTRACT placementContract Business information/Agreement numbers for placement string
+PROMOTION_CONTRACT promotionContract Business information/Agreement numbers for promotion string ORDER_ID
+orderId Information about orders/Order or shipment number integer PARTNER_ORDER_ID partnerOrderId Information about orders/Your order number
+string PLACEMENT_DATE placementDate Information about orders/The date of the order string SHOP_SKU shopSku
+Information about orders/Your SKU string PRODUCT_NAME productName Information about orders/Product name
+string PRICE price Information about orders/Your price, pcs. number MARKETPLACE_DISCOUNT marketplaceDiscount
+Information about orders/Marketplace discount, pcs. number SPASIBO_DISCOUNT spasiboDiscount Information about orders/Payment with Sberbank bonuses, pcs.
+number YANDEX_PLUS_DISCOUNT yandexPlusDiscount Information about orders/Payment with Yandex Plus points
+number DELIVERY_SERVICE deliveryService Information about orders/Product delivery service string TYPE
+type Information about refunds or non-purchases/Type string COUNT count Information about refunds or non-purchases/Quantity, pcs.
+integer COUNT_OF_FIT countOfFit Information about refunds or non-purchases/The number of suitable ones, pcs.
+integer RETURN_NUMBER returnNumber Information about refunds or non-purchases/Return Number integer STATUS
+status Information about refunds or non-purchases/Status string BOX_BARCODES boxBarcodes Information about refunds or non-purchases/Barcode boxes
+string DATE_OF_RETURN_CREATION dateOfReturnCreation Information about refunds or non-purchases/Date of return or unpurchased
+string DATE_READY_FOR_ISSUANCE dateReadyForIssuance Information about refunds or non-purchases/Date of readiness for issuance
+string CHARGEABLE_STORAGE_DAYS_NUMBER chargeableStorageDaysNumber Information about refunds or non-purchases/How many days is it stored for a fee
+integer DAYS_BEFORE_RECYCLING_QUEUE daysBeforeRecyclingQueue Information about refunds or non-purchases/Count days before being queued for disposal
+integer DISPOSAL_TRANSFER_DATE disposalTransferDate Information about refunds or non-purchases/Date of transfer to disposal
+string DISPENSING_PLACE dispensingPlace Information about refunds or non-purchases/Place of issue string
+RETURN_PICKED_DATE returnPickedDate Information about refunds or non-purchases/Date of issue to you or return to sale
+string RETURN_LOST_DATE returnLostDate Information about refunds or non-purchases/Date of loss string
+RETURN_REASON returnReason Information about refunds or non-purchases/The reason for the refund string
+BUYER_COMMENT buyerComment Information about refunds or non-purchases/Buyer's comment string
+
+⚙️ Limit:100 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/reports/united-returns/generate
+
+https://api.partner.market.yandex.ru/v2/reports/united-returns/generate
+
+Query parameters
+
+Name | Description
+format | Type: stringThe format of the report or document.
+Report format:FILE— the spreadsheet file (XLSX).CSV— A ZIP archive with CSV files for each report sheet.JSON— A ZIP archive with JSON files for each report sheet.Default:FILEEnum:FILE,CSV,JSON
+Name Description format Type: string The format of the report or document.
+Report format:
+
+• FILE— the spreadsheet file (XLSX).
+
+FILE
+• CSV— A ZIP archive with CSV files for each report sheet.
+
+CSV
+• JSON— A ZIP archive with JSON files for each report sheet.
+
+JSON Default:FILE
+
+FILE Enum:FILE,CSV,JSON
+
+FILE
+
+CSV
+
+JSON
+
+Body
+
+{
+"businessId": 1,
+"dateFrom": "2025-08-22",
+"dateTo": "2025-09-22",
+"campaignIds": [
+1
+],
+"returnType": "UNREDEEMED",
+"returnStatusTypes": [
+"CREATED"
+]
+}
+
+{
+"businessId": 1,
+"dateFrom": "2025-08-22",
+"dateTo": "2025-09-22",
+"campaignIds": [
+1
+],
+"returnType": "UNREDEEMED",
+"returnStatusTypes": [
+"CREATED"
+]
+}
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+dateFrom | Type: string<date>The beginning of the period, inclusive.Date format:YYYY-MM-DD.Example:2025-08-22
+dateTo | Type: string<date>End of the period, inclusive.Date format:YYYY-MM-DD.Example:2025-09-22
+campaignIds | Type: integer[] | nullThe list of campaign IDs of those stores that are needed in the report.Min items:1Unique items:trueExample[1]
+returnStatusTypes | Type: string[] | nullRefund transfer statuses that are needed in the report.If you do not specify them, information on all refunds will be returned.Min items:1Unique items:trueExample["CREATED"]
+returnType | Type: stringType of filtration:UNREDEEMED— non-purchases.RETURN— refunds.If you do not specify it, the response will include both non-purchases and refunds.Enum:UNREDEEMED,RETURN
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1 dateFrom Type: string<date> The beginning of the period, inclusive. Date format:YYYY-MM-DD.
+
+YYYY-MM-DD Example:2025-08-22
+
+2025-08-22 dateTo Type: string<date> End of the period, inclusive. Date format:YYYY-MM-DD.
+
+YYYY-MM-DD Example:2025-09-22
+
+2025-09-22 campaignIds Type: integer[] | null The list of campaign IDs of those stores that are needed in the report.
+Min items:1
+
+1 Unique items:true
+
+true
+
+[
+1
+]
+
+[
+1
+]
+returnStatusTypes Type: string[] | null Refund transfer statuses that are needed in the report.
+If you do not specify them, information on all refunds will be returned. Min items:1
+
+1 Unique items:true
+
+true
+
+[
+"CREATED"
+]
+
+[
+"CREATED"
+]
+returnType Type: string Type of filtration:
+
+• UNREDEEMED— non-purchases.
+UNREDEEMED— non-purchases.
+
+UNREDEEMED
+• RETURN— refunds.
+RETURN— refunds.
+
+RETURN If you do not specify it, the response will include both non-purchases and refunds. Enum:UNREDEEMED,RETURN
+
+UNREDEEMED
+
+RETURN
+
+Responses
+200 OK
+In response, you receive an identifier that allows you to find out the generation status and download the finished report.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+{
+"status": "OK",
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectestimatedGenerationTimeType: integerExpected generation time in milliseconds.reportIdType: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:exampleThe ID that will be needed to track the generation status and receive the finished report or document.Example{"reportId":"example","estimatedGenerationTime":0}Example{"result":{"reportId":"example","estimatedGenerationTime":0}}
+
+result | Type: objectestimatedGenerationTimeType: integerExpected generation time in milliseconds.reportIdType: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:exampleThe ID that will be needed to track the generation status and receive the finished report or document.Example{"reportId":"example","estimatedGenerationTime":0} | estimatedGenerationTime | Type: integerExpected generation time in milliseconds. | reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+estimatedGenerationTime | Type: integerExpected generation time in milliseconds.
+reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+result
+
+estimatedGenerationTime | Type: integerExpected generation time in milliseconds.
+reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+estimatedGenerationTime Type: integer Expected generation time in milliseconds. reportId Type: string
+The ID that will be needed to track the generation status and receive the finished report or document.
+Example:example
+
+example
+The ID that will be needed to track the generation status and receive the finished report or document.
+
+{
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+
+{
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+
+{
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+{
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

@@ -1,0 +1,72 @@
+How to work with Yandex Market API for sellers of the Yandex Go Market
+In the documentation, we describe the interaction of Market sellers with Yandex Market API for sellers. On this page, we have collected the specifics of the work for sellers from Uzbekistan who place goods on the Yandex Go Market.
+Yandex Go Market Help for Sellers
+
+Calling methods
+In queries, instead of.ruuse.net. Format:
+
+.ru
+
+.net
+
+<http_method> https://api.partner.market.yandex.net/<version>/<resource>.<format>?<query_parameters>
+
+<http_method> https://api.partner.market.yandex.net/<version>/<resource>.<format>?<query_parameters>
+
+Learn more about calling methods
+
+Methods
+If the method is not available for Yandex Go Market sellers, this is indicated in the description. Example:POST v2/businesses/{businessId}/promos
+
+Product name and description
+When you add products to the catalog using the methodPOST v2/businesses/{businessId}/offer-mappings/update, specify the parameter valuesnameanddescriptionin Russian. In order for them to be displayed in a different language on the showcase, make the request again, where specify:
+
+name
+
+description
+
+• the language in the parameterlanguage;
+
+language
+• parameter valuesnameanddescriptionin the specified language.
+
+name
+
+description You do not need to retransmit the remaining product characteristics.
+
+Product code
+Send the product codes and their type.IKPU_CODEin the parameterscodeandtype— methodPOST v2/businesses/{businessId}/offer-mappings/update.
+
+IKPU_CODE
+
+code
+
+type
+
+Prices of goods
+Methods for transmitting product prices:
+
+• POST v2/businesses/{businessId}/offer-mappings/update— adding products and transmitting prices;
+• POST v2/businesses/{businessId}/offer-prices/updates— transfer prices for all stores;
+• POST v2/campaigns/{campaignId}/offer-prices/updates— transmitting prices in a specific store.
+Specify prices in the national currency in the parametervalueand the currency itself incurrencyId. When receiving information, for example about orders, prices are returned in the currency that was set when adding the product.
+
+value
+
+currencyId You do not need to transfer VAT (parametervat).
+
+vat
+
+Marking codes
+In the methodPUT v2/campaigns/{campaignId}/orders/{orderId}/boxessend the product labeling codes in the system«ASL BELGISI»in the parametercis.
+
+cis
+
+Shortcuts
+Other shortcuts are available for Market Yandex Go sellers:
+
+A9_HORIZONTALLY
+
+A9
+
+A7 Methods for working with labels

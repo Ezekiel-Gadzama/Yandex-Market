@@ -1,0 +1,201 @@
+Adding and editing products
+Using a requestPOST v2/businesses/{businessId}/offer-mappings/updateyou can add products to the catalog and transfer:
+
+• theirleaf categorieson the Market and categorical characteristics;
+• main features;
+• prices of goods in the cabinet.
+You can also combine products on the card, edit and delete information about already added products, including prices in the cabinet and product categories.
+To find out the source and time of the information update:
+
+• In the seller's account on the Market, go to the pageProducts→Catalog.
+In the seller's account on the Market, go to the pageProducts→Catalog.
+• Click on the product you are interested in.
+Click on the product you are interested in.
+• In the upper-right corner, clickand enable the optionData source.Information about the data transfer will appear under the corresponding characteristics.
+In the upper-right corner, clickand enable the optionData source. Information about the data transfer will appear under the corresponding characteristics.
+
+Add new products to the catalog
+To add products to the catalog and place them in the store, you need to make several consecutive requests to the Market:
+
+• Get a list of Market categories by making a requestPOST v2/categories/tree.
+Get a list of Market categories by making a requestPOST v2/categories/tree.
+• For eachleaf categoryrequest a list of required characteristics usingPOST v2/category/{categoryId}/parameters.For characteristics that have units of measurement, in the parameterunitThey will return:acceptable values (units);default value (defaultUnitId).
+For eachleaf categoryrequest a list of required characteristics usingPOST v2/category/{categoryId}/parameters.
+For characteristics that have units of measurement, in the parameterunitThey will return:
+
+unit
+
+• acceptable values (units);
+
+units
+• default value (defaultUnitId).
+
+defaultUnitId
+• Call the methodPOST v2/businesses/{businessId}/offer-mappings/update, where:Provide information about the products (names, descriptions, photos, etc.), prices,leaf categorieson the Market and characteristics.If necessary, change the identifier of the unit of measurement of characteristics. — parameterunitIdinparameterValues. If it is not passed, the default units of measurement will be used (defaultUnitId).Before formingparameterValues, check out the"Transfer of characteristic values"— it describes typical cases, limitations, and examples.For sellers of the Yandex Go Market:also readinstructions.
+Call the methodPOST v2/businesses/{businessId}/offer-mappings/update, where:
+
+• Provide information about the products (names, descriptions, photos, etc.), prices,leaf categorieson the Market and characteristics.
+• If necessary, change the identifier of the unit of measurement of characteristics. — parameterunitIdinparameterValues. If it is not passed, the default units of measurement will be used (defaultUnitId).
+
+unitId
+
+parameterValues
+
+defaultUnitId
+• Before formingparameterValues, check out the"Transfer of characteristic values"— it describes typical cases, limitations, and examples.
+
+parameterValues For sellers of the Yandex Go Market:also readinstructions.
+• For products that do not have manufacturer's barcodes, generate the Market barcodes. — methodPOST v1/businesses/{businessId}/offer-mappings/barcodes/generate.
+For products that do not have manufacturer's barcodes, generate the Market barcodes. — methodPOST v1/businesses/{businessId}/offer-mappings/barcodes/generate.
+• If necessary, look at the cost of Market services for specific products. To do this, pass their parameters in the request.POST v2/tariffs/calculate.
+If necessary, look at the cost of Market services for specific products. To do this, pass their parameters in the request.POST v2/tariffs/calculate.
+• Get a list of models from Yandex. Market for which you can sell each of the added products using a request.POST v2/businesses/{businessId}/offer-mappings.What is a work model and what models are there?
+Get a list of models from Yandex. Market for which you can sell each of the added products using a request.POST v2/businesses/{businessId}/offer-mappings.What is a work model and what models are there?
+• Set the conditions for product placement using a queryPOST v2/campaigns/{campaignId}/offers/update. Terms of placement — this is the minimum order quantity, sales quantum and VAT. If you work according to the model DBS, the same request sets the delivery parameters.
+Set the conditions for product placement using a queryPOST v2/campaigns/{campaignId}/offers/update. Terms of placement — this is the minimum order quantity, sales quantum and VAT. If you work according to the model DBS, the same request sets the delivery parameters.
+• Make sure that the products have appeared in the showcase by using a requestPOST v2/campaigns/{campaignId}/offers. You will find detailed explanations of the product statuses.in the Help of the Market for sellers.
+Make sure that the products have appeared in the showcase by using a requestPOST v2/campaigns/{campaignId}/offers. You will find detailed explanations of the product statuses.in the Help of the Market for sellers.
+Each added product will receive a card on the Market
+Each of the products you add will be placed on the corresponding page. — the card. To understand how the cards are arranged on the Market, readan article in the Help of the Market for sellers.
+In the requestPOST v2/businesses/{businessId}/offer-mappingsyou can check the current binding of the product to the card.
+When transmitting the card ID in the requestPOST v2/businesses/{businessId}/offer-mappings/updateYandex.Market will consider your offer for linking, but based on the results of verification, it can link the product to a more suitable card.
+
+Change product categories
+
+• Get a list of Market categories using a requestPOST v2/categories/tree.
+Get a list of Market categories using a requestPOST v2/categories/tree.
+• To change the categories of products that you have already added to the catalog, in the requestPOST v2/businesses/{businessId}/offer-mappings/updatesend:Their IDs —offerId.IDs of newleaf categories—marketCategoryId.Product characteristics and their meanings for new categories —parameterValues. The values of the common characteristics for the old and new categories will remain, and you do not need to transfer them.
+To change the categories of products that you have already added to the catalog, in the requestPOST v2/businesses/{businessId}/offer-mappings/updatesend:
+
+• Their IDs —offerId.
+
+offerId
+• IDs of newleaf categories—marketCategoryId.
+
+marketCategoryId
+• Product characteristics and their meanings for new categories —parameterValues. The values of the common characteristics for the old and new categories will remain, and you do not need to transfer them.
+
+parameterValues
+
+Change product characteristics
+To change the characteristics of products that you have already added to the catalog, in the requestPOST v2/businesses/{businessId}/offer-mappings/updateretransmit:
+
+• Their IDs —offerId.
+
+offerId
+• IDs ofleaf categories—marketCategoryId. If you don't send it, you will receive a warning in the response (parameterwarnings).
+
+marketCategoryId
+
+warnings
+• New characteristics and their meanings —parameterValues. If you don't pass itparameterValuesandmarketCategoryId, information from outdated parameters will be usedparamsandcategory, andmarketCategoryIdit will be detected automatically.
+
+parameterValues
+
+parameterValues
+
+marketCategoryId
+
+params
+
+category
+
+marketCategoryId
+If necessary, change the identifier of the unit of measurement of characteristics. — parameterunitIdinparameterValues. If it is not passed, the default units of measurement will be used (defaultUnitId).
+
+unitId
+
+parameterValues
+
+defaultUnitId You don't need to pass parameters where nothing changes.
+Product characteristics by category can be obtained using a request.POST v2/category/{categoryId}/parameters.
+You can also change the categorical characteristics usingInstructions.
+
+Delete product characteristics
+To delete previously transmitted product characteristics, use a requestPOST v2/businesses/{businessId}/offer-mappings/update— indeleteParametersspecify the parameter values that you want to delete.
+
+deleteParameters You can pass multiple values at once. For parameters with the typestringyou can also pass an empty value.
+
+string
+
+Combine products on a card
+To combine product options on one card:
+
+• Make a requestPOST v2/category/{categoryId}/parameters. The characteristics that are the features of the product variant may depend on the cabinet. To find them out, pass the parameterbusinessId.If the category supports combining options:Among the characteristics will be the following:ParameterMeaningid200nameName of the group of optionsThe characteristics will be returned with the valuetruein the fielddistinctive.
+Make a requestPOST v2/category/{categoryId}/parameters. The characteristics that are the features of the product variant may depend on the cabinet. To find them out, pass the parameterbusinessId.
+
+businessId If the category supports combining options:
+
+• Among the characteristics will be the following:ParameterMeaningid200nameName of the group of options
+Among the characteristics will be the following:
+
+Parameter | Meaning
+id | 200
+name | Name of the group of options
+• The characteristics will be returned with the valuetruein the fielddistinctive.
+The characteristics will be returned with the valuetruein the fielddistinctive.
+
+true
+
+distinctive
+• Add each option to the catalog individually.
+Add each option to the catalog individually.
+• Give them categorical characteristics. — parameterparameterValuesin the methodPOST v2/businesses/{businessId}/offer-mappings/updateorPOST v2/businesses/{businessId}/offer-cards/update.Follow the following rules:The name of the group of options should bethe samefor all products that need to be displayed as options on a single card.The name of a group of variants can be a sequence of any characters up to 255 characters long.Each option should be different from all the others indistinctive- characteristics.All other characteristics must have the same values.Example.There are three characteristics in a certain category — features of the options (distinctive:true):the color for the filter,sizeandavailability of Wi-Fi. And more featuresmaterialandseries, which are not features of the variants.✅ Right❌ WrongThe color for the filterSizeThere is Wi-FiMaterialSeriesOption 1RedXLYesTree"Jupiter"Option 2RedXL—Tree"Jupiter"Option 3GreenSYesTree"Jupiter"Each option has its own setdistinctive- characteristics, and the rest match.The color for the filterSizeThere is Wi-FiMaterialSeriesOption 1RedXLYesTree"Jupiter"Option 2RedXLYesTree"Jupiter"Option 3GreenSYesTree"Jupiter"Option 1 and option 2 have the same features.The color for the filterSizeThere is Wi-FiMaterialSeriesOption 1RedXLYesTree"Jupiter"Option 2RedXL—Tree"Jupiter"Option 3GreenSYesSteel"Mars"Option 3 has different characteristics that are not specific to the option.
+Give them categorical characteristics. — parameterparameterValuesin the methodPOST v2/businesses/{businessId}/offer-mappings/updateorPOST v2/businesses/{businessId}/offer-cards/update.
+
+parameterValues Follow the following rules:
+
+• The name of the group of options should bethe samefor all products that need to be displayed as options on a single card.
+The name of the group of options should bethe samefor all products that need to be displayed as options on a single card.
+• The name of a group of variants can be a sequence of any characters up to 255 characters long.
+The name of a group of variants can be a sequence of any characters up to 255 characters long.
+• Each option should be different from all the others indistinctive- characteristics.
+Each option should be different from all the others indistinctive- characteristics.
+
+distinctive
+• All other characteristics must have the same values.Example.There are three characteristics in a certain category — features of the options (distinctive:true):the color for the filter,sizeandavailability of Wi-Fi. And more featuresmaterialandseries, which are not features of the variants.✅ Right❌ WrongThe color for the filterSizeThere is Wi-FiMaterialSeriesOption 1RedXLYesTree"Jupiter"Option 2RedXL—Tree"Jupiter"Option 3GreenSYesTree"Jupiter"Each option has its own setdistinctive- characteristics, and the rest match.The color for the filterSizeThere is Wi-FiMaterialSeriesOption 1RedXLYesTree"Jupiter"Option 2RedXLYesTree"Jupiter"Option 3GreenSYesTree"Jupiter"Option 1 and option 2 have the same features.The color for the filterSizeThere is Wi-FiMaterialSeriesOption 1RedXLYesTree"Jupiter"Option 2RedXL—Tree"Jupiter"Option 3GreenSYesSteel"Mars"Option 3 has different characteristics that are not specific to the option.
+All other characteristics must have the same values.
+Example.There are three characteristics in a certain category — features of the options (distinctive:true):the color for the filter,sizeandavailability of Wi-Fi. And more featuresmaterialandseries, which are not features of the variants.
+
+distinctive
+
+true
+
+| The color for the filter | Size | There is Wi-Fi | Material | Series
+Option 1 | Red | XL | Yes | Tree | "Jupiter"
+Option 2 | Red | XL | — | Tree | "Jupiter"
+Option 3 | Green | S | Yes | Tree | "Jupiter" Each option has its own setdistinctive- characteristics, and the rest match.
+
+distinctive
+
+| The color for the filter | Size | There is Wi-Fi | Material | Series
+Option 1 | Red | XL | Yes | Tree | "Jupiter"
+Option 2 | Red | XL | Yes | Tree | "Jupiter"
+Option 3 | Green | S | Yes | Tree | "Jupiter" Option 1 and option 2 have the same features.
+
+| The color for the filter | Size | There is Wi-Fi | Material | Series
+Option 1 | Red | XL | Yes | Tree | "Jupiter"
+Option 2 | Red | XL | — | Tree | "Jupiter"
+Option 3 | Green | S | Yes | Steel | "Mars" Option 3 has different characteristics that are not specific to the option.
+Products that are grouped together will have the same identifier.groupId.
+
+groupId For more information on how to work with product options, seeYandex.Market Help for sellers.
+Also read the instructions
+
+• Changing categorical characteristics
+• Yandex.Market recommendations for cards
+• Managing goods in the archive
+
+Removing products from the catalog
+Delete products from the catalog using the API:
+
+• POST v2/businesses/{businessId}/offer-mappings/delete— deletes the specified products from the cabinet catalog
+• POST v2/campaigns/{campaignId}/offers/delete— removes the specified products from the assortment of the selected store, does not affect other stores or the availability of the product in the general catalog.
+The product can be returned to the catalog Please note: the product will be returned to the catalog again if:
+
+• you are sending the product via the API
+• you are using an external integrator solution that synchronizes the product with the Market
+• You transfer the goods via the YML file and the synchronization starts.
+• you upload the product manually via Excel
+• You have enabled data synchronization with external platforms. Ozon/WB in the merchant's personal account
+A category that has no children. Categories that have no children.

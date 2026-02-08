@@ -1,0 +1,9 @@
+Quality index
+You can use the API to find out:
+
+• the value of the store quality index and its components;
+• information about orders that affected the quality index.
+Read more about the quality index.in the Help of the Market for sellers.
+
+• To find out the value of the quality index, pass the campaign IDs in the request.POST v2/businesses/{businessId}/ratings/quality.
+• To get information about orders that affected the store's quality index, use a requestPOST v2/campaigns/{campaignId}/ratings/quality/details.

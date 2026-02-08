@@ -15,11 +15,13 @@ router = APIRouter()
 MEDIA_DIR = Path("media")
 IMAGES_DIR = MEDIA_DIR / "images"
 VIDEOS_DIR = MEDIA_DIR / "videos"
+FILES_DIR = MEDIA_DIR / "files"
 
 # Create directories if they don't exist
 MEDIA_DIR.mkdir(exist_ok=True)
 IMAGES_DIR.mkdir(exist_ok=True)
 VIDEOS_DIR.mkdir(exist_ok=True)
+FILES_DIR.mkdir(exist_ok=True)
 
 
 def get_media_url(file_path: str) -> str:
@@ -100,6 +102,75 @@ async def get_media_file(file_path: str):
         raise HTTPException(status_code=403, detail="Access denied")
     
     return FileResponse(full_path)
+
+
+@router.post("/upload/files", response_model=List[str])
+async def upload_files(
+    files: List[UploadFile] = File(...),
+    db: Session = Depends(get_db)
+):
+    """Upload generic files (documents, etc.)"""
+    uploaded_urls = []
+    
+    for file in files:
+        # Generate unique filename
+        file_ext = Path(file.filename).suffix
+        unique_filename = f"{uuid.uuid4()}{file_ext}"
+        file_path = FILES_DIR / unique_filename
+        
+        # Save file
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        # Return relative path for database storage
+        relative_path = f"files/{unique_filename}"
+        uploaded_urls.append(relative_path)
+    
+    return uploaded_urls
+
+
+@router.post("/upload", response_model=List[dict])
+async def upload_any_files(
+    files: List[UploadFile] = File(...),
+    db: Session = Depends(get_db)
+):
+    """Unified upload endpoint - accepts any file type and returns attachment objects"""
+    uploaded_attachments = []
+    
+    for file in files:
+        # Determine file type
+        content_type = file.content_type or ''
+        if content_type.startswith('image/'):
+            file_type = 'image'
+            target_dir = IMAGES_DIR
+            relative_dir = 'images'
+        elif content_type.startswith('video/'):
+            file_type = 'video'
+            target_dir = VIDEOS_DIR
+            relative_dir = 'videos'
+        else:
+            file_type = 'file'
+            target_dir = FILES_DIR
+            relative_dir = 'files'
+        
+        # Generate unique filename
+        file_ext = Path(file.filename or 'file').suffix
+        unique_filename = f"{uuid.uuid4()}{file_ext}"
+        file_path = target_dir / unique_filename
+        
+        # Save file
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(file.file, buffer)
+        
+        # Return attachment object
+        relative_path = f"{relative_dir}/{unique_filename}"
+        uploaded_attachments.append({
+            "url": relative_path,
+            "type": file_type,
+            "name": file.filename or unique_filename
+        })
+    
+    return uploaded_attachments
 
 
 @router.delete("/files/{file_path:path}")

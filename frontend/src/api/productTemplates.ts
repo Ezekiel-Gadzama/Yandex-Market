@@ -20,7 +20,7 @@ export interface ProductTemplateUpdate {
 
 export const productTemplatesApi = {
   getAll: async () => {
-    const response = await apiClient.get<ProductTemplate[]>('/product-templates')
+    const response = await apiClient.get<ProductTemplate[]>('/product-templates/')
     return response.data
   },
   
@@ -30,7 +30,7 @@ export const productTemplatesApi = {
   },
   
   create: async (data: ProductTemplateCreate) => {
-    const response = await apiClient.post<ProductTemplate>('/product-templates', data)
+    const response = await apiClient.post<ProductTemplate>('/product-templates/', data)
     return response.data
   },
   

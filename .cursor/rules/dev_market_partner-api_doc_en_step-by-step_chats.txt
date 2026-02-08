@@ -1,0 +1,65 @@
+Chats with customers
+Yandex Market API allows you to communicate with your customers in chat rooms. What are the types of chats:
+
+• ORDER— by orders.Chats about orders and refunds
+
+ORDER
+• RETURN— on refunds (FBY, FBS and Express).Chats about orders and refunds
+
+RETURN
+• DIRECT— A chat that the customer starts if they have questions about the product. The seller cannot create it.Learn more about such chats
+
+DIRECT
+
+How to check if there are new chats or messages
+Via API notifications: Yandex.Market will send you a request.POST notificationwhen a new chat or message appears:
+
+• OnCHAT_CREATED: Create a chat in your system and savechatId. Get the chat context once using the methodGET v2/businesses/{businessId}/chatand save the chat information.
+OnCHAT_CREATED: Create a chat in your system and savechatId. Get the chat context once using the methodGET v2/businesses/{businessId}/chatand save the chat information.
+
+chatId
+• OnCHAT_MESSAGE_SENT: Receive only the message using the methodGET v2/businesses/{businessId}/chats/message. If the chat has not been saved yet, get it once using the methodGET v2/businesses/{businessId}/chatand save it.
+OnCHAT_MESSAGE_SENT: Receive only the message using the methodGET v2/businesses/{businessId}/chats/message. If the chat has not been saved yet, get it once using the methodGET v2/businesses/{businessId}/chatand save it.
+Through the main API:
+
+• Check if there is a chat with the buyer. —POST v2/businesses/{businessId}/chats. In the request, specify the chat type and the ID of the order or refund to which it relates.
+Check if there is a chat with the buyer. —POST v2/businesses/{businessId}/chats. In the request, specify the chat type and the ID of the order or refund to which it relates.
+• To receive one specific chat —GET v2/businesses/{businessId}/chat
+To receive one specific chat —GET v2/businesses/{businessId}/chat To receive messages, use the following methods:
+
+• POST v2/businesses/{businessId}/chats/history— for the history of chat messages;
+• GET v2/businesses/{businessId}/chats/message— for the message.
+
+How to reply to a message
+
+• Find the chats where your answer is needed. To do this, make a requestPOST v2/businesses/{businessId}/chats.
+In the request, send the status "Store response needed" ("statuses": ["WAITING_FOR_PARTNER"]).
+Find the chats where your answer is needed. To do this, make a requestPOST v2/businesses/{businessId}/chats.
+In the request, send the status "Store response needed" ("statuses": ["WAITING_FOR_PARTNER"]).
+• To get the chat message history, use a requestPOST v2/businesses/{businessId}/chats/history, where pass the chat ID.
+To get the chat message history, use a requestPOST v2/businesses/{businessId}/chats/history, where pass the chat ID.
+• Send a message using a requestPOST v2/businesses/{businessId}/chats/message.
+If you need to send a file to the buyer — for example, an additional product photo — use a requestPOST v2/businesses/{businessId}/chats/file/send.
+Send a message using a requestPOST v2/businesses/{businessId}/chats/message.
+If you need to send a file to the buyer — for example, an additional product photo — use a requestPOST v2/businesses/{businessId}/chats/file/send.
+
+How to start a chat
+
+• You can start a new chat and get its ID using a request.POST v2/businesses/{businessId}/chats/new.
+If the chat with the transmitted context already exists, the ID of this chat will be returned.How to start a test chatIn the debugging interface, create a test order, and then clickCreate a test chator make a requestPOST v2/businesses/{businessId}/chats/new.Learn more about working with test ordersPlease note:such a chat can only be created for an order, not a refund;There are no customer responses in the test chats.
+You can start a new chat and get its ID using a request.POST v2/businesses/{businessId}/chats/new.
+If the chat with the transmitted context already exists, the ID of this chat will be returned.
+How to start a test chat
+In the debugging interface, create a test order, and then clickCreate a test chator make a requestPOST v2/businesses/{businessId}/chats/new.
+Learn more about working with test orders Please note:
+
+• such a chat can only be created for an order, not a refund;
+such a chat can only be created for an order, not a refund;
+• There are no customer responses in the test chats.
+There are no customer responses in the test chats.
+• Send a message with a requestPOST v2/businesses/{businessId}/chats/message.
+If you need to send a file to the buyer — for example, an additional product photo — use a requestPOST v2/businesses/{businessId}/chats/file/send.
+Send a message with a requestPOST v2/businesses/{businessId}/chats/message.
+If you need to send a file to the buyer — for example, an additional product photo — use a requestPOST v2/businesses/{businessId}/chats/file/send.
+• Check new messages from the buyer. —POST v2/businesses/{businessId}/chats/history. Use a filter based on the ID of the last message in the request to receive only new messages and not re-upload those that you already have.
+Check new messages from the buyer. —POST v2/businesses/{businessId}/chats/history. Use a filter based on the ID of the last message in the request to receive only new messages and not re-upload those that you already have.

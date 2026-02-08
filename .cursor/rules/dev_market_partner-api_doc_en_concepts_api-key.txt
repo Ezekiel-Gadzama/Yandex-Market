@@ -1,0 +1,68 @@
+Creation and use API-Key-tokens
+To work with Yandex.Market via the API:
+
+• Create a token with access to certain groups of methods. This way, employees will be able to call only the methods they need for their work.What types of access are available
+• Insert the token into the header of the Yandex.Market request.
+Only the cabinet owner and cabinet manager can create and manage tokens. For more information about what roles are available, readin the Help of the Market for sellers.
+The maximum number of tokens for the cabinet — 30. The token is valid indefinitely — it remains active until you delete it.
+
+Create a token
+
+• In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules.
+In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules.
+• In the blockAuthorization tokensClick the buttonCreate a new token.
+In the blockAuthorization tokensClick the buttonCreate a new token.
+• In the window that opens:Specify the unique name of the token.Select the access rights that you want to grant.Click the buttonTo create.
+In the window that opens:
+
+• Specify the unique name of the token.
+Specify the unique name of the token.
+• Select the access rights that you want to grant.
+Select the access rights that you want to grant.
+• Click the buttonTo create.
+Click the buttonTo create.
+
+Edit the token
+Before editing Make sure that your integration will continue to work with the modified token. You can change access rights, as well as the name of the token. To do this:
+
+• In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules.
+In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules.
+• In the blockAuthorization tokensfind the one you need, tap the three dots next to it and selectEdit.
+In the blockAuthorization tokensfind the one you need, tap the three dots next to it and selectEdit.
+• Change the required information.
+Change the required information.
+• ClickSave.
+ClickSave. The information will be updated within 10 minutes.
+
+Delete a token
+Before deleting Make sure that your integration will continue to work without this token.
+
+• In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules.
+In the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules.
+• In the blockAuthorization tokensfind the one you need, tap the three dots next to it and selectRemove.
+In the blockAuthorization tokensfind the one you need, tap the three dots next to it and selectRemove.
+• Confirm the deletion.
+Confirm the deletion.
+
+Transfer the token
+Insert the received token into the headerApi-Keyaccording to the following scheme:
+
+Api-Key
+
+Api-Key: <token>
+
+Api-Key: <token>
+As a result, the title will look like this:
+
+Api-Key: ACMA:I4c4CxCSYaI41RSC2uYWP2qj3Rhhm4knMiBEga5K:151c0664
+
+Api-Key: ACMA:I4c4CxCSYaI41RSC2uYWP2qj3Rhhm4knMiBEga5K:151c0664
+
+If the request is received without a header with a valid token, the Market returns an error.401 Unauthorized.
+
+401 Unauthorized
+
+It may be useful
+
+• The method of obtaining information about the transmitted authorization token
+• Description of errors returned Yandex Market API

@@ -1,0 +1,84 @@
+Processing FBS-orders
+Yandex Market API it allows you to perform all the same actions that are performed in the cabinet: view new orders, receive labels for them, change something in them if necessary, and so on.
+To understand how everything happens Read itan article about order processing.
+
+Step 1. Receiving orders
+Read the instructions:Receiving orders — API survey or notifications
+Make sure that all the items are in stock. If everything is in order, proceed to step 2. If something is missing, read the instructions first.Postponement, cancellation and reduction of the order.
+
+Step 2. Generating an assembly sheet
+Generation takes time, so first you need to make a request for the generation itself, and then to get the finished assembly sheet.
+
+• Make a requestPOST v2/reports/documents/shipment-list/generate.
+• To find out if the build sheet is ready, make a requestGET v2/reports/info/{reportId}. You will receive the generation status and the estimated time remaining until it is completed.
+• After the generation time is over, repeat the request.GET v2/reports/info/{reportId}. If the build sheet has been generated, you will receive a link to download it.
+
+Step 3. Transfer of labeling codes and distribution of goods by boxes
+This information is transmitted simultaneously in a single request.:PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+
+Marking codes
+Labeling of goods in the system"An honest SIGN"optional for orders from individuals
+If the product is marked in «Честном знаке» or other labeling systems, give the Market the code of each sold copy.
+For example, if a person ordered three pairs of identical slippers, three codes must be provided for this item in the order.
+If the order contains jewelry or goods marked in the Honest Sign system, after transmitting the codes, the Market will begin checking them.How to get verification statuses
+
+Distribution by boxes
+Before shipping the order, you need to provide the Market with information about how the goods are distributed in boxes. This information is sometimes needed if something goes wrong.
+What should I do if I need to change the order information?
+By requestPUT v2/campaigns/{campaignId}/orders/{orderId}/boxesyou can use it as many times as you want until the order status changesReady for shipment. Each new request replaces the data transmitted with the previous request.
+
+Step 4. Label printing and "Ready for shipment" status transmission
+
+• Pack the collected order according to the rules described in detailin the Help of the Market for sellers.
+Pack the collected order according to the rules described in detailin the Help of the Market for sellers.
+• While the order is in the statusPROCESSINGwith a sub-statusSTARTED, you can pass its external ID —POST v2/campaigns/{campaignId}/orders/{orderId}/external-id.
+While the order is in the statusPROCESSINGwith a sub-statusSTARTED, you can pass its external ID —POST v2/campaigns/{campaignId}/orders/{orderId}/external-id.
+
+PROCESSING
+
+STARTED
+• Get the shortcuts using a request:GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels— for a single order;POST v2/reports/documents/labels/generate— for multiple orders.
+Get the shortcuts using a request:
+
+• GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels— for a single order;
+• POST v2/reports/documents/labels/generate— for multiple orders.
+• Put labels on the packed order.
+Put labels on the packed order.
+• Set the order to the statusReady for shipment("status": "PROCESSING" "substatus": "READY_TO_SHIP") using a request:PUT v2/campaigns/{campaignId}/orders/{orderId}/status— for a single order;POST v2/campaigns/{campaignId}/orders/status-update— for multiple orders.By doing this, you confirm that the product is in stock and will be shipped.Products in the statusReady for shipmentthey are included in the acceptance and transfer certificate.
+Set the order to the statusReady for shipment("status": "PROCESSING" "substatus": "READY_TO_SHIP") using a request:
+
+"status": "PROCESSING" "substatus": "READY_TO_SHIP"
+
+• PUT v2/campaigns/{campaignId}/orders/{orderId}/status— for a single order;
+• POST v2/campaigns/{campaignId}/orders/status-update— for multiple orders.
+By doing this, you confirm that the product is in stock and will be shipped.
+Products in the statusReady for shipmentthey are included in the acceptance and transfer certificate.
+
+Step 5. Handling the shipment
+To ship orders, the driver will need an acceptance certificate. Using a requestGET v2/campaigns/{campaignId}/shipments/reception-transfer-actYou can:
+
+• Receive and sign the acceptance certificate via the API. For information on how to enable work with electronic acceptance certificates, seeYandex.Market Help for sellers.
+Receive and sign the acceptance certificate via the API. For information on how to enable work with electronic acceptance certificates, seeYandex.Market Help for sellers.
+• Confirm the shipment. There is no such step when working in the office, but when working through the API — there is.
+Confirm the shipment. There is no such step when working in the office, but when working through the API — there is.
+When can I receive the report and confirm the shipment?
+Only after all orders have been converted to the statusReady for shipment. If there are unconfirmed orders in the shipment, an error message with a list of orders will be sent in response to the request.
+Send the number of packages using a requestPUT v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallets.
+To get shortcuts for them, use a requestGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallet/labels.
+
+If the product is not enough: postponement, cancellation and reduction of the order
+During the preparation of an order, your warehouse may discover that one or more items are missing. If this happens, you will have to postpone the delivery of the order or cancel it in whole or in part.
+The postponement of the delivery date and the complete cancellation of the order are made by separate requests.
+To change the order composition, usePUT v2/campaigns/{campaignId}/orders/{orderId}/boxes— the same request that transmits the labeling codes and the distribution of goods in boxes.
+
+Order action | Request
+Transfer to the next shipment | POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/transfer
+Complete cancellation of the order | RequestPUT v2/campaigns/{campaignId}/orders/{orderId}/status. (Transfer the order to"status":"CANCELLED""substatus": "SHOP_FAILED".)
+Exclusion of the product from the order | PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+
+"status":"CANCELLED"
+
+"substatus": "SHOP_FAILED" You can't do that often.
+Any of these actions will lower thequality indexthe store. When the quality index decreases, the store faces limitations.
+Доверительная приемка — это передача заказов Маркету без пересчета в общей таре.Узнать больше
+Индекс качества — число от 0 до 100. Если магазин работает по модели FBY, индекс качества показывает, насколько хорошо продавец делает поставки на склады Маркета, а в моделях FBS, DBS и Экспресс индекс оценивает работу с заказами.Узнать больше

@@ -1,0 +1,1089 @@
+The structure and content of the reports are subject to change without prior notice. For example, a new column may be added or the name of the sheet may change.
+
+Warehouse balance report
+The method is available for models:FBY,FBS,ExpressandDBS.
+
+• offers-and-cards-management —Manage products and cards
+• all-methods — Full account management
+Starts the generation of a report on inventory balances.What kind of report is this What information will be returned:
+
+• For the model FBY if you specifycampaignId, — about the leftovers in the Market warehouses.
+
+campaignId
+• For other models, if you specifycampaignId, — about the leftovers in the store's corresponding warehouse.
+
+campaignId
+• For other models, if you specifybusinessId, — about the leftovers in all store warehouses in the cabinet, except FBY. Use a filtercampaignIdsto specify specific stores.
+
+businessId
+
+campaignIds ⚠️ Do not transmit at the same timecampaignIdandbusinessId.
+
+campaignId
+
+businessId
+You can find out the generation status and get a link to the finished report using a request.GET v2/reports/info/{reportId}.
+Explanation of the report columns:
+
+CSV column name | JSON column name | XLSX column name | Value type
+SHOP_SKU | shopSku | SSKU | string
+ARTICLE | article | Ваш SKU | string
+MARKET_SKU | marketSku | SKU на Яндексе | integer
+PRODUCT_NAME | productName | Название товара | string
+VALID | valid | Годный | integer
+RESERVED | reserved | Резерв | integer
+AVAILABLE_FOR_ORDER | availableForOrder | Доступно для заказа | integer
+QUARANTINE | quarantine | Карантин | integer
+UTILIZATION | utilization | Передан на утилизацию | integer
+DEFECT | defect | Брак | integer
+EXPIRED | expired | Просрочен | integer
+LENGTH | length | Длина, см | integer
+WIDTH | width | Ширина, см | integer
+HEIGHT | height | Высота, см | integer
+WEIGHT | weight | Вес, кг | number
+WAREHOUSE | warehouse | Склад | string
+SELLING_STATUS | sellingStatus | Статус продаж | string
+RECOMMENDATIONS | recommendations | Рекомендации | string
+TURNOVER | turnover | Оборачиваемость
+за \d{2}.\d{2}.\d{2}-\d{2}.\d{2}.\d | string CSV column name JSON column name
+XLSX column name Value type SHOP_SKU shopSku SSKU string ARTICLE article Ваш SKU string MARKET_SKU marketSku
+SKU на Яндексе integer PRODUCT_NAME productName Название товара string VALID valid Годный integer RESERVED
+reserved Резерв integer AVAILABLE_FOR_ORDER availableForOrder Доступно для заказа integer QUARANTINE
+quarantine Карантин integer UTILIZATION utilization Передан на утилизацию integer DEFECT defect Брак
+integer EXPIRED expired Просрочен integer LENGTH length Длина, см integer WIDTH width Ширина, см integer
+HEIGHT height Высота, см integer WEIGHT weight Вес, кг number WAREHOUSE warehouse Склад string SELLING_STATUS
+sellingStatus Статус продаж string RECOMMENDATIONS recommendations Рекомендации string TURNOVER turnover
+Оборачиваемость
+за \d{2}.\d{2}.\d{2}-\d{2}.\d{2}.\d string Explanation of the report columns:
+
+CSV column name | JSON column name | XLSX column name | Value type
+ERRORS | errors | Критичные ошибки | string
+WARNINGS | warnings | Некритичные ошибки | string
+SHOP_SKU | shopSku | Ваш SKU * | string
+PRODUCT_NAME | productName | Название товара | string
+COUNT | count | Доступное количество товара * | integer CSV column name JSON column name XLSX column name
+Value type ERRORS errors Критичные ошибки string WARNINGS warnings Некритичные ошибки string SHOP_SKU
+shopSku Ваш SKU * string PRODUCT_NAME productName Название товара string COUNT count Доступное количество товара *
+integer Explanation of the report columns:
+
+CSV column name | JSON column name | XLSX column name | Value type
+ERRORS | errors | Критичные ошибки | string
+SHOP_SKU | shopSku | Ваш SKU * | string
+PRODUCT_NAME | productName | Название товара | string
+PLACEMENT_TYPE | placementType | Модель работы | string
+WAREHOUSE_AND_SHOP | warehouseAndShop | Склад * | string
+COUNT | count | Доступно для заказа * | integer
+RESERVE | reserve | Резерв | integer
+PRICE | price | Цена | string
+STATUS | status | Статус | string
+COMMENT | comment | Примечание | string CSV column name JSON column name XLSX column name Value type
+ERRORS errors Критичные ошибки string SHOP_SKU shopSku Ваш SKU * string PRODUCT_NAME productName Название товара
+string PLACEMENT_TYPE placementType Модель работы string WAREHOUSE_AND_SHOP warehouseAndShop Склад *
+string COUNT count Доступно для заказа * integer RESERVE reserve Резерв integer PRICE price Цена string
+STATUS status Статус string COMMENT comment Примечание string
+
+⚙️ Limit:100 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/reports/stocks-on-warehouses/generate
+
+https://api.partner.market.yandex.ru/v2/reports/stocks-on-warehouses/generate
+
+Query parameters
+
+Name | Description
+format | Type: stringThe format of the report or document.
+Report format:FILE— the spreadsheet file (XLSX).CSV— A ZIP archive with CSV files for each report sheet.JSON— A ZIP archive with JSON files for each report sheet.Default:FILEEnum:FILE,CSV,JSON
+Name Description format Type: string The format of the report or document.
+Report format:
+
+• FILE— the spreadsheet file (XLSX).
+
+FILE
+• CSV— A ZIP archive with CSV files for each report sheet.
+
+CSV
+• JSON— A ZIP archive with JSON files for each report sheet.
+
+JSON Default:FILE
+
+FILE Enum:FILE,CSV,JSON
+
+FILE
+
+CSV
+
+JSON
+
+Body
+
+{
+"campaignId": 1,
+"businessId": 1,
+"warehouseIds": [
+0
+],
+"reportDate": "2025-01-01",
+"categoryIds": [
+0
+],
+"hasStocks": true,
+"campaignIds": [
+1
+]
+}
+
+{
+"campaignId": 1,
+"businessId": 1,
+"warehouseIds": [
+0
+],
+"reportDate": "2025-01-01",
+"categoryIds": [
+0
+],
+"hasStocks": true,
+"campaignIds": [
+1
+]
+}
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+campaignIds | Type: integer[] | nullFilter by stores for the cabinet report (except for the model FBY).Transmit along withbusinessId.Min items:1Unique items:trueExample[1]
+categoryIds | Type: integer[] | nullFilter by category on the Market (except for the model FBY).Min items:1Unique items:trueExample[0]
+hasStocks | Type: booleanFilter by presence of leftovers (except for the model FBY).
+reportDate | Type: string<date>Filter by date (for the model FBY). The report will include data forthe previous oneGood afternoon.Date format:YYYY-MM-DD.Example:2025-01-01
+warehouseIds | Type: integer[] | nullFilter by warehouse IDs (model only FBY). To find out the ID, use the requestGET v2/warehouses.Min items:1Unique items:trueExample[0]
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1 campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 campaignIds Type: integer[] | null Filter by stores for the cabinet report (except for the model FBY).
+Transmit along withbusinessId.
+
+businessId Min items:1
+
+1 Unique items:true
+
+true
+
+[
+1
+]
+
+[
+1
+]
+categoryIds Type: integer[] | null Filter by category on the Market (except for the model FBY).
+Min items:1
+
+1 Unique items:true
+
+true
+
+[
+0
+]
+
+[
+0
+]
+hasStocks Type: boolean Filter by presence of leftovers (except for the model FBY). reportDate
+Type: string<date> Filter by date (for the model FBY). The report will include data forthe previous oneGood afternoon.
+Date format:YYYY-MM-DD.
+
+YYYY-MM-DD Example:2025-01-01
+
+2025-01-01 warehouseIds Type: integer[] | null Filter by warehouse IDs (model only FBY). To find out the ID, use the requestGET v2/warehouses.
+Min items:1
+
+1 Unique items:true
+
+true
+
+[
+0
+]
+
+[
+0
+]
+
+Responses
+200 OK
+In response, you receive an identifier that allows you to find out the generation status and download the finished report.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+{
+"status": "OK",
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectestimatedGenerationTimeType: integerExpected generation time in milliseconds.reportIdType: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:exampleThe ID that will be needed to track the generation status and receive the finished report or document.Example{"reportId":"example","estimatedGenerationTime":0}Example{"result":{"reportId":"example","estimatedGenerationTime":0}}
+
+result | Type: objectestimatedGenerationTimeType: integerExpected generation time in milliseconds.reportIdType: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:exampleThe ID that will be needed to track the generation status and receive the finished report or document.Example{"reportId":"example","estimatedGenerationTime":0} | estimatedGenerationTime | Type: integerExpected generation time in milliseconds. | reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+estimatedGenerationTime | Type: integerExpected generation time in milliseconds.
+reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+result
+
+estimatedGenerationTime | Type: integerExpected generation time in milliseconds.
+reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+estimatedGenerationTime Type: integer Expected generation time in milliseconds. reportId Type: string
+The ID that will be needed to track the generation status and receive the finished report or document.
+Example:example
+
+example
+The ID that will be needed to track the generation status and receive the finished report or document.
+
+{
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+
+{
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+
+{
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+{
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

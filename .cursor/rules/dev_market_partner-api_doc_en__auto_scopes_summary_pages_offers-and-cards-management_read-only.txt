@@ -1,0 +1,50 @@
+View products and cards
+The name of the access in the OpenAPI specification: offers-and-cards-management:read-only.
+
+Products
+
+Method | Method description
+POST v2/category/{categoryId}/parameters | Lists of product characteristics by category
+POST v2/businesses/{businessId}/offer-cards | Getting information about the fullness of store cards
+POST v2/businesses/{businessId}/offer-mappings | Information about the products in the catalog
+POST v2/campaigns/{campaignId}/offers | Information about the products that are placed in the specified store
+GET v2/campaigns/{campaignId}/hidden-offers | Information about the goods you have hidden Method Method description
+POST v2/category/{categoryId}/parameters Lists of product characteristics by category POST v2/businesses/{businessId}/offer-cards
+Getting information about the fullness of store cards POST v2/businesses/{businessId}/offer-mappings
+Information about the products in the catalog POST v2/campaigns/{campaignId}/offers Information about the products that are placed in the specified store
+GET v2/campaigns/{campaignId}/hidden-offers Information about the goods you have hidden
+
+Balances and turnover
+
+Method | Method description
+POST v2/campaigns/{campaignId}/offers/stocks | Information about balances and turnover Method Method description
+POST v2/campaigns/{campaignId}/offers/stocks Information about balances and turnover
+
+Reports and documents
+
+Method | Method description
+POST v2/campaigns/{campaignId}/stats/skus | Product Report Method Method description POST v2/campaigns/{campaignId}/stats/skus
+Product Report
+
+Viewing additional information
+
+Method | Method description
+GET v2/campaigns | User's Store List
+GET v2/campaigns/{campaignId} | Store Information
+POST v2/businesses/{businessId}/settings | Cabinet Settings
+GET v2/campaigns/{campaignId}/settings | Store Settings
+POST v2/categories/tree | The category tree
+GET v2/reports/info/{reportId} | Getting a given report or document
+GET v2/warehouses | Market Warehouse IDs
+POST v2/auth/token | Getting information about the authorization token
+GET v2/delivery/services | Directory of delivery services
+POST v2/regions/countries | List of valid country codes
+GET v2/regions | Search for regions by their name
+GET v2/regions/{regionId} | Information about the region
+GET v2/regions/{regionId}/children | Information about child regions Method Method description GET v2/campaigns
+User's Store List GET v2/campaigns/{campaignId} Store Information POST v2/businesses/{businessId}/settings
+Cabinet Settings GET v2/campaigns/{campaignId}/settings Store Settings POST v2/categories/tree The category tree
+GET v2/reports/info/{reportId} Getting a given report or document GET v2/warehouses Market Warehouse IDs
+POST v2/auth/token Getting information about the authorization token GET v2/delivery/services Directory of delivery services
+POST v2/regions/countries List of valid country codes GET v2/regions Search for regions by their name
+GET v2/regions/{regionId} Information about the region GET v2/regions/{regionId}/children Information about child regions

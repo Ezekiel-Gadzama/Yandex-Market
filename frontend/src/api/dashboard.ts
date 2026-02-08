@@ -6,7 +6,11 @@ export interface DashboardStats {
   active_products: number
   total_orders: number
   pending_orders: number
+  processing_orders: number
   completed_orders: number
+  cancelled_orders: number
+  finished_orders: number
+  successful_orders: number
   total_revenue: number
   total_profit: number
   total_cost: number

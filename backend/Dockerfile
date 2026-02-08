@@ -1,4 +1,8 @@
+# Try with a more specific tag or use a mirror if registry is slow
 FROM python:3.11-slim
+
+# Alternative: Use a different base image if python:3.11-slim fails
+# FROM python:3.11-alpine
 
 WORKDIR /app
 

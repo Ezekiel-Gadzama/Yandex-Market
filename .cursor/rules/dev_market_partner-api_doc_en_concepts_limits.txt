@@ -1,0 +1,68 @@
+Restrictions on requests
+Restrictions for requests to Yandex Market API For sellers, they are divided into the following types:
+
+• global restrictions (limits on the number of simultaneous requests);
+global restrictions (limits on the number of simultaneous requests);
+• resource restrictions (restrictions on the number of requests to the same resource over a long period of time, for example, per day);
+resource restrictions (restrictions on the number of requests to the same resource over a long period of time, for example, per day);
+• functional limitations (restrictions on the amount of data to be sent or returned in a single request).
+functional limitations (restrictions on the amount of data to be sent or returned in a single request).
+
+Global restrictions
+They affect the number of simultaneous (parallel) requests. A maximum of four simultaneous requests are allowed.
+The limit is applied to a specific entity depending on URL Request:
+
+• for queries like/campaigns/{campaignId}/...— to the store (campaignId);
+
+/campaigns/{campaignId}/...
+• for queries like/businesses/{businessId}/...— to the cabinet (Businesssid);
+
+/businesses/{businessId}/...
+• for other requests:when logging in byApi-Key-the token— to the account (BusinessID) where the token was created;when logging in byThe OAuth token— to the employee (userId) in whose name the token was issued.
+• when logging in byApi-Key-the token— to the account (BusinessID) where the token was created;
+• when logging in byThe OAuth token— to the employee (userId) in whose name the token was issued.
+If the limit is exceeded, the server returns a special HTTP code.420 Enhance Your Calmwith an explanatory message:
+
+420 Enhance Your Calm
+
+Hit rate limit of 4 parallel requests for campaignId 12345
+
+Hit rate limit of 4 parallel requests for campaignId 12345
+
+Resource constraints
+They affect the volume of requests to the same API resource over a long period of time from a single login. Query volume refers to the number of requests and the amount of data sent or returned per request.
+For most resources, the restrictions apply only to the number of requests. These restrictions are individual for each resource.
+For other resources, restrictions apply to the total amount of data sent or returned in requests to the same resource. These limits are calculated individually for each cabinet or store. The criteria for calculating restrictions are specified in the descriptions of such resources. Restrictions are recalculated with a delay of two to eight hours.
+Some resources are grouped into groups with a common resource limit. In this case, restrictions apply to the volume of requests to any of the group's resources over a long period of time.
+In each response to the request, the server returns special HTTP headers that indicate the resource limit status for the entity:
+
+• headingX-RateLimit-Resource-Limitcontains the numeric value of the restriction.
+headingX-RateLimit-Resource-Limitcontains the numeric value of the restriction.
+
+X-RateLimit-Resource-Limit
+• headingX-RateLimit-Resource-Untilcontains the date until which the restriction applies, in the formatRFC822(for example,Thu, 10 Jul 2018 00:42:42 GMT);
+headingX-RateLimit-Resource-Untilcontains the date until which the restriction applies, in the formatRFC822(for example,Thu, 10 Jul 2018 00:42:42 GMT);
+
+X-RateLimit-Resource-Until
+
+RFC822
+
+Thu, 10 Jul 2018 00:42:42 GMT
+• headingX-RateLimit-Resource-Remainingcontains the numeric value of the amount of requests to this resource remaining before the limit is exceeded.
+headingX-RateLimit-Resource-Remainingcontains the numeric value of the amount of requests to this resource remaining before the limit is exceeded.
+
+X-RateLimit-Resource-Remaining
+If the limit is exceeded, the server issues a special HTTP code.420 Enhance Your Calmwith an explanatory message, for example:
+
+420 Enhance Your Calm
+
+Hit rate limit of 10000 points per 1 day for resource /regions/{regionId}.json for userId 67890
+
+Hit rate limit of 10000 points per 1 day for resource /regions/{regionId}.json for userId 67890
+
+Functional limitations
+They affect the amount of data sent or returned for a resource per request. The restrictions are individual for each resource, and their values are specified in the descriptions of the methods themselves.
+In addition, there is a common restriction for all requests: the maximum size of the request body is 512 KB. If the volume is larger, split the request into several.
+If the limit is exceeded, the server issues a special HTTP code.400 Bad Requestwith an explanatory message.
+
+400 Bad Request

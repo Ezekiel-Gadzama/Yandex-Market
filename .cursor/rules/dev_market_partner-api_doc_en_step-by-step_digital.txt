@@ -1,0 +1,19 @@
+Processing orders with digital goods
+
+• Get a list of orders — methodPOST v1/businesses/{businessId}/orders. If the order contains digital goods, in the shipping informationdeliveryin the parametertypethe value will returnDIGITAL.
+Get a list of orders — methodPOST v1/businesses/{businessId}/orders. If the order contains digital goods, in the shipping informationdeliveryin the parametertypethe value will returnDIGITAL.
+
+delivery
+
+type
+
+DIGITAL
+• After the order status changesPROCESSINGwithin 30 minutes, use the methodPOST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods.After completing the request, yandex.Market will send the buyer an email with the keys and description. If the email could not be delivered (for example, the buyer provided an incorrect email address), yandex.Market will send the keys to the buyer via chat. The order will be transferred to the final statusDELIVERED.
+After the order status changesPROCESSINGwithin 30 minutes, use the methodPOST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods.
+
+PROCESSING
+After completing the request, yandex.Market will send the buyer an email with the keys and description. If the email could not be delivered (for example, the buyer provided an incorrect email address), yandex.Market will send the keys to the buyer via chat. The order will be transferred to the final statusDELIVERED.
+
+DELIVERED Enable API notifications
+Yandex.Market will send you a request.POST notificationwhen a new order appears and its status changes.
+How to work with notifications

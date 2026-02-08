@@ -1,0 +1,118 @@
+List of methods used in the model FBY
+If you work according to the model FBY. The Market takes over all work with orders — from storage to delivery. All you have to do is make sure that your goods in the Market warehouse do not run out, and deliver new batches. Read more about the model inYandex.Market Help for sellers.
+
+Offices and shops
+
+Method | Method description
+GET v2/​campaigns | User's Store List
+GET v2/​campaigns/​{campaignId} | Store Information
+GET v2/​campaigns/​{campaignId}/​settings | Store Settings Method Method description GET v2/​campaigns
+User's Store List GET v2/​campaigns/​{campaignId} Store Information GET v2/​campaigns/​{campaignId}/​settings
+Store Settings
+
+Products
+
+Method | Method description
+POST v2/​categories/​tree | The category tree
+POST v2/​category/​{categoryId}/​parameters | Lists of product characteristics by category
+POST v2/​campaigns/​{campaignId}/​offers/​update | Changing the terms of sale of goods in the store
+POST v1/​reports/​documents/​barcodes/​generate | Getting a barcode file
+POST v2/​campaigns/​{campaignId}/​offers | Information about the products that are placed in the specified store
+POST v2/​campaigns/​{campaignId}/​offers/​delete | Removing items from the store's assortment
+GET v2/​campaigns/​{campaignId}/​hidden-offers | Information about the goods you have hidden
+POST v2/​campaigns/​{campaignId}/​hidden-offers | Hiding products and hiding settings
+POST v2/​campaigns/​{campaignId}/​hidden-offers/​delete | Resuming product display Method Method description
+POST v2/​categories/​tree The category tree POST v2/​category/​{categoryId}/​parameters Lists of product characteristics by category
+POST v2/​campaigns/​{campaignId}/​offers/​update Changing the terms of sale of goods in the store POST v1/​reports/​documents/​barcodes/​generate
+Getting a barcode file POST v2/​campaigns/​{campaignId}/​offers Information about the products that are placed in the specified store
+POST v2/​campaigns/​{campaignId}/​offers/​delete Removing items from the store's assortment GET v2/​campaigns/​{campaignId}/​hidden-offers
+Information about the goods you have hidden POST v2/​campaigns/​{campaignId}/​hidden-offers Hiding products and hiding settings
+POST v2/​campaigns/​{campaignId}/​hidden-offers/​delete Resuming product display
+
+Balances and turnover
+
+Method | Method description
+POST v2/​campaigns/​{campaignId}/​offers/​stocks | Information about balances and turnover Method Method description
+POST v2/​campaigns/​{campaignId}/​offers/​stocks Information about balances and turnover
+
+Prices
+
+Method | Method description
+POST v2/​campaigns/​{campaignId}/​offer-prices/​updates | Setting prices for products in a specific store
+POST v2/​campaigns/​{campaignId}/​offer-prices | View prices for specified products in a specific store
+POST v2/​campaigns/​{campaignId}/​price-quarantine | List of quarantined products by price in the store
+POST v2/​campaigns/​{campaignId}/​price-quarantine/​confirm | Removing an item from quarantine for the price in the store
+Method Method description POST v2/​campaigns/​{campaignId}/​offer-prices/​updates Setting prices for products in a specific store
+POST v2/​campaigns/​{campaignId}/​offer-prices View prices for specified products in a specific store
+POST v2/​campaigns/​{campaignId}/​price-quarantine List of quarantined products by price in the store
+POST v2/​campaigns/​{campaignId}/​price-quarantine/​confirm Removing an item from quarantine for the price in the store
+
+Orders
+
+Method | Method description
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​business-buyer | Information about the buyer — a legal entity
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​documents | Information about documents Method Method description
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​business-buyer Information about the buyer — a legal entity
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​documents Information about documents
+
+FBY-applications
+
+Method | Method description
+POST v2/​campaigns/​{campaignId}/​supply-requests | Receiving information about orders for delivery, removal and disposal
+POST v2/​campaigns/​{campaignId}/​supply-requests/​items | Receipt of goods in an application for delivery, export or disposal
+POST v2/​campaigns/​{campaignId}/​supply-requests/​documents | Receipt of documents on the application for delivery, export or disposal
+Method Method description POST v2/​campaigns/​{campaignId}/​supply-requests Receiving information about orders for delivery, removal and disposal
+POST v2/​campaigns/​{campaignId}/​supply-requests/​items Receipt of goods in an application for delivery, export or disposal
+POST v2/​campaigns/​{campaignId}/​supply-requests/​documents Receipt of documents on the application for delivery, export or disposal
+
+Non-purchases and refunds
+
+Method | Method description
+GET v2/​campaigns/​{campaignId}/​returns | List of non-purchases and refunds
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId} | Information about non-purchase or refund
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​application | Receiving a refund request
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​decision/​{itemId}/​image/​{imageHash} | Receiving photos of items in a refund
+POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​decision/​submit | Transfer and confirmation of the refund decision
+Method Method description GET v2/​campaigns/​{campaignId}/​returns List of non-purchases and refunds
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId} Information about non-purchase or refund
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​application Receiving a refund request
+GET v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​decision/​{itemId}/​image/​{imageHash}
+Receiving photos of items in a refund POST v2/​campaigns/​{campaignId}/​orders/​{orderId}/​returns/​{returnId}/​decision/​submit
+Transfer and confirmation of the refund decision
+
+Reports and documents
+
+Method | Method description
+POST v2/​campaigns/​{campaignId}/​stats/​orders | Detailed information on orders
+POST v2/​reports/​united-returns/​generate | Report on non-purchases and refunds
+POST v2/​campaigns/​{campaignId}/​stats/​skus | Product Report
+POST v2/​reports/​stocks-on-warehouses/​generate | Report on warehouse balances
+POST v2/​reports/​goods-turnover/​generate | Turnover Report
+POST v2/​reports/​goods-movement/​generate | Report on the movement of goods
+POST v2/​reports/​united-marketplace-services/​generate | Report on the cost of services
+POST v2/​reports/​closure-documents/​generate | Closing documents
+POST v2/​reports/​closure-documents/​detalization/​generate | Report on convergence with closing documents
+GET v2/​reports/​info/​{reportId} | Getting a given report or document Method Method description POST v2/​campaigns/​{campaignId}/​stats/​orders
+Detailed information on orders POST v2/​reports/​united-returns/​generate Report on non-purchases and refunds
+POST v2/​campaigns/​{campaignId}/​stats/​skus Product Report POST v2/​reports/​stocks-on-warehouses/​generate
+Report on warehouse balances POST v2/​reports/​goods-turnover/​generate Turnover Report POST v2/​reports/​goods-movement/​generate
+Report on the movement of goods POST v2/​reports/​united-marketplace-services/​generate Report on the cost of services
+POST v2/​reports/​closure-documents/​generate Closing documents POST v2/​reports/​closure-documents/​detalization/​generate
+Report on convergence with closing documents GET v2/​reports/​info/​{reportId} Getting a given report or document
+
+Warehouses
+
+Method | Method description
+GET v2/​warehouses | Market Warehouse IDs Method Method description GET v2/​warehouses Market Warehouse IDs
+
+Reference books
+
+Method | Method description
+POST v2/​auth/​token | Getting information about the authorization token
+POST v2/​regions/​countries | List of valid country codes
+GET v2/​regions | Search for regions by their name
+GET v2/​regions/​{regionId} | Information about the region
+GET v2/​regions/​{regionId}/​children | Information about child regions Method Method description POST v2/​auth/​token
+Getting information about the authorization token POST v2/​regions/​countries List of valid country codes
+GET v2/​regions Search for regions by their name GET v2/​regions/​{regionId} Information about the region
+GET v2/​regions/​{regionId}/​children Information about child regions

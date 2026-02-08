@@ -1,0 +1,903 @@
+Types of errors and what to do about them
+If the store's request could not be completed, the Market returns the parameter in response.errors. It contains error codes (parametercode) and their brief descriptions (parametermessage).
+
+errors
+
+code
+
+message
+If there are too many errors with a certain code, you will receive a notification about this in the seller's account on the Market.
+
+What do the error codes mean?
+
+Code | Title | What happened and what to do
+400 | Bad Request | Something is wrong with the request content. For example, there is an error in the JSON data format or you are trying to change the status of a cancelled or delivered order.Focus on the error description to understand what exactly is wrong.
+401 | Unauthorized | The authorization token is not specified in the request (or is specified, but not there).
+403 | Forbidden | The authorization token did not work.For the OAuth token:most likely, it has expired or you have removed the person for whom the token was issued from the staff.Another access error.
+404 | Not Found | The requested method or resource was not found. Check the request addresses that the store's system uses.The specified parameter was not found. For example, a campaign. Check the correctness of the transmitted data.The method version was not found. Check that the version you are using is correct.
+405 | Method Not Allowed | There is no such method on the specified resource.Check the request addresses that the store's system uses.
+415 | Unsupported Media Type | The requested content type is not supported by the method.Check the correctness of the request.
+420 | Enhance Your Calm | The store exceeded the request limit.Make sure that your system does not send anything superfluous.
+423 | Locked | The method cannot be used for this store.Focus on the error description to understand what exactly is wrong.
+499 | Client Closed Request | The client closed the connection before completing the request processing on the Market side. Check the timeouts on the client side and repeat the request.
+500 | Internal Server Error | Internal error of the Market.
+503 | Service Unavailable | The Yandex.Market server is overloaded. Code Title What happened and what to do
+400 Bad Request
+
+Bad Request
+Something is wrong with the request content. For example, there is an error in the JSON data format or you are trying to change the status of a cancelled or delivered order.
+Focus on the error description to understand what exactly is wrong. 401 Unauthorized
+
+Unauthorized The authorization token is not specified in the request (or is specified, but not there).
+403 Forbidden
+
+Forbidden
+
+• The authorization token did not work.For the OAuth token:most likely, it has expired or you have removed the person for whom the token was issued from the staff.
+• Another access error.
+404 Not Found
+
+Not Found
+
+• The requested method or resource was not found. Check the request addresses that the store's system uses.
+• The specified parameter was not found. For example, a campaign. Check the correctness of the transmitted data.
+• The method version was not found. Check that the version you are using is correct.
+405 Method Not Allowed
+
+Method Not Allowed There is no such method on the specified resource. Check the request addresses that the store's system uses.
+415 Unsupported Media Type
+
+Unsupported Media Type The requested content type is not supported by the method. Check the correctness of the request.
+420 Enhance Your Calm
+
+Enhance Your Calm The store exceeded the request limit. Make sure that your system does not send anything superfluous.
+423 Locked
+
+Locked The method cannot be used for this store. Focus on the error description to understand what exactly is wrong.
+499 Client Closed Request
+
+Client Closed Request
+The client closed the connection before completing the request processing on the Market side. Check the timeouts on the client side and repeat the request.
+500 Internal Server Error
+
+Internal Server Error Internal error of the Market. 503 Service Unavailable
+
+Service Unavailable The Yandex.Market server is overloaded.
+
+Errors in the query content (400)
+Errors found in all methods
+
+Description | Translation | What to do | Methods in which the error occurs
+'field' elements must be not null (rejected value: 'value') | Collection items should not benull. | Delete or replace the elements with the valuenull. | It is found in all methods.
+'field' must be greater than 'value' (rejected value: 'value') | The value must be strictly greater than the threshold. | Specify a value from the acceptable range. | It is found in all methods.
+'field' must be greater than or equal to 'value' (rejected value: 'value') | The value must be greater than or equal to the threshold. | Specify a value from the acceptable range. | It is found in all methods.
+'field' must be less than or equal to 'value' (rejected value: 'value') | The value must be less than or equal to the threshold. | Specify a value from the acceptable range. | It is found in all methods.
+'field' must match 'regexp' (rejected value: 'value') | The value does not match the required template. | Pass the value corresponding to the regular expression. | It is found in all methods.
+'field' must not be empty (rejected value: 'value') | The field must not be empty. | Pass a non-empty field value. | It is found in all methods.
+'field' must not be null (rejected value: null) | The required field is not passed. | Specify the value of the field. | It is found in all methods.
+'field' size must be between 'min' and 'max' (rejected size: 'size') | Invalid collection size: must be from 'min' to 'max'. | Change the number of elements to acceptable. | It is found in all methods.
+'field' size must be between 'min' and 'max' (rejected value: 'value') | Invalid value length: must be from 'min' to 'max'. | Pass the value of the allowed length. | It is found in all methods.
+Campaign type is not allowed. Allowed campaign types: 'campaignTypes' | This method does not support your store's operating model. | Make sure that you use a method that supports your store's operating model. | It is found in all methods.
+Content type 'contentType' not supported | The requested content type is not supported. | Pass one of the supported content types in the headerContent-Type.Learn more about the input data format | It is found in all methods.
+Illegal input at 'path' | Invalid value for the specified path. | Check the structure and types in the request body using the specified path; correct the field names and value formats to match the expected JSON schema. If the content type is not JSON, specify the correct one.Content-Type. | It is found in all methods.
+JSON: {message} | The JSON data format contains an error. | Check the correctness of the JSON. | It is found in all methods.
+Required request body is missing | The request body is required, but it has not been transmitted. | Make sure that you have passed the request body for the method where it is required. | It is found in all methods.
+Required request parameter 'param' is not present | The required parameter was not passed. | Make sure that you have passed all the required input parameters for the method used. | It is found in all methods.
+The request is too big: Maximum allowed request size must be less than 'maxSize' KB, but passed 'size' MB | The request is too large: the size of the transmitted request is greater than the maximum allowed. | Reduce the request body; if there is a large volume, split the data into several smaller requests so that each one does not exceed the limit. | It is found in all methods.
+The request is too big: {message} | The HTTP request size limit has been exceeded. | The content size cannot exceed 512 KB. Split the request into several. | It is found in all methods.
+Type mismatch: 'value' | The input value type does not match the expected parameter type. | Pass the values in the correct format and type, which can be viewed on the corresponding methods page. | It is found in all methods.
+Unexpected end of content | The request body ends unexpectedly. | Check the correctness of the format of the data transmitted in the request body. | It is found in all methods.
+Description Translation What to do Methods in which the error occurs 'field' elements must be not null (rejected value: 'value')
+Collection items should not benull.
+
+null Delete or replace the elements with the valuenull.
+
+null It is found in all methods. 'field' must be greater than 'value' (rejected value: 'value') The value must be strictly greater than the threshold.
+Specify a value from the acceptable range. It is found in all methods. 'field' must be greater than or equal to 'value' (rejected value: 'value')
+The value must be greater than or equal to the threshold. Specify a value from the acceptable range.
+It is found in all methods. 'field' must be less than or equal to 'value' (rejected value: 'value') The value must be less than or equal to the threshold.
+Specify a value from the acceptable range. It is found in all methods. 'field' must match 'regexp' (rejected value: 'value')
+The value does not match the required template. Pass the value corresponding to the regular expression.
+It is found in all methods. 'field' must not be empty (rejected value: 'value') The field must not be empty.
+Pass a non-empty field value. It is found in all methods. 'field' must not be null (rejected value: null)
+The required field is not passed. Specify the value of the field. It is found in all methods. 'field' size must be between 'min' and 'max' (rejected size: 'size')
+Invalid collection size: must be from 'min' to 'max'. Change the number of elements to acceptable. It is found in all methods.
+'field' size must be between 'min' and 'max' (rejected value: 'value') Invalid value length: must be from 'min' to 'max'.
+Pass the value of the allowed length. It is found in all methods. Campaign type is not allowed. Allowed campaign types: 'campaignTypes'
+This method does not support your store's operating model. Make sure that you use a method that supports your store's operating model.
+It is found in all methods. Content type 'contentType' not supported The requested content type is not supported.
+Pass one of the supported content types in the headerContent-Type.Learn more about the input data format
+
+Content-Type It is found in all methods. Illegal input at 'path' Invalid value for the specified path.
+Check the structure and types in the request body using the specified path; correct the field names and value formats to match the expected JSON schema. If the content type is not JSON, specify the correct one.Content-Type.
+
+Content-Type It is found in all methods. JSON: {message} The JSON data format contains an error. Check the correctness of the JSON.
+It is found in all methods. Required request body is missing The request body is required, but it has not been transmitted.
+Make sure that you have passed the request body for the method where it is required. It is found in all methods.
+Required request parameter 'param' is not present The required parameter was not passed. Make sure that you have passed all the required input parameters for the method used.
+It is found in all methods.
+The request is too big: Maximum allowed request size must be less than 'maxSize' KB, but passed 'size' MB
+The request is too large: the size of the transmitted request is greater than the maximum allowed.
+Reduce the request body; if there is a large volume, split the data into several smaller requests so that each one does not exceed the limit.
+It is found in all methods. The request is too big: {message} The HTTP request size limit has been exceeded.
+The content size cannot exceed 512 KB. Split the request into several. It is found in all methods. Type mismatch: 'value'
+The input value type does not match the expected parameter type.
+Pass the values in the correct format and type, which can be viewed on the corresponding methods page.
+It is found in all methods. Unexpected end of content The request body ends unexpectedly. Check the correctness of the format of the data transmitted in the request body.
+It is found in all methods.
+
+Pagination errors
+
+Description | Translation | What to do | Methods in which the error occurs
+Bad page token | Invalid pagination token. | Check the correctness of the transmitted pagination token.Learn more about pagination in queries. | It is found in all methods where pagination is used.
+Limit exceeded | The limit on the number of values per page has been exceeded — parameterlimit. | Reduce the number of values. | It is found in all methods where pagination is used.
+Limit is less than number of offerIds | The limit is less than the number of transferred offer IDs. | Zoom inlimitup to a value of at least a numberofferIds, or shorten the listofferIdsand call the method with multiple requests. | GET v2/campaigns/{campaignId}/offer-pricesPOST v2/businesses/{businessId}/offer-pricesPOST v2/businesses/{businessId}/offer-mappingsPOST v2/businesses/{businessId}/offer-cardsPOST v2/campaigns/{campaignId}/offersPUT v2/campaigns/{campaignId}/offers/stocks
+Non positive limit | Non-positive valuelimit. | Send it aslimita positive number. | It is found in all methods where pagination is used.
+Page not exist: 'page' | The requested page does not exist. | Transmit the correct pagination parameters. — positive onespageandpageSize. The page number should not be more thanpagesCount. | GET v2/campaigns
+Page size is too big: 'pageSize'. Max page size is 'maxPageSize' | The transmitted page size exceeds the maximum allowed size. | Set the page size to no more than the maximum size. | It is found in all methods where pagination is used.
+Description Translation What to do Methods in which the error occurs Bad page token Invalid pagination token.
+Check the correctness of the transmitted pagination token.Learn more about pagination in queries. It is found in all methods where pagination is used.
+Limit exceeded The limit on the number of values per page has been exceeded — parameterlimit.
+
+limit Reduce the number of values. It is found in all methods where pagination is used. Limit is less than number of offerIds
+The limit is less than the number of transferred offer IDs.
+Zoom inlimitup to a value of at least a numberofferIds, or shorten the listofferIdsand call the method with multiple requests.
+
+limit
+
+offerIds
+
+offerIds
+GET v2/campaigns/{campaignId}/offer-pricesPOST v2/businesses/{businessId}/offer-pricesPOST v2/businesses/{businessId}/offer-mappingsPOST v2/businesses/{businessId}/offer-cardsPOST v2/campaigns/{campaignId}/offersPUT v2/campaigns/{campaignId}/offers/stocks
+Non positive limit Non-positive valuelimit.
+
+limit Send it aslimita positive number.
+
+limit It is found in all methods where pagination is used. Page not exist: 'page' The requested page does not exist.
+Transmit the correct pagination parameters. — positive onespageandpageSize. The page number should not be more thanpagesCount.
+
+page
+
+pageSize
+
+pagesCount GET v2/campaigns Page size is too big: 'pageSize'. Max page size is 'maxPageSize' The transmitted page size exceeds the maximum allowed size.
+Set the page size to no more than the maximum size. It is found in all methods where pagination is used.
+
+Errors when working with orders
+
+Description | Translation | What to do | Methods in which the error occurs
+Action is not allowed for order 'orderId' with status 'status' and substatus 'substatus' | The action is not available for the order in the current status and sub-status. | Detailed instructions on how to handle orders for your type of placement can be found in the sectionStep-by-step instructions. | POST v2/campaigns/{campaignId}/orders/{orderId}/delivery/trackPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/datePUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Attempt to change order items or instances after READY_TO_SHIP | An attempt to change order items or labeling codes after switching to the statusREADY_TO_SHIP. | Do not try to change the order composition or labeling codes after switching to the statusREADY_TO_SHIP. Detailed instructions on how to handle orders for your type of placement can be found in the sectionStep-by-step instructions. | PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Cancellation request substatus 'subbstatus' is not available for status 'status' and role 'role' for order 'orderId' | The sub-status of the cancellation request is not available for the specified combination of status and role. | Use the correct sub-status, taking into account the order status and your role. | PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+Cannot do operation for order with status 'status', and substatus 'substatus' (partnerId = 'partnerId', orderId = 'orderId') | It is not possible to perform an operation for an order with the current status and sub-status. | Do not send an external ID after the order status changesPROCESSINGwith a sub-statusREADY_TO_SHIP. | POST v2/campaigns/{campaignId}/orders/{orderId}/external-id
+Cannot do operation, external ID already set for order (partnerId = 'partnerId', orderId = 'orderId', externalId = 'externalId') | The operation cannot be performed: the external ID has already been sent for the order. | Do not attempt to transmit the external order ID more than once. | POST v2/campaigns/{campaignId}/orders/{orderId}/external-id
+Delivery datecan't be in the future | The delivery date cannot be in the future. | Set the delivery date no later than the current moment. | PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+Exceeded the number of days to edit delivery dates! limit is: 'days' days | The allowed period for editing delivery dates has been exceeded. | Postpone the date no further than the specified limit of days. | PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/date
+Exceeded the number of edits of delivery dates! limit is: 'limit' | The number of delivery date changes has been exceeded. | — | PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/date
+Invalid filters: interval between 'dateFrom' and 'dateTo' is more than 'range' days. | Incorrect filters: the interval between the start and end dates exceeds the allowed value. | Reduce the period to the acceptable limit or divide the request into several smaller intervals. | POST v1/businesses/{businessId}/orders
+Invalid incoming cis for item with id = %d for reason: {reason} | An incorrect labeling code was transmitted for the product in the order. | Check that the transmitted marking code (cis) is non-empty and has a valid format. | PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Invalid order boxes layout request. Violations: {violations} | Incorrect box layout request. | Correct the layout according to the list of violations and repeat the request. Make sure that you do not specify the same product as different objects in the same box; one box does not contain both the entire product and parts of the goods. | PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Invalid status for order 'orderId': 'status', PROCESSING expected | Invalid order status, pending statusPROCESSING. | Use the method only for digital orders with the statusPROCESSING. You can read more about working with digital orders instep-by-step instructions. | POST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods
+New delivery dates are the same as the current! | The new delivery date is the same as the current one. | Send the changed delivery date. | PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/date
+No permission to set status 'newStatus' for order 'orderId' with status 'currentStatus' | It is not allowed to set the transmitted status for an order with the current status. | Make sure that you are trying to transfer the order to the correct status. Detailed instructions on how to handle orders for your type of placement can be found in the sectionStep-by-step instructions. | PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+No transition found: 'fromStatus' -> 'toStatus' | The transition between statuses was not found. | Send the correct status for changing the order status. Detailed instructions on how to handle orders for your type of placement can be found in the sectionStep-by-step instructions. | PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+Not a business buyer. | Buyer — not a legal entity. | Use the method of obtaining information about the buyer — an individualGET v2/campaigns/{campaignId}/orders/{orderId}/buyer. | POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyerPOST v2/campaigns/{campaignId}/orders/{orderId}/documents
+Order creation start date is required to be less than end date | The start date for filtering orders by checkout date must be less than the end date. | Set the beginning of the period strictly before the end; if necessary, swap the dates or adjust one of them. | POST v1/businesses/{businessId}/orders
+Order is in the wrong status, it’s only possible starting from the status PROCESSING. | The order is in an unsuitable status; the operation is only possible with the PROCESSING status. | Make sure that the transferred order is in the statusPROCESSING,DELIVERY,PICKUPorDELIVERED. | POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyer
+Order is not in shop-processing status (actual: 'status'). | The order is not in the status of processing by the store. | You can receive the data only if the order is in the statusPROCESSING,DELIVERYorPICKUP. | GET v2/campaigns/{campaignId}/orders/{orderId}/buyer
+Order shipment start date is required to be less than end date | The start date for filtering orders by shipping date to the delivery service must be less than the end date. | Set the beginning of the period strictly before the end; if necessary, swap the dates or adjust one of them. | POST v1/businesses/{businessId}/orders
+Order update start is required to be less than end date | The start date for filtering orders by date and time of the update must be less than the end date. | Set the beginning of the period strictly before the end; if necessary, swap the dates or adjust one of them. | POST v1/businesses/{businessId}/orders
+Order.id='orderId' is not digital. | The transmitted order is not digital. | Make sure that the transmitted order is digital. This method is only available for working with digital orders. | POST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods
+Real delivery date should be from order creation date to current date inclusively | The actual delivery date must be from the date the order was created up to and including the current date. | Specify the actual delivery date in the range from the order creation date to the current date inclusive. | PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+Status change was forbidden for client role = 'role' | Changing the order status is prohibited for the customer role. | — | PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+Status not allowed: 'status' | The transfer of the order to the transferred status is not allowed. | Check the correctness of the transmitted order status. It is allowed to transfer the order to the following statusesPROCESSING,CANCELLED,DELIVERY,PICKUP,DELIVERED. | PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+String (value) is not a valid country code according to ISO 3166-1 alpha-2 | Invalid country code. | Specify the country code in the ISO 3166-1 alpha-2 format. | PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Transition 'fromStatus' -> 'toStatus' is not allowed. Reason: {reason} | Changing the order status from the current to the target is not available. | Make sure that you are trying to transfer the order to the correct status. Detailed instructions on how to handle orders for your type of placement can be found in the sectionStep-by-step instructions. | PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+Description Translation What to do Methods in which the error occurs Action is not allowed for order 'orderId' with status 'status' and substatus 'substatus'
+The action is not available for the order in the current status and sub-status.
+Detailed instructions on how to handle orders for your type of placement can be found in the sectionStep-by-step instructions.
+POST v2/campaigns/{campaignId}/orders/{orderId}/delivery/trackPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/datePUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Attempt to change order items or instances after READY_TO_SHIP An attempt to change order items or labeling codes after switching to the statusREADY_TO_SHIP.
+
+READY_TO_SHIP
+Do not try to change the order composition or labeling codes after switching to the statusREADY_TO_SHIP. Detailed instructions on how to handle orders for your type of placement can be found in the sectionStep-by-step instructions.
+
+READY_TO_SHIP PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Cancellation request substatus 'subbstatus' is not available for status 'status' and role 'role' for order 'orderId'
+The sub-status of the cancellation request is not available for the specified combination of status and role.
+Use the correct sub-status, taking into account the order status and your role. PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+Cannot do operation for order with status 'status', and substatus 'substatus' (partnerId = 'partnerId', orderId = 'orderId')
+It is not possible to perform an operation for an order with the current status and sub-status. Do not send an external ID after the order status changesPROCESSINGwith a sub-statusREADY_TO_SHIP.
+
+PROCESSING
+
+READY_TO_SHIP POST v2/campaigns/{campaignId}/orders/{orderId}/external-id
+Cannot do operation, external ID already set for order (partnerId = 'partnerId', orderId = 'orderId', externalId = 'externalId')
+The operation cannot be performed: the external ID has already been sent for the order. Do not attempt to transmit the external order ID more than once.
+POST v2/campaigns/{campaignId}/orders/{orderId}/external-id Delivery datecan't be in the future The delivery date cannot be in the future.
+Set the delivery date no later than the current moment. PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+Exceeded the number of days to edit delivery dates! limit is: 'days' days The allowed period for editing delivery dates has been exceeded.
+Postpone the date no further than the specified limit of days. PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/date
+Exceeded the number of edits of delivery dates! limit is: 'limit' The number of delivery date changes has been exceeded.
+— PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/date Invalid filters: interval between 'dateFrom' and 'dateTo' is more than 'range' days.
+Incorrect filters: the interval between the start and end dates exceeds the allowed value. Reduce the period to the acceptable limit or divide the request into several smaller intervals.
+POST v1/businesses/{businessId}/orders Invalid incoming cis for item with id = %d for reason: {reason}
+An incorrect labeling code was transmitted for the product in the order. Check that the transmitted marking code (cis) is non-empty and has a valid format.
+
+cis
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Invalid order boxes layout request. Violations: {violations} Incorrect box layout request.
+Correct the layout according to the list of violations and repeat the request. Make sure that you do not specify the same product as different objects in the same box; one box does not contain both the entire product and parts of the goods.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes Invalid status for order 'orderId': 'status', PROCESSING expected
+Invalid order status, pending statusPROCESSING.
+
+PROCESSING
+Use the method only for digital orders with the statusPROCESSING. You can read more about working with digital orders instep-by-step instructions.
+
+PROCESSING POST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods New delivery dates are the same as the current!
+The new delivery date is the same as the current one. Send the changed delivery date. PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/date
+No permission to set status 'newStatus' for order 'orderId' with status 'currentStatus' It is not allowed to set the transmitted status for an order with the current status.
+Make sure that you are trying to transfer the order to the correct status. Detailed instructions on how to handle orders for your type of placement can be found in the sectionStep-by-step instructions.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/status No transition found: 'fromStatus' -> 'toStatus'
+The transition between statuses was not found.
+Send the correct status for changing the order status. Detailed instructions on how to handle orders for your type of placement can be found in the sectionStep-by-step instructions.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/status Not a business buyer. Buyer — not a legal entity.
+Use the method of obtaining information about the buyer — an individualGET v2/campaigns/{campaignId}/orders/{orderId}/buyer.
+POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyerPOST v2/campaigns/{campaignId}/orders/{orderId}/documents
+Order creation start date is required to be less than end date The start date for filtering orders by checkout date must be less than the end date.
+Set the beginning of the period strictly before the end; if necessary, swap the dates or adjust one of them.
+POST v1/businesses/{businessId}/orders Order is in the wrong status, it’s only possible starting from the status PROCESSING.
+The order is in an unsuitable status; the operation is only possible with the PROCESSING status. Make sure that the transferred order is in the statusPROCESSING,DELIVERY,PICKUPorDELIVERED.
+
+PROCESSING
+
+DELIVERY
+
+PICKUP
+
+DELIVERED POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyer Order is not in shop-processing status (actual: 'status').
+The order is not in the status of processing by the store. You can receive the data only if the order is in the statusPROCESSING,DELIVERYorPICKUP.
+
+PROCESSING
+
+DELIVERY
+
+PICKUP GET v2/campaigns/{campaignId}/orders/{orderId}/buyer Order shipment start date is required to be less than end date
+The start date for filtering orders by shipping date to the delivery service must be less than the end date.
+Set the beginning of the period strictly before the end; if necessary, swap the dates or adjust one of them.
+POST v1/businesses/{businessId}/orders Order update start is required to be less than end date The start date for filtering orders by date and time of the update must be less than the end date.
+Set the beginning of the period strictly before the end; if necessary, swap the dates or adjust one of them.
+POST v1/businesses/{businessId}/orders Order.id='orderId' is not digital. The transmitted order is not digital.
+Make sure that the transmitted order is digital. This method is only available for working with digital orders.
+POST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods Real delivery date should be from order creation date to current date inclusively
+The actual delivery date must be from the date the order was created up to and including the current date.
+Specify the actual delivery date in the range from the order creation date to the current date inclusive.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/status Status change was forbidden for client role = 'role'
+Changing the order status is prohibited for the customer role. — PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+Status not allowed: 'status' The transfer of the order to the transferred status is not allowed.
+Check the correctness of the transmitted order status. It is allowed to transfer the order to the following statusesPROCESSING,CANCELLED,DELIVERY,PICKUP,DELIVERED.
+
+PROCESSING
+
+CANCELLED
+
+DELIVERY
+
+PICKUP
+
+DELIVERED PUT v2/campaigns/{campaignId}/orders/{orderId}/status String (value) is not a valid country code according to ISO 3166-1 alpha-2
+Invalid country code. Specify the country code in the ISO 3166-1 alpha-2 format.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Transition 'fromStatus' -> 'toStatus' is not allowed. Reason: {reason} Changing the order status from the current to the target is not available.
+Make sure that you are trying to transfer the order to the correct status. Detailed instructions on how to handle orders for your type of placement can be found in the sectionStep-by-step instructions.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+
+Errors when working with shipments (FBS)
+
+Description | Translation | What to do | Methods in which the error occurs
+Closest shipment for reception transfer act generation not found. | Shipments with the statusCan be processednot found. | Create a purchase order or wait for the existing order to be upgraded to the desired status. | GET v2/campaigns/{campaignId}/shipments/reception-transfer-act
+Cutoff time for shipments has not been reached yet | The time to confirm the shipment has not yet arrived. | Wait for the start of the shipping confirmation time according to the warehouse schedule and try again. You can check the shipment confirmation using the methodGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}: among the available actionsavailableActionsThere must be an actionCONFIRM. | POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm
+No orders for closest shipment have been processed yet (shipmentId: 'shipmentId'). | There are no orders in the next shipment. | Check that the orders have the parameterstatusit mattersPROCESSING, and the parametersubstatus—READY_TO_SHIP. You can get the statuses and shipping dates of orders using the methodPOST v1/businesses/{businessId}/orders, change order statuses — using methodsPUT v2/campaigns/{campaignId}/orders/{orderId}/statusandPOST v2/campaigns/{campaignId}/orders/status-update. | GET v2/campaigns/{campaignId}/shipments/reception-transfer-act
+Outbound with id = 'shipmentId' is not confirmed and hasn't draft transfer | Shipment has not been confirmed. | Before receiving the acceptance certificate, it is necessary to confirm the shipment. To do this, use the methodPOST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm. | GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/act
+Shipment with ID 'shipmentId' contains invalid orders. Reasons: orders are in wrong status ('orderIds') | The shipment contains orders with incorrect statuses. | For confirmation, the shipment must contain only orders in acceptable statuses.:PROCESSINGwith a sub-statusREADY_TO_SHIPorSHIPPED, orDELIVERY,DELIVERED,PICKUP. Transfer incorrect orders to the allowed statuses or transfer them to the next shipment using the methodPOST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/transferand repeat the confirmation. | POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm
+Shipment with ID 'shipmentId' does not contain any orders | There is not a single order in the shipment. | Add orders to the shipment: set them to acceptable statuses. Then repeat the confirmation. | POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm
+Shipment with ID 'shipmentId' has been confirmed already | The shipment has already been confirmed. | Do not repeat the shipment confirmation. To receive the acceptance certificate for a confirmed shipment, use the methodGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/act. | GET v2/campaigns/{campaignId}/shipments/reception-transfer-actPOST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm
+Some orders are in the process of being excluded from shipment (shipmentId: 'shipmentId', orderIds: 'orderIds'). Please wait up to 30 minutes and try again. | IDs of orders in the nearest shipment that are in the process of being deleted from it. | Transferring orders can take up to 30 minutes. Wait for the transfer to finish and try again. | GET v2/campaigns/{campaignId}/shipments/reception-transfer-act
+Some orders have not been processed yet. Please change the status of orders to READY_TO_SHIP and try again. (shipmentId: 'shipmentId', orderIds: 'orderIds'). | IDs of orders in the nearest shipment that have not yet been processed. | Send it for orders with the specified IDsstatus: PROCESSINGandsubstatus: READY_TO_SHIPand try again. You can change the order statuses using queriesPUT v2/campaigns/{campaignId}/orders/{orderId}/statusandPOST v2/campaigns/{campaignId}/orders/status-update. | GET v2/campaigns/{campaignId}/shipments/reception-transfer-act
+Description Translation What to do Methods in which the error occurs Closest shipment for reception transfer act generation not found.
+Shipments with the statusCan be processednot found. Create a purchase order or wait for the existing order to be upgraded to the desired status.
+GET v2/campaigns/{campaignId}/shipments/reception-transfer-act Cutoff time for shipments has not been reached yet
+The time to confirm the shipment has not yet arrived.
+Wait for the start of the shipping confirmation time according to the warehouse schedule and try again. You can check the shipment confirmation using the methodGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}: among the available actionsavailableActionsThere must be an actionCONFIRM.
+
+availableActions
+
+CONFIRM POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm No orders for closest shipment have been processed yet (shipmentId: 'shipmentId').
+There are no orders in the next shipment.
+Check that the orders have the parameterstatusit mattersPROCESSING, and the parametersubstatus—READY_TO_SHIP. You can get the statuses and shipping dates of orders using the methodPOST v1/businesses/{businessId}/orders, change order statuses — using methodsPUT v2/campaigns/{campaignId}/orders/{orderId}/statusandPOST v2/campaigns/{campaignId}/orders/status-update.
+
+status
+
+PROCESSING
+
+substatus
+
+READY_TO_SHIP GET v2/campaigns/{campaignId}/shipments/reception-transfer-act Outbound with id = 'shipmentId' is not confirmed and hasn't draft transfer
+Shipment has not been confirmed.
+Before receiving the acceptance certificate, it is necessary to confirm the shipment. To do this, use the methodPOST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm.
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/act
+Shipment with ID 'shipmentId' contains invalid orders. Reasons: orders are in wrong status ('orderIds')
+The shipment contains orders with incorrect statuses.
+For confirmation, the shipment must contain only orders in acceptable statuses.:PROCESSINGwith a sub-statusREADY_TO_SHIPorSHIPPED, orDELIVERY,DELIVERED,PICKUP. Transfer incorrect orders to the allowed statuses or transfer them to the next shipment using the methodPOST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/transferand repeat the confirmation.
+
+PROCESSING
+
+READY_TO_SHIP
+
+SHIPPED
+
+DELIVERY
+
+DELIVERED
+
+PICKUP POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm Shipment with ID 'shipmentId' does not contain any orders
+There is not a single order in the shipment. Add orders to the shipment: set them to acceptable statuses. Then repeat the confirmation.
+POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm Shipment with ID 'shipmentId' has been confirmed already
+The shipment has already been confirmed.
+Do not repeat the shipment confirmation. To receive the acceptance certificate for a confirmed shipment, use the methodGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/act.
+GET v2/campaigns/{campaignId}/shipments/reception-transfer-actPOST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm
+Some orders are in the process of being excluded from shipment (shipmentId: 'shipmentId', orderIds: 'orderIds'). Please wait up to 30 minutes and try again.
+IDs of orders in the nearest shipment that are in the process of being deleted from it. Transferring orders can take up to 30 minutes. Wait for the transfer to finish and try again.
+GET v2/campaigns/{campaignId}/shipments/reception-transfer-act
+Some orders have not been processed yet. Please change the status of orders to READY_TO_SHIP and try again. (shipmentId: 'shipmentId', orderIds: 'orderIds').
+IDs of orders in the nearest shipment that have not yet been processed.
+Send it for orders with the specified IDsstatus: PROCESSINGandsubstatus: READY_TO_SHIPand try again. You can change the order statuses using queriesPUT v2/campaigns/{campaignId}/orders/{orderId}/statusandPOST v2/campaigns/{campaignId}/orders/status-update.
+
+status: PROCESSING
+
+substatus: READY_TO_SHIP GET v2/campaigns/{campaignId}/shipments/reception-transfer-act
+
+Errors when working with prices
+
+Description | Translation | What to do | Methods in which the error occurs
+discountBase is less than value: offerId = 'offerId' | The crossed-out price is less than the current price of the product. | Set the crossed-out price not lower than the current one. If there is no discount — do not indicate the crossed-out price. | POST v2/campaigns/{campaignId}/offer-prices/updates
+Duplicate offer in request: offerId = 'offerId' | Duplicate product in the request. | Check the uniqueness of the transferred items. | POST v2/campaigns/{campaignId}/offer-prices/updates
+Missing offerId | The product ID is missing. | Pass a non-emptyofferId. | POST v2/campaigns/{campaignId}/offer-prices/updates
+Missing price value: offerId = 'offerId' | The value of the product price is missing. | Transmit the value of the product price. | POST v2/campaigns/{campaignId}/offer-prices/updates
+Offer at index 'index' should have valid discount value. Discount percentage must be between 'min' and 'max', actual 'val' | The product has an invalid discount value: the discount percentage must be from 'min' to 'max'. | Specify the discount percentage in the acceptable range. | POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-prices/updates
+Offer at index 'index' should not have 'fieldName' with 'currency' currency | Incorrect currency is specified for the price. | Send the price in the currency of your account. You can view the currency in the cabinet using the methodGET v2/campaigns/{campaignId}/settings. | POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-prices/updates
+Offer at index 'index' should not have 'fieldName' with too many digits | There are too many decimal places passed for the field. | Pass a value with no more than 7 decimal places. | POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-prices/updates
+offerId = 'offerId' should have valid discount value. Discount percentage must be between min' and 'max', actual 'val' | The product has an invalid discount value: the discount percentage must be from 'min' to 'max'. | Specify the discount percentage in the acceptable range. | POST v2/campaigns/{campaignId}/offer-prices/updates
+Unrecognized vat: 'value': offerId = 'offerId' | The unrecognized VAT rate. | Send the correct VAT rate for the product. You can view the acceptable VAT IDs on the method page.POST v2/campaigns/{campaignId}/offer-prices/updates. | POST v2/campaigns/{campaignId}/offer-prices/updates
+Vat setting of 'vatName' ('vatId') not supported for current 'taxSystemName' ('taxSystemId') taxSystem: 'offerId' | The VAT rate is not supported for the current taxation system. | Use the supported VAT rate for your tax system/country. | POST v2/campaigns/{campaignId}/offer-prices/updatesPOST v2/campaigns/{campaignId}/offers/update
+Vat setting of 'vatName' ('vatId') not supported since year 2019: 'offerId' | The VAT rate has not been supported since 2019. | Do not use the unsupported 18% rate. Specify the current supported rate for your tax system/country. | POST v2/campaigns/{campaignId}/offer-prices/updatesPOST v2/campaigns/{campaignId}/offers/update
+Description Translation What to do Methods in which the error occurs discountBase is less than value: offerId = 'offerId'
+The crossed-out price is less than the current price of the product.
+Set the crossed-out price not lower than the current one. If there is no discount — do not indicate the crossed-out price.
+POST v2/campaigns/{campaignId}/offer-prices/updates Duplicate offer in request: offerId = 'offerId' Duplicate product in the request.
+Check the uniqueness of the transferred items. POST v2/campaigns/{campaignId}/offer-prices/updates Missing offerId
+The product ID is missing. Pass a non-emptyofferId.
+
+offerId POST v2/campaigns/{campaignId}/offer-prices/updates Missing price value: offerId = 'offerId'
+The value of the product price is missing. Transmit the value of the product price. POST v2/campaigns/{campaignId}/offer-prices/updates
+Offer at index 'index' should have valid discount value. Discount percentage must be between 'min' and 'max', actual 'val'
+The product has an invalid discount value: the discount percentage must be from 'min' to 'max'. Specify the discount percentage in the acceptable range.
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-prices/updates
+Offer at index 'index' should not have 'fieldName' with 'currency' currency Incorrect currency is specified for the price.
+Send the price in the currency of your account. You can view the currency in the cabinet using the methodGET v2/campaigns/{campaignId}/settings.
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-prices/updates
+Offer at index 'index' should not have 'fieldName' with too many digits There are too many decimal places passed for the field.
+Pass a value with no more than 7 decimal places.
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-prices/updates
+offerId = 'offerId' should have valid discount value. Discount percentage must be between min' and 'max', actual 'val'
+The product has an invalid discount value: the discount percentage must be from 'min' to 'max'. Specify the discount percentage in the acceptable range.
+POST v2/campaigns/{campaignId}/offer-prices/updates Unrecognized vat: 'value': offerId = 'offerId' The unrecognized VAT rate.
+Send the correct VAT rate for the product. You can view the acceptable VAT IDs on the method page.POST v2/campaigns/{campaignId}/offer-prices/updates.
+POST v2/campaigns/{campaignId}/offer-prices/updates
+Vat setting of 'vatName' ('vatId') not supported for current 'taxSystemName' ('taxSystemId') taxSystem: 'offerId'
+The VAT rate is not supported for the current taxation system. Use the supported VAT rate for your tax system/country.
+POST v2/campaigns/{campaignId}/offer-prices/updatesPOST v2/campaigns/{campaignId}/offers/update Vat setting of 'vatName' ('vatId') not supported since year 2019: 'offerId'
+The VAT rate has not been supported since 2019.
+Do not use the unsupported 18% rate. Specify the current supported rate for your tax system/country.
+POST v2/campaigns/{campaignId}/offer-prices/updatesPOST v2/campaigns/{campaignId}/offers/update
+
+Errors when working with products
+
+Description | Translation | What to do | Methods in which the error occurs
+Duplicate offerId='offerId' at positions 'positions' | Duplicate items were transferred. | Ensure that the items in the transmitted list are unique. | POST v2/campaigns/{campaignId}/hidden-offers
+Offer at index 'index' cannot have parameter 'fieldName' deleted and set at the same time | You can either pass the parameter value todeleteParameters, or the corresponding parameter inUpdateOfferDTO. | To delete a previously passed parameter, specify its value indeleteParametersand don't send it toUpdateOfferDTO.If you want to set a new parameter value, pass it toUpdateOfferDTOand do not specify indeleteParameters. | POST v2/businesses/{businessId}/offer-mappings/update
+Offer at index 'index' should not have empty values in list of 'fieldName' | The product must not contain empty values in the list. | Remove empty items from the 'fieldName' list or replace them with valid values. | POST v2/businesses/{businessId}/offer-mappings/update
+Offer at index 'index' should have weightDimensions.greater than 0 | The dimensions of the package and the weight of the product must be positive. | Send positive values for the package dimensions and the weight of the product. | POST v2/businesses/{businessId}/offer-mappings/update
+Offers should have different ids. Following offers ids are repeating: 'offerIds'. | The transferred items must be unique. | Check the uniqueness of the transmitted product IDs. | POST v2/businesses/{businessId}/offer-mappings/update
+Description Translation What to do Methods in which the error occurs Duplicate offerId='offerId' at positions 'positions'
+Duplicate items were transferred. Ensure that the items in the transmitted list are unique. POST v2/campaigns/{campaignId}/hidden-offers
+Offer at index 'index' cannot have parameter 'fieldName' deleted and set at the same time
+You can either pass the parameter value todeleteParameters, or the corresponding parameter inUpdateOfferDTO.
+
+deleteParameters
+
+UpdateOfferDTO
+To delete a previously passed parameter, specify its value indeleteParametersand don't send it toUpdateOfferDTO.If you want to set a new parameter value, pass it toUpdateOfferDTOand do not specify indeleteParameters.
+
+deleteParameters
+
+UpdateOfferDTO
+
+UpdateOfferDTO
+
+deleteParameters POST v2/businesses/{businessId}/offer-mappings/update Offer at index 'index' should not have empty values in list of 'fieldName'
+The product must not contain empty values in the list. Remove empty items from the 'fieldName' list or replace them with valid values.
+POST v2/businesses/{businessId}/offer-mappings/update Offer at index 'index' should have weightDimensions.greater than 0
+The dimensions of the package and the weight of the product must be positive. Send positive values for the package dimensions and the weight of the product.
+POST v2/businesses/{businessId}/offer-mappings/update Offers should have different ids. Following offers ids are repeating: 'offerIds'.
+The transferred items must be unique. Check the uniqueness of the transmitted product IDs. POST v2/businesses/{businessId}/offer-mappings/update
+
+Errors when working with leftovers
+
+Description | Translation | What to do | Methods in which the error occurs
+Duplicate shop-sku 'sku' for warehouse 'count' | Duplicate shop-sku for the warehouse. | Check the uniqueness of the transmitted valuessku. | PUT v2/campaigns/{campaignId}/offers/stocks
+Stock for 'sku' should not be in the future | There should be no data about the remaining items in the future. | InstallupdatedAtno later than the current moment. | PUT v2/campaigns/{campaignId}/offers/stocks
+Stock for 'sku' should not be older than a day | The remaining data for the product must not be more than a day old. | Enter the current date and time of the update (no more than 24 hours) in the fieldupdatedAt. | PUT v2/campaigns/{campaignId}/offers/stocks
+Description Translation What to do Methods in which the error occurs Duplicate shop-sku 'sku' for warehouse 'count'
+Duplicate shop-sku for the warehouse. Check the uniqueness of the transmitted valuessku.
+
+sku PUT v2/campaigns/{campaignId}/offers/stocks Stock for 'sku' should not be in the future There should be no data about the remaining items in the future.
+InstallupdatedAtno later than the current moment.
+
+updatedAt PUT v2/campaigns/{campaignId}/offers/stocks Stock for 'sku' should not be older than a day
+The remaining data for the product must not be more than a day old. Enter the current date and time of the update (no more than 24 hours) in the fieldupdatedAt.
+
+updatedAt PUT v2/campaigns/{campaignId}/offers/stocks
+
+Errors when working with points of sale
+
+Description | Translation | What to do | Methods in which the error occurs
+datediff-is-to-big-local | For delivery in your region, the difference between the maximum and minimum delivery time should not exceed two days. | Make sure that the difference betweenmaxDeliveryDaysandminDeliveryDaysnot more than two days. | POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId}
+datediff-is-to-big-long-period | When delivering to other regions where the minimum delivery time is more than 18 days, the difference between the maximum and minimum delivery time should not exceed the minimum time. | Make sure that the difference betweenmaxDeliveryDaysandminDeliveryDaysdoes not exceedminDeliveryDays. | POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId}
+datediff-is-to-big-remote | For delivery to other regions, the difference between the maximum and minimum delivery time should not exceed four days. | Make sure that the difference betweenmaxDeliveryDaysandminDeliveryDaysnot more than four days. | POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId}
+Not valid outlet info: 'errors' | Invalid point of sale data. | Correct the data of the point of sale according to the error text (address, region, opening hours, required fields, value format, etc.) and repeat the request. The full requirements for the fields can be found in the descriptions of the corresponding methods. | POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId}
+Outlet with code 'shopOutletCode' already exists for campaign 'campaignId' | The point of sale with the transmitted IDshopOutletCodeit already exists. | The value of the identifiershopOutletCodeit must be unique within the same campaign. | POST v2/campaigns/{campaignId}/outlets
+Region 'regionName' cannot be used as outlet region | The region cannot be used as a point of sale address. | Specify only the following types of regionsTOWN(city),CITY(large city) andREPUBLIC_AREA(district of the subject of the federation). The region type is specified in the output parametertyperequestsGET v2/regionsandGET v2/regions/{regionId}. | POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId}
+Wrong outlet gps coordinates | Incorrect GPS coordinates of the point of sale. | Specify the coordinates in the format: longitude, latitude. Delimiters: comma and/or space. For example,20.4522144, 54.7104264. | POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId}
+Description Translation What to do Methods in which the error occurs datediff-is-to-big-local
+For delivery in your region, the difference between the maximum and minimum delivery time should not exceed two days.
+Make sure that the difference betweenmaxDeliveryDaysandminDeliveryDaysnot more than two days.
+
+maxDeliveryDays
+
+minDeliveryDays POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId}
+datediff-is-to-big-long-period
+When delivering to other regions where the minimum delivery time is more than 18 days, the difference between the maximum and minimum delivery time should not exceed the minimum time.
+Make sure that the difference betweenmaxDeliveryDaysandminDeliveryDaysdoes not exceedminDeliveryDays.
+
+maxDeliveryDays
+
+minDeliveryDays
+
+minDeliveryDays POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId}
+datediff-is-to-big-remote
+For delivery to other regions, the difference between the maximum and minimum delivery time should not exceed four days.
+Make sure that the difference betweenmaxDeliveryDaysandminDeliveryDaysnot more than four days.
+
+maxDeliveryDays
+
+minDeliveryDays POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId}
+Not valid outlet info: 'errors' Invalid point of sale data.
+Correct the data of the point of sale according to the error text (address, region, opening hours, required fields, value format, etc.) and repeat the request. The full requirements for the fields can be found in the descriptions of the corresponding methods.
+POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId} Outlet with code 'shopOutletCode' already exists for campaign 'campaignId'
+The point of sale with the transmitted IDshopOutletCodeit already exists.
+
+shopOutletCode The value of the identifiershopOutletCodeit must be unique within the same campaign.
+
+shopOutletCode POST v2/campaigns/{campaignId}/outlets Region 'regionName' cannot be used as outlet region
+The region cannot be used as a point of sale address.
+Specify only the following types of regionsTOWN(city),CITY(large city) andREPUBLIC_AREA(district of the subject of the federation). The region type is specified in the output parametertyperequestsGET v2/regionsandGET v2/regions/{regionId}.
+
+TOWN
+
+CITY
+
+REPUBLIC_AREA
+
+type POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId} Wrong outlet gps coordinates
+Incorrect GPS coordinates of the point of sale.
+Specify the coordinates in the format: longitude, latitude. Delimiters: comma and/or space. For example,20.4522144, 54.7104264.
+
+20.4522144, 54.7104264 POST v2/campaigns/{campaignId}/outletsPUT v2/campaigns/{campaignId}/outlets/{outletId}
+
+Errors when working with categories
+
+Description | Translation | What to do | Methods in which the error occurs
+Category is not a leaf. | The category is not a leaf one. | Use the ID of the leaf category (a category that has no children). To get a category tree on the Market, use the methodPOST v2/categories/tree. | POST v2/category/{categoryId}/parameters
+Following categories are not leaf categories: 'categories' | The transmitted categories are not leaf categories. | Use the IDs of the leaf categories (categories that have no children). To get a category tree on the Market, use the methodPOST v2/categories/tree. | POST v2/tariffs/calculate
+Unknown categories: 'categories' | Unknown categories have been transmitted. | Check that the transmitted category IDs are correct.
+To find out the ID of the category to which the product you are interested in belongs, use the requestPOST v2/categories/tree. | POST v2/tariffs/calculate
+Description Translation What to do Methods in which the error occurs Category is not a leaf. The category is not a leaf one.
+Use the ID of the leaf category (a category that has no children). To get a category tree on the Market, use the methodPOST v2/categories/tree.
+POST v2/category/{categoryId}/parameters Following categories are not leaf categories: 'categories' The transmitted categories are not leaf categories.
+Use the IDs of the leaf categories (categories that have no children). To get a category tree on the Market, use the methodPOST v2/categories/tree.
+POST v2/tariffs/calculate Unknown categories: 'categories' Unknown categories have been transmitted.
+Check that the transmitted category IDs are correct.
+To find out the ID of the category to which the product you are interested in belongs, use the requestPOST v2/categories/tree.
+POST v2/tariffs/calculate
+
+Mistakes when working with stocks
+
+Description | Translation | What to do | Methods in which the error occurs
+Not enough parameters in request: offerIds or deleteAllOffers should be specified | The parameter for removing products from the promotion was not passed. | To remove all products, pass the valuetruein the parameterdeleteAllOffers. To delete only some items, transfer them SKU in the parameterofferIds. | POST v2/businesses/{businessId}/promos/offers/delete
+Promo has ended | The promotion is over. | Check the correctness of the transmitted stock ID. To find out which promotions you can participate in, use the methodPOST v2/businesses/{businessId}/promos. | POST v2/businesses/{businessId}/promos/offersPOST v2/businesses/{businessId}/promos/offers/updatePOST v2/businesses/{businessId}/promos/offers/delete
+The limit for promo update requests with a single offerId has been exceeded. Please wait or use batch requests with multiple offerIds for the same promoId. | The limit of requests to update the promotion for one product per request has been exceeded. | Wait and try again later, or use queries with multiple items in the list.offersfor the same promotion. | POST v2/businesses/{businessId}/promos/offers/updatePOST v2/businesses/{businessId}/promos/offers/delete
+Too many parameters in request: only one of parameters offerIds or deleteAllOffers should be specified | You can either pass the valuetruein the parameterdeleteAllOffers, or SKU products in the parameterofferIds. | Give me one thing. — or the valuetruein the parameterdeleteAllOffers, or SKU products in the parameterofferIds. | POST v2/businesses/{businessId}/promos/offers/delete
+Description Translation What to do Methods in which the error occurs Not enough parameters in request: offerIds or deleteAllOffers should be specified
+The parameter for removing products from the promotion was not passed.
+To remove all products, pass the valuetruein the parameterdeleteAllOffers. To delete only some items, transfer them SKU in the parameterofferIds.
+
+true
+
+deleteAllOffers
+
+offerIds POST v2/businesses/{businessId}/promos/offers/delete Promo has ended The promotion is over.
+Check the correctness of the transmitted stock ID. To find out which promotions you can participate in, use the methodPOST v2/businesses/{businessId}/promos.
+POST v2/businesses/{businessId}/promos/offersPOST v2/businesses/{businessId}/promos/offers/updatePOST v2/businesses/{businessId}/promos/offers/delete
+The limit for promo update requests with a single offerId has been exceeded. Please wait or use batch requests with multiple offerIds for the same promoId.
+The limit of requests to update the promotion for one product per request has been exceeded.
+Wait and try again later, or use queries with multiple items in the list.offersfor the same promotion.
+
+offers
+POST v2/businesses/{businessId}/promos/offers/updatePOST v2/businesses/{businessId}/promos/offers/delete
+Too many parameters in request: only one of parameters offerIds or deleteAllOffers should be specified
+You can either pass the valuetruein the parameterdeleteAllOffers, or SKU products in the parameterofferIds.
+
+true
+
+deleteAllOffers
+
+offerIds
+Give me one thing. — or the valuetruein the parameterdeleteAllOffers, or SKU products in the parameterofferIds.
+
+true
+
+deleteAllOffers
+
+offerIds POST v2/businesses/{businessId}/promos/offers/delete
+
+Errors in reports and documents
+
+Description | Translation | What to do | Methods in which the error occurs
+Contract with type MARKETING was signed with the agency | The marketing contract has been signed with the agency. | For information on the closing documents, please contact your agency. | POST v2/reports/closure-documents/detalization/generate
+Date field 'dateFieldTo' must be greater or equal to 'dateFieldFrom'! | The end date of the interval must be at least the start date. | Set the end of the period no earlier than the beginning; adjust the dates or swap them if necessary. | POST v2/campaigns/{campaignId}/stats/orders
+Only default prices are used for this business. Generate the report at the business level (not campaign) to see actual prices. | Only the uniform cabinet prices are used for this cabinet. | Create a business-level report (not a campaign). To check whether store prices are enabled, use the parameteronlyDefaultPricein the methodPOST v2/businesses/{businessId}/settings. | POST v2/reports/goods-prices/generate
+Periods "orderDate" and "orderUpdate" can't be specified simultaneously! | You cannot specify the periods by the date of the order formation and by the date of the change at the same time. | Specify only one period: either by the date of formation or by the date of modification. | POST v2/campaigns/{campaignId}/stats/orders
+Description Translation What to do Methods in which the error occurs Contract with type MARKETING was signed with the agency
+The marketing contract has been signed with the agency. For information on the closing documents, please contact your agency.
+POST v2/reports/closure-documents/detalization/generate Date field 'dateFieldTo' must be greater or equal to 'dateFieldFrom'!
+The end date of the interval must be at least the start date.
+Set the end of the period no earlier than the beginning; adjust the dates or swap them if necessary.
+POST v2/campaigns/{campaignId}/stats/orders
+Only default prices are used for this business. Generate the report at the business level (not campaign) to see actual prices.
+Only the uniform cabinet prices are used for this cabinet.
+Create a business-level report (not a campaign). To check whether store prices are enabled, use the parameteronlyDefaultPricein the methodPOST v2/businesses/{businessId}/settings.
+
+onlyDefaultPrice POST v2/reports/goods-prices/generate Periods "orderDate" and "orderUpdate" can't be specified simultaneously!
+You cannot specify the periods by the date of the order formation and by the date of the change at the same time.
+Specify only one period: either by the date of formation or by the date of modification. POST v2/campaigns/{campaignId}/stats/orders
+
+Errors when working with product reviews
+
+Description | Translation | What to do | Methods in which the error occurs
+Duplicate comment. | There is already a comment with this text. | Do not send a comment that matches an existing one. | POST v2/businesses/{businessId}/goods-feedback/comments/update
+Illegal url in comment text. | Links to third-party resources were found in the text of the comment. | Delete the links and, if necessary, add those that lead to the Market. | POST v2/businesses/{businessId}/goods-feedback/comments/update
+Description Translation What to do Methods in which the error occurs Duplicate comment. There is already a comment with this text.
+Do not send a comment that matches an existing one. POST v2/businesses/{businessId}/goods-feedback/comments/update
+Illegal url in comment text. Links to third-party resources were found in the text of the comment. Delete the links and, if necessary, add those that lead to the Market.
+POST v2/businesses/{businessId}/goods-feedback/comments/update
+
+Errors when dealing with product questions
+
+Description | Translation | What to do | Methods in which the error occurs
+parentEntityId required for CREATE operation | To create it, you need the ID of the question or answer as the parent entity. | Specify in the requestparentEntityId. | POST v1/businesses/{businessId}/goods-questions/update
+entityId required for UPDATE and DELETE operation | To update and delete, you need the ID of the updated response or comment. | Specify in the requestentityId. | POST v1/businesses/{businessId}/goods-questions/update
+QUESTION entity type cannot be updated | The question cannot be changed after creation. | Change the type of the entity to a reply or comment. | POST v1/businesses/{businessId}/goods-questions/update
+Cannot create a comment on another comment. | You can't create a comment on a comment. | Change the type of parent entity for the response. | POST v1/businesses/{businessId}/goods-questions/update
+Description Translation What to do Methods in which the error occurs parentEntityId required for CREATE operation
+To create it, you need the ID of the question or answer as the parent entity. Specify in the requestparentEntityId.
+
+parentEntityId POST v1/businesses/{businessId}/goods-questions/update entityId required for UPDATE and DELETE operation
+To update and delete, you need the ID of the updated response or comment. Specify in the requestentityId.
+
+entityId POST v1/businesses/{businessId}/goods-questions/update QUESTION entity type cannot be updated
+The question cannot be changed after creation. Change the type of the entity to a reply or comment. POST v1/businesses/{businessId}/goods-questions/update
+Cannot create a comment on another comment. You can't create a comment on a comment. Change the type of parent entity for the response.
+POST v1/businesses/{businessId}/goods-questions/update
+
+401 Unauthorized Errors
+
+Description | Translation | What to do | Methods in which the error occurs
+Api-Key token is invalid | Api-Key-the token is invalid. | Check the spelling Api-Key- a token. If the error persists, get a new token.How to do it | It is found in all methods.
+Api-Key token is not specified | The request did not specify Api-Key- a token. | Pass it on Api-Key-the token in the headerApi-KeybyInstructions. | It is found in all methods.
+Api-Key token length invalid | Incorrect length Api-Key- a token. | Check the spelling Api-Key- a token. If the error persists, get a new token.How to do it | It is found in all methods.
+Api-Key token prefix invalid | Incorrect prefix Api-Key- a token. | Make sure that you do not use a prefix in the header.Bearer.How to transmit Api-Key-tokenIf there is no prefix, check the spelling. Api-Key- a token. If the error persists, get a new token.How to do it | It is found in all methods.
+Api-Key token format invalid | Incorrect format Api-Key- a token. | Check the spelling Api-Key- a token. If the error persists, get a new token.How to do it | It is found in all methods.
+Api-Key token is revoked | Api-Key-the token has been deleted. | Get a new token.How to do it | It is found in all methods.
+Authorization header has invalid syntax | HTTP header formatAuthorizationincorrect. | Make a headline byInstructions. | It is found in all methods.
+Credentials are not specified | The authorization data is not specified in the request. | Make a heading according to the instructions:Api-Key-tokenThe OAuth token | It is found in all methods.
+OAuth client id is not specified | The request did not specify the OAuth client ID (client_id). | Specifyclient_idyour application in the headeroauth_client_id. | It is found in all methods.
+OAuth credentials are not specified | The authorization data is not specified in the request. | Make a headlineAuthorizationbyInstructions. | It is found in all methods.
+OAuth token is not specified | The request does not specify an OAuth authorization token. | Make a headlineAuthorizationbyInstructions. | It is found in all methods.
+Description Translation What to do Methods in which the error occurs Api-Key token is invalid Api-Key-the token is invalid.
+Check the spelling Api-Key- a token. If the error persists, get a new token.How to do it It is found in all methods.
+Api-Key token is not specified The request did not specify Api-Key- a token. Pass it on Api-Key-the token in the headerApi-KeybyInstructions.
+
+Api-Key It is found in all methods. Api-Key token length invalid Incorrect length Api-Key- a token. Check the spelling Api-Key- a token. If the error persists, get a new token.How to do it
+It is found in all methods. Api-Key token prefix invalid Incorrect prefix Api-Key- a token. Make sure that you do not use a prefix in the header.Bearer.How to transmit Api-Key-token
+
+Bearer
+If there is no prefix, check the spelling. Api-Key- a token. If the error persists, get a new token.How to do it
+It is found in all methods. Api-Key token format invalid Incorrect format Api-Key- a token. Check the spelling Api-Key- a token. If the error persists, get a new token.How to do it
+It is found in all methods. Api-Key token is revoked Api-Key-the token has been deleted. Get a new token.How to do it
+It is found in all methods. Authorization header has invalid syntax HTTP header formatAuthorizationincorrect.
+
+Authorization Make a headline byInstructions. It is found in all methods. Credentials are not specified
+The authorization data is not specified in the request. Make a heading according to the instructions:
+
+• Api-Key-token
+• The OAuth token
+It is found in all methods. OAuth client id is not specified The request did not specify the OAuth client ID (client_id).
+
+client_id Specifyclient_idyour application in the headeroauth_client_id.
+
+client_id
+
+oauth_client_id It is found in all methods. OAuth credentials are not specified The authorization data is not specified in the request.
+Make a headlineAuthorizationbyInstructions.
+
+Authorization It is found in all methods. OAuth token is not specified The request does not specify an OAuth authorization token.
+Make a headlineAuthorizationbyInstructions.
+
+Authorization It is found in all methods.
+
+403 Forbidden Errors
+
+Description | Translation | What to do | Methods in which the error occurs
+Access denied | Access is denied. | Check that the resource is specified correctly, as well as whether the user whose authorization token is used in the request has access rights to it.More information about access | It is found in all methods.
+API for business 'businessId' disabled because it has only disabled partners | The cabinet API is disabled because all its stores are disabled. | Enable the API for at least one store inthe seller's account on the Market. If activation is not possible, fix the reasons for disabling stores.Detailed instructions | It is found in all methods.
+API for campaign 'campaignId' disabled because it has no placement program | The store's API is disabled because it does not have a placement program. | Complete the store's connection to the placement program inthe seller's account on the Market.Detailed instructions | It is found in all methods.
+API for campaign 'campaignId' disabled because there are no active contracts with Market | The store's API is disabled due to the lack of an active contract with Yandex.Market. | Complete the account connection in the section"Legal data"in the seller's office on the Market.Detailed instructions | It is found in all methods.
+API for campaign 'campaignId' disabled due to inactivity | The store's API is disabled due to inactivity — there were no goods in the window for a long time. | To resume working via the API, enable integration inthe seller's account on the Marketand check if it is working correctly.Detailed instructions | It is found in all methods.
+API for campaign 'campaignId' manually disabled | You have turned off integration — all requests to the Market are rejected. | Enable integration inthe seller's account on the Market.Detailed instructions | It is found in all methods.
+Client id is invalid | Invalid OAuth client ID is specified (client_id). | Specifyoauth_client_idthe same application that issued the token, or reissue the token to the desired client. | It is found in all methods.
+Contact not found for login 'login' and campaignId 'campaignId' | The user account whose login was sent to sign the electronic acceptance certificate was not found. | Select the username of the user that is linked to the account or store. | It is found in all methods.
+Contacts with available roles for signing not found for login 'login' | The user account whose login was transferred to sign the electronic acceptance certificate does not have the necessary access rights. | Provide the username of the user who is linked to the account or store and has the necessary access rights.Access to software methodsApi-Key | It is found in all methods.
+Electronic signature is only available for API token authorization. | The electronic signature is only available when authorized by Api-Key. | Make a request with authorization by Api-Key. How to transmit Api-Key:manual. | GET v2/campaigns/{campaignId}/shipments/reception-transfer-actPOST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm
+No access to campaigns: 'campaigns' | There is no access to the specified stores. | Send only campaigns belonging to the specified account (businessId). | It is found in all methods.
+No access to comment modifying. | There is no access to edit the specified comment. | Check the correctness of the transmitted comment ID. | POST v2/businesses/{businessId}/goods-feedback/comments/update
+No access to feedback modifying. | There is no access to modify the specified review. | Check the correctness of the transmitted review ID. | POST v2/businesses/{businessId}/goods-feedback/comments/update
+OAuth token is invalid | The specified OAuth authorization token is invalid. | Get a new token.How to do it | It is found in all methods.
+OAuth token is invalid (account has been globally logged out) | The user used the function"Get out everywhere"in Yandex ID. | Get a new token.How to do it | It is found in all methods.
+Scope is invalid | The OAuth token was obtained through the app without access to the Market. | Get a new token.How to do it | It is found in all methods.
+The method is deprecated and is occasionally forbidden. Please stop using it | The method is outdated, and some requests to it are rejected. Don't use it. | Switch to the current method specified in the documentation. The error is returned to integrations that continue to invoke the outdated method; the proportion of such responses increases over time. | It is found in all methods.
+The method is not supported for Market Yandex Go sellers | This method is not available for Yandex Go Market sellers.These restrictions are specified in the description of the methods. | — | It is found in all methods.
+The partner does not have access to the supply request. | The partner does not have access to the delivery request. | Check the correctness of the transmitted application ID. | POST v2/campaigns/{campaignId}/supply-requests/documentsPOST v2/campaigns/{campaignId}/supply-requests/items
+Token does not have any of the scopes to access the API method | There is no access to the method. | Get access to at least one group of methods listed in the error text.How to do it | It is found in all methods.
+User account is disabled | The account of the user for whom the specified authorization token was issued is blocked. | Contact customer support. | It is found in all methods.
+Description Translation What to do Methods in which the error occurs Access denied Access is denied.
+Check that the resource is specified correctly, as well as whether the user whose authorization token is used in the request has access rights to it.More information about access
+It is found in all methods. API for business 'businessId' disabled because it has only disabled partners
+The cabinet API is disabled because all its stores are disabled.
+Enable the API for at least one store inthe seller's account on the Market. If activation is not possible, fix the reasons for disabling stores.Detailed instructions
+It is found in all methods. API for campaign 'campaignId' disabled because it has no placement program
+The store's API is disabled because it does not have a placement program.
+Complete the store's connection to the placement program inthe seller's account on the Market.Detailed instructions
+It is found in all methods. API for campaign 'campaignId' disabled because there are no active contracts with Market
+The store's API is disabled due to the lack of an active contract with Yandex.Market.
+Complete the account connection in the section"Legal data"in the seller's office on the Market.Detailed instructions
+It is found in all methods. API for campaign 'campaignId' disabled due to inactivity The store's API is disabled due to inactivity — there were no goods in the window for a long time.
+To resume working via the API, enable integration inthe seller's account on the Marketand check if it is working correctly.Detailed instructions
+It is found in all methods. API for campaign 'campaignId' manually disabled You have turned off integration — all requests to the Market are rejected.
+Enable integration inthe seller's account on the Market.Detailed instructions It is found in all methods.
+Client id is invalid Invalid OAuth client ID is specified (client_id).
+
+client_id
+Specifyoauth_client_idthe same application that issued the token, or reissue the token to the desired client.
+
+oauth_client_id It is found in all methods. Contact not found for login 'login' and campaignId 'campaignId'
+The user account whose login was sent to sign the electronic acceptance certificate was not found. Select the username of the user that is linked to the account or store.
+It is found in all methods. Contacts with available roles for signing not found for login 'login'
+The user account whose login was transferred to sign the electronic acceptance certificate does not have the necessary access rights.
+Provide the username of the user who is linked to the account or store and has the necessary access rights.Access to software methodsApi-Key
+It is found in all methods. Electronic signature is only available for API token authorization. The electronic signature is only available when authorized by Api-Key.
+Make a request with authorization by Api-Key. How to transmit Api-Key:manual.
+GET v2/campaigns/{campaignId}/shipments/reception-transfer-actPOST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm
+No access to campaigns: 'campaigns' There is no access to the specified stores. Send only campaigns belonging to the specified account (businessId).
+
+businessId It is found in all methods. No access to comment modifying. There is no access to edit the specified comment.
+Check the correctness of the transmitted comment ID. POST v2/businesses/{businessId}/goods-feedback/comments/update
+No access to feedback modifying. There is no access to modify the specified review. Check the correctness of the transmitted review ID.
+POST v2/businesses/{businessId}/goods-feedback/comments/update OAuth token is invalid The specified OAuth authorization token is invalid.
+Get a new token.How to do it It is found in all methods. OAuth token is invalid (account has been globally logged out)
+The user used the function"Get out everywhere"in Yandex ID. Get a new token.How to do it It is found in all methods.
+Scope is invalid The OAuth token was obtained through the app without access to the Market. Get a new token.How to do it
+It is found in all methods. The method is deprecated and is occasionally forbidden. Please stop using it
+The method is outdated, and some requests to it are rejected. Don't use it.
+Switch to the current method specified in the documentation. The error is returned to integrations that continue to invoke the outdated method; the proportion of such responses increases over time.
+It is found in all methods. The method is not supported for Market Yandex Go sellers This method is not available for Yandex Go Market sellers.
+These restrictions are specified in the description of the methods. — It is found in all methods. The partner does not have access to the supply request.
+The partner does not have access to the delivery request. Check the correctness of the transmitted application ID.
+POST v2/campaigns/{campaignId}/supply-requests/documentsPOST v2/campaigns/{campaignId}/supply-requests/items
+Token does not have any of the scopes to access the API method There is no access to the method. Get access to at least one group of methods listed in the error text.How to do it
+It is found in all methods. User account is disabled The account of the user for whom the specified authorization token was issued is blocked.
+Contact customer support. It is found in all methods.
+
+404 Not Found Errors
+
+Description | Translation | What to do | Methods in which the error occurs
+Box not found. Box: 'boxId' | The box specified in the request was not found. | Check that the transmitted box ID is correct. | GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/label
+Campaign not found 'campaignId' | The campaign specified in the request was not found. | Check that the transmitted campaign ID is correct. | It is found in all cabinet methods.
+Can't find chat by id: 'chatId' | The chat specified in the request was not found. | Check the correctness of the transmitted chat ID. | GET v2/businesses/{businessId}/chats/messagePOST v2/businesses/{businessId}/chats/messagePOST v2/businesses/{businessId}/chats/history
+Can't find message by id: 'messageId' for chat 'chatId' | The message specified in the request was not found in the transmitted chat. | Check the correctness of the transmitted message and chat IDs. | GET v2/businesses/{businessId}/chats/message
+Failed to find ['resource'] with id ['id'] | The resource specified in the request was not found. | Check the correctness of the transmitted resource identifier (order or shipment). | GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/actPOST v2/campaigns/{campaignId}/orders/{orderId}/delivery/trackGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/infoGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/transportation-waybillPUT v2/campaigns/{campaignId}/orders/{orderId}/verifyEacPUT v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/palletsGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallet/labelsPOST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/transfer
+Failed to find order with id 'orderId' | The order specified in the request was not found. | Check the correctness of the transmitted order ID. | PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Feedbacks not found. | The reviews specified in the request were not found. | Check that the transmitted review IDs are correct. | POST v2/businesses/{businessId}/goods-feedback/comments/update
+Grade not found. | The review was not found. | Check the correctness of the transmitted review ID. | POST v2/businesses/{businessId}/goods-feedback/comments/update
+No boxes found for order 'orderId' | No boxes were found for the order specified in the request. | Check the correctness of the transmitted order ID.
+Make sure that you have provided information about how the goods are distributed in boxes. To do this, use the methodPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes. | GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/labelGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data
+Order not found: 'orderId' | The order specified in the request was not found. | Check the correctness of the transmitted order ID. | PUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoodsPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/datePUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/storage-limitPOST v2/businesses/{businessId}/chats/newPOST v2/campaigns/{campaignId}/orders/{orderId}/external-id
+Order not found: partnerId = 'partnerId', orderId = 'orderId' | The order specified in the request was not found. | Check the correctness of the transmitted order ID. | GET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/labelGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/dataPOST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoodsGET v2/campaigns/{campaignId}/orders/{orderId}/buyerPUT v2/campaigns/{campaignId}/orders/{orderId}/cancellation/acceptPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/datePUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPOST v2/campaigns/{campaignId}/orders/{orderId}/business-buyerPOST v2/campaigns/{campaignId}/orders/{orderId}/documentsPOST v2/campaigns/{campaignId}/orders/{orderId}/external-idPOST v2/campaigns/{campaignId}/orders/{orderId}/identifiers/status
+Outlet not found: 'outletId' | The point of sale specified in the request was not found. | Check the correctness of the transmitted point of sale identifier. | GET v2/campaigns/{campaignId}/outlets/{outletId}DELETE v2/campaigns/{campaignId}/outlets/{outletId}PUT v2/campaigns/{campaignId}/outlets/{outletId}
+Region 'regionId' not found. | The region specified in the request was not found. | Check that the transmitted region ID is correct.
+To get a list of all available regions, use the reference methodGET v2/regions | GET v2/regions/{regionId}GET v2/regions/{regionId}/children
+Report not found. | The report or document specified in the request was not found. | Check the correctness of the transmitted ID of the report or document. | GET v2/reports/info/{reportId}
+Resource not found | The resource was not found. | Check the accuracy URL and the HTTP method, they can be viewed in the documentation on the method page.Make sure that you are using the correct version of the method.Learn more about calling methods | It is found in all methods.
+Return 'returnId' for order 'orderId' is not found | The refund specified in the request was not found. | Check the correctness of the transmitted refund and order IDs. | GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}POST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decisionPOST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit
+Shipment with ID 'shipmentId' not found | The shipment specified in the request was not found. | Check the correctness of the transmitted shipment ID. | POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm
+Supply request not found. | The application was not found. | Check the correctness of the transmitted application ID. | POST v2/campaigns/{campaignId}/supply-requests/documentsPOST v2/campaigns/{campaignId}/supply-requests/items
+Unknown category | Unknown category. | Check that the transmitted category ID is correct.
+To find out the identifier of the category to which the product you are interested in belongs, use the requestPOST v2/categories/tree. | POST v2/category/{categoryId}/parameters
+Description Translation What to do Methods in which the error occurs Box not found. Box: 'boxId' The box specified in the request was not found.
+Check that the transmitted box ID is correct. GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/label
+Campaign not found 'campaignId' The campaign specified in the request was not found. Check that the transmitted campaign ID is correct.
+It is found in all cabinet methods. Can't find chat by id: 'chatId' The chat specified in the request was not found.
+Check the correctness of the transmitted chat ID.
+GET v2/businesses/{businessId}/chats/messagePOST v2/businesses/{businessId}/chats/messagePOST v2/businesses/{businessId}/chats/history
+Can't find message by id: 'messageId' for chat 'chatId' The message specified in the request was not found in the transmitted chat.
+Check the correctness of the transmitted message and chat IDs. GET v2/businesses/{businessId}/chats/message
+Failed to find ['resource'] with id ['id'] The resource specified in the request was not found. Check the correctness of the transmitted resource identifier (order or shipment).
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/actPOST v2/campaigns/{campaignId}/orders/{orderId}/delivery/trackGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/infoGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/transportation-waybillPUT v2/campaigns/{campaignId}/orders/{orderId}/verifyEacPUT v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/palletsGET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallet/labelsPOST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/transfer
+Failed to find order with id 'orderId' The order specified in the request was not found. Check the correctness of the transmitted order ID.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes Feedbacks not found. The reviews specified in the request were not found.
+Check that the transmitted review IDs are correct. POST v2/businesses/{businessId}/goods-feedback/comments/update
+Grade not found. The review was not found. Check the correctness of the transmitted review ID. POST v2/businesses/{businessId}/goods-feedback/comments/update
+No boxes found for order 'orderId' No boxes were found for the order specified in the request.
+Check the correctness of the transmitted order ID.
+Make sure that you have provided information about how the goods are distributed in boxes. To do this, use the methodPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/labelGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data
+Order not found: 'orderId' The order specified in the request was not found. Check the correctness of the transmitted order ID.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoodsPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/datePUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/storage-limitPOST v2/businesses/{businessId}/chats/newPOST v2/campaigns/{campaignId}/orders/{orderId}/external-id
+Order not found: partnerId = 'partnerId', orderId = 'orderId' The order specified in the request was not found.
+Check the correctness of the transmitted order ID.
+GET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/labelGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/dataPOST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoodsGET v2/campaigns/{campaignId}/orders/{orderId}/buyerPUT v2/campaigns/{campaignId}/orders/{orderId}/cancellation/acceptPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/datePUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPOST v2/campaigns/{campaignId}/orders/{orderId}/business-buyerPOST v2/campaigns/{campaignId}/orders/{orderId}/documentsPOST v2/campaigns/{campaignId}/orders/{orderId}/external-idPOST v2/campaigns/{campaignId}/orders/{orderId}/identifiers/status
+Outlet not found: 'outletId' The point of sale specified in the request was not found. Check the correctness of the transmitted point of sale identifier.
+GET v2/campaigns/{campaignId}/outlets/{outletId}DELETE v2/campaigns/{campaignId}/outlets/{outletId}PUT v2/campaigns/{campaignId}/outlets/{outletId}
+Region 'regionId' not found. The region specified in the request was not found.
+Check that the transmitted region ID is correct.
+To get a list of all available regions, use the reference methodGET v2/regions
+GET v2/regions/{regionId}GET v2/regions/{regionId}/children Report not found. The report or document specified in the request was not found.
+Check the correctness of the transmitted ID of the report or document. GET v2/reports/info/{reportId}
+Resource not found The resource was not found.
+
+• Check the accuracy URL and the HTTP method, they can be viewed in the documentation on the method page.
+• Make sure that you are using the correct version of the method.
+Learn more about calling methods It is found in all methods. Return 'returnId' for order 'orderId' is not found
+The refund specified in the request was not found. Check the correctness of the transmitted refund and order IDs.
+GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}POST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decisionPOST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit
+Shipment with ID 'shipmentId' not found The shipment specified in the request was not found. Check the correctness of the transmitted shipment ID.
+POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm Supply request not found. The application was not found.
+Check the correctness of the transmitted application ID.
+POST v2/campaigns/{campaignId}/supply-requests/documentsPOST v2/campaigns/{campaignId}/supply-requests/items
+Unknown category Unknown category.
+Check that the transmitted category ID is correct.
+To find out the identifier of the category to which the product you are interested in belongs, use the requestPOST v2/categories/tree.
+POST v2/category/{categoryId}/parameters
+
+Errors 405 Method Not Allowed
+
+Description | Translation | What to do | Methods in which the error occurs
+Request method 'method' not supported | The requested HTTP method is not supported. | Check the methods that are supported by the resource. | It is found in all methods.
+Description Translation What to do Methods in which the error occurs Request method 'method' not supported
+The requested HTTP method is not supported. Check the methods that are supported by the resource. It is found in all methods.
+
+Errors 415 Unsupported Media Type
+
+Description | Translation | What to do | Methods in which the error occurs
+Content type 'content-type' not supported | The requested content type is not supported. | Transmit one of the supported content types. | It is found in all methods.
+Unknown content-type: 'content-type' | Requested content type — unknown. | Transmit one of the supported content types. | It is found in all methods.
+Description Translation What to do Methods in which the error occurs Content type 'content-type' not supported
+The requested content type is not supported. Transmit one of the supported content types. It is found in all methods.
+Unknown content-type: 'content-type' Requested content type — unknown. Transmit one of the supported content types.
+It is found in all methods.
+
+Errors 420 Enhance Your Calm
+
+Description | Translation | What to do | Methods in which the error occurs
+Hit rate limit of 'N' parallel requests for {entity} | Exceeded the global limit on the number of simultaneous requests to Yandex Market API for sellers.What is it | Reduce the number of parallel API requests for a specific entity toNrequests. | It is found in all methods.
+Hit rate limit of 'N' requests per 'period' for resource 'R' for {entity} | Exceeded the resource limit on the number ofNresource requestsRfor the periodperiodfor a specific entity.What is it | The time limit is specified in the header.X-RateLimit-Resource-Until. The use of the resource will become possible after the specified time. | It is found in all methods.
+Description Translation What to do Methods in which the error occurs Hit rate limit of 'N' parallel requests for {entity}
+Exceeded the global limit on the number of simultaneous requests to Yandex Market API for sellers.What is it
+Reduce the number of parallel API requests for a specific entity toNrequests.
+
+N It is found in all methods. Hit rate limit of 'N' requests per 'period' for resource 'R' for {entity}
+Exceeded the resource limit on the number ofNresource requestsRfor the periodperiodfor a specific entity.What is it
+
+N
+
+R
+
+period
+The time limit is specified in the header.X-RateLimit-Resource-Until. The use of the resource will become possible after the specified time.
+
+X-RateLimit-Resource-Until It is found in all methods.
+
+Errors 423 Locked
+
+Description | Translation | What to do | Methods in which the error occurs
+Business is in migration | Store migrations are taking place in the cabinet. | Wait for the transfer to finish. | POST v2/businesses/{businessId}/offer-cards/updatePOST v2/campaigns/{campaignId}/offer-prices/updatesPOST v2/businesses/{businessId}/offer-prices/updatesPOST v2/businesses/{businessId}/price-quarantine/confirmPOST v2/campaigns/{campaignId}/price-quarantine/confirmPOST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offers/deletePOST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings/archivePOST v2/businesses/{businessId}/offer-mappings/unarchivePOST v2/businesses/{businessId}/offer-mappings/deletePOST v1/businesses/{businessId}/offer-mappings/barcodes/generatePOST v2/campaigns/{campaignId}/offer-mapping-entries/updatesPOST v2/businesses/{businessId}/promos/offers/updatePOST v2/businesses/{businessId}/promos/offers/delete
+Campaign is in business migration | The store is in the process of being moved to another account. | Wait for the transfer to finish. | GET v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offers/delete
+Partner use only default price | The cabinet uses prices for all stores. | You will not be able to set the price for a separate store. Set uniform prices for all stores in the cabinet. | POST v2/campaigns/{campaignId}/offer-prices/updates
+Description Translation What to do Methods in which the error occurs Business is in migration Store migrations are taking place in the cabinet.
+Wait for the transfer to finish.
+POST v2/businesses/{businessId}/offer-cards/updatePOST v2/campaigns/{campaignId}/offer-prices/updatesPOST v2/businesses/{businessId}/offer-prices/updatesPOST v2/businesses/{businessId}/price-quarantine/confirmPOST v2/campaigns/{campaignId}/price-quarantine/confirmPOST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offers/deletePOST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings/archivePOST v2/businesses/{businessId}/offer-mappings/unarchivePOST v2/businesses/{businessId}/offer-mappings/deletePOST v1/businesses/{businessId}/offer-mappings/barcodes/generatePOST v2/campaigns/{campaignId}/offer-mapping-entries/updatesPOST v2/businesses/{businessId}/promos/offers/updatePOST v2/businesses/{businessId}/promos/offers/delete
+Campaign is in business migration The store is in the process of being moved to another account. Wait for the transfer to finish.
+GET v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offers/delete Partner use only default price
+The cabinet uses prices for all stores.
+You will not be able to set the price for a separate store. Set uniform prices for all stores in the cabinet.
+POST v2/campaigns/{campaignId}/offer-prices/updates
+
+Errors 499 Client Closed Request
+The error is returned when the client closes the connection before completing request processing on the Market side. Check the timeout settings and the request replay policy on the client side and repeat the call.
+
+Errors 500 Internal Server Error
+Wait for a while and call the method again. If the problem persists, contact customer support. — go toseller's account on the Marketand press the buttonCreate an appeal.
+
+503 Service Unavailable Errors
+
+Description | Translation | What to do | Methods in which the error occurs
+Service temporarily unavailable. Please, try again later | The server is temporarily unavailable due to high load. | Try to repeat the request after a while.If the problem persists, contact customer support. — go toseller's account on the Marketand press the buttonCreate an appeal. | It is found in all methods.
+Description Translation What to do Methods in which the error occurs Service temporarily unavailable. Please, try again later
+The server is temporarily unavailable due to high load. Try to repeat the request after a while.
+If the problem persists, contact customer support. — go toseller's account on the Marketand press the buttonCreate an appeal.
+It is found in all methods.
+
+Example of an error message
+Request:
+
+GET /campaigns/10003/orders HTTP/1.1
+Host: api.partner.market.yandex.ru
+Accept: */*
+Api-Key: ACMA:I4c4CxCSYaI41RSC2uYWP2qj3Rhhm4knMiBEga5K:151c0664a
+
+GET /campaigns/10003/orders HTTP/1.1
+Host: api.partner.market.yandex.ru
+Accept: */*
+Api-Key: ACMA:I4c4CxCSYaI41RSC2uYWP2qj3Rhhm4knMiBEga5K:151c0664a
+
+Answer:
+
+{
+"errors": [
+{
+"code": "UNAUTHORIZED",
+"message": "Api-Key token is invalid"
+}
+],
+"status": "ERROR"
+}
+
+{
+"errors": [
+{
+"code": "UNAUTHORIZED",
+"message": "Api-Key token is invalid"
+}
+],
+"status": "ERROR"
+}

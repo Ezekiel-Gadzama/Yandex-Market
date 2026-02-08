@@ -1,0 +1,1475 @@
+Information about balances and turnover
+The method is available for models:FBY,FBS,ExpressandDBS.
+
+• offers-and-cards-management —Manage products and cards
+• offers-and-cards-management:read-only —View products and cards
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns data on product balances (for all models) and onturnoverproducts (for the model FBY). By default, the turnover data is not returned.
+To have them in the response, sendtruein the fieldwithTurnover.
+
+true
+
+withTurnover
+For the model FBY:information about balances may be returned from several Market warehouses, which will have differentwarehouseId. To get a list of Market warehouses, use the methodGET v2/warehouses.
+
+warehouseId
+For the model FBS:the response may include not only the partner warehouse, but also the Market's return warehouse. This is possible if the refund was received at the return point specified by the seller and was not picked up for a long time.
+Restriction for the parameterlimit
+
+limit Do not pass a value greater than 200.
+
+⚙️ Limit:100,000 products per minute
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/offers/stocks
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/offers/stocks
+
+Path parameters
+
+Name | Description
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+Name Description campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1
+
+Query parameters
+
+Name | Description
+limit | Type: integerThe number of values per page.Min value:1
+page_token | Type: stringID of the results page.If the parameter is omitted, the first page is returned.We recommend transmitting the value of the output parameternextPageToken, received during the last request.If setpage_tokenand the request has parameterspageandpageSizethey are ignored.Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+Name Description limit Type: integer The number of values per page. Min value:1
+
+1 page_token Type: string ID of the results page. If the parameter is omitted, the first page is returned.
+We recommend transmitting the value of the output parameternextPageToken, received during the last request.
+
+nextPageToken If setpage_tokenand the request has parameterspageandpageSizethey are ignored.
+
+page_token
+
+page
+
+pageSize Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+
+eyBuZXh0SWQ6IDIzNDIgfQ==
+
+Body
+
+{
+"stocksWarehouseId": 1,
+"hasStocks": true,
+"withTurnover": false,
+"archived": true,
+"offerIds": [
+"example"
+]
+}
+
+{
+"stocksWarehouseId": 1,
+"hasStocks": true,
+"withTurnover": false,
+"archived": true,
+"offerIds": [
+"example"
+]
+}
+
+Name | Description
+archived | Type: booleanFilter by location in the archive.Pass it ontrueto get information about the remaining items that are archived. If the filter is not filled or passedfalsethe response returns information about products that are not archived.
+hasStocks | Type: booleanFor the model only FBYFilter by product availability. Use only together withstocksWarehouseId.Pass it onfalseto get information about products that are not available. With the valuetrueThe data about the goods that are in the specified warehouse is returned.
+offerIds | Type: string[] | nullFilter by your SKU products.Information about the remaining amounts of all transferred funds is returned. SKU, including items in the archive.This list is returned only in its entirety.If you are requesting information on specific SKU, do not fill in:page_tokenlimitarchivedstocksOnWarehouseMin items:1Max items:500Unique items:trueExample["example"]
+stocksWarehouseId | Type: integerThe warehouse ID.If the parameter is specified, only the goods in the transferred warehouse are returned.For the model FBY:to get a list of Market warehouses, use the methodGET v2/warehouses.Min value:1
+withTurnover | Type: booleanFor the model only FBYWhether to return the turnover information.Default value:false. If the information is needed, pass the valuetrue.Default:false
+Name Description archived Type: boolean Filter by location in the archive.
+Pass it ontrueto get information about the remaining items that are archived. If the filter is not filled or passedfalsethe response returns information about products that are not archived.
+
+true
+
+false hasStocks Type: boolean For the model only FBY Filter by product availability. Use only together withstocksWarehouseId.
+
+stocksWarehouseId
+Pass it onfalseto get information about products that are not available. With the valuetrueThe data about the goods that are in the specified warehouse is returned.
+
+false
+
+true offerIds Type: string[] | null Filter by your SKU products.
+Information about the remaining amounts of all transferred funds is returned. SKU, including items in the archive.
+This list is returned only in its entirety. If you are requesting information on specific SKU, do not fill in:
+
+• page_token
+
+page_token
+• limit
+
+limit
+• archived
+
+archived
+• stocksOnWarehouse
+
+stocksOnWarehouse Min items:1
+
+1 Max items:500
+
+500 Unique items:true
+
+true
+
+[
+"example"
+]
+
+[
+"example"
+]
+stocksWarehouseId Type: integer The warehouse ID. If the parameter is specified, only the goods in the transferred warehouse are returned.
+For the model FBY:to get a list of Market warehouses, use the methodGET v2/warehouses. Min value:1
+
+1 withTurnover Type: boolean For the model only FBY Whether to return the turnover information. Default value:false. If the information is needed, pass the valuetrue.
+
+false
+
+true Default:false
+
+false
+
+Responses
+200 OK
+Remnants of goods in warehouses.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"paging": {
+"nextPageToken": "example"
+},
+"warehouses": [
+{
+"warehouseId": 0,
+"offers": [
+null
+]
+}
+]
+}
+}
+
+{
+"status": "OK",
+"result": {
+"paging": {
+"nextPageToken": "example"
+},
+"warehouses": [
+{
+"warehouseId": 0,
+"offers": [
+null
+]
+}
+]
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectwarehousesType: object[]offersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}]warehouseIdType: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.The warehouse list page.For the model FBY:may contain several Market warehouses.For the model FBS:can contain both a partner warehouse and a Market return warehouse.Example[{"warehouseId":0,"offers":[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{}],"updatedAt":"2025-01-01T00:00:00Z"}]}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}A list of warehouses with information about the balances on each of them.Example{"paging":{"nextPageToken":"example"},"warehouses":[{"warehouseId":0,"offers":[{"offerId":"example","turnoverSummary":{},"stocks":[null],"updatedAt":"2025-01-01T00:00:00Z"}]}]}Example{"result":{"paging":{"nextPageToken":"example"},"warehouses":[{"warehouseId":0,"offers":[{}]}]}}
+
+result | Type: objectwarehousesType: object[]offersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}]warehouseIdType: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.The warehouse list page.For the model FBY:may contain several Market warehouses.For the model FBS:can contain both a partner warehouse and a Market return warehouse.Example[{"warehouseId":0,"offers":[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{}],"updatedAt":"2025-01-01T00:00:00Z"}]}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}A list of warehouses with information about the balances on each of them.Example{"paging":{"nextPageToken":"example"},"warehouses":[{"warehouseId":0,"offers":[{"offerId":"example","turnoverSummary":{},"stocks":[null],"updatedAt":"2025-01-01T00:00:00Z"}]}]} | warehouses | Type: object[]offersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}]warehouseIdType: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.The warehouse list page.For the model FBY:may contain several Market warehouses.For the model FBS:can contain both a partner warehouse and a Market return warehouse.Example[{"warehouseId":0,"offers":[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{}],"updatedAt":"2025-01-01T00:00:00Z"}]}] | offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | stocks | Type: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}] | count | Type: integerThe value of the leftovers. | type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED | turnoverSummary | Type: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5} | turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE | turnoverDays | Type: numberThe value is in days. | updatedAt | Type: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00Z | warehouseId | Type: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned. | paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+warehouses | Type: object[]offersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}]warehouseIdType: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.The warehouse list page.For the model FBY:may contain several Market warehouses.For the model FBS:can contain both a partner warehouse and a Market return warehouse.Example[{"warehouseId":0,"offers":[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{}],"updatedAt":"2025-01-01T00:00:00Z"}]}] | offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | stocks | Type: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}] | count | Type: integerThe value of the leftovers. | type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED | turnoverSummary | Type: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5} | turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE | turnoverDays | Type: numberThe value is in days. | updatedAt | Type: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00Z | warehouseId | Type: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.
+offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | stocks | Type: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}] | count | Type: integerThe value of the leftovers. | type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED | turnoverSummary | Type: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5} | turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE | turnoverDays | Type: numberThe value is in days. | updatedAt | Type: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00Z
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+stocks | Type: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}] | count | Type: integerThe value of the leftovers. | type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED
+count | Type: integerThe value of the leftovers.
+type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED
+turnoverSummary | Type: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5} | turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE | turnoverDays | Type: numberThe value is in days.
+turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE
+turnoverDays | Type: numberThe value is in days.
+updatedAt | Type: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00Z
+warehouseId | Type: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example result
+
+warehouses | Type: object[]offersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}]warehouseIdType: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.The warehouse list page.For the model FBY:may contain several Market warehouses.For the model FBS:can contain both a partner warehouse and a Market return warehouse.Example[{"warehouseId":0,"offers":[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{}],"updatedAt":"2025-01-01T00:00:00Z"}]}] | offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | stocks | Type: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}] | count | Type: integerThe value of the leftovers. | type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED | turnoverSummary | Type: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5} | turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE | turnoverDays | Type: numberThe value is in days. | updatedAt | Type: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00Z | warehouseId | Type: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.
+offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | stocks | Type: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}] | count | Type: integerThe value of the leftovers. | type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED | turnoverSummary | Type: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5} | turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE | turnoverDays | Type: numberThe value is in days. | updatedAt | Type: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00Z
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+stocks | Type: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}] | count | Type: integerThe value of the leftovers. | type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED
+count | Type: integerThe value of the leftovers.
+type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED
+turnoverSummary | Type: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5} | turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE | turnoverDays | Type: numberThe value is in days.
+turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE
+turnoverDays | Type: numberThe value is in days.
+updatedAt | Type: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00Z
+warehouseId | Type: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example warehouses
+
+offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplestocksType: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}]turnoverSummaryType: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5}updatedAtType: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00ZInformation about balances.Example[{"offerId":"example","turnoverSummary":{"turnover":"LOW","turnoverDays":0.5},"stocks":[{"type":"FIT","count":0}],"updatedAt":"2025-01-01T00:00:00Z"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | stocks | Type: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}] | count | Type: integerThe value of the leftovers. | type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED | turnoverSummary | Type: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5} | turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE | turnoverDays | Type: numberThe value is in days. | updatedAt | Type: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00Z
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+stocks | Type: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}] | count | Type: integerThe value of the leftovers. | type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED
+count | Type: integerThe value of the leftovers.
+type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED
+turnoverSummary | Type: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5} | turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE | turnoverDays | Type: numberThe value is in days.
+turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE
+turnoverDays | Type: numberThe value is in days.
+updatedAt | Type: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00Z
+warehouseId | Type: integerThe warehouse ID.For the model FBY:the ID of the Market warehouse is returned.For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.
+offers
+
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+stocks | Type: object[]countType: integerThe value of the leftovers.typeType: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIREDInformation about balances.Example[{"type":"FIT","count":0}] | count | Type: integerThe value of the leftovers. | type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED
+count | Type: integerThe value of the leftovers.
+type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED
+turnoverSummary | Type: objectturnoverType: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STOREturnoverDaysType: numberThe value is in days.Information about the turnover of the product.Read more about the storage and turnover of goods inYandex.Market Help for sellers.Example{"turnover":"LOW","turnoverDays":0.5} | turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE | turnoverDays | Type: numberThe value is in days.
+turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE
+turnoverDays | Type: numberThe value is in days.
+updatedAt | Type: string<date-time>The date and time of the last update of the balance information.Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.Example:2025-01-01T00:00:00Z
+offerId Type: string Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example stocks
+
+count | Type: integerThe value of the leftovers.
+type | Type: stringThe type of remaining goods in the warehouse:AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.DEFECT(corresponds to the "Marriage" type) — a defective product.EXPIRED(corresponds to the "Overdue" type) — an expired product.FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.FREEZE— the product that is reserved for orders.QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).UTILIZATION— the product that will be disposed of.Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED
+count Type: integer The value of the leftovers. type Type: string The type of remaining goods in the warehouse:
+
+• AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.
+AVAILABLE(corresponds to the "Available to order" type in the "Stock balances" report in the seller's office on the Market) — an item available for sale.
+
+AVAILABLE
+• DEFECT(corresponds to the "Marriage" type) — a defective product.
+DEFECT(corresponds to the "Marriage" type) — a defective product.
+
+DEFECT
+• EXPIRED(corresponds to the "Overdue" type) — an expired product.
+EXPIRED(corresponds to the "Overdue" type) — an expired product.
+
+EXPIRED
+• FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.
+FIT(corresponds to the "Fit" type) — An item that is available for sale or has already been reserved.
+
+FIT
+• FREEZE— the product that is reserved for orders.
+FREEZE— the product that is reserved for orders.
+
+FREEZE
+• QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).
+QUARANTINE(corresponds to the "Quarantine" type) — An item that is temporarily unavailable for sale (for example, an item is being moved from one warehouse to another).
+
+QUARANTINE
+• UTILIZATION— the product that will be disposed of.
+UTILIZATION— the product that will be disposed of.
+
+UTILIZATION Enum:FIT,FREEZE,AVAILABLE,QUARANTINE,UTILIZATION,DEFECT,EXPIRED
+
+FIT
+
+FREEZE
+
+AVAILABLE
+
+QUARANTINE
+
+UTILIZATION
+
+DEFECT
+
+EXPIRED Information about balances.
+
+[
+{
+"type": "FIT",
+"count": 0
+}
+]
+
+[
+{
+"type": "FIT",
+"count": 0
+}
+]
+turnoverSummary
+
+turnover | Type: stringEvaluation of turnover.|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE
+turnoverDays | Type: numberThe value is in days. turnover Type: string Evaluation of turnover.
+|enum|Turnover range|Comment|
+|-|-|-|
+|LOW|turnoverDays≥ 120||
+|ALMOST_LOW|100 ≤turnoverDays< 120||
+|HIGH|45 ≤turnoverDays< 100||
+|VERY_HIGH|0 ≤turnoverDays< 45||
+|NO_SALES|—|There are no sales.|
+|FREE_STORE|Any value.|There is no need to pay for the storage of goods in this category.|
+
+LOW
+
+turnoverDays
+
+ALMOST_LOW
+
+turnoverDays
+
+HIGH
+
+turnoverDays
+
+VERY_HIGH
+
+turnoverDays
+
+NO_SALES
+
+FREE_STORE Enum:LOW,ALMOST_LOW,HIGH,VERY_HIGH,NO_SALES,FREE_STORE
+
+LOW
+
+ALMOST_LOW
+
+HIGH
+
+VERY_HIGH
+
+NO_SALES
+
+FREE_STORE turnoverDays Type: number The value is in days. Information about the turnover of the product.
+Read more about the storage and turnover of goods inYandex.Market Help for sellers.
+
+{
+"turnover": "LOW",
+"turnoverDays": 0.5
+}
+
+{
+"turnover": "LOW",
+"turnoverDays": 0.5
+}
+updatedAt Type: string<date-time> The date and time of the last update of the balance information.
+Date and time format: ISO 8601 with an offset relative to UTC. For example,2023-11-21T00:42:42+03:00.
+
+2023-11-21T00:42:42+03:00 Example:2025-01-01T00:00:00Z
+
+2025-01-01T00:00:00Z Information about balances.
+
+[
+{
+"offerId": "example",
+"turnoverSummary": {
+"turnover": "LOW",
+"turnoverDays": 0.5
+},
+"stocks": [
+{
+"type": "FIT",
+"count": 0
+}
+],
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+]
+
+[
+{
+"offerId": "example",
+"turnoverSummary": {
+"turnover": "LOW",
+"turnoverDays": 0.5
+},
+"stocks": [
+{
+"type": "FIT",
+"count": 0
+}
+],
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+]
+
+warehouseId Type: integer The warehouse ID. For the model FBY:the ID of the Market warehouse is returned.
+For the model FBS:the identifier of both the partner warehouse and the Market return warehouse can be returned.
+The warehouse list page. For the model FBY:may contain several Market warehouses. For the model FBS:can contain both a partner warehouse and a Market return warehouse.
+
+[
+{
+"warehouseId": 0,
+"offers": [
+{
+"offerId": "example",
+"turnoverSummary": {
+"turnover": "LOW",
+"turnoverDays": 0.5
+},
+"stocks": [
+{}
+],
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+]
+}
+]
+
+[
+{
+"warehouseId": 0,
+"offers": [
+{
+"offerId": "example",
+"turnoverSummary": {
+"turnover": "LOW",
+"turnoverDays": 0.5
+},
+"stocks": [
+{}
+],
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+]
+}
+]
+
+paging
+
+nextPageToken | Type: stringID of the next results page.Example:example nextPageToken Type: string ID of the next results page.
+Example:example
+
+example The ID of the next page.
+
+{
+"nextPageToken": "example"
+}
+
+{
+"nextPageToken": "example"
+}
+A list of warehouses with information about the balances on each of them.
+
+{
+"paging": {
+"nextPageToken": "example"
+},
+"warehouses": [
+{
+"warehouseId": 0,
+"offers": [
+{
+"offerId": "example",
+"turnoverSummary": {},
+"stocks": [
+null
+],
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+]
+}
+]
+}
+
+{
+"paging": {
+"nextPageToken": "example"
+},
+"warehouses": [
+{
+"warehouseId": 0,
+"offers": [
+{
+"offerId": "example",
+"turnoverSummary": {},
+"stocks": [
+null
+],
+"updatedAt": "2025-01-01T00:00:00Z"
+}
+]
+}
+]
+}
+
+{
+"result": {
+"paging": {
+"nextPageToken": "example"
+},
+"warehouses": [
+{
+"warehouseId": 0,
+"offers": [
+{}
+]
+}
+]
+}
+}
+
+{
+"result": {
+"paging": {
+"nextPageToken": "example"
+},
+"warehouses": [
+{
+"warehouseId": 0,
+"offers": [
+{}
+]
+}
+]
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+The average number of days for which the product is sold. Detailed information about turnover is providedin the Help of the Market for sellers.
+
+Was the article helpful?

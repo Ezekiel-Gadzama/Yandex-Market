@@ -1,0 +1,23 @@
+How to sign integrations
+In the seller's account on the Market on the pageAPIs and moduleson the tabQuery logYou can view information on the requests and responses, as well as on the issues related to them. To understand which integration the data belongs to, you need to sign:
+
+• Requeststhat you send to Yandex Market API, — in the header, specify the name of the integration and its version, if any.Format:X-Market-Integration: integration name/version.For example,X-Market-Integration: BitrixorX-Market-Integration: Bitrix/1.0.0.
+Requeststhat you send to Yandex Market API, — in the header, specify the name of the integration and its version, if any.
+Format:X-Market-Integration: integration name/version.
+
+X-Market-Integration: integration name/version For example,X-Market-Integration: BitrixorX-Market-Integration: Bitrix/1.0.0.
+
+X-Market-Integration: Bitrix
+
+X-Market-Integration: Bitrix/1.0.0
+• AnswerstoAPI notificationsfrom Yandex. Market — provide the name of the integration and its version in the response to the request.POST notificationin the parametersnameandversion.
+AnswerstoAPI notificationsfrom Yandex. Market — provide the name of the integration and its version in the response to the request.POST notificationin the parametersnameandversion.
+
+name
+
+version
+The name of the integration is displayed on the pageQuery login the blockType of integrations. You can also use a filter on this page.Integration.Learn more about working with logs
+Name requirements:
+
+• Maximum number of characters — 100.
+• Only ASCII characters fromtables.

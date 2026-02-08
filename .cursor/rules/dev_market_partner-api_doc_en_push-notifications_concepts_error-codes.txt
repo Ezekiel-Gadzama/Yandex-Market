@@ -1,0 +1,65 @@
+Error messages
+When the Market sends a requestPOST notification, return a response with the code200and information about notification processing.Response body
+
+200 If there is an error, please report it:
+
+• 400 Bad Request— The market sent an incorrect notification. In the response, specify the type of error and describe it.Response body
+400 Bad Request— The market sent an incorrect notification. In the response, specify the type of error and describe it.Response body
+
+400 Bad Request
+• 500 Internal Server Error— the error is on the store's side.Response body
+500 Internal Server Error— the error is on the store's side.Response body
+
+500 Internal Server Error
+Sending other codes will be considered an error, as when responding with a code500.The store's API is not responding
+
+500
+
+Errors when enabling or working with API notifications
+
+Type of error | Error subtype | Error description
+CANT_GET_RESPONSE | CONNECTION_REFUSED | The connection to the store's server could not be established. The error may be caused by network problems on the store's side.
+CANT_GET_RESPONSE | CONNECTION_TIMED_OUT | The waiting time for connecting to the store's server has expired.
+CANT_GET_RESPONSE | HTTP | The response from the store was different from200 OK.
+CANT_GET_RESPONSE | READ_TIMED_OUT | The waiting time for the store's response to the Yandex.Market request has expired.
+CANT_GET_RESPONSE | SSL_ERROR | A secure connection to the store's server cannot be established. The security certificate is not valid.
+CANT_GET_RESPONSE | UNSUPPORTED_MEDIA_TYPE | The header of the store's response specifies a data format other thanapplication/json.Data format
+INVALID_RESPONSE | CANT_PARSE_RESPONSE | Data could not be extracted from the store's response.
+INVALID_RESPONSE | INVALID_DATA | The body of the store's response contains incorrect or insufficient data. For example, there is no information about the integration version.
+
+CANT_GET_RESPONSE
+
+CONNECTION_REFUSED
+
+CANT_GET_RESPONSE
+
+CONNECTION_TIMED_OUT
+
+CANT_GET_RESPONSE
+
+HTTP
+
+200 OK
+
+CANT_GET_RESPONSE
+
+READ_TIMED_OUT
+
+CANT_GET_RESPONSE
+
+SSL_ERROR
+
+CANT_GET_RESPONSE
+
+UNSUPPORTED_MEDIA_TYPE
+
+application/json
+
+INVALID_RESPONSE
+
+CANT_PARSE_RESPONSE
+
+INVALID_RESPONSE
+
+INVALID_DATA
+Detailed information on requests and responses, including errors, can be viewed in the seller's account on the Market. — click on your account icon →Settingsand in the menu on the left, selectAPIs and modules→ tabNotification Log. Read more about this in the sectionRequest logs.

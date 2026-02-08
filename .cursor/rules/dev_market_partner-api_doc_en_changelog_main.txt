@@ -1,0 +1,1941 @@
+Major updates
+Stay tuned for documentation updates inThe Telegram channel.
+
+2026
+January 30th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/supply-requests | Added a new status of the export requestEAPP signed by the warehouse(WAREHOUSE_SIGNED_ACT). The status is assigned when the warehouse has signed the acceptance certificate.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/supply-requests
+Added a new status of the export requestEAPP signed by the warehouse(WAREHOUSE_SIGNED_ACT). The status is assigned when the warehouse has signed the acceptance certificate.
+
+WAREHOUSE_SIGNED_ACT
+
+january 28th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings | The limit on the number of products per request has been changed from 200 to 100.
+POST v2/reports/goods-feedback/generate | Fields were deleted from the reportESTIMATED_OPINIONS_COUNT("You can still get it") andORDERED_ITEMS_TOTAL_AMOUNT("Ordered items for the amount").
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-mappings
+The limit on the number of products per request has been changed from 200 to 100. POST v2/reports/goods-feedback/generate
+Fields were deleted from the reportESTIMATED_OPINIONS_COUNT("You can still get it") andORDERED_ITEMS_TOTAL_AMOUNT("Ordered items for the amount").
+
+January 15th
+
+Methods or documentation pages | Description of the changes
+POST /v2/reports/prices/generate | The outdated method of generating the price report has been removed. Use the methodPOST v2/reports/goods-prices/generate.
+Methods or documentation pages Description of the changes POST /v2/reports/prices/generate
+
+POST /v2/reports/prices/generate
+The outdated method of generating the price report has been removed. Use the methodPOST v2/reports/goods-prices/generate.
+
+January 12
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns | Added a restriction on the parameterpageSize. Now, no more than 100 stores per request are returned.
+POST v2/reports/united-marketplace-services/generate | Renamed the report sheets:The commission for the sale→Order for saleTransfer of payment from 1.01.26→Payment transfer order
+Methods or documentation pages Description of the changes GET v2/campaigns
+Added a restriction on the parameterpageSize. Now, no more than 100 stores per request are returned.
+
+pageSize POST v2/reports/united-marketplace-services/generate Renamed the report sheets:
+
+• The commission for the sale→Order for sale
+• Transfer of payment from 1.01.26→Payment transfer order
+
+2025
+December 26th
+
+Methods or documentation pages | Description of the changes
+Questions and answers about products | Added step-by-step instructions "Questions and answers about products". It described scenarios for dealing with user questions: getting a list of questions, publishing answers and comments.
+POST v1/businesses/{businessId}/goods-questionsPOST v1/businesses/{businessId}/goods-questions/answersPOST v1/businesses/{businessId}/goods-questions/update | Added new methods for working with questions and answers about products.
+Methods or documentation pages Description of the changes Questions and answers about products
+Added step-by-step instructions "Questions and answers about products". It described scenarios for dealing with user questions: getting a list of questions, publishing answers and comments.
+POST v1/businesses/{businessId}/goods-questions POST v1/businesses/{businessId}/goods-questions/answers
+POST v1/businesses/{businessId}/goods-questions/update Added new methods for working with questions and answers about products.
+
+December 24th
+
+Methods or documentation pages | Description of the changes
+API Access Control | The article "API Access Control" has been added. They described how to check the availability of the API for the store, the reasons for the blockages, and ways to restore access.
+Methods or documentation pages Description of the changes API Access Control
+The article "API Access Control" has been added. They described how to check the availability of the API for the store, the reasons for the blockages, and ways to restore access.
+
+December 21
+
+Methods or documentation pages | Description of the changes
+Methods in which it is transmittedofferId/shopSku(product ID). | Clarified that the whitespace characters at the beginning and end of the valueofferId/shopSkuthey are automatically deleted.
+Methods or documentation pages Description of the changes Methods in which it is transmittedofferId/shopSku(product ID).
+
+offerId
+
+shopSku
+Clarified that the whitespace characters at the beginning and end of the valueofferId/shopSkuthey are automatically deleted.
+
+offerId
+
+shopSku
+
+December 17th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId} | Marked the methods as obsolete. UsePOST v1/businesses/{businessId}/ordersto get information about orders.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}
+Marked the methods as obsolete. UsePOST v1/businesses/{businessId}/ordersto get information about orders.
+
+December 9th
+
+Methods or documentation pages | Description of the changes
+Types of errors and what to do about them | Updated the error page — The "Methods" column has been added for all error codes (400, 401, 403, 404, etc.) and the list of 400 errors has been expanded by category.
+Best practices for integrating with Yandex Market API for sellers | We have added a new page with the best practices of API integration: resilience to changes, working with limits, error handling, and security.
+Methods or documentation pages Description of the changes Types of errors and what to do about them
+Updated the error page — The "Methods" column has been added for all error codes (400, 401, 403, 404, etc.) and the list of 400 errors has been expanded by category.
+Best practices for integrating with Yandex Market API for sellers
+We have added a new page with the best practices of API integration: resilience to changes, working with limits, error handling, and security.
+
+November 21
+
+Methods or documentation pages | Description of the changes
+Error codes | Added a description of the errorThe method is deprecated and is occasionally forbidden. Please stop using it. The error is returned to integrations that continue to use outdated API methods.
+Methods or documentation pages Description of the changes Error codes
+Added a description of the errorThe method is deprecated and is occasionally forbidden. Please stop using it. The error is returned to integrations that continue to use outdated API methods.
+
+November 18th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-cards | Added a parameterwithRecommendations(by defaultfalse). With the valuetruethe fields are returned in the responserecommendations(list of recommendations for filling out the card) andaverageContentRating(the average rating of the card).
+POST v1/businesses/{businessId}/orders | Added a new method. It returns information about orders in the cabinet.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-cards
+Added a parameterwithRecommendations(by defaultfalse). With the valuetruethe fields are returned in the responserecommendations(list of recommendations for filling out the card) andaverageContentRating(the average rating of the card).
+
+withRecommendations
+
+false
+
+true
+
+recommendations
+
+averageContentRating POST v1/businesses/{businessId}/orders Added a new method. It returns information about orders in the cabinet.
+
+October 27th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/orders/{orderId}/identifiers/statusPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes | Codes of the Honest SIGN system have been added to the marking code status verification method.It was clarified that the unsuccessful status of checking the marking codes in the system"An honest SIGN"does not block the transfer of the order to the statusREADY_TO_SHIPuntil December 1, 2025.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/orders/{orderId}/identifiers/status
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiers PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Codes of the Honest SIGN system have been added to the marking code status verification method.
+It was clarified that the unsuccessful status of checking the marking codes in the system"An honest SIGN"does not block the transfer of the order to the statusREADY_TO_SHIPuntil December 1, 2025.
+
+READY_TO_SHIP
+
+October 23rd
+
+Methods or documentation pages | Description of the changes
+Calling methodsHow to work with Yandex Market API for sellers of the Yandex Go Market | They told me that requests need to specify the version number of the method. It can be found on the page of each method.We will soon disable the ability to work with queries without specifying the version.
+Methods or documentation pages Description of the changes Calling methodsHow to work with Yandex Market API for sellers of the Yandex Go Market
+They told me that requests need to specify the version number of the method. It can be found on the page of each method.We will soon disable the ability to work with queries without specifying the version.
+
+October 13
+
+Methods or documentation pages | Description of the changes
+POST v1/businesses/{businessId}/offer-mappings/barcodes/generate | Added a new method. It generates barcodes and assigns them to the specified products.
+POST v1/reports/documents/barcodes/generate | Added a new method. It starts the generation PDF-a file with barcodes of the transferred goods or goods in the specified delivery request.
+Methods or documentation pages Description of the changes POST v1/businesses/{businessId}/offer-mappings/barcodes/generate
+Added a new method. It generates barcodes and assigns them to the specified products. POST v1/reports/documents/barcodes/generate
+Added a new method. It starts the generation PDF-a file with barcodes of the transferred goods or goods in the specified delivery request.
+
+September 5th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/label | The parameter has been deprecatedshipmentId.
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameter has been deprecatedidinOrderShipmentDTO.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/label
+The parameter has been deprecatedshipmentId.
+
+shipmentId
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameter has been deprecatedidinOrderShipmentDTO.
+
+id
+
+OrderShipmentDTO
+
+August 21st
+
+Methods or documentation pages | Description of the changes
+POST notification | Added the notification type — order change. Methods or documentation pages Description of the changes
+POST notification Added the notification type — order change.
+
+August 19th
+
+Methods or documentation pages | Description of the changes
+Chats with customersNon-purchases and refundsHow the refund statuses for models change FBY, FBS and Express | They told me that FBY-Stores can make decisions on refunds and create chats with customers to clarify the details of the refund.
+Methods or documentation pages Description of the changes
+Chats with customersNon-purchases and refundsHow the refund statuses for models change FBY, FBS and Express
+They told me that FBY-Stores can make decisions on refunds and create chats with customers to clarify the details of the refund.
+
+August 15th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/goods-prices/generate | The Prices report has been added.
+POST v2/reports/prices/generate | The method has been deprecated. Instead, usePOST v2/reports/goods-prices/generate.
+Methods or documentation pages Description of the changes POST v2/reports/goods-prices/generate The Prices report has been added.
+POST v2/reports/prices/generate
+
+POST v2/reports/prices/generate The method has been deprecated. Instead, usePOST v2/reports/goods-prices/generate.
+
+August 11th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/returnsGET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId} | Because you mistakenly marked the parameteridinLogisticPickupPointDTOoutdated, this indication has been removed.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/returnsGET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}
+Because you mistakenly marked the parameteridinLogisticPickupPointDTOoutdated, this indication has been removed.
+
+id
+
+LogisticPickupPointDTO
+
+August 7th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings | Added a parametershowcaseUrls— links to the same product on different storefronts of the Market.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-mappings
+Added a parametershowcaseUrls— links to the same product on different storefronts of the Market.
+
+showcaseUrls
+
+August 1st
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/stocks-on-warehouses/generate | Clarified that for models DBS, FBS and Express parametercampaignIdit will become unavailable soon.To get information about the store's stock balances, usebusinessIdand the ID of the required store incampaignIds.
+GET v2/campaigns/{campaignId}/settings | The parameters have been deprecatedshowInContext,showInPremiumanduseOpenStat.
+GET v2/campaigns/{campaignId}/region | An outdated method has been removed. Methods or documentation pages
+Description of the changes POST v2/reports/stocks-on-warehouses/generate
+Clarified that for models DBS, FBS and Express parametercampaignIdit will become unavailable soon.To get information about the store's stock balances, usebusinessIdand the ID of the required store incampaignIds.
+
+campaignId
+
+businessId
+
+campaignIds GET v2/campaigns/{campaignId}/settings The parameters have been deprecatedshowInContext,showInPremiumanduseOpenStat.
+
+showInContext
+
+showInPremium
+
+useOpenStat GET v2/campaigns/{campaignId}/region
+
+GET v2/campaigns/{campaignId}/region An outdated method has been removed.
+
+July 31
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/outlets/{outletId}GET v2/campaigns/{campaignId}/outlets | The parameters have been deprecatedshopOutletIdandworkingTime. Use them insteadshopOutletCodeandworkingSchedule.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/outlets/{outletId}GET v2/campaigns/{campaignId}/outlets
+The parameters have been deprecatedshopOutletIdandworkingTime. Use them insteadshopOutletCodeandworkingSchedule.
+
+shopOutletId
+
+workingTime
+
+shopOutletCode
+
+workingSchedule
+
+July 25th
+
+Methods or documentation pages | Description of the changes
+POST v2/categories/max-sale-quantum | The method has been deprecated.
+POST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offers | The parameter has been deprecatedquantum.
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings | The parameter has been deprecatedfirstVideoAsCover.
+Methods or documentation pages Description of the changes POST v2/categories/max-sale-quantum The method has been deprecated.
+POST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offers The parameter has been deprecatedquantum.
+
+quantum POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings
+The parameter has been deprecatedfirstVideoAsCover.
+
+firstVideoAsCover
+
+July 23rd
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/stocks-on-warehouses/generate | ParametercampaignIdit is no longer mandatory. If you transfer it, you will receive a report on the balances in the corresponding store warehouse.Added a parameterbusinessId. If you transfer it, the report will return information about the balances in all stores in the cabinet, except for FBY.Added a parametercampaignIds— filter by stores for the cabinet report (except for the model FBY).
+Methods or documentation pages Description of the changes POST v2/reports/stocks-on-warehouses/generate
+ParametercampaignIdit is no longer mandatory. If you transfer it, you will receive a report on the balances in the corresponding store warehouse.Added a parameterbusinessId. If you transfer it, the report will return information about the balances in all stores in the cabinet, except for FBY.Added a parametercampaignIds— filter by stores for the cabinet report (except for the model FBY).
+
+campaignId
+
+businessId
+
+campaignIds
+
+July 16
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/returnsGET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId} | The parameter has been deprecatedidinLogisticPickupPointDTO.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/returnsGET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}
+The parameter has been deprecatedidinLogisticPickupPointDTO.
+
+id
+
+LogisticPickupPointDTO
+
+July 11th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-prices | Added a new method. It returns a list of prices that you have set for all stores.
+POST v2/businesses/{businessId}/offer-prices/updates | Added a parameterminimumForBestseller— the minimum price of the product to be included in the "Best Sellers of the Market" promotion.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-prices
+Added a new method. It returns a list of prices that you have set for all stores. POST v2/businesses/{businessId}/offer-prices/updates
+Added a parameterminimumForBestseller— the minimum price of the product to be included in the "Best Sellers of the Market" promotion.
+
+minimumForBestseller
+
+July 9th
+
+Methods or documentation pages | Description of the changes
+Chats with customersNon-purchases and refundsHow the refund statuses for models change FBY, FBS and Express | They told me that Express-Stores can make decisions on refunds and create chats with customers to clarify the details of the refund.
+Methods or documentation pages Description of the changes
+Chats with customersNon-purchases and refundsHow the refund statuses for models change FBY, FBS and Express
+They told me that Express-Stores can make decisions on refunds and create chats with customers to clarify the details of the refund.
+
+July 3rd
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/closure-documents/generate | Added a new method. It provides an opportunity to receive closing documents.
+POST v2/reports/closure-documents/detalization/generate | Added a report on convergence with closing documents.
+Types of errors and what to do about them | Described the errorContract with type MARKETING was signed with the agency(the marketing agreement has been concluded with the agency), which the Market can return in response to the request.
+Methods or documentation pages Description of the changes POST v2/reports/closure-documents/generate
+Added a new method. It provides an opportunity to receive closing documents. POST v2/reports/closure-documents/detalization/generate
+Added a report on convergence with closing documents. Types of errors and what to do about them
+Described the errorContract with type MARKETING was signed with the agency(the marketing agreement has been concluded with the agency), which the Market can return in response to the request.
+
+July 1st
+
+Methods or documentation pages | Description of the changes
+Chats with customersNon-purchases and refunds | They told me that FBS-stores can create chats with customers not only on orders, but also on refunds.
+Methods or documentation pages Description of the changes Chats with customersNon-purchases and refunds
+They told me that FBS-stores can create chats with customers not only on orders, but also on refunds.
+
+June 30
+
+Methods or documentation pages | Description of the changes
+FBS-shopsDBS-shops | Added schemes for how refund statuses change.
+POST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit | Now the method transmits and confirms the refund decisions for all placement models except FBY.
+Non-purchases and refunds | They told us how to work with refunds that require a solution.
+POST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision | The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit.
+Methods or documentation pages Description of the changes FBS-shopsDBS-shops Added schemes for how refund statuses change.
+POST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit Now the method transmits and confirms the refund decisions for all placement models except FBY.
+Non-purchases and refunds They told us how to work with refunds that require a solution. POST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision
+The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit.
+
+June 23rd
+
+Methods or documentation pages | Description of the changes
+Request logs | We talked about a widget with information about errors in requests and responses and a filterIntegration.
+Methods or documentation pages Description of the changes Request logs
+We talked about a widget with information about errors in requests and responses and a filterIntegration.
+
+June 4th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/key-indicators/generate | We have added a report on key indicators.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes | The method has been deprecated. Instead, usePUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+Methods or documentation pages Description of the changes POST v2/reports/key-indicators/generate We have added a report on key indicators.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes The method has been deprecated. Instead, usePUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+
+June 3rd
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-pricesGET v2/campaigns/{campaignId}/offer-prices | Changed the limits on the number of products — 150,000 items per minute.
+GET v2/campaigns/{campaignId}/offer-mapping-entries | The limit on the number of products has been changed — 10,000 products per minute.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offer-pricesGET v2/campaigns/{campaignId}/offer-prices
+Changed the limits on the number of products — 150,000 items per minute. GET v2/campaigns/{campaignId}/offer-mapping-entries
+The limit on the number of products has been changed — 10,000 products per minute.
+
+May 29th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/sales-geography/generate | Added a report on the geography of sales.
+GET v2/campaigns/{campaignId}/offersGET v2/campaigns/{campaignId}/offers/allGET v2/campaigns/{campaignId}/feedsGET v2/campaigns/{campaignId}/feeds/{feedId}GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logsPOST v2/campaigns/{campaignId}/feeds/{feedId}/paramsPOST v2/campaigns/{campaignId}/feeds/{feedId}/refresh | Outdated methods have been removed.
+Methods or documentation pages Description of the changes POST v2/reports/sales-geography/generate Added a report on the geography of sales.
+GET v2/campaigns/{campaignId}/offersGET v2/campaigns/{campaignId}/offers/allGET v2/campaigns/{campaignId}/feedsGET v2/campaigns/{campaignId}/feeds/{feedId}GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logsPOST v2/campaigns/{campaignId}/feeds/{feedId}/paramsPOST v2/campaigns/{campaignId}/feeds/{feedId}/refresh
+
+GET v2/campaigns/{campaignId}/offers
+
+GET v2/campaigns/{campaignId}/offers/all
+
+GET v2/campaigns/{campaignId}/feeds
+
+GET v2/campaigns/{campaignId}/feeds/{feedId}
+
+GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logs
+
+POST v2/campaigns/{campaignId}/feeds/{feedId}/params
+
+POST v2/campaigns/{campaignId}/feeds/{feedId}/refresh Outdated methods have been removed.
+
+May 28th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/orders/{orderId}/identifiers/status | Added a new method. It returns the verification statuses of the UINs in the order.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/orders/{orderId}/identifiers/status
+Added a new method. It returns the verification statuses of the UINs in the order.
+
+May 27th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/jewelry-fiscal/generate | Added a report on jewelry orders. Methods or documentation pages
+Description of the changes POST v2/reports/jewelry-fiscal/generate Added a report on jewelry orders.
+
+the 6th of May
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/banners-statistics/generate | Added a report on the coverage promotion. Methods or documentation pages
+Description of the changes POST v2/reports/banners-statistics/generate Added a report on the coverage promotion.
+
+April 30th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/shows-boost/generate | Added a report on the boost of impressions.
+POST v2/campaigns/{campaignId}/orders/{orderId}/external-id | Added a new method. It transmits the external order ID in the store's system.
+Methods or documentation pages Description of the changes POST v2/reports/shows-boost/generate Added a report on the boost of impressions.
+POST v2/campaigns/{campaignId}/orders/{orderId}/external-id Added a new method. It transmits the external order ID in the store's system.
+
+April 28
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/supply-requests— receiving information about requests for supply, export, and disposal;POST v2/campaigns/{campaignId}/supply-requests/items— receipt of goods in an application for delivery, export or disposal;POST v2/campaigns/{campaignId}/supply-requests/documents— receipt of documents on the application for delivery, export or disposal. | Added methods for working with FBY- applications.
+FBY-requests for the supply of goods to the warehouse, export or disposal | Added step-by-step instructions for working with FBY- applications.
+Methods or documentation pages Description of the changes
+POST v2/campaigns/{campaignId}/supply-requests— receiving information about requests for supply, export, and disposal;POST v2/campaigns/{campaignId}/supply-requests/items— receipt of goods in an application for delivery, export or disposal;POST v2/campaigns/{campaignId}/supply-requests/documents— receipt of documents on the application for delivery, export or disposal.
+Added methods for working with FBY- applications. FBY-requests for the supply of goods to the warehouse, export or disposal
+Added step-by-step instructions for working with FBY- applications.
+
+April 24th
+
+Methods or documentation pages | Description of the changes
+POST v2/auth/token | Added a new method. It returns information about the transmitted authorization token.
+Module for the 1C system:The enterprise" | We talked about the module for the 1C system.:Enterprise", with which you can manage products and process orders on the Market.
+POST v2/businesses/{businessId}/offer-mappings/update | The parameter has been deprecatedcofinancePrice.
+Methods or documentation pages Description of the changes POST v2/auth/token Added a new method. It returns information about the transmitted authorization token.
+Module for the 1C system:The enterprise"
+We talked about the module for the 1C system.:Enterprise", with which you can manage products and process orders on the Market.
+POST v2/businesses/{businessId}/offer-mappings/update The parameter has been deprecatedcofinancePrice.
+
+cofinancePrice
+
+April 22nd
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/united-netting/generate | We have added a report on Yandex.Market scores.
+GET v2/businesses/{businessId}/chat— returns the chat by its ID;GET v2/businesses/{businessId}/chats/message— returns a message by its ID. | Added methods for working with chats.
+POST notification | Added notification types:creating a chat with a customer;adding a chat message;the beginning of the dispute;ending the dispute;creating a product review;creating a comment on the review.
+Methods or documentation pages Description of the changes POST v2/reports/united-netting/generate We have added a report on Yandex.Market scores.
+GET v2/businesses/{businessId}/chat— returns the chat by its ID;GET v2/businesses/{businessId}/chats/message— returns a message by its ID.
+Added methods for working with chats. POST notification
+Added notification types:creating a chat with a customer;adding a chat message;the beginning of the dispute;ending the dispute;creating a product review;creating a comment on the review.
+
+• creating a chat with a customer;
+• adding a chat message;
+• the beginning of the dispute;
+• ending the dispute;
+• creating a product review;
+• creating a comment on the review.
+
+April 16
+
+Methods or documentation pages | Description of the changes
+Methods where these types of discounts are transferred or returned. | Outdated discount types have been removed:YANDEX_PLUSYANDEX_EMPLOYEELIMITED_FREE_DELIVERY_PROMOFREE_DELIVERY_THRESHOLDMULTICART_DISCOUNTFREE_DELIVERY_FOR_LDIFREE_DELIVERY_FOR_LSCFREE_PICKUPSUPPLIER_MULTICART_DISCOUNTANNOUNCEMENT_PROMOEMPTY_PROMOBLOCKING_PROMOMARKET_DEALMARKET_PRIMEBERU_PLUS
+Methods or documentation pages Description of the changes Methods where these types of discounts are transferred or returned.
+Outdated discount types have been removed:YANDEX_PLUSYANDEX_EMPLOYEELIMITED_FREE_DELIVERY_PROMOFREE_DELIVERY_THRESHOLDMULTICART_DISCOUNTFREE_DELIVERY_FOR_LDIFREE_DELIVERY_FOR_LSCFREE_PICKUPSUPPLIER_MULTICART_DISCOUNTANNOUNCEMENT_PROMOEMPTY_PROMOBLOCKING_PROMOMARKET_DEALMARKET_PRIMEBERU_PLUS
+
+YANDEX_PLUS
+
+YANDEX_EMPLOYEE
+
+LIMITED_FREE_DELIVERY_PROMO
+
+FREE_DELIVERY_THRESHOLD
+
+MULTICART_DISCOUNT
+
+FREE_DELIVERY_FOR_LDI
+
+FREE_DELIVERY_FOR_LSC
+
+FREE_PICKUP
+
+SUPPLIER_MULTICART_DISCOUNT
+
+ANNOUNCEMENT_PROMO
+
+EMPTY_PROMO
+
+BLOCKING_PROMO
+
+MARKET_DEAL
+
+MARKET_PRIME
+
+BERU_PLUS
+
+April 15th
+
+Methods or documentation pages | Description of the changes
+How to use the console | They told us how to log in to the console, depending on the type of token. Methods or documentation pages
+Description of the changes How to use the console They told us how to log in to the console, depending on the type of token.
+
+April 11
+
+Methods or documentation pages | Description of the changes
+Methods where these parameters are passed or returned. | The parameters have been deprecatedmarketModelId,marketModelName,modelIdsandmodelId.
+GET v2/models/{modelId}POST v2/modelsGET v2/models/{modelId}/offersPOST v2/models/offersGET v2/models | The methods have been deprecated.
+Methods or documentation pages Description of the changes Methods where these parameters are passed or returned.
+The parameters have been deprecatedmarketModelId,marketModelName,modelIdsandmodelId.
+
+marketModelId
+
+marketModelName
+
+modelIds
+
+modelId
+GET v2/models/{modelId}POST v2/modelsGET v2/models/{modelId}/offersPOST v2/models/offersGET v2/models
+
+GET v2/models/{modelId}
+
+POST v2/models
+
+GET v2/models/{modelId}/offers
+
+POST v2/models/offers
+
+GET v2/models The methods have been deprecated.
+
+April 10th
+
+Methods or documentation pages | Description of the changes
+Working with warehouses | Added step-by-step instructions on how to work with warehouses. Methods or documentation pages
+Description of the changes Working with warehouses Added step-by-step instructions on how to work with warehouses.
+
+April 9th
+
+Methods or documentation pages | Description of the changes
+POST v2/regions/countries | Added a new method. It returns a list of countries with their codes.
+POST v2/businesses/{businessId}/offer-prices/updates | The limit on the number of products has been changed — 10,000 products per minute, no more than 500 products per request in the method.
+POST v2/campaigns/{campaignId}/offer-prices/updates | The limit on the number of products has been changed — 10,000 products per minute.
+Methods or documentation pages Description of the changes POST v2/regions/countries Added a new method. It returns a list of countries with their codes.
+POST v2/businesses/{businessId}/offer-prices/updates
+The limit on the number of products has been changed — 10,000 products per minute, no more than 500 products per request in the method.
+POST v2/campaigns/{campaignId}/offer-prices/updates The limit on the number of products has been changed — 10,000 products per minute.
+
+April 8
+
+Methods or documentation pages | Description of the changes
+Non-purchases and refunds | Added step-by-step instructions on how to handle non-purchases and refunds.
+Methods or documentation pages Description of the changes Non-purchases and refunds Added step-by-step instructions on how to handle non-purchases and refunds.
+
+6 april
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/goods-realization/generate | The implementation report is now available for the model as well. DBS.
+Methods or documentation pages Description of the changes POST v2/reports/goods-realization/generate
+The implementation report is now available for the model as well. DBS.
+
+April, 4
+
+Methods or documentation pages | Description of the changes
+POST v2/category/{categoryId}/parameters | The limit on the number of categories has been changed — 100 categories per minute.
+POST v2/categories/max-sale-quantum | Changed the limit on the number of requests — 5,000 requests per hour.
+POST v2/businesses/{businessId}/offer-cards/updatePOST v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offers/delete | Changed the limits on the number of products — 10,000 products per minute.
+GET v2/campaigns/{campaignId}/hidden-offers | The limit on the number of products has been changed — 10,000 products per minute, no more than 500 products per request.
+Methods or documentation pages Description of the changes POST v2/category/{categoryId}/parameters The limit on the number of categories has been changed — 100 categories per minute.
+POST v2/categories/max-sale-quantum Changed the limit on the number of requests — 5,000 requests per hour.
+POST v2/businesses/{businessId}/offer-cards/updatePOST v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offers/delete
+Changed the limits on the number of products — 10,000 products per minute. GET v2/campaigns/{campaignId}/hidden-offers
+The limit on the number of products has been changed — 10,000 products per minute, no more than 500 products per request.
+
+April 1st
+
+Methods or documentation pages | Description of the changes
+Step-by-step instructions and methods where marking codes are transmitted or returned in the Honest SIGN system. | They said that the labeling of goods in the system"An honest SIGN"It is now optional for orders from individuals.For business orders, you still need to send the labeling codes.
+Methods or documentation pages Description of the changes
+Step-by-step instructions and methods where marking codes are transmitted or returned in the Honest SIGN system.
+They said that the labeling of goods in the system"An honest SIGN"It is now optional for orders from individuals.For business orders, you still need to send the labeling codes.
+
+March 31
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/warehouses— returns a list of warehouses and information about them.POST v2/campaigns/{campaignId}/warehouse/status— disables or enables the warehouse. | Added methods of working with warehouses.
+GET v2/businesses/{businessId}/warehouses | The method has been deprecated. Instead, usePOST v2/businesses/{businessId}/warehouses.
+Methods or documentation pages Description of the changes
+POST v2/businesses/{businessId}/warehouses— returns a list of warehouses and information about them.POST v2/campaigns/{campaignId}/warehouse/status— disables or enables the warehouse.
+Added methods of working with warehouses. GET v2/businesses/{businessId}/warehouses The method has been deprecated. Instead, usePOST v2/businesses/{businessId}/warehouses.
+
+20th of March
+
+Methods or documentation pages | Description of the changes
+How to work with Yandex Market API for sellers of the Yandex Go Market | Added a page on how to work with Yandex Market API for sellers of the Yandex Go Market.
+POST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offersPOST v2/campaigns/{campaignId}/offers/deletePOST v2/campaigns/{campaignId}/price-quarantinePOST v2/campaigns/{campaignId}/price-quarantine/confirm | Changed the limits on the number of products — 10,000 products per minute.
+POST v2/businesses/{businessId}/offer-mappings/update | The limit on the number of products has been changed — 10,000 products per minute, no more than 100 products per request.
+POST v2/businesses/{businessId}/offer-mappings/deletePOST v2/businesses/{businessId}/offer-mappings/archivePOST v2/businesses/{businessId}/offer-mappings/unarchivePOST v2/businesses/{businessId}/price-quarantine/confirm | Changed the limits on the number of products — 10,000 products per minute, no more than 200 products per request.
+POST v2/businesses/{businessId}/price-quarantine | The limit on the number of products has been changed — 10,000 products per minute, no more than 500 products per request.
+Methods or documentation pages Description of the changes How to work with Yandex Market API for sellers of the Yandex Go Market
+Added a page on how to work with Yandex Market API for sellers of the Yandex Go Market.
+POST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offersPOST v2/campaigns/{campaignId}/offers/deletePOST v2/campaigns/{campaignId}/price-quarantinePOST v2/campaigns/{campaignId}/price-quarantine/confirm
+Changed the limits on the number of products — 10,000 products per minute. POST v2/businesses/{businessId}/offer-mappings/update
+The limit on the number of products has been changed — 10,000 products per minute, no more than 100 products per request.
+POST v2/businesses/{businessId}/offer-mappings/deletePOST v2/businesses/{businessId}/offer-mappings/archivePOST v2/businesses/{businessId}/offer-mappings/unarchivePOST v2/businesses/{businessId}/price-quarantine/confirm
+Changed the limits on the number of products — 10,000 products per minute, no more than 200 products per request.
+POST v2/businesses/{businessId}/price-quarantine
+The limit on the number of products has been changed — 10,000 products per minute, no more than 500 products per request.
+
+18th of March
+
+Methods or documentation pages | Description of the changes
+POST notification | Added notification types:creating an order cancellation request;changing the non-purchase or refund status.
+Methods or documentation pages Description of the changes POST notification
+Added notification types:creating an order cancellation request;changing the non-purchase or refund status.
+
+• creating an order cancellation request;
+• changing the non-purchase or refund status.
+
+March 14th
+
+Methods or documentation pages | Description of the changes
+How order statuses change | They told us how the statuses change. DBS- orders.
+POST v2/reports/united-returns/generate | Added a report on non-purchases and refunds. Methods or documentation pages
+Description of the changes How order statuses change They told us how the statuses change. DBS- orders.
+POST v2/reports/united-returns/generate Added a report on non-purchases and refunds.
+
+March 7th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/returnsGET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId} | Added parameters:amount— refund amount;partnerCompensationAmount— compensation for return shipping.The parameters have been deprecatedrefundAmountandpartnerCompensation. Use them insteadamountandpartnerCompensationAmount.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/returnsGET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}
+Added parameters:amount— refund amount;partnerCompensationAmount— compensation for return shipping.
+
+• amount— refund amount;
+
+amount
+• partnerCompensationAmount— compensation for return shipping.
+
+partnerCompensationAmount
+The parameters have been deprecatedrefundAmountandpartnerCompensation. Use them insteadamountandpartnerCompensationAmount.
+
+refundAmount
+
+partnerCompensation
+
+amount
+
+partnerCompensationAmount
+
+March, 6
+
+Methods or documentation pages | Description of the changes
+How to sign integrations | They told me how to sign integrations. Methods or documentation pages Description of the changes
+How to sign integrations They told me how to sign integrations.
+
+March, 3rd
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/loginsGET v2/campaigns/by_login/{login} | Outdated methods have been removed.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/loginsGET v2/campaigns/by_login/{login}
+
+GET v2/campaigns/{campaignId}/logins
+
+GET v2/campaigns/by_login/{login} Outdated methods have been removed.
+
+February 27th
+
+Methods or documentation pages | Description of the changes
+Processing Express-orders | Added step-by-step instructions for processing Express- orders. Methods or documentation pages
+Description of the changes Processing Express-orders Added step-by-step instructions for processing Express- orders.
+
+February 20th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offers | The parameter has been deprecatedavailable. Instead, use methods to hide goods from the showcase:GET v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offers/delete
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offers
+The parameter has been deprecatedavailable. Instead, use methods to hide goods from the showcase:GET v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offers/delete
+
+available
+
+February 13th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameter has been deprecateddetails.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameter has been deprecateddetails.
+
+details
+
+12th of February
+
+Methods or documentation pages | Description of the changes
+Reports that can be uploaded in the formatFILEorCSV. | Added the format —JSON.A block has appeared in the explanations of the columnsColumn name in JSON.
+Methods or documentation pages Description of the changes Reports that can be uploaded in the formatFILEorCSV.
+
+FILE
+
+CSV Added the format —JSON.A block has appeared in the explanations of the columnsColumn name in JSON.
+
+JSON
+
+February 10th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/suggestions | The method has been deprecated. Methods or documentation pages
+Description of the changes POST v2/businesses/{businessId}/offer-mappings/suggestions The method has been deprecated.
+
+February 7
+
+Methods or documentation pages | Description of the changes
+Yandex Market API for sellers | We talked about enabling API notifications.
+Request and response data format | Added a pageData formatAPI notifications.
+POST v2/businesses/{businessId}/offer-mappings/update | They told us how to delete the previously transmitted product parameters. — indeleteParametersspecify the values of the parameters that you want to delete.
+POST v2/businesses/{businessId}/offer-mappings/update | Added a description of the errorOffer at index... cannot have parameter... deleted and set at the same time— you can either pass the parameter value todeleteParameters, or the corresponding parameter inUpdateOfferDTO.
+Methods or documentation pages Description of the changes Yandex Market API for sellers We talked about enabling API notifications.
+Request and response data format Added a pageData formatAPI notifications. POST v2/businesses/{businessId}/offer-mappings/update
+They told us how to delete the previously transmitted product parameters. — indeleteParametersspecify the values of the parameters that you want to delete.
+
+deleteParameters POST v2/businesses/{businessId}/offer-mappings/update
+Added a description of the errorOffer at index... cannot have parameter... deleted and set at the same time— you can either pass the parameter value todeleteParameters, or the corresponding parameter inUpdateOfferDTO.
+
+deleteParameters
+
+UpdateOfferDTO
+
+February 5th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/offers | The limit on the number of products has been changed — 100 items per hour.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/offers
+
+GET v2/campaigns/{campaignId}/offers The limit on the number of products has been changed — 100 items per hour.
+
+February 4th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/promos/offers | Added a parameterstatuses— filter for products that can participate in the promotion.The parameter has been deprecatedstatusType. Instead, usestatuses.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/promos/offers
+Added a parameterstatuses— filter for products that can participate in the promotion.
+
+statuses The parameter has been deprecatedstatusType. Instead, usestatuses.
+
+statusType
+
+statuses
+
+February 3rd
+
+Methods or documentation pages | Description of the changes
+GET campaigns/{campaignId}/feedback/updates | An outdated method has been removed. Methods or documentation pages
+Description of the changes GET campaigns/{campaignId}/feedback/updates
+
+GET campaigns/{campaignId}/feedback/updates An outdated method has been removed.
+
+January 22
+
+Methods or documentation pages | Description of the changes
+How to work with notificationsError messagesReceiving notifications | API notifications have been added — connect them and Yandex.Market will send you information about events.:creating an order;order cancellation;changing the order status;creating a non-purchase or refund.
+Test orders | We clarified that if you have API notifications enabled, then yandex.Market will send you a request.POST notificationwith information about the event also for test orders.
+Methods or documentation pages Description of the changes How to work with notificationsError messagesReceiving notifications
+API notifications have been added — connect them and Yandex.Market will send you information about events.:creating an order;order cancellation;changing the order status;creating a non-purchase or refund.
+
+• creating an order;
+• order cancellation;
+• changing the order status;
+• creating a non-purchase or refund.
+Test orders
+We clarified that if you have API notifications enabled, then yandex.Market will send you a request.POST notificationwith information about the event also for test orders.
+
+January 21st
+
+Methods or documentation pages | Description of the changes
+All methods. | You have specified the placement models for which the method is available. Methods or documentation pages
+Description of the changes All methods. You have specified the placement models for which the method is available.
+
+January 20th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/bids/recommendations | The parameter has been deprecatedpriceRecommendations.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/bids/recommendations
+The parameter has been deprecatedpriceRecommendations.
+
+priceRecommendations
+
+January 14th
+
+Methods or documentation pages | Description of the changes
+All methods where passed or returnedoffset. | An outdated parameter has been deletedoffset. Methods or documentation pages
+Description of the changes All methods where passed or returnedoffset.
+
+offset An outdated parameter has been deletedoffset.
+
+offset
+
+2024
+December 27th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/loginsGET v2/campaigns/by_login/{login} | The methods have been deprecated.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/loginsGET v2/campaigns/by_login/{login}
+
+GET v2/campaigns/{campaignId}/logins
+
+GET v2/campaigns/by_login/{login} The methods have been deprecated.
+
+20th of December
+
+Methods or documentation pages | Description of the changes
+Comparison of methods by models | We have added tables where you can see which work models the method is available for.
+Methods or documentation pages Description of the changes Comparison of methods by models We have added tables where you can see which work models the method is available for.
+
+December 17th
+
+Methods or documentation pages | Description of the changes
+GET v2/models/{modelId}POST v2/models | Changed the limits on the number of models — 100,000 models per hour.
+GET v2/models/{modelId}/offersPOST v2/models/offers | Changed the limits on the number of offers — 100,000 offers per hour.
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameter has been deprecatedidindelivery.
+Methods or documentation pages Description of the changes GET v2/models/{modelId}
+
+GET v2/models/{modelId} POST v2/models
+
+POST v2/models Changed the limits on the number of models — 100,000 models per hour. GET v2/models/{modelId}/offers
+
+GET v2/models/{modelId}/offers POST v2/models/offers
+
+POST v2/models/offers Changed the limits on the number of offers — 100,000 offers per hour.
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameter has been deprecatedidindelivery.
+
+id
+
+delivery
+
+December 16th
+
+Methods or documentation pages | Description of the changes
+Instructions and methods of working with the push scheme. | The pages were deleted.We do not recommend setting up new integrations with the push component.
+Test orders | Added instructions on how to work with test orders.
+GET v2/campaigns/{campaignId}/orders/{orderId}/buyer | Added a parametertrusted— a trusted customer.If the parameter is returned with the valuetrue, The market has already verified the buyer — Don't call him. Process the order as usual and hand it over to the courier or take it to the PVZ.
+Methods or documentation pages Description of the changes Instructions and methods of working with the push scheme.
+The pages were deleted.We do not recommend setting up new integrations with the push component. Test orders
+Added instructions on how to work with test orders. GET v2/campaigns/{campaignId}/orders/{orderId}/buyer
+Added a parametertrusted— a trusted customer.If the parameter is returned with the valuetrue, The market has already verified the buyer — Don't call him. Process the order as usual and hand it over to the courier or take it to the PVZ.
+
+trusted
+
+true
+
+December 10th
+
+Methods or documentation pages | Description of the changes
+Methods where the parameter is passed or returnedvat. | Added VAT of 5% and 7% — valuesVAT_05andVAT_07in the parametervat. They will be applied to the simplified taxation system (STS) from 2025.
+Methods or documentation pages Description of the changes Methods where the parameter is passed or returnedvat.
+
+vat
+Added VAT of 5% and 7% — valuesVAT_05andVAT_07in the parametervat. They will be applied to the simplified taxation system (STS) from 2025.
+
+VAT_05
+
+VAT_07
+
+vat
+
+December 9th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings | Added a parameterfirstVideoAsCover— the ability to use the first video in the card as a video background.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings
+Added a parameterfirstVideoAsCover— the ability to use the first video in the card as a video background.
+
+firstVideoAsCover
+
+December 3
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/labelGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsPOST v2/reports/documents/labels/generate | Added a format for placing labels on the page —A9_HORIZONTALLY.It is only available to sellers from Russia.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/labelGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsPOST v2/reports/documents/labels/generate
+Added a format for placing labels on the page —A9_HORIZONTALLY.It is only available to sellers from Russia.
+
+A9_HORIZONTALLY
+
+November 29th
+
+Methods or documentation pages | Description of the changes
+Order processing and inventoryView order informationManage pricesView pricesManage products and cardsView products and cardsProduct promotionView promotion informationView financial data and reportsCustomer communicationStore settings | Added pages listing all available methods for specific access.
+POST v2/businesses/{businessId}/offer-mappings | Added information about the product's media file —OfferMediaFileDTOinuploadState.
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings | Added parameters:commodityCodes(product codes) and its typesCommodityCodeType:CUSTOMS_COMMODITY_CODE— the product code in the unified Commodity Nomenclature of Foreign Economic Activity (HS);IKPU_CODE— the identification code of products and services in Uzbekistan;PACK_CODE— the packaging code for the ICPU.language— the language in which the values in the parameters are accepted and returnednameanddescription.
+POST v2/businesses/{businessId}/offer-mappings/update | Added the error type and warningsINVALID_COMMODITY_CODE— an incorrect product code was transmitted.
+Methods where the parameter is passed or returnedvat. | Added 12% VAT, which is used only in Uzbekistan, — identifier9and the valueVAT_12in the parametervat.
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings | The parameter has been deprecatedcustomsCommodityCode. Instead, usecommodityCodeswith the typeCUSTOMS_COMMODITY_CODE.
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data | The parameter has been deprecatedurl.
+Methods or documentation pages Description of the changes
+Order processing and inventoryView order informationManage pricesView pricesManage products and cardsView products and cardsProduct promotionView promotion informationView financial data and reportsCustomer communicationStore settings
+Added pages listing all available methods for specific access. POST v2/businesses/{businessId}/offer-mappings
+Added information about the product's media file —OfferMediaFileDTOinuploadState.
+
+OfferMediaFileDTO
+
+uploadState POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings
+Added parameters:commodityCodes(product codes) and its typesCommodityCodeType:CUSTOMS_COMMODITY_CODE— the product code in the unified Commodity Nomenclature of Foreign Economic Activity (HS);IKPU_CODE— the identification code of products and services in Uzbekistan;PACK_CODE— the packaging code for the ICPU.language— the language in which the values in the parameters are accepted and returnednameanddescription.
+
+• commodityCodes(product codes) and its typesCommodityCodeType:CUSTOMS_COMMODITY_CODE— the product code in the unified Commodity Nomenclature of Foreign Economic Activity (HS);IKPU_CODE— the identification code of products and services in Uzbekistan;PACK_CODE— the packaging code for the ICPU.
+
+commodityCodes
+
+CommodityCodeType
+
+• CUSTOMS_COMMODITY_CODE— the product code in the unified Commodity Nomenclature of Foreign Economic Activity (HS);
+
+CUSTOMS_COMMODITY_CODE
+• IKPU_CODE— the identification code of products and services in Uzbekistan;
+
+IKPU_CODE
+• PACK_CODE— the packaging code for the ICPU.
+
+PACK_CODE
+• language— the language in which the values in the parameters are accepted and returnednameanddescription.
+
+language
+
+name
+
+description POST v2/businesses/{businessId}/offer-mappings/update Added the error type and warningsINVALID_COMMODITY_CODE— an incorrect product code was transmitted.
+
+INVALID_COMMODITY_CODE Methods where the parameter is passed or returnedvat.
+
+vat
+Added 12% VAT, which is used only in Uzbekistan, — identifier9and the valueVAT_12in the parametervat.
+
+9
+
+VAT_12
+
+vat POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings
+The parameter has been deprecatedcustomsCommodityCode. Instead, usecommodityCodeswith the typeCUSTOMS_COMMODITY_CODE.
+
+customsCommodityCode
+
+commodityCodes
+
+CUSTOMS_COMMODITY_CODE GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data The parameter has been deprecatedurl.
+
+url
+
+November 28th
+
+Methods or documentation pages | Description of the changes
+Methods where it is passed or returned SKU. | They told me that SKU you can change it in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+POST v2/businesses/{businessId}/offer-mappings/update | Added the ability to change the product category on the Market. To do this, pass the ID of the new category in the parametermarketCategoryIdorcategoryId.They also clarified that when the category is changed, the values of the general characteristics for the old and new categories will remain, they do not need to be transmitted.The parameter has been deprecatedcategory. Instead, usemarketCategoryId.
+Methods or documentation pages Description of the changes Methods where it is passed or returned SKU.
+They told me that SKU you can change it in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+POST v2/businesses/{businessId}/offer-mappings/update
+Added the ability to change the product category on the Market. To do this, pass the ID of the new category in the parametermarketCategoryIdorcategoryId.They also clarified that when the category is changed, the values of the general characteristics for the old and new categories will remain, they do not need to be transmitted.
+
+marketCategoryId
+
+categoryId The parameter has been deprecatedcategory. Instead, usemarketCategoryId.
+
+category
+
+marketCategoryId
+
+November 26th
+
+Methods or documentation pages | Description of the changes
+All methods. | For sellers who useAPI-Key-tokens: added a list of accesses, one of which is required to call this method.
+Methods or documentation pages Description of the changes All methods.
+For sellers who useAPI-Key-tokens: added a list of accesses, one of which is required to call this method.
+
+November 22nd
+
+Methods or documentation pages | Description of the changes
+Reports that can be uploaded in the formatFILEorCSV. | Added the names of the columns that are in the report.
+Methods or documentation pages Description of the changes Reports that can be uploaded in the formatFILEorCSV.
+
+FILE
+
+CSV Added the names of the columns that are in the report.
+
+November 20th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods | Simplified the process of mass transfer of digital codes: each product is uniqueidit must be passed as a separate element in the array.items, and the product keys — in the arraycodes.The parameter has been deprecatedcode. Instead, usecodes.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods
+Simplified the process of mass transfer of digital codes: each product is uniqueidit must be passed as a separate element in the array.items, and the product keys — in the arraycodes.
+
+id
+
+items
+
+codes The parameter has been deprecatedcode. Instead, usecodes.
+
+code
+
+codes
+
+November 8
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/labelGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsPOST v2/reports/documents/labels/generate. | Added a format for placing labels on the page —A9.Its design differs from other formats, and it is also available only to sellers from Russia.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/labelGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsPOST v2/reports/documents/labels/generate.
+Added a format for placing labels on the page —A9.Its design differs from other formats, and it is also available only to sellers from Russia.
+
+A9
+
+November 6
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/stats/orders | Added a parametersubsidies— accrual of points that are used to reduce the cost of placement, and their deduction in case of non-purchase or refund.Money transfer methods have been deprecatedCASHBACK,MARKETPLACEandSPLIT.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/stats/orders
+Added a parametersubsidies— accrual of points that are used to reduce the cost of placement, and their deduction in case of non-purchase or refund.
+
+subsidies Money transfer methods have been deprecatedCASHBACK,MARKETPLACEandSPLIT.
+
+CASHBACK
+
+MARKETPLACE
+
+SPLIT
+
+November 2nd
+
+Methods or documentation pages | Description of the changes
+Methods where it is passed or returned SKU. | They clarified that SKU A product cannot consist only of spaces and tabs.
+Methods or documentation pages Description of the changes Methods where it is passed or returned SKU.
+They clarified that SKU A product cannot consist only of spaces and tabs.
+
+November 1st
+
+Methods or documentation pages | Description of the changes
+— | Product Feature nameColourchanged toThe color for the filter. Methods or documentation pages Description of the changes
+— Product Feature nameColourchanged toThe color for the filter.
+
+October 17th
+
+Methods or documentation pages | Description of the changes
+Pagination in requests to Yandex Market API for sellers | They talked about pagination in queries.
+Request logs | They talked about the process of working with query logs and the unique query identifier, which will help you find logs faster and will be useful when contacting support.
+Methods or documentation pages Description of the changes Pagination in requests to Yandex Market API for sellers
+They talked about pagination in queries. Request logs
+They talked about the process of working with query logs and the unique query identifier, which will help you find logs faster and will be useful when contacting support.
+
+October 14th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/boxesPUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST v2/campaigns/{campaignId}/orders/status-updatePUT v2/campaigns/{campaignId}/orders/{orderId}/verifyEacPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxesPUT v2/campaigns/{campaignId}/orders/{orderId}/itemsPOST v2/campaigns/{campaignId}/orders/{orderId}/delivery/trackPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/datePUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/storage-limitPOST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoodsGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/labelGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data | Changed the limits on the number of requests — 100,000 requests per hour.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/boxesPUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST v2/campaigns/{campaignId}/orders/status-updatePUT v2/campaigns/{campaignId}/orders/{orderId}/verifyEacPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxesPUT v2/campaigns/{campaignId}/orders/{orderId}/itemsPOST v2/campaigns/{campaignId}/orders/{orderId}/delivery/trackPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/datePUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/storage-limitPOST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoodsGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/labelGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labelsGET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data
+Changed the limits on the number of requests — 100,000 requests per hour.
+
+October 8th
+
+Methods or documentation pages | Description of the changes
+Authorization | Added API-Key-a token and told us how to use it to set up access only to certain groups of methods.We described how the authorization methods differ.
+Methods or documentation pages Description of the changes Authorization
+Added API-Key-a token and told us how to use it to set up access only to certain groups of methods.We described how the authorization methods differ.
+
+August 29th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-cards/update | ParametervalueinparameterValuesbecame optional.They told me what to send.:an empty value to remove the characteristics that are specified in the parameters with the typestring;only those characteristics whose value you want to update;parameterIdwith an emptyvalueto delete the value of the specified characteristic.
+POST v2/businesses/{businessId}/offer-mappings/update | Added a parameteronlyPartnerMediaContent— Only the images of the products that you submitted will be used.If you specified the valuetrueand the product had images from the Market, they will be deleted.
+Methods or documentation pages Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-cards/update
+ParametervalueinparameterValuesbecame optional.They told me what to send.:an empty value to remove the characteristics that are specified in the parameters with the typestring;only those characteristics whose value you want to update;parameterIdwith an emptyvalueto delete the value of the specified characteristic.
+
+value
+
+parameterValues
+
+• an empty value to remove the characteristics that are specified in the parameters with the typestring;
+
+string
+• only those characteristics whose value you want to update;
+• parameterIdwith an emptyvalueto delete the value of the specified characteristic.
+
+parameterId
+
+value POST v2/businesses/{businessId}/offer-mappings/update
+Added a parameteronlyPartnerMediaContent— Only the images of the products that you submitted will be used.If you specified the valuetrueand the product had images from the Market, they will be deleted.
+
+onlyPartnerMediaContent
+
+true
+
+August 26th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-cardsPOST v2/category/{categoryId}/parameters | The recommendations were considered outdatedHAS_VIDEO,FILTERABLE,HAS_DESCRIPTIONandHAS_BARCODE.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-cardsPOST v2/category/{categoryId}/parameters
+The recommendations were considered outdatedHAS_VIDEO,FILTERABLE,HAS_DESCRIPTIONandHAS_BARCODE.
+
+HAS_VIDEO
+
+FILTERABLE
+
+HAS_DESCRIPTION
+
+HAS_BARCODE
+
+August 21st
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/feeds/{feedId}/categoriesGET v2/campaigns/{campaignId}/feeds/categories | Outdated methods have been removed.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/feeds/{feedId}/categoriesGET v2/campaigns/{campaignId}/feeds/categories
+
+GET v2/campaigns/{campaignId}/feeds/{feedId}/categories
+
+GET v2/campaigns/{campaignId}/feeds/categories Outdated methods have been removed.
+
+August 15th
+
+Methods or documentation pages | Description of the changes
+GET campaigns/{campaignId}/feedback/updates | The method has been deprecated. Methods or documentation pages
+Description of the changes GET campaigns/{campaignId}/feedback/updates
+
+GET campaigns/{campaignId}/feedback/updates The method has been deprecated.
+
+August 12th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/promos— shows information about the Market's promotions.POST v2/businesses/{businessId}/promos/offers— shows a list of products that participate or may participate in the promotion.POST v2/businesses/{businessId}/promos/offers/update— adds products to the promotion or changes their prices;POST v2/businesses/{businessId}/promos/offers/delete— removes products from the promotion. | Added methods for working with stocks.
+Stock management | They told us how to manage stocks. Methods or documentation pages Description of the changes
+POST v2/businesses/{businessId}/promos— shows information about the Market's promotions.POST v2/businesses/{businessId}/promos/offers— shows a list of products that participate or may participate in the promotion.POST v2/businesses/{businessId}/promos/offers/update— adds products to the promotion or changes their prices;POST v2/businesses/{businessId}/promos/offers/delete— removes products from the promotion.
+Added methods for working with stocks. Stock management They told us how to manage stocks.
+
+August 9th
+
+Methods or documentation pages | Description of the changes
+Documentation Yandex Market API for sellers. | Updated the menu. Methods or documentation pages Description of the changes
+Documentation Yandex Market API for sellers. Updated the menu.
+
+August 8th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-prices/suggestions | The method has been deprecated. Instead, usePOST v2/reports/goods-prices/generate.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offer-prices/suggestions
+
+POST v2/campaigns/{campaignId}/offer-prices/suggestions The method has been deprecated. Instead, usePOST v2/reports/goods-prices/generate.
+
+August 5th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/region | The method has been deprecated. Instead, useGET v2/campaigns/{campaignId}/settings.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/region
+
+GET v2/campaigns/{campaignId}/region The method has been deprecated. Instead, useGET v2/campaigns/{campaignId}/settings.
+
+August 2nd
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-prices/updates | Outdated parameters have been deletedidandshopSku.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offer-prices/updates
+Outdated parameters have been deletedidandshopSku.
+
+id
+
+shopSku
+
+July 31
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyerPOST v2/campaigns/{campaignId}/orders/{orderId}/documents | The methods have become available for the model as well DBS.
+Methods or documentation pages Description of the changes
+POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyerPOST v2/campaigns/{campaignId}/orders/{orderId}/documents
+The methods have become available for the model as well DBS.
+
+July 30th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/goods-feedback— shows all reviews of the seller's products.POST v2/businesses/{businessId}/goods-feedback/comments— shows all the comments on the review.POST v2/businesses/{businessId}/goods-feedback/comments/update— adds a store comment or modifies a comment that the store left earlier.POST v2/businesses/{businessId}/goods-feedback/skip-reaction— skips reviews.POST v2/businesses/{businessId}/goods-feedback/comments/delete— deletes the store's comment. | Added methods for working with product reviews.
+Product Reviews | They told us how to work with product reviews.
+POST v2/reports/goods-feedback/generate | We have added a report on product reviews. Methods or documentation pages
+Description of the changes
+POST v2/businesses/{businessId}/goods-feedback— shows all reviews of the seller's products.POST v2/businesses/{businessId}/goods-feedback/comments— shows all the comments on the review.POST v2/businesses/{businessId}/goods-feedback/comments/update— adds a store comment or modifies a comment that the store left earlier.POST v2/businesses/{businessId}/goods-feedback/skip-reaction— skips reviews.POST v2/businesses/{businessId}/goods-feedback/comments/delete— deletes the store's comment.
+Added methods for working with product reviews. Product Reviews They told us how to work with product reviews.
+POST v2/reports/goods-feedback/generate We have added a report on product reviews.
+
+July 19th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/updateBusinessPrices/update | Increased the upper value for the minimum cost of the product without discount to 99% — parameterdiscountBase.
+POST cart | The parameter has been deprecatedsubsidy. Methods or documentation pages Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/updateBusinessPrices/update
+Increased the upper value for the minimum cost of the product without discount to 99% — parameterdiscountBase.
+
+discountBase POST cart
+
+POST cart The parameter has been deprecatedsubsidy.
+
+subsidy
+
+July 11th
+
+Methods or documentation pages | Description of the changes
+DELETE v2/campaigns/{campaignId}/hidden-offers | The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/hidden-offers/delete.
+Methods or documentation pages Description of the changes DELETE v2/campaigns/{campaignId}/hidden-offers
+
+DELETE v2/campaigns/{campaignId}/hidden-offers The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/hidden-offers/delete.
+
+July 9th
+
+Methods or documentation pages | Description of the changes
+POST order/acceptPOST order/statusPOST order/cancellation/notify | The parameter has been deprecatedsubsidy. Instead, usesubsidies.
+Methods or documentation pages Description of the changes POST order/acceptPOST order/statusPOST order/cancellation/notify
+
+POST order/accept
+
+POST order/status
+
+POST order/cancellation/notify The parameter has been deprecatedsubsidy. Instead, usesubsidies.
+
+subsidy
+
+subsidies
+
+July 8th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/ratings/quality— shows the value of the store quality index and its components.POST v2/campaigns/{campaignId}/ratings/quality/details— returns a list of orders that affected the store's quality index. | Added methods for working with the quality index.
+Methods or documentation pages Description of the changes
+POST v2/businesses/{businessId}/ratings/quality— shows the value of the store quality index and its components.POST v2/campaigns/{campaignId}/ratings/quality/details— returns a list of orders that affected the store's quality index.
+Added methods for working with the quality index.
+
+July 5th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameter has been deprecatedbuyerTotalBeforeDiscount.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameter has been deprecatedbuyerTotalBeforeDiscount.
+
+buyerTotalBeforeDiscount
+
+July 4th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST order/acceptPOST order/statusPOST order/cancellation/notify | An outdated parameter has been deletedstatus.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST order/acceptPOST order/statusPOST order/cancellation/notify
+
+POST order/accept
+
+POST order/status
+
+POST order/cancellation/notify An outdated parameter has been deletedstatus.
+
+status
+
+June 28th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/shipments/reception-transfer-act | Now, using the method, you can confirm the next shipment in advance, not only on the day of shipment or the day before.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/shipments/reception-transfer-act
+Now, using the method, you can confirm the next shipment in advance, not only on the day of shipment or the day before.
+
+June 27th
+
+Methods or documentation pages | Description of the changes
+POST v2/categories/max-sale-quantum | Added a new method. It returns the limit for setting the quantum and the minimum number of items in the order.
+Methods or documentation pages Description of the changes POST v2/categories/max-sale-quantum
+Added a new method. It returns the limit for setting the quantum and the minimum number of items in the order.
+
+June 26th
+
+Methods or documentation pages | Description of the changes
+Types of errors and what to do about them | Described the errorCampaign type is not allowed(the method does not support your store's operating model), which the Market can return in response to the request.
+Methods or documentation pages Description of the changes Types of errors and what to do about them
+Described the errorCampaign type is not allowed(the method does not support your store's operating model), which the Market can return in response to the request.
+
+June 24th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameters have been deprecatedpriceBeforeDiscount,buyerItemsTotalandbuyerTotal.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameters have been deprecatedpriceBeforeDiscount,buyerItemsTotalandbuyerTotal.
+
+priceBeforeDiscount
+
+buyerItemsTotal
+
+buyerTotal
+
+June 20th
+
+Methods or documentation pages | Description of the changes
+Methods where it is passed or returned SKU. | Changed the parameter formatShopSku. Now it can be any sequence up to 255 characters long.
+Methods or documentation pages Description of the changes Methods where it is passed or returned SKU.
+Changed the parameter formatShopSku. Now it can be any sequence up to 255 characters long.
+
+ShopSku
+
+June 11th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/documents/labels/generate | Added a new method. It starts the generation PDF-a file with labels for multiple orders.
+Methods or documentation pages Description of the changes POST v2/reports/documents/labels/generate Added a new method. It starts the generation PDF-a file with labels for multiple orders.
+
+June 6th
+
+Methods or documentation pages | Description of the changes
+Processing orders with digital goods | Now you don't need to set up a push component to work with digital goods. Yandex Market API.
+Methods or documentation pages Description of the changes Processing orders with digital goods Now you don't need to set up a push component to work with digital goods. Yandex Market API.
+
+June 5th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/update— when adding products to the catalog, it transmits their prices, categories on the Market, and the characteristics necessary for these categories.POST v2/businesses/{businessId}/offer-mappings— returns the categories of products on the Market and their characteristics;POST v2/businesses/{businessId}/offer-cards— returns the transmitted product characteristics. | Updated the work with the Market categories and product characteristics that are necessary for these categories.
+PUT v2/campaigns/{campaignId}/outlets/{outletId}DELETE v2/campaigns/{campaignId}/outlets/{outletId} | Added a description of the errorOutlet is disabled for editing by partner— You cannot change the information or delete the store's point of sale.
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings | The parameter has been deprecatedparams. Instead, useparameterValues.
+Methods or documentation pages Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/update— when adding products to the catalog, it transmits their prices, categories on the Market, and the characteristics necessary for these categories.POST v2/businesses/{businessId}/offer-mappings— returns the categories of products on the Market and their characteristics;POST v2/businesses/{businessId}/offer-cards— returns the transmitted product characteristics.
+Updated the work with the Market categories and product characteristics that are necessary for these categories.
+PUT v2/campaigns/{campaignId}/outlets/{outletId}DELETE v2/campaigns/{campaignId}/outlets/{outletId}
+Added a description of the errorOutlet is disabled for editing by partner— You cannot change the information or delete the store's point of sale.
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings The parameter has been deprecatedparams. Instead, useparameterValues.
+
+params
+
+parameterValues
+
+June 4th
+
+Methods or documentation pages | Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders | Outdated parameters have been deletedtotal,subsidyTotalandtotalWithSubsidy.
+Methods or documentation pages Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders
+Outdated parameters have been deletedtotal,subsidyTotalandtotalWithSubsidy.
+
+total
+
+subsidyTotal
+
+totalWithSubsidy
+
+May 27th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/settings | Added a new method. It returns information about the cabinet settings.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/settings Added a new method. It returns information about the cabinet settings.
+
+May 24th
+
+Methods or documentation pages | Description of the changes
+Creating and using an OAuth token | They said that the token will need to be received again if the user who created it logs out of all devices in the Yandex account.
+POST v2/reports/competitors-position/generate | The "Competitive Position" report has been added. Methods or documentation pages
+Description of the changes Creating and using an OAuth token
+They said that the token will need to be received again if the user who created it logs out of all devices in the Yandex account.
+POST v2/reports/competitors-position/generate The "Competitive Position" report has been added.
+
+May 17
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-prices/updates | An outdated parameter has been deletedmarketSku.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offer-prices/updates
+An outdated parameter has been deletedmarketSku.
+
+marketSku
+
+16th of May
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-prices/updatesGET v2/campaigns/{campaignId}/offer-prices | An outdated parameter has been deletedfeed.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offer-prices/updatesGET v2/campaigns/{campaignId}/offer-prices
+An outdated parameter has been deletedfeed.
+
+feed
+
+May 14th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/shelf-statistics/generate | Added a summary report on the shelves. Methods or documentation pages
+Description of the changes POST v2/reports/shelf-statistics/generate Added a summary report on the shelves.
+
+May 8th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offers/stocks | Improved the method for the model FBY — now it transmits information on the turnover of goods for each warehouse separately, rather than the total value for all warehouses.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offers/stocks
+Improved the method for the model FBY — now it transmits information on the turnover of goods for each warehouse separately, rather than the total value for all warehouses.
+
+April 24th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offers/stocks | The method has become available for models DBS and Express.
+GET v2/campaigns/{campaignId}/offer-prices | The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/offer-prices.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offers/stocks
+The method has become available for models DBS and Express. GET v2/campaigns/{campaignId}/offer-prices
+The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/offer-prices.
+
+April 19th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST order/acceptPOST order/statusPOST order/cancellation/notify | The parameter has been deprecatedstatus.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST order/acceptPOST order/statusPOST order/cancellation/notify
+
+POST order/accept
+
+POST order/status
+
+POST order/cancellation/notify The parameter has been deprecatedstatus.
+
+status
+
+April 18th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameter has been deprecatedprice.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameter has been deprecatedprice.
+
+price
+
+April 11
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/stats/skus | The limit on the number of products has been changed — 5,000 products per minute, no more than 500 products per request.
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/statusPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/cis | An outdated parameter has been deletedfeedCategoryId.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/stats/skus
+The limit on the number of products has been changed — 5,000 products per minute, no more than 500 products per request.
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/statusPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/cis
+
+PUT v2/campaigns/{campaignId}/orders/{orderId}/cis An outdated parameter has been deletedfeedCategoryId.
+
+feedCategoryId
+
+April 10th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/united-marketplace-services/generatePOST v2/reports/united-netting/generate | The parameters have been deprecateddateTimeFromanddateTimeTo. Use them insteaddateFromanddateTo.
+Methods or documentation pages Description of the changes POST v2/reports/united-marketplace-services/generatePOST v2/reports/united-netting/generate
+The parameters have been deprecateddateTimeFromanddateTimeTo. Use them insteaddateFromanddateTo.
+
+dateTimeFrom
+
+dateTimeTo
+
+dateFrom
+
+dateTo
+
+April 9th
+
+Methods or documentation pages | Description of the changes
+POST cart | For the model FBS disabled the method.For DBS-stores that do not sell digital goods have made the method optional. We recommend that you do not use it and disable this feature in the seller's account on the Market. — click on your account icon →Settings, in the menu on the left, selectAPIs and modules→ tabPush APIand activate the optionDo not use the method POST cart.If you sell digital goods, the method remains mandatory.
+Methods or documentation pages Description of the changes POST cart
+
+POST cart
+For the model FBS disabled the method.For DBS-stores that do not sell digital goods have made the method optional. We recommend that you do not use it and disable this feature in the seller's account on the Market. — click on your account icon →Settings, in the menu on the left, selectAPIs and modules→ tabPush APIand activate the optionDo not use the method POST cart.If you sell digital goods, the method remains mandatory.
+
+March 29th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/documents/shipment-list/generate | Added an assembly sheet for shipment.
+Processing FBS-orders | They told us how to generate an assembly sheet. Methods or documentation pages
+Description of the changes POST v2/reports/documents/shipment-list/generate Added an assembly sheet for shipment.
+Processing FBS-orders They told us how to generate an assembly sheet.
+
+March 15th
+
+Methods or documentation pages | Description of the changes
+POST v2/categories/tree | Added a new method. It returns the category tree of the Market.
+POST v2/tariffs/calculate | Added a new method. It calculates the cost of Market services for products with the specified parameters.
+POST v2/reports/boost-consolidated/generate | Added a sales boost report.
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/statusPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/cis | The parameter has been deprecatedfeedCategoryId.
+Methods or documentation pages Description of the changes POST v2/categories/tree Added a new method. It returns the category tree of the Market.
+POST v2/tariffs/calculate
+Added a new method. It calculates the cost of Market services for products with the specified parameters.
+POST v2/reports/boost-consolidated/generate Added a sales boost report.
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/statusPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/cis
+
+PUT v2/campaigns/{campaignId}/orders/{orderId}/cis The parameter has been deprecatedfeedCategoryId.
+
+feedCategoryId
+
+March 13th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/hidden-offersDELETE v2/campaigns/{campaignId}/hidden-offers | Changed the limits on the number of products — 5,000 products per minute, no more than 500 products per request.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/hidden-offersDELETE v2/campaigns/{campaignId}/hidden-offers
+
+DELETE v2/campaigns/{campaignId}/hidden-offers
+Changed the limits on the number of products — 5,000 products per minute, no more than 500 products per request.
+
+5th of March
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/goods-turnover/generatePOST v2/reports/prices/generate | Two report formats are now available:FILE— the spreadsheet;CSV— ZIP archive with CSV files.
+Methods or documentation pages Description of the changes POST v2/reports/goods-turnover/generatePOST v2/reports/prices/generate
+
+POST v2/reports/prices/generate Two report formats are now available:FILE— the spreadsheet;CSV— ZIP archive with CSV files.
+
+• FILE— the spreadsheet;
+
+FILE
+• CSV— ZIP archive with CSV files.
+
+CSV
+
+February 27th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/united-netting/generatePOST v2/reports/goods-realization/generatePOST v2/reports/goods-movement/generatePOST v2/reports/shows-sales/generate | Two report formats are now available:FILE— the spreadsheet;CSV— ZIP archive with CSV files.
+Methods or documentation pages Description of the changes
+POST v2/reports/united-netting/generatePOST v2/reports/goods-realization/generatePOST v2/reports/goods-movement/generatePOST v2/reports/shows-sales/generate
+Two report formats are now available:FILE— the spreadsheet;CSV— ZIP archive with CSV files.
+
+• FILE— the spreadsheet;
+
+FILE
+• CSV— ZIP archive with CSV files.
+
+CSV
+
+February, 15
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/stocks-on-warehouses/generate | Two report formats are now available:FILE— the spreadsheet;CSV— ZIP archive with CSV files.
+Methods or documentation pages Description of the changes POST v2/reports/stocks-on-warehouses/generate
+Two report formats are now available:FILE— the spreadsheet;CSV— ZIP archive with CSV files.
+
+• FILE— the spreadsheet;
+
+FILE
+• CSV— ZIP archive with CSV files.
+
+CSV
+
+The 14th of February
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/orders/{orderId}/documents | Now, in addition to the UPD, information about other documents is returned.:UKD;The waybill;the invoice;the adjustment invoice.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/orders/{orderId}/documents
+Now, in addition to the UPD, information about other documents is returned.:UKD;The waybill;the invoice;the adjustment invoice.
+
+• UKD;
+• The waybill;
+• the invoice;
+• the adjustment invoice.
+
+12th of February
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-cards | Changed the limit on the number of requests — 600 requests per minute, no more than 200 products per request.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-cards
+Changed the limit on the number of requests — 600 requests per minute, no more than 200 products per request.
+
+February 8
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId} | The parameter has been deprecatedphone.To get the buyer's phone number, use the methodGET v2/campaigns/{campaignId}/orders/{orderId}/buyer.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}
+The parameter has been deprecatedphone.To get the buyer's phone number, use the methodGET v2/campaigns/{campaignId}/orders/{orderId}/buyer.
+
+phone
+
+1st of February
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/united-orders/generatePOST v2/reports/united-marketplace-services/generate | Two report formats are now available:FILE— the spreadsheet;CSV— ZIP archive with CSV files.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId} | The parameter has been deprecatedshopSku. Instead, useofferId.
+Methods or documentation pages Description of the changes POST v2/reports/united-orders/generatePOST v2/reports/united-marketplace-services/generate
+Two report formats are now available:FILE— the spreadsheet;CSV— ZIP archive with CSV files.
+
+• FILE— the spreadsheet;
+
+FILE
+• CSV— ZIP archive with CSV files.
+
+CSV
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}
+The parameter has been deprecatedshopSku. Instead, useofferId.
+
+shopSku
+
+offerId
+
+January 22
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/hidden-offers | An outdated parameter has been deletedtotal.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders | The parameters have been deprecatedtotal,subsidyTotalandtotalWithSubsidy.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/hidden-offers
+An outdated parameter has been deletedtotal.
+
+total
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders
+The parameters have been deprecatedtotal,subsidyTotalandtotalWithSubsidy.
+
+total
+
+subsidyTotal
+
+totalWithSubsidy
+
+January 18th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offersDELETE v2/campaigns/{campaignId}/hidden-offers | Outdated parameters have been deletedcommentandpriority.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offersDELETE v2/campaigns/{campaignId}/hidden-offers
+
+DELETE v2/campaigns/{campaignId}/hidden-offers Outdated parameters have been deletedcommentandpriority.
+
+comment
+
+priority
+
+January 17th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/hidden-offers | An outdated parameter has been deletedfeed_id. Methods or documentation pages
+Description of the changes GET v2/campaigns/{campaignId}/hidden-offers An outdated parameter has been deletedfeed_id.
+
+feed_id
+
+January 10th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-prices/updates | The limit on the number of products has been changed — 5,000 products per minute, no more than 500 products per request.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offer-prices/updates
+The limit on the number of products has been changed — 5,000 products per minute, no more than 500 products per request.
+
+January 9th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyer | Added the ability to get information about the buyer — a legal entity.
+POST v2/campaigns/{campaignId}/orders/{orderId}/documents | Added the ability to get information about the UPD.
+Processing orders from legal entities | Added step-by-step instructions for handling orders from legal entities.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyer
+Added the ability to get information about the buyer — a legal entity. POST v2/campaigns/{campaignId}/orders/{orderId}/documents
+Added the ability to get information about the UPD. Processing orders from legal entities Added step-by-step instructions for handling orders from legal entities.
+
+2023
+December 29th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/stats/orders | Now the method is calledDetailed information on orders.
+POST v2/reports/united-orders/generate | Added a report on orders. Methods or documentation pages Description of the changes
+POST v2/campaigns/{campaignId}/stats/orders Now the method is calledDetailed information on orders. POST v2/reports/united-orders/generate
+Added a report on orders.
+
+December 26th
+
+Methods or documentation pages | Description of the changes
+Yandex Market API for sellers | They told us about the components Yandex Market API: pull component (the store sends requests to the Market) and push component (the Market sends requests to the store), as well as how to set up integration.
+Processing FBS-orders | Added step-by-step instructions for processing orders for the model FBS.
+POST v2/reports/goods-turnover/generate | Added a turnover report.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes | Added a new method. It transmits the box layout and labeling codes, as well as changes the composition of the order.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxesPUT v2/campaigns/{campaignId}/orders/{orderId}/items | Marked the methods obsolete for the model FBS. Use them insteadPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+Methods or documentation pages Description of the changes Yandex Market API for sellers
+They told us about the components Yandex Market API: pull component (the store sends requests to the Market) and push component (the Market sends requests to the store), as well as how to set up integration.
+Processing FBS-orders Added step-by-step instructions for processing orders for the model FBS. POST v2/reports/goods-turnover/generate
+Added a turnover report. PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Added a new method. It transmits the box layout and labeling codes, as well as changes the composition of the order.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxesPUT v2/campaigns/{campaignId}/orders/{orderId}/items
+Marked the methods obsolete for the model FBS. Use them insteadPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+
+December 25
+
+Methods or documentation pages | Description of the changes
+Managing goods in the archive | They told us how to manage the goods in the archive. Methods or documentation pages
+Description of the changes Managing goods in the archive They told us how to manage the goods in the archive.
+
+December 22nd
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/chats/new— creates a chat.POST v2/businesses/{businessId}/chats/message— sends a message to the chat;POST v2/businesses/{businessId}/chats/file/send— sends the file to the chat;POST v2/businesses/{businessId}/chats— returns a list of chats.POST v2/businesses/{businessId}/chats/history— returns the message history. | Added methods for communicating with customers in chats.
+Chats with customers | Added step-by-step instructions for working with chats.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/verifyEac | Changed the limit on the number of requests — 1,000,000 requests per hour.
+POST v2/campaigns/{campaignId}/offers | The limit on the quantity of goods has been changed — 5,000 products per minute, no more than 200 products per request.
+PUT v2/campaigns/{campaignId}/offers/stocks | The limit on the quantity of goods has been changed — 100,000 products per minute.
+Methods or documentation pages Description of the changes
+POST v2/businesses/{businessId}/chats/new— creates a chat.POST v2/businesses/{businessId}/chats/message— sends a message to the chat;POST v2/businesses/{businessId}/chats/file/send— sends the file to the chat;POST v2/businesses/{businessId}/chats— returns a list of chats.POST v2/businesses/{businessId}/chats/history— returns the message history.
+Added methods for communicating with customers in chats. Chats with customers Added step-by-step instructions for working with chats.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/verifyEac Changed the limit on the number of requests — 1,000,000 requests per hour.
+POST v2/campaigns/{campaignId}/offers
+The limit on the quantity of goods has been changed — 5,000 products per minute, no more than 200 products per request.
+PUT v2/campaigns/{campaignId}/offers/stocks The limit on the quantity of goods has been changed — 100,000 products per minute.
+
+December 8th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offers/recommendations | Added a parametershows, where the number of product card impressions in the last 7 days is indicated.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offers/recommendations
+Added a parametershows, where the number of product card impressions in the last 7 days is indicated.
+
+shows
+
+December 6th
+
+Methods or documentation pages | Description of the changes
+How to change product prices | They told us how to change prices in a particular store. Methods or documentation pages
+Description of the changes How to change product prices They told us how to change prices in a particular store.
+
+5th of December
+
+Methods or documentation pages | Description of the changes
+Working with a sales boost | Added step-by-step instructions for working with sales boost. Methods or documentation pages
+Description of the changes Working with a sales boost Added step-by-step instructions for working with sales boost.
+
+November 27th
+
+Methods or documentation pages | Description of the changes
+Launching integration in JavaScript | Added step-by-step instructions for launching integration in JavaScript.
+Methods or documentation pages Description of the changes Launching integration in JavaScript Added step-by-step instructions for launching integration in JavaScript.
+
+November 23rd
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders | Added methods for receiving orders based on the model FBY.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders
+Added methods for receiving orders based on the model FBY.
+
+November 20th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappingsPOST v2/campaigns/{campaignId}/offers/stocks | Added filtering by finding products in the archive.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-mappingsPOST v2/campaigns/{campaignId}/offers/stocks
+Added filtering by finding products in the archive.
+
+November 14th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/archive— places the goods in the archive;POST v2/businesses/{businessId}/offer-mappings/unarchive— restores items from the archive. | Added methods for working with the archive.
+Methods or documentation pages Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/archive— places the goods in the archive;POST v2/businesses/{businessId}/offer-mappings/unarchive— restores items from the archive.
+Added methods for working with the archive.
+
+November 8
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/hidden-offersDELETE v2/campaigns/{campaignId}/hidden-offers | The limit on the number of products has been changed — 1,000 products per minute, no more than 500 products per request.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/hidden-offersDELETE v2/campaigns/{campaignId}/hidden-offers
+
+DELETE v2/campaigns/{campaignId}/hidden-offers
+The limit on the number of products has been changed — 1,000 products per minute, no more than 500 products per request.
+
+October 3rd
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/shows-sales/generate | Added the Sales Analytics report.
+Methods of working with orders from external sites. | The methods were deleted. Methods or documentation pages
+Description of the changes POST v2/reports/shows-sales/generate Added the Sales Analytics report. Methods of working with orders from external sites.
+The methods were deleted.
+
+September 29th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaignsGET v2/campaigns/by_login/{login} | The methods no longer work for the ADV model.
+POST v2/campaigns/{campaignId}/offers/stocks | Added a new method. It returns information on the remaining goods in the showcase (for models FBY, FBS and Express) and about the turnover of goods (for the model FBY).
+Acceptance and transfer certificateThe actual act of acceptance and transferThe act of discrepanciesBill of lading | Added methods for obtaining documents on shipments (FBS).
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersGET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders | Added parameters:rnpt— Batch registration number;gtd— the number of the cargo customs declaration.
+Methods or documentation pages Description of the changes GET v2/campaignsGET v2/campaigns/by_login/{login}
+
+GET v2/campaigns/by_login/{login} The methods no longer work for the ADV model. POST v2/campaigns/{campaignId}/offers/stocks
+Added a new method. It returns information on the remaining goods in the showcase (for models FBY, FBS and Express) and about the turnover of goods (for the model FBY).
+Acceptance and transfer certificateThe actual act of acceptance and transferThe act of discrepanciesBill of lading
+Added methods for obtaining documents on shipments (FBS).
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersGET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders
+Added parameters:rnpt— Batch registration number;gtd— the number of the cargo customs declaration.
+
+• rnpt— Batch registration number;
+
+rnpt
+• gtd— the number of the cargo customs declaration.
+
+gtd
+
+September 28th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-cards/update— transmits the categorical characteristics of the goods.POST v2/businesses/{businessId}/offer-cards— shows the statuses and the degree of card occupancy;POST v2/category/{categoryId}/parameters— returns a list of characteristics with acceptable values for the specified category. | Now you can use the API to manage the content on product cards.
+PUT v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallets | Added a new method. It transmits the number of packages in the shipment.
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallet/labels | Added a new method. It returns the labels for the packages in the shipment.
+Methods or documentation pages Description of the changes
+POST v2/businesses/{businessId}/offer-cards/update— transmits the categorical characteristics of the goods.POST v2/businesses/{businessId}/offer-cards— shows the statuses and the degree of card occupancy;POST v2/category/{categoryId}/parameters— returns a list of characteristics with acceptable values for the specified category.
+Now you can use the API to manage the content on product cards. PUT v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallets
+Added a new method. It transmits the number of packages in the shipment. GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallet/labels
+Added a new method. It returns the labels for the packages in the shipment.
+
+September 27th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/prices/generate | The "Market Prices" report has been added. Methods or documentation pages
+Description of the changes POST v2/reports/prices/generate
+
+POST v2/reports/prices/generate The "Market Prices" report has been added.
+
+September 25th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/price-quarantine | The parameters have been deprecatedcurrentPriceandlastValidPrice. Use them insteadparams.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/price-quarantine
+The parameters have been deprecatedcurrentPriceandlastValidPrice. Use them insteadparams.
+
+currentPrice
+
+lastValidPrice
+
+params
+
+September 15th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/stocks-on-warehouses/generate | Added a report on the remaining stock in the Market (FBY).
+Methods or documentation pages Description of the changes POST v2/reports/stocks-on-warehouses/generate
+Added a report on the remaining stock in the Market (FBY).
+
+September 14th
+
+Methods or documentation pages | Description of the changes
+GET v2/warehouses | Added a new method. It returns a list of Market warehouses (FBY) with their IDs.
+Methods or documentation pages Description of the changes GET v2/warehouses Added a new method. It returns a list of Market warehouses (FBY) with their IDs.
+
+September 7th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/stocks-on-warehouses/generate | Added a report on the store's inventory balances (FBS).
+Methods or documentation pages Description of the changes POST v2/reports/stocks-on-warehouses/generate
+Added a report on the store's inventory balances (FBS).
+
+September 5th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/goods-movement/generate | Added a report on the movement of goods. Methods or documentation pages
+Description of the changes POST v2/reports/goods-movement/generate Added a report on the movement of goods.
+
+September 4
+
+Methods or documentation pages | Description of the changes
+All methods. | Now in the answer400 Bad Requestwe return the name of the field that contains the error.
+Methods or documentation pages Description of the changes All methods. Now in the answer400 Bad Requestwe return the name of the field that contains the error.
+
+400 Bad Request
+
+August 4th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/goods-realization/generate | Added a report on the implementation.
+POST v2/reports/united-marketplace-services/generate | Added a report on the cost of services.
+POST v2/reports/united-netting/generate | A payment report has been added. Methods or documentation pages
+Description of the changes POST v2/reports/goods-realization/generate Added a report on the implementation.
+POST v2/reports/united-marketplace-services/generate Added a report on the cost of services. POST v2/reports/united-netting/generate
+A payment report has been added.
+
+July 20th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/bids/recommendations | Added a new method. It shows the recommended bids.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/bids/recommendations
+Added a new method. It shows the recommended bids.
+
+July 19th
+
+Methods or documentation pages | Description of the changes
+GET v2/businesses/{businessId}/warehouses | Added a new method. It shows a list of warehouses and warehouse groups.
+Methods or documentation pages Description of the changes GET v2/businesses/{businessId}/warehouses Added a new method. It shows a list of warehouses and warehouse groups.
+
+July 13th
+
+Methods or documentation pages | Description of the changes
+— | Changed the format of the authorization token — instead of 21 characters, it now has 48 characters. You can update the token right now to strengthen the protection of your integration.
+PageAutomatic renewal of the OAuth token. | They told us how to automatically update the OAuth token via the Yandex ID API.
+POST v2/businesses/{businessId}/bids/info | Added a new method. It shows the bid values for the specified products.
+POST v2/campaigns/{campaignId}/orders/status-update | Now you don't have to transmit the stages of order processing or the reasons for its cancellation. — parametersubstatusinordersbecame optional.
+Methods or documentation pages Description of the changes —
+Changed the format of the authorization token — instead of 21 characters, it now has 48 characters. You can update the token right now to strengthen the protection of your integration.
+PageAutomatic renewal of the OAuth token. They told us how to automatically update the OAuth token via the Yandex ID API.
+POST v2/businesses/{businessId}/bids/info Added a new method. It shows the bid values for the specified products.
+POST v2/campaigns/{campaignId}/orders/status-update
+Now you don't have to transmit the stages of order processing or the reasons for its cancellation. — parametersubstatusinordersbecame optional.
+
+substatus
+
+orders
+
+June 22nd
+
+Methods or documentation pages | Description of the changes
+Adding productsPrice changes | Big update: expanded API capabilities for working with the catalog.Now you can:work with general product data in the cabinet and manage the placement in individual stores;set the basic price;check the goods that are in quarantine;delete products from the cabinet and store.
+POST v2/campaigns/{campaignId}/offer-mapping-entries/suggestionsPOST v2/campaigns/{campaignId}/offer-mapping-entries/updatesGET v2/campaigns/{campaignId}/offer-mapping-entriesGET v2/campaigns/{campaignId}/offersGET v2/campaigns/{campaignId}/offers/allGET v2/campaigns/{campaignId}/feedsGET v2/campaigns/{campaignId}/feeds/{feedId}GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logsPOST v2/campaigns/{campaignId}/feeds/{feedId}/paramsPOST v2/campaigns/{campaignId}/feeds/{feedId}/refresh | The methods have been deprecated.
+Methods or documentation pages Description of the changes Adding productsPrice changes
+Big update: expanded API capabilities for working with the catalog.Now you can:work with general product data in the cabinet and manage the placement in individual stores;set the basic price;check the goods that are in quarantine;delete products from the cabinet and store.
+
+• work with general product data in the cabinet and manage the placement in individual stores;
+• set the basic price;
+• check the goods that are in quarantine;
+• delete products from the cabinet and store.
+POST v2/campaigns/{campaignId}/offer-mapping-entries/suggestionsPOST v2/campaigns/{campaignId}/offer-mapping-entries/updatesGET v2/campaigns/{campaignId}/offer-mapping-entriesGET v2/campaigns/{campaignId}/offersGET v2/campaigns/{campaignId}/offers/allGET v2/campaigns/{campaignId}/feedsGET v2/campaigns/{campaignId}/feeds/{feedId}GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logsPOST v2/campaigns/{campaignId}/feeds/{feedId}/paramsPOST v2/campaigns/{campaignId}/feeds/{feedId}/refresh
+
+GET v2/campaigns/{campaignId}/offers
+
+GET v2/campaigns/{campaignId}/offers/all
+
+GET v2/campaigns/{campaignId}/feeds
+
+GET v2/campaigns/{campaignId}/feeds/{feedId}
+
+GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logs
+
+POST v2/campaigns/{campaignId}/feeds/{feedId}/params
+
+POST v2/campaigns/{campaignId}/feeds/{feedId}/refresh The methods have been deprecated.
+
+May 30th
+
+Methods or documentation pages | Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiers | Added a new method. He gives the Market the marking codes of the "Honest Mark" and the UIN for jewelry.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/cis | The method has been deprecated. Instead, usePUT v2/campaigns/{campaignId}/orders/{orderId}/identifiers
+Methods or documentation pages Description of the changes PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiers
+Added a new method. He gives the Market the marking codes of the "Honest Mark" and the UIN for jewelry.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/cis
+
+PUT v2/campaigns/{campaignId}/orders/{orderId}/cis
+The method has been deprecated. Instead, usePUT v2/campaigns/{campaignId}/orders/{orderId}/identifiers
+
+14th of April
+
+Methods or documentation pages | Description of the changes
+Methods in which limits are calculated using the formula. | Changed the limits on the number of requests — we specify the exact number of requests per hour. This will make it easier for you to plan integrations, and for the Market. — the load.
+Processing orders with digital goods | They told us how to work with digital goods. Methods or documentation pages
+Description of the changes Methods in which limits are calculated using the formula.
+Changed the limits on the number of requests — we specify the exact number of requests per hour. This will make it easier for you to plan integrations, and for the Market. — the load.
+Processing orders with digital goods They told us how to work with digital goods.
+
+March 29th
+
+Methods or documentation pages | Description of the changes
+PUT v2/businesses/{businessId}/bids— creates a campaign, adds products to it, assigns or changes bids. | Added a new method. It helps to manage the sales boost.
+Methods or documentation pages Description of the changes
+PUT v2/businesses/{businessId}/bids— creates a campaign, adds products to it, assigns or changes bids.
+Added a new method. It helps to manage the sales boost.
+
+March 17th
+
+Methods or documentation pages | Description of the changes
+Documentation Yandex Market API for sellers. | Redesign of documentation:We've put together instructions for different models;The appearance has been modernized;added step-by-step instructions for frequent scenarios.
+How to use the console | The console has been started — query testing interface. Methods or documentation pages
+Description of the changes Documentation Yandex Market API for sellers.
+Redesign of documentation:We've put together instructions for different models;The appearance has been modernized;added step-by-step instructions for frequent scenarios.
+
+• We've put together instructions for different models;
+• The appearance has been modernized;
+• added step-by-step instructions for frequent scenarios.
+How to use the console The console has been started — query testing interface.

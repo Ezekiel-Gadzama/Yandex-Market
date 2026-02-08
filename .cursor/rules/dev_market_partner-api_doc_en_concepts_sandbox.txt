@@ -1,0 +1,109 @@
+Test orders
+On Yandex. Market, you can test the store and its API on test orders before you start working with real ones. You can emulate the following processes:
+
+• making an order on behalf of the buyer — add items to the cart, choose payment methods and delivery terms;
+• cancellation of the order.
+Yandex. Market does not charge for such orders. And errors in working with them do not affect the checks and are not used in calculating the quality index.
+To go to the debugging interface, in the merchant's office on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→Test order.
+All orders created in the debugging interface are sent to the store with the valuetruethe parameterfake, which allows the store to distinguish such orders from the real ones.
+
+true
+
+fake Data on test orders
+If you have API notifications enabled, yandex.Market will send you a request.POST notificationwith information aboutthe eventalso for test orders.How to work with notifications
+However, methods that return information on orders do not include data on test orders by default. To get them, pass the valuetruein the parameterfake.
+
+true
+
+fake
+
+Limitations
+Information about test orders and request logs are stored for 10 days.
+
+How to debug
+1. Create a new order
+On the pageAPIs and modules→Test order:
+
+• ChooseCreate in your personal account.
+ChooseCreate in your personal account.
+• Add items to the shopping cart — clickclose to the right ones.
+Add items to the shopping cart — clickclose to the right ones.
+• In the blockBasketclickCheck availability.
+In the blockBasketclickCheck availability.
+
+2. Send the order
+In the third block:
+
+• Specify the shipping and payment method. Since this is a test order, select payment upon receipt.The store has just been createdConfigured delivery services may not be available. In this case, select the test service.
+Specify the shipping and payment method. Since this is a test order, select payment upon receipt. The store has just been created
+Configured delivery services may not be available. In this case, select the test service.
+• Enter the buyer's test data (address, first and last name, phone number, etc.).
+Enter the buyer's test data (address, first and last name, phone number, etc.).
+• ClickSend an order.
+ClickSend an order.
+After that, a notification about the creation of a new order and its number will appear on the page.
+
+3. Process the order
+Check the log after each request.
+If the integration is not configured correctly, you will see errors in the log that need to be fixed. To view the log, in the merchant's office on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabQuery log.
+
+• Send a requestPOST v1/businesses/{businessId}/orderscorderIdsand save the parcel ID (idinshipments) from the response.
+Send a requestPOST v1/businesses/{businessId}/orderscorderIdsand save the parcel ID (idinshipments) from the response.
+
+orderIds
+
+id
+
+shipments
+• Send a requestPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes, where to transmit:the received ID.information about the distribution of goods from the order by boxes;if there are products that are subject to labeling, then the labeling codes for these products.
+Send a requestPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes, where to transmit:
+
+• the received ID.
+• information about the distribution of goods from the order by boxes;
+• if there are products that are subject to labeling, then the labeling codes for these products.
+• Confirm that you are ready for shipment by sending the statusPROCESSINGwith a sub-statusREADY_TO_SHIPusing a requestPUT v2/campaigns/{campaignId}/orders/{orderId}/status.
+Confirm that you are ready for shipment by sending the statusPROCESSINGwith a sub-statusREADY_TO_SHIPusing a requestPUT v2/campaigns/{campaignId}/orders/{orderId}/status.
+
+PROCESSING
+
+READY_TO_SHIP
+• If in the future you will ship orders to a sorting center or a pick-up point or transfer them to Market couriers from your warehouse, send a requestPUT v2/campaigns/{campaignId}/orders/{orderId}/status. Send the status in itPROCESSINGwith a sub-statusSHIPPED.
+If in the future you will ship orders to a sorting center or a pick-up point or transfer them to Market couriers from your warehouse, send a requestPUT v2/campaigns/{campaignId}/orders/{orderId}/status. Send the status in itPROCESSINGwith a sub-statusSHIPPED.
+
+PROCESSING
+
+SHIPPED
+
+4. Cancel the order
+Send a requestPUT v2/campaigns/{campaignId}/orders/{orderId}/statusand send the statusCANCELLEDwith the reason for cancellationSHOP_FAILED. A test order can only be canceled before it is upgraded to the statusPROCESSINGwith a sub-status:
+
+CANCELLED
+
+SHOP_FAILED
+
+PROCESSING
+
+• SHIPPEDif in the future you will ship orders to a sorting center or a pick-up point or transfer them to Market couriers from your warehouse;
+SHIPPEDif in the future you will ship orders to a sorting center or a pick-up point or transfer them to Market couriers from your warehouse;
+
+SHIPPED
+• READY_TO_SHIPif your store is connected to express delivery and you will ship orders to couriersYandex Go.
+READY_TO_SHIPif your store is connected to express delivery and you will ship orders to couriersYandex Go.
+
+READY_TO_SHIP
+Check for errors — in the seller's account on the Market, click on the icon of your account →Settingsand in the menu on the left, selectAPIs and modules→ tabQuery log— and fix them.
+Events for which Yandex.Market sends notifications:creating a new order;changing the order;changing the order status;creating a new chat with a customer;adding a new chat message;the beginning of the dispute;ending the dispute;creating a new product review;creating a new review comment;creating an order cancellation request;order cancellation;creating a new non-purchase or refund;changing the non-purchase or refund status.
+
+• creating a new order;
+• changing the order;
+• changing the order status;
+• creating a new chat with a customer;
+• adding a new chat message;
+• the beginning of the dispute;
+• ending the dispute;
+• creating a new product review;
+• creating a new review comment;
+• creating an order cancellation request;
+• order cancellation;
+• creating a new non-purchase or refund;
+• changing the non-purchase or refund status.

@@ -44,11 +44,5 @@ done
 echo "PostgreSQL is up - initializing database"
 python init_db.py
 
-echo "Running database migrations..."
-python migrations/add_product_fields.py || echo "Migration script not found or failed, continuing..."
-python migrations/add_product_templates.py || echo "Template migration script not found or failed, continuing..."
-python migrations/add_stock_fields.py || echo "Stock fields migration script not found or failed, continuing..."
-python migrations/add_product_variants.py || echo "Product variants migration script not found or failed, continuing..."
-
 echo "Starting application..."
 exec "$@"

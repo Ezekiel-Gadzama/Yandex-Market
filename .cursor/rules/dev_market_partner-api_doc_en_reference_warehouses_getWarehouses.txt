@@ -1,0 +1,1676 @@
+List of warehouses and groups of warehouses
+Deprecated The method is available for models:FBS, Express and DBS.
+
+• inventory-and-order-processing —Order processing and inventory
+• inventory-and-order-processing:read-only —View order information
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Which method should I use instead of the outdated one? POST v2/businesses/{businessId}/warehouses
+Returns a list of warehouses and, if warehouses are combined, a list of warehouse groups.What are warehouse groups and why are they needed?
+Among other things, the request allows you to determine the identifier to be used when transferring balances for a group of warehouses.
+
+⚙️ Limit:100 requests per minute
+
+Request
+GET
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/warehouses
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/warehouses
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Responses
+200 OK
+A list of warehouses and groups of warehouses.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {}
+}
+],
+"warehouseGroups": [
+{
+"name": "example",
+"mainWarehouse": {},
+"warehouses": [
+null
+]
+}
+]
+}
+}
+
+{
+"status": "OK",
+"result": {
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {}
+}
+],
+"warehouseGroups": [
+{
+"name": "example",
+"mainWarehouse": {},
+"warehouses": [
+null
+]
+}
+]
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectwarehouseGroupsType: object[]mainWarehouseType: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}nameType: stringThe name of the warehouse group.Example:examplewarehousesType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}]List of warehouse groups.Example[{"name":"example","mainWarehouse":{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}},"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{}}}]}]warehousesType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}A list of warehouses that are not included in the groups.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}]Information about warehouses and groups of warehouses.Example{"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}],"warehouseGroups":[{"name":"example","mainWarehouse":{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{}}},"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"address":{}}]}]}Example{"result":{"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{}}}],"warehouseGroups":[{"name":"example","mainWarehouse":{"id":0,"name":"example","campaignId":1,"express":true,"address":{}},"warehouses":[{}]}]}}
+
+result | Type: objectwarehouseGroupsType: object[]mainWarehouseType: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}nameType: stringThe name of the warehouse group.Example:examplewarehousesType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}]List of warehouse groups.Example[{"name":"example","mainWarehouse":{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}},"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{}}}]}]warehousesType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}A list of warehouses that are not included in the groups.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}]Information about warehouses and groups of warehouses.Example{"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}],"warehouseGroups":[{"name":"example","mainWarehouse":{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{}}},"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"address":{}}]}]} | warehouseGroups | Type: object[]mainWarehouseType: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}nameType: stringThe name of the warehouse group.Example:examplewarehousesType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}]List of warehouse groups.Example[{"name":"example","mainWarehouse":{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}},"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{}}}]}] | mainWarehouse | Type: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}} | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example | name | Type: stringThe name of the warehouse group.Example:example | warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example | warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}A list of warehouses that are not included in the groups.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+warehouseGroups | Type: object[]mainWarehouseType: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}nameType: stringThe name of the warehouse group.Example:examplewarehousesType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}]List of warehouse groups.Example[{"name":"example","mainWarehouse":{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}},"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{}}}]}] | mainWarehouse | Type: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}} | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example | name | Type: stringThe name of the warehouse group.Example:example | warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+mainWarehouse | Type: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}} | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example
+name | Type: stringThe name of the warehouse group.Example:example
+warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example
+warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}A list of warehouses that are not included in the groups.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example result
+
+warehouseGroups | Type: object[]mainWarehouseType: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}nameType: stringThe name of the warehouse group.Example:examplewarehousesType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}]List of warehouse groups.Example[{"name":"example","mainWarehouse":{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}},"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{}}}]}] | mainWarehouse | Type: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}} | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example | name | Type: stringThe name of the warehouse group.Example:example | warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+mainWarehouse | Type: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}} | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example
+name | Type: stringThe name of the warehouse group.Example:example
+warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example
+warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}A list of warehouses that are not included in the groups.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example warehouseGroups
+
+mainWarehouse | Type: objectcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}Information about the warehouse.Example{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}} | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example
+name | Type: stringThe name of the warehouse group.Example:example
+warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible according to the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}The list of warehouses included in the group.Example[{"id":0,"name":"example","campaignId":1,"express":true,"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible according to the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example mainWarehouse
+
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 express Type: boolean Is delivery possible according to the model Express. id Type: integer The warehouse ID.
+name Type: string The name of the warehouse. Example:example
+
+example address
+
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example city Type: string City. Max length:200
+
+200 Example:example
+
+example gps
+
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude. latitude Type: number Width. longitude Type: number Longitude. GPS coordinates of latitude and longitude.
+
+{
+"latitude": 0.5,
+"longitude": 0.5
+}
+
+{
+"latitude": 0.5,
+"longitude": 0.5
+}
+block Type: string Building number. Max length:16
+
+16 Example:example
+
+example building Type: string Building number. Max length:16
+
+16 Example:example
+
+example number Type: string The house number. Max length:256
+
+256 Example:example
+
+example street Type: string Street. Max length:512
+
+512 Example:example
+
+example Warehouse address.
+
+{
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+
+{
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+
+Information about the warehouse.
+
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+}
+
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+}
+
+name Type: string The name of the warehouse group. Example:example
+
+example warehouses
+
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 express Type: boolean Is delivery possible according to the model Express. id Type: integer The warehouse ID.
+name Type: string The name of the warehouse. Example:example
+
+example address
+
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example city Type: string City. Max length:200
+
+200 Example:example
+
+example gps
+
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude. latitude Type: number Width. longitude Type: number Longitude. GPS coordinates of latitude and longitude.
+
+{
+"latitude": 0.5,
+"longitude": 0.5
+}
+
+{
+"latitude": 0.5,
+"longitude": 0.5
+}
+block Type: string Building number. Max length:16
+
+16 Example:example
+
+example building Type: string Building number. Max length:16
+
+16 Example:example
+
+example number Type: string The house number. Max length:256
+
+256 Example:example
+
+example street Type: string Street. Max length:512
+
+512 Example:example
+
+example Warehouse address.
+
+{
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+
+{
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+
+The list of warehouses included in the group.
+
+[
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+}
+]
+
+[
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+}
+]
+
+List of warehouse groups.
+
+[
+{
+"name": "example",
+"mainWarehouse": {
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+},
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {}
+}
+}
+]
+}
+]
+
+[
+{
+"name": "example",
+"mainWarehouse": {
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+},
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {}
+}
+}
+]
+}
+]
+
+warehouses
+
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible according to the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 express Type: boolean Is delivery possible according to the model Express. id Type: integer The warehouse ID.
+name Type: string The name of the warehouse. Example:example
+
+example address
+
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example city Type: string City. Max length:200
+
+200 Example:example
+
+example gps
+
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude. latitude Type: number Width. longitude Type: number Longitude. GPS coordinates of latitude and longitude.
+
+{
+"latitude": 0.5,
+"longitude": 0.5
+}
+
+{
+"latitude": 0.5,
+"longitude": 0.5
+}
+block Type: string Building number. Max length:16
+
+16 Example:example
+
+example building Type: string Building number. Max length:16
+
+16 Example:example
+
+example number Type: string The house number. Max length:256
+
+256 Example:example
+
+example street Type: string Street. Max length:512
+
+512 Example:example
+
+example Warehouse address.
+
+{
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+
+{
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+
+A list of warehouses that are not included in the groups.
+
+[
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+}
+]
+
+[
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+}
+]
+
+Information about warehouses and groups of warehouses.
+
+{
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+}
+],
+"warehouseGroups": [
+{
+"name": "example",
+"mainWarehouse": {
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {}
+}
+},
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {}
+}
+]
+}
+]
+}
+
+{
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+}
+],
+"warehouseGroups": [
+{
+"name": "example",
+"mainWarehouse": {
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {}
+}
+},
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {}
+}
+]
+}
+]
+}
+
+{
+"result": {
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {}
+}
+}
+],
+"warehouseGroups": [
+{
+"name": "example",
+"mainWarehouse": {
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {}
+},
+"warehouses": [
+{}
+]
+}
+]
+}
+}
+
+{
+"result": {
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {}
+}
+}
+],
+"warehouseGroups": [
+{
+"name": "example",
+"mainWarehouse": {
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"address": {}
+},
+"warehouses": [
+{}
+]
+}
+]
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

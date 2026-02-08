@@ -1,9 +1,36 @@
 """
-Script to create initial data (default email template)
+Script to create initial data (default email template and app settings)
 Run this after database is created
 """
 from app.database import SessionLocal
 from app import models
+
+
+def create_default_settings():
+    """Create default app settings if they don't exist"""
+    db = SessionLocal()
+    try:
+        existing = db.query(models.AppSettings).first()
+        if existing:
+            print("App settings already exist")
+            return
+        
+        default_settings = models.AppSettings(
+            processing_time_min=20,
+            processing_time_max=30,
+            maximum_wait_time_value=6,
+            maximum_wait_time_unit="hours",
+            working_hours_text="We are open seven days a week from 10:00 AM to 12:00 AM Moscow time.",
+            company_email="oneplayinfo@gmail.com"
+        )
+        db.add(default_settings)
+        db.commit()
+        print("Default app settings created successfully")
+    except Exception as e:
+        print(f"Error creating default settings: {str(e)}")
+        db.rollback()
+    finally:
+        db.close()
 
 
 def create_default_email_template():
@@ -21,34 +48,9 @@ def create_default_email_template():
         
         default_template = models.EmailTemplate(
             name="Default Digital Product Template",
-            subject="Digital Product Activation Code - Order {order_number}",
-            body="""
-<html>
-<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-    <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2 style="color: #2c3e50;">Digital Product Activation</h2>
-        <p>Hello, {customer_name}!</p>
-        <p>Here is your activation code for the digital product from your order.</p>
-        
-        <div style="background-color: #f8f9fa; border-left: 4px solid #007bff; padding: 15px; margin: 20px 0;">
-            <p style="margin: 0;"><strong>Order Number:</strong> {order_number}</p>
-            <p style="margin: 5px 0;"><strong>Product:</strong> {product_name}</p>
-            <p style="margin: 5px 0;"><strong>Activation Code:</strong> <span style="font-size: 18px; font-weight: bold; color: #007bff;">{activation_code}</span></p>
-            <p style="margin: 5px 0;"><strong>Activate before:</strong> {expiry_date}</p>
-        </div>
-        
-        <p>Thank you for your purchase!</p>
-        
-        {instructions}
-        
-        <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
-        <p style="color: #666; font-size: 12px;">
-            If you have any questions, please contact us through the order chat on Yandex Market.
-        </p>
-    </div>
-</body>
-</html>
-            """.strip()
+            body="""1. Send your registered email to the order chat on the Market. Within few minutes you will get an OTP to your email to login to your account, you need to send the OTP code to the order chat.""",
+            random_key=True,
+            required_login=False
         )
         
         db.add(default_template)

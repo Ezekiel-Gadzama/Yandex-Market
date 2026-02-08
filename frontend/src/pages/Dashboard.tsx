@@ -6,7 +6,10 @@ import {
   ShoppingCart, 
   DollarSign, 
   TrendingUp,
-  Calendar
+  Calendar,
+  Edit2,
+  ChevronDown,
+  ChevronRight
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
@@ -14,8 +17,22 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContaine
 export default function Dashboard() {
   const [period, setPeriod] = useState<string>('all')
   const [dateRange, setDateRange] = useState<DateRange>({})
+  const [tempDateRange, setTempDateRange] = useState<DateRange>({})
   const [showDatePicker, setShowDatePicker] = useState(false)
   const datePickerRef = useRef<HTMLDivElement>(null)
+  const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set())
+  
+  const toggleOrderExpansion = (yandexOrderId: string) => {
+    setExpandedOrders(prev => {
+      const newSet = new Set(prev)
+      if (newSet.has(yandexOrderId)) {
+        newSet.delete(yandexOrderId)
+      } else {
+        newSet.add(yandexOrderId)
+      }
+      return newSet
+    })
+  }
   
   const { data, isLoading, error } = useQuery({
     queryKey: ['dashboard', period, dateRange],
@@ -27,6 +44,8 @@ export default function Dashboard() {
     const handleClickOutside = (event: MouseEvent) => {
       if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
         setShowDatePicker(false)
+        // Reset temp date range to current applied range when closing without applying
+        setTempDateRange(dateRange)
       }
     }
     
@@ -34,22 +53,33 @@ export default function Dashboard() {
       document.addEventListener('mousedown', handleClickOutside)
       return () => document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [showDatePicker])
+  }, [showDatePicker, dateRange])
   
   const handlePeriodChange = (newPeriod: string) => {
-    setPeriod(newPeriod)
     if (newPeriod === 'custom') {
+      setPeriod(newPeriod)
+      // Initialize temp date range with current date range when opening picker
+      setTempDateRange(dateRange)
       setShowDatePicker(true)
     } else {
+      setPeriod(newPeriod)
       setShowDatePicker(false)
       setDateRange({})
+      setTempDateRange({})
     }
   }
   
   const handleDateRangeApply = () => {
-    if (dateRange.startDate && dateRange.endDate) {
+    if (tempDateRange.startDate && tempDateRange.endDate) {
+      setDateRange(tempDateRange)
       setShowDatePicker(false)
     }
+  }
+  
+  const handleDateRangeCancel = () => {
+    setShowDatePicker(false)
+    // Reset temp date range to current applied range
+    setTempDateRange(dateRange)
   }
   
   const getPeriodLabel = () => {
@@ -88,27 +118,44 @@ export default function Dashboard() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-        <div className="relative">
-          <select
-            value={period}
-            onChange={(e) => handlePeriodChange(e.target.value)}
-            className="px-4 py-2 rounded-md text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none pr-8"
-          >
-            <option value="today">Today</option>
-            <option value="week">This Week</option>
-            <option value="month">This Month</option>
-            <option value="all">All Time</option>
-            <option value="custom">Custom Date Range</option>
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
-            </svg>
+        <div className="flex items-center gap-2 relative">
+          <div className="relative">
+            <select
+              value={period}
+              onChange={(e) => handlePeriodChange(e.target.value)}
+              className="px-4 py-2 rounded-md text-sm font-medium border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none pr-8"
+            >
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
+              <option value="all">All Time</option>
+              <option value="custom">Custom Date Range</option>
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+              </svg>
+            </div>
           </div>
+          
+          {/* Edit button to reopen date picker when in custom mode */}
+          {period === 'custom' && (
+            <button
+              onClick={() => {
+                // Initialize temp date range with current date range when opening picker
+                setTempDateRange(dateRange)
+                setShowDatePicker(true)
+              }}
+              className="p-2 text-gray-600 hover:text-blue-600 hover:bg-gray-100 rounded-md transition-colors"
+              title="Edit date range"
+            >
+              <Edit2 className="h-4 w-4" />
+            </button>
+          )}
           
           {/* Date Range Picker */}
           {showDatePicker && (
-            <div ref={datePickerRef} className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-10 p-4">
+            <div ref={datePickerRef} className="absolute right-0 top-full mt-2 w-80 bg-white rounded-lg shadow-lg border border-gray-200 z-10 p-4">
               <div className="flex items-center mb-3">
                 <Calendar className="h-5 w-5 text-gray-400 mr-2" />
                 <h3 className="text-sm font-medium text-gray-900">Select Date Range</h3>
@@ -118,9 +165,9 @@ export default function Dashboard() {
                   <label className="block text-xs font-medium text-gray-700 mb-1">From Date</label>
                   <input
                     type="date"
-                    value={dateRange.startDate || ''}
-                    onChange={(e) => setDateRange({ ...dateRange, startDate: e.target.value })}
-                    max={dateRange.endDate || undefined}
+                    value={tempDateRange.startDate || ''}
+                    onChange={(e) => setTempDateRange({ ...tempDateRange, startDate: e.target.value })}
+                    max={tempDateRange.endDate || undefined}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
@@ -128,26 +175,22 @@ export default function Dashboard() {
                   <label className="block text-xs font-medium text-gray-700 mb-1">To Date</label>
                   <input
                     type="date"
-                    value={dateRange.endDate || ''}
-                    onChange={(e) => setDateRange({ ...dateRange, endDate: e.target.value })}
-                    min={dateRange.startDate || undefined}
+                    value={tempDateRange.endDate || ''}
+                    onChange={(e) => setTempDateRange({ ...tempDateRange, endDate: e.target.value })}
+                    min={tempDateRange.startDate || undefined}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div className="flex space-x-2 pt-2">
                   <button
                     onClick={handleDateRangeApply}
-                    disabled={!dateRange.startDate || !dateRange.endDate}
+                    disabled={!tempDateRange.startDate || !tempDateRange.endDate}
                     className="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     Apply
                   </button>
                   <button
-                    onClick={() => {
-                      setShowDatePicker(false)
-                      setDateRange({})
-                      setPeriod('all')
-                    }}
+                    onClick={handleDateRangeCancel}
                     className="px-4 py-2 border border-gray-300 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-50"
                   >
                     Cancel
@@ -159,8 +202,31 @@ export default function Dashboard() {
           
           {/* Period Label Display */}
           {period === 'custom' && dateRange.startDate && dateRange.endDate && !showDatePicker && (
-            <div className="mt-2 text-sm text-gray-600">
+            <div 
+              className="mt-2 text-sm text-gray-600 cursor-pointer hover:text-blue-600"
+              onClick={() => {
+                // Initialize temp date range with current date range when opening picker
+                setTempDateRange(dateRange)
+                setShowDatePicker(true)
+              }}
+              title="Click to change date range"
+            >
               {getPeriodLabel()}
+            </div>
+          )}
+          
+          {/* Show clickable label when in custom mode but no dates selected */}
+          {period === 'custom' && (!dateRange.startDate || !dateRange.endDate) && !showDatePicker && (
+            <div 
+              className="mt-2 text-sm text-gray-500 cursor-pointer hover:text-blue-600"
+              onClick={() => {
+                // Initialize temp date range with current date range when opening picker
+                setTempDateRange(dateRange)
+                setShowDatePicker(true)
+              }}
+              title="Click to select date range"
+            >
+              Click to select date range
             </div>
           )}
         </div>
@@ -195,7 +261,13 @@ export default function Dashboard() {
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Total Orders</dt>
                   <dd className="text-lg font-medium text-gray-900">{stats.total_orders}</dd>
-                  <dd className="text-sm text-gray-500">{stats.pending_orders} pending</dd>
+                  <dd className="text-sm text-gray-500 space-y-1">
+                    <div>{stats.pending_orders} pending</div>
+                    <div>{stats.processing_orders} processing</div>
+                    <div>{stats.completed_orders} completed</div>
+                    <div>{stats.cancelled_orders} cancelled</div>
+                    <div>{stats.finished_orders} finished</div>
+                  </dd>
                 </dl>
               </div>
             </div>
@@ -236,7 +308,7 @@ export default function Dashboard() {
                     {stats.profit_margin.toFixed(2)}%
                   </dd>
                   <dd className="text-sm text-gray-500">
-                    {stats.completed_orders} completed
+                    {stats.successful_orders} successful
                   </dd>
                 </dl>
               </div>
@@ -248,7 +320,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Top Products Chart */}
         <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Top Products</h2>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Top Products (Revenue & Profit Chart)</h2>
           {chartData.length > 0 ? (
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={chartData}>
@@ -267,7 +339,7 @@ export default function Dashboard() {
 
         {/* Top Products List */}
         <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Top Selling Products</h2>
+          <h2 className="text-lg font-medium text-gray-900 mb-4">Top Selling Products (Sales Count)</h2>
           {top_products.length > 0 ? (
             <div className="space-y-4">
               {top_products.slice(0, 5).map((product) => (
@@ -306,6 +378,9 @@ export default function Dashboard() {
                   Order ID
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Product
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Customer
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -321,35 +396,114 @@ export default function Dashboard() {
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {recent_orders.length > 0 ? (
-                recent_orders.map((order) => (
-                  <tr key={order.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {order.yandex_order_id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {order.customer_name || order.customer_email || 'N/A'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      ₽{order.total_amount.toLocaleString('ru-RU', { minimumFractionDigits: 2 })}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                        order.status === 'completed' ? 'bg-green-100 text-green-800' :
-                        order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
-                        {order.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {format(new Date(order.created_at), 'MMM d, yyyy')}
-                    </td>
-                  </tr>
-                ))
+                recent_orders.map((order) => {
+                  const isExpanded = expandedOrders.has(order.yandex_order_id)
+                  
+                  // If order doesn't have items array, create one from the single product (backward compatibility)
+                  let orderItems: any[] | undefined = order.items
+                  if (!orderItems || orderItems.length === 0) {
+                    orderItems = [{
+                      product_id: order.product_id,
+                      product_name: order.product_name || 'Unknown Product',
+                      quantity: order.quantity || 1,
+                      item_price: order.total_amount / (order.quantity || 1),
+                      item_total: order.total_amount,
+                      activation_code_sent: order.activation_code_sent || false,
+                      yandex_item_id: null,
+                      yandex_offer_id: null,
+                      activation_key_id: null,
+                      email_template_id: null,
+                      documentation_id: null,
+                    }]
+                  }
+                  
+                  const itemsCount = order.items_count || (orderItems ? orderItems.length : 1)
+                  
+                  return (
+                    <>
+                      {/* Main order row */}
+                      <tr 
+                        key={order.id} 
+                        className="bg-gray-50 hover:bg-gray-100 cursor-pointer" 
+                        onClick={() => toggleOrderExpansion(order.yandex_order_id)}
+                      >
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                          <div className="flex items-center gap-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                toggleOrderExpansion(order.yandex_order_id)
+                              }}
+                              className="text-gray-500 hover:text-gray-700"
+                            >
+                              {isExpanded ? (
+                                <ChevronDown className="h-4 w-4" />
+                              ) : (
+                                <ChevronRight className="h-4 w-4" />
+                              )}
+                            </button>
+                            {order.yandex_order_id}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 text-sm text-gray-900 max-w-xs">
+                          <div className="font-medium">
+                            {itemsCount} product{itemsCount !== 1 ? 's' : ''}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {order.customer_name || order.customer_email || 'N/A'}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          ₽{order.total_amount.toLocaleString('ru-RU', { minimumFractionDigits: 2 })}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            order.status === 'finished' ? 'bg-purple-100 text-purple-800' :
+                            order.status === 'completed' ? 'bg-green-100 text-green-800' :
+                            order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                            order.status === 'processing' ? 'bg-blue-100 text-blue-800' :
+                            'bg-red-100 text-red-800'
+                          }`}>
+                            {order.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {format(new Date(order.created_at), 'MMM d, yyyy')}
+                        </td>
+                      </tr>
+                      
+                      {/* Expanded product rows */}
+                      {isExpanded && orderItems && orderItems.length > 0 && orderItems.map((item: any, idx: number) => (
+                        <tr key={`${order.id}-item-${idx}`} className="bg-white border-l-4 border-blue-200" onClick={(e) => e.stopPropagation()}>
+                          <td className="px-6 py-3 text-sm text-gray-500">
+                            {/* Empty for alignment */}
+                          </td>
+                          <td className="px-6 py-3 text-sm text-gray-900">
+                            <div className="font-medium">{item.product_name}</div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              Qty: {item.quantity} × ₽{item.item_price.toLocaleString('ru-RU', { minimumFractionDigits: 2 })} = ₽{item.item_total.toLocaleString('ru-RU', { minimumFractionDigits: 2 })}
+                            </div>
+                          </td>
+                          <td className="px-6 py-3 text-sm text-gray-500">
+                            {/* Empty for alignment */}
+                          </td>
+                          <td className="px-6 py-3 text-sm text-gray-900">
+                            ₽{item.item_total.toLocaleString('ru-RU', { minimumFractionDigits: 2 })}
+                          </td>
+                          <td className="px-6 py-3 text-sm text-gray-500">
+                            {/* Empty for alignment */}
+                          </td>
+                          <td className="px-6 py-3 text-sm text-gray-500">
+                            {/* Empty for alignment */}
+                          </td>
+                        </tr>
+                      ))}
+                    </>
+                  )
+                })
               ) : (
                 <tr>
-                  <td colSpan={5} className="px-6 py-4 text-center text-sm text-gray-500">
+                  <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">
                     No orders yet
                   </td>
                 </tr>

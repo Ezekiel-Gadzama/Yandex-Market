@@ -1,0 +1,31 @@
+Module for the 1C system:The enterprise"
+The "Placement on the Market Marketplace" module allows you to manage products on the Market and process orders from your configuration1C system:Enterprise.
+How to install the module
+
+Module Configurations
+
+1C configuration:Enterprises" | Version | Link
+1C:ERP Enterprise Management 2 | 2 4.6.154 and higher | Download
+1C:Trade Management 11 | 11 4.5.111 and higher
+1C:Integrated Automation 8 | 2 4.6.175 and higher
+1C:Managing our company 8 | 1 6.16.120 and above | Download
+1C:Retail | 3 0.1.193 and higher 1C configuration:Enterprises" Version Link 1C:ERP Enterprise Management 2
+2 4.6.154 and higher Download 1C:Trade Management 11 11 4.5.111 and higher 1C:Integrated Automation 8
+2 4.6.175 and higher 1C:Managing our company 8 1 6.16.120 and above Download 1C:Retail 3 0.1.193 and higher
+
+Module Features
+
+Opportunity | Model FBY | Model FBS | Model DBS
+Add products to the catalog | ✔️️ | ✔️️ | ✔️
+Working with products in the catalog | ✔️ | ✔️ | ✔️
+Set prices for goods | ✔️ | ✔️ | ✔️
+Process orders and update their statuses | ❌ | ✔️ | ✔️
+Compare products with cards on the Market | ✔️ | ✔️ | ✔️
+Set up automatic price transmission | ✔️ | ✔️ | ✔️
+Transmit information about the remaining goods | ❌ | ✔️ | ✔️
+Transfer information about cargo areas, print labels and acceptance certificates. | ❌ | ✔️ | ❌ Opportunity
+Model FBY Model FBS Model DBS Add products to the catalog ✔️️ ✔️️ ✔️ Working with products in the catalog
+✔️ ✔️ ✔️ Set prices for goods ✔️ ✔️ ✔️ Process orders and update their statuses ❌ ✔️ ✔️ Compare products with cards on the Market
+✔️ ✔️ ✔️ Set up automatic price transmission ✔️ ✔️ ✔️ Transmit information about the remaining goods
+❌ ✔️ ✔️ Transfer information about cargo areas, print labels and acceptance certificates. ❌ ✔️ ❌
+The 1C software system:Enterprise" includes the platform and configurations (for example, "1C:ERP Enterprise Management 2").The platform is not a software product, users work with configurations.

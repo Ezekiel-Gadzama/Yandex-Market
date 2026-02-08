@@ -1,0 +1,1364 @@
+Adding products to a promotion or changing their prices
+The method is available forall models. Not yet available for Market Yandex Go sellers.
+
+• pricing —Manage prices
+• promotion —Product promotion
+• all-methods — Full account management
+Adds products to the promotion or changes the prices of the products that participate in the promotion.
+The changes begin to take effect within 4-6 hours. To find out if they have been applied, use the parameterprocessingin the method's responsePOST v2/businesses/{businessId}/promos.
+
+processing
+
+⚙️ Limit:10,000 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/promos/offers/update
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/promos/offers/update
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Body
+
+{
+"promoId": "example",
+"offers": [
+{
+"offerId": "example",
+"params": {
+"discountParams": {
+"price": 1,
+"promoPrice": 1
+}
+}
+}
+]
+}
+
+{
+"promoId": "example",
+"offers": [
+{
+"offerId": "example",
+"params": {
+"discountParams": {
+"price": 1,
+"promoPrice": 1
+}
+}
+}
+]
+}
+
+Name | Description
+offers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleparamsType: objectdiscountParamsType: objectpriceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.A required parameter for stocks with these types.Example{"price":1,"promoPrice":1}The parameters of the product that participates in the promotion.Example{"discountParams":{"price":1,"promoPrice":1}}Products that need to be added to the promotion or whose prices need to be changed.Min items:1Max items:500Example[{"offerId":"example","params":{"discountParams":{"price":1,"promoPrice":1}}}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | params | Type: objectdiscountParamsType: objectpriceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.A required parameter for stocks with these types.Example{"price":1,"promoPrice":1}The parameters of the product that participates in the promotion.Example{"discountParams":{"price":1,"promoPrice":1}} | discountParams | Type: objectpriceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.A required parameter for stocks with these types.Example{"price":1,"promoPrice":1} | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1 | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+params | Type: objectdiscountParamsType: objectpriceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.A required parameter for stocks with these types.Example{"price":1,"promoPrice":1}The parameters of the product that participates in the promotion.Example{"discountParams":{"price":1,"promoPrice":1}} | discountParams | Type: objectpriceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.A required parameter for stocks with these types.Example{"price":1,"promoPrice":1} | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1 | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1
+discountParams | Type: objectpriceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.A required parameter for stocks with these types.Example{"price":1,"promoPrice":1} | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1 | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1
+price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1
+promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1
+promoId | Type: stringThe ID of the promotion.Example:example Name Description offers
+
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+params | Type: objectdiscountParamsType: objectpriceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.A required parameter for stocks with these types.Example{"price":1,"promoPrice":1}The parameters of the product that participates in the promotion.Example{"discountParams":{"price":1,"promoPrice":1}} | discountParams | Type: objectpriceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.A required parameter for stocks with these types.Example{"price":1,"promoPrice":1} | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1 | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1
+discountParams | Type: objectpriceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.A required parameter for stocks with these types.Example{"price":1,"promoPrice":1} | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1 | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1
+price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1
+promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1
+offerId Type: string Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example params
+
+discountParams | Type: objectpriceType: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1promoPriceType: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.A required parameter for stocks with these types.Example{"price":1,"promoPrice":1} | price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1 | promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1
+price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1
+promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1
+discountParams
+
+price | Type: integerCrossed out price — the price at which the product was sold before the promotion.Indicated in rubles.The number must be an integer.Min value:1
+promoPrice | Type: integerShare price — the one you want to sell the product at.Indicated in rubles.The number must be an integer.Min value:1
+price Type: integer Crossed out price — the price at which the product was sold before the promotion.
+Indicated in rubles. The number must be an integer. Min value:1
+
+1 promoPrice Type: integer Share price — the one you want to sell the product at. Indicated in rubles.
+The number must be an integer. Min value:1
+
+1 Product parameters in the promotion with the typeDIRECT_DISCOUNTorBLUE_FLASH.
+
+DIRECT_DISCOUNT
+
+BLUE_FLASH A required parameter for stocks with these types.
+
+{
+"price": 1,
+"promoPrice": 1
+}
+
+{
+"price": 1,
+"promoPrice": 1
+}
+The parameters of the product that participates in the promotion.
+
+{
+"discountParams": {
+"price": 1,
+"promoPrice": 1
+}
+}
+
+{
+"discountParams": {
+"price": 1,
+"promoPrice": 1
+}
+}
+Products that need to be added to the promotion or whose prices need to be changed.
+Min items:1
+
+1 Max items:500
+
+500
+
+[
+{
+"offerId": "example",
+"params": {
+"discountParams": {
+"price": 1,
+"promoPrice": 1
+}
+}
+}
+]
+
+[
+{
+"offerId": "example",
+"params": {
+"discountParams": {
+"price": 1,
+"promoPrice": 1
+}
+}
+}
+]
+
+promoId Type: string The ID of the promotion. Example:example
+
+example
+
+Responses
+200 OK
+The result of adding products to the promotion or updating their prices.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"rejectedOffers": [
+{
+"offerId": "example",
+"reason": "OFFER_DOES_NOT_EXIST"
+}
+],
+"warningOffers": [
+{
+"offerId": "example",
+"warnings": [
+null
+]
+}
+]
+}
+}
+
+{
+"status": "OK",
+"result": {
+"rejectedOffers": [
+{
+"offerId": "example",
+"reason": "OFFER_DOES_NOT_EXIST"
+}
+],
+"warningOffers": [
+{
+"offerId": "example",
+"warnings": [
+null
+]
+}
+]
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectrejectedOffersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplereasonType: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIGChanges that were rejected.It is returned only if there are rejected changes.Min items:1Example[{"offerId":"example","reason":"OFFER_DOES_NOT_EXIST"}]warningOffersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplewarningsType: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}]Changes that have warnings. They inform you about possible problems. The product information will be updated.It is returned only if there are warnings.Min items:1Example[{"offerId":"example","warnings":[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}]}]Errors and warnings that appeared when adding products to the promotion.Example{"rejectedOffers":[{"offerId":"example","reason":"OFFER_DOES_NOT_EXIST"}],"warningOffers":[{"offerId":"example","warnings":[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[null]}]}]}Example{"result":{"rejectedOffers":[{"offerId":"example","reason":"OFFER_DOES_NOT_EXIST"}],"warningOffers":[{"offerId":"example","warnings":[{}]}]}}
+
+result | Type: objectrejectedOffersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplereasonType: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIGChanges that were rejected.It is returned only if there are rejected changes.Min items:1Example[{"offerId":"example","reason":"OFFER_DOES_NOT_EXIST"}]warningOffersType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplewarningsType: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}]Changes that have warnings. They inform you about possible problems. The product information will be updated.It is returned only if there are warnings.Min items:1Example[{"offerId":"example","warnings":[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}]}]Errors and warnings that appeared when adding products to the promotion.Example{"rejectedOffers":[{"offerId":"example","reason":"OFFER_DOES_NOT_EXIST"}],"warningOffers":[{"offerId":"example","warnings":[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[null]}]}]} | rejectedOffers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplereasonType: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIGChanges that were rejected.It is returned only if there are rejected changes.Min items:1Example[{"offerId":"example","reason":"OFFER_DOES_NOT_EXIST"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | reason | Type: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIG | warningOffers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplewarningsType: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}]Changes that have warnings. They inform you about possible problems. The product information will be updated.It is returned only if there are warnings.Min items:1Example[{"offerId":"example","warnings":[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}]}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | warnings | Type: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}] | code | Type: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO | campaignIds | Type: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]
+rejectedOffers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplereasonType: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIGChanges that were rejected.It is returned only if there are rejected changes.Min items:1Example[{"offerId":"example","reason":"OFFER_DOES_NOT_EXIST"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | reason | Type: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIG
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+reason | Type: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIG
+warningOffers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplewarningsType: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}]Changes that have warnings. They inform you about possible problems. The product information will be updated.It is returned only if there are warnings.Min items:1Example[{"offerId":"example","warnings":[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}]}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | warnings | Type: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}] | code | Type: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO | campaignIds | Type: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+warnings | Type: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}] | code | Type: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO | campaignIds | Type: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]
+code | Type: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO
+campaignIds | Type: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]
+result
+
+rejectedOffers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplereasonType: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIGChanges that were rejected.It is returned only if there are rejected changes.Min items:1Example[{"offerId":"example","reason":"OFFER_DOES_NOT_EXIST"}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | reason | Type: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIG
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+reason | Type: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIG
+warningOffers | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:examplewarningsType: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}]Changes that have warnings. They inform you about possible problems. The product information will be updated.It is returned only if there are warnings.Min items:1Example[{"offerId":"example","warnings":[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}]}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | warnings | Type: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}] | code | Type: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO | campaignIds | Type: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+warnings | Type: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}] | code | Type: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO | campaignIds | Type: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]
+code | Type: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO
+campaignIds | Type: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]
+rejectedOffers
+
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+reason | Type: stringThe reason for rejecting the change:OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.OFFER_DUPLICATION— the same product has been transferred several times.OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.EMPTY_OLD_PRICE— The crossed-out price is not indicated.EMPTY_PROMO_PRICE— the price of the promotion is not specified.MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.PRICE_TOO_BIG— The stock price is too high.OLD_PRICE_TOO_BIG— The crossed-out price is too large.Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIG
+offerId Type: string Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example reason Type: string The reason for rejecting the change:
+
+• OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.
+OFFER_DOES_NOT_EXIST— there is no product in the cabinet with this SKU.
+
+OFFER_DOES_NOT_EXIST
+• OFFER_DUPLICATION— the same product has been transferred several times.
+OFFER_DUPLICATION— the same product has been transferred several times.
+
+OFFER_DUPLICATION
+• OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.
+OFFER_NOT_ELIGIBLE_FOR_PROMO— The product does not meet the terms of the promotion.
+
+OFFER_NOT_ELIGIBLE_FOR_PROMO
+• OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.
+OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED— The product was not added to the promotion due to technical reasons.
+
+OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED
+• DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.
+DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED— The deadline for adding products to the promotion has expired.
+
+DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED
+• EMPTY_OLD_PRICE— The crossed-out price is not indicated.
+EMPTY_OLD_PRICE— The crossed-out price is not indicated.
+
+EMPTY_OLD_PRICE
+• EMPTY_PROMO_PRICE— the price of the promotion is not specified.
+EMPTY_PROMO_PRICE— the price of the promotion is not specified.
+
+EMPTY_PROMO_PRICE
+• MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.
+MAX_PROMO_PRICE_EXCEEDED— the share price exceeds the maximum possible price for participation in the promotion.
+
+MAX_PROMO_PRICE_EXCEEDED
+• PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.
+PROMO_PRICE_BIGGER_THAN_MAX— the share price is more than 95% of the crossed-out price.
+
+PROMO_PRICE_BIGGER_THAN_MAX
+• PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.
+PROMO_PRICE_SMALLER_THAN_MIN— the share price is less than 1% of the crossed-out price.
+
+PROMO_PRICE_SMALLER_THAN_MIN
+• PRICE_TOO_BIG— The stock price is too high.
+PRICE_TOO_BIG— The stock price is too high.
+
+PRICE_TOO_BIG
+• OLD_PRICE_TOO_BIG— The crossed-out price is too large.
+OLD_PRICE_TOO_BIG— The crossed-out price is too large.
+
+OLD_PRICE_TOO_BIG
+Enum:OFFER_DOES_NOT_EXIST,OFFER_DUPLICATION,OFFER_NOT_ELIGIBLE_FOR_PROMO,OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED,DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED,EMPTY_OLD_PRICE,EMPTY_PROMO_PRICE,MAX_PROMO_PRICE_EXCEEDED,PROMO_PRICE_BIGGER_THAN_MAX,PROMO_PRICE_SMALLER_THAN_MIN,PRICE_TOO_BIG,OLD_PRICE_TOO_BIG
+
+OFFER_DOES_NOT_EXIST
+
+OFFER_DUPLICATION
+
+OFFER_NOT_ELIGIBLE_FOR_PROMO
+
+OFFER_PROMOS_MAX_BYTE_SIZE_EXCEEDED
+
+DEADLINE_FOR_FOCUS_PROMOS_EXCEEDED
+
+EMPTY_OLD_PRICE
+
+EMPTY_PROMO_PRICE
+
+MAX_PROMO_PRICE_EXCEEDED
+
+PROMO_PRICE_BIGGER_THAN_MAX
+
+PROMO_PRICE_SMALLER_THAN_MIN
+
+PRICE_TOO_BIG
+
+OLD_PRICE_TOO_BIG Changes that were rejected. It is returned only if there are rejected changes. Min items:1
+
+1
+
+[
+{
+"offerId": "example",
+"reason": "OFFER_DOES_NOT_EXIST"
+}
+]
+
+[
+{
+"offerId": "example",
+"reason": "OFFER_DOES_NOT_EXIST"
+}
+]
+warningOffers
+
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+warnings | Type: object[]codeType: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMOcampaignIdsType: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]Warnings that appear when adding an item to a promotion or changing its prices.Example[{"code":"DEEP_DISCOUNT_OFFER","campaignIds":[1]}] | code | Type: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO | campaignIds | Type: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]
+code | Type: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO
+campaignIds | Type: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]
+offerId Type: string Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example warnings
+
+code | Type: stringThe warning that appeared when adding the product:DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO
+campaignIds | Type: integer[] | nullThe campaign IDs of those stores for which warnings were received.It is not refunded if the warnings are valid for all stores in the cabinet.Min items:1Unique items:trueExample[1]
+code Type: string The warning that appeared when adding the product:
+
+• DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.
+DEEP_DISCOUNT_OFFER— there is a big difference with the price in the catalog. Check if there is an error.
+
+DEEP_DISCOUNT_OFFER
+• CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.
+CATALOG_PRICE_IS_LOWER_THAN_PROMO— the price, which is valid in all stores, is lower than the price of the promotion. The product price will not be displayed for the promotion.
+
+CATALOG_PRICE_IS_LOWER_THAN_PROMO
+• SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.
+SHOP_PRICES_ARE_LOWER_THAN_PROMO— the price in a separate store is lower than the price of the promotion. The product in the promotion will display the price in the store. The promotion price will apply to all other stores.
+
+SHOP_PRICES_ARE_LOWER_THAN_PROMO
+• SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.
+SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO— The product in a separate store does not meet the terms of the promotion.
+
+SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO
+Enum:DEEP_DISCOUNT_OFFER,CATALOG_PRICE_IS_LOWER_THAN_PROMO,SHOP_PRICES_ARE_LOWER_THAN_PROMO,SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO
+
+DEEP_DISCOUNT_OFFER
+
+CATALOG_PRICE_IS_LOWER_THAN_PROMO
+
+SHOP_PRICES_ARE_LOWER_THAN_PROMO
+
+SHOP_OFFER_NOT_ELIGIBLE_FOR_PROMO campaignIds Type: integer[] | null The campaign IDs of those stores for which warnings were received.
+It is not refunded if the warnings are valid for all stores in the cabinet. Min items:1
+
+1 Unique items:true
+
+true
+
+[
+1
+]
+
+[
+1
+]
+Warnings that appear when adding an item to a promotion or changing its prices.
+
+[
+{
+"code": "DEEP_DISCOUNT_OFFER",
+"campaignIds": [
+1
+]
+}
+]
+
+[
+{
+"code": "DEEP_DISCOUNT_OFFER",
+"campaignIds": [
+1
+]
+}
+]
+
+Changes that have warnings. They inform you about possible problems. The product information will be updated.
+It is returned only if there are warnings. Min items:1
+
+1
+
+[
+{
+"offerId": "example",
+"warnings": [
+{
+"code": "DEEP_DISCOUNT_OFFER",
+"campaignIds": [
+1
+]
+}
+]
+}
+]
+
+[
+{
+"offerId": "example",
+"warnings": [
+{
+"code": "DEEP_DISCOUNT_OFFER",
+"campaignIds": [
+1
+]
+}
+]
+}
+]
+
+Errors and warnings that appeared when adding products to the promotion.
+
+{
+"rejectedOffers": [
+{
+"offerId": "example",
+"reason": "OFFER_DOES_NOT_EXIST"
+}
+],
+"warningOffers": [
+{
+"offerId": "example",
+"warnings": [
+{
+"code": "DEEP_DISCOUNT_OFFER",
+"campaignIds": [
+null
+]
+}
+]
+}
+]
+}
+
+{
+"rejectedOffers": [
+{
+"offerId": "example",
+"reason": "OFFER_DOES_NOT_EXIST"
+}
+],
+"warningOffers": [
+{
+"offerId": "example",
+"warnings": [
+{
+"code": "DEEP_DISCOUNT_OFFER",
+"campaignIds": [
+null
+]
+}
+]
+}
+]
+}
+
+{
+"result": {
+"rejectedOffers": [
+{
+"offerId": "example",
+"reason": "OFFER_DOES_NOT_EXIST"
+}
+],
+"warningOffers": [
+{
+"offerId": "example",
+"warnings": [
+{}
+]
+}
+]
+}
+}
+
+{
+"result": {
+"rejectedOffers": [
+{
+"offerId": "example",
+"reason": "OFFER_DOES_NOT_EXIST"
+}
+],
+"warningOffers": [
+{
+"offerId": "example",
+"warnings": [
+{}
+]
+}
+]
+}
+}
+
+400 Bad Request
+The request contains incorrect data.Learn more about errors when working with stocks
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version. Цена, которая действует во всех магазинах.
+
+Was the article helpful?

@@ -1,0 +1,1825 @@
+Getting information about the fullness of store cards
+The method is available for models:FBY, FBS, Express and DBS.
+
+• offers-and-cards-management —Manage products and cards
+• offers-and-cards-management:read-only —View products and cards
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns information about the content status for the specified products:
+
+• whether a product card has been created and what is its status.
+• card rating — how many percent is it filled;
+• transmitted product characteristics;
+• are there any errors or warnings related to the content;
+• recommendations for filling out the card.
+To get other product characteristics, use the methodPOST v2/businesses/{businessId}/offer-mappings.
+
+⚙️ Limit:600 requests per minute
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/offer-cards
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/offer-cards
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Query parameters
+
+Name | Description
+limit | Type: integerThe number of values per page.Min value:1
+page_token | Type: stringID of the results page.If the parameter is omitted, the first page is returned.We recommend transmitting the value of the output parameternextPageToken, received during the last request.If setpage_tokenand the request has parameterspageandpageSizethey are ignored.Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+Name Description limit Type: integer The number of values per page. Min value:1
+
+1 page_token Type: string ID of the results page. If the parameter is omitted, the first page is returned.
+We recommend transmitting the value of the output parameternextPageToken, received during the last request.
+
+nextPageToken If setpage_tokenand the request has parameterspageandpageSizethey are ignored.
+
+page_token
+
+page
+
+pageSize Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+
+eyBuZXh0SWQ6IDIzNDIgfQ==
+
+Body
+
+{
+"offerIds": [
+"example"
+],
+"cardStatuses": [
+"HAS_CARD_CAN_NOT_UPDATE"
+],
+"categoryIds": [
+0
+],
+"withRecommendations": false
+}
+
+{
+"offerIds": [
+"example"
+],
+"cardStatuses": [
+"HAS_CARD_CAN_NOT_UPDATE"
+],
+"categoryIds": [
+0
+],
+"withRecommendations": false
+}
+
+Name | Description
+cardStatuses | Type: string[] | nullFilter by card status.What is a product card?Min items:1Unique items:trueExample["HAS_CARD_CAN_NOT_UPDATE"]
+categoryIds | Type: integer[] | nullFilter by category on the Market.Min items:1Max items:200Unique items:trueExample[0]
+offerIds | Type: string[] | nullThe IDs of the products that information is needed about.⚠️ Do not use this field at the same time as filters based on card statuses, categories, brands, or tags. If you want to use filters, leave the field empty.Min items:1Max items:200Unique items:trueExample["example"]
+withRecommendations | Type: booleanShould I return the list of recommendations for filling out the card and the average rating of the card for products of the category indicated inmarketCategoryId.Default value:false. If the information is needed, pass the valuetrue.Default:false
+Name Description cardStatuses Type: string[] | null Filter by card status. What is a product card? Min items:1
+
+1 Unique items:true
+
+true
+
+[
+"HAS_CARD_CAN_NOT_UPDATE"
+]
+
+[
+"HAS_CARD_CAN_NOT_UPDATE"
+]
+categoryIds Type: integer[] | null Filter by category on the Market.
+Min items:1
+
+1 Max items:200
+
+200 Unique items:true
+
+true
+
+[
+0
+]
+
+[
+0
+]
+offerIds Type: string[] | null
+The IDs of the products that information is needed about.⚠️ Do not use this field at the same time as filters based on card statuses, categories, brands, or tags. If you want to use filters, leave the field empty.
+Min items:1
+
+1 Max items:200
+
+200 Unique items:true
+
+true
+
+[
+"example"
+]
+
+[
+"example"
+]
+withRecommendations Type: boolean
+Should I return the list of recommendations for filling out the card and the average rating of the card for products of the category indicated inmarketCategoryId.
+
+marketCategoryId Default value:false. If the information is needed, pass the valuetrue.
+
+false
+
+true Default:false
+
+false
+
+Responses
+200 OK
+Information about the cards of the specified products.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"offerCards": [
+{
+"offerId": "example",
+"mapping": {},
+"parameterValues": [
+null
+],
+"cardStatus": "HAS_CARD_CAN_NOT_UPDATE",
+"contentRating": 0,
+"averageContentRating": 0,
+"contentRatingStatus": "UPDATING",
+"recommendations": [
+null
+],
+"groupId": "example",
+"errors": [
+null
+],
+"warnings": [
+null
+]
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+{
+"status": "OK",
+"result": {
+"offerCards": [
+{
+"offerId": "example",
+"mapping": {},
+"parameterValues": [
+null
+],
+"cardStatus": "HAS_CARD_CAN_NOT_UPDATE",
+"contentRating": 0,
+"averageContentRating": 0,
+"contentRatingStatus": "UPDATING",
+"recommendations": [
+null
+],
+"groupId": "example",
+"errors": [
+null
+],
+"warnings": [
+null
+]
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectofferCardsType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleaverageContentRatingType: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue.cardStatusType: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGNcontentRatingType: integerThe rating of the card.contentRatingStatusType: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUALerrorsType: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}]groupIdType: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:examplemappingType: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}parameterValuesType: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}]recommendationsType: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}]warningsType: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}]The product list page with information about the status of the cards.Example[{"offerId":"example","mapping":{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"},"parameterValues":[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}],"cardStatus":"HAS_CARD_CAN_NOT_UPDATE","contentRating":0,"averageContentRating":0,"contentRatingStatus":"UPDATING","recommendations":[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}],"groupId":"example","errors":[{"message":"example","comment":"example"}],"warnings":[{"message":"example","comment":"example"}]}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}A list of products with information about the status of the cards.Example{"offerCards":[{"offerId":"example","mapping":{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"},"parameterValues":[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}],"cardStatus":"HAS_CARD_CAN_NOT_UPDATE","contentRating":0,"averageContentRating":0,"contentRatingStatus":"UPDATING","recommendations":[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}],"groupId":"example","errors":[{"message":"example","comment":"example"}],"warnings":[{"message":"example","comment":"example"}]}],"paging":{"nextPageToken":"example"}}Example{"result":{"offerCards":[{"offerId":"example","mapping":{},"parameterValues":[{}],"cardStatus":"HAS_CARD_CAN_NOT_UPDATE","contentRating":0,"averageContentRating":0,"contentRatingStatus":"UPDATING","recommendations":[{}],"groupId":"example","errors":[{}],"warnings":[{}]}],"paging":{"nextPageToken":"example"}}}
+
+result | Type: objectofferCardsType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleaverageContentRatingType: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue.cardStatusType: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGNcontentRatingType: integerThe rating of the card.contentRatingStatusType: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUALerrorsType: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}]groupIdType: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:examplemappingType: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}parameterValuesType: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}]recommendationsType: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}]warningsType: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}]The product list page with information about the status of the cards.Example[{"offerId":"example","mapping":{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"},"parameterValues":[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}],"cardStatus":"HAS_CARD_CAN_NOT_UPDATE","contentRating":0,"averageContentRating":0,"contentRatingStatus":"UPDATING","recommendations":[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}],"groupId":"example","errors":[{"message":"example","comment":"example"}],"warnings":[{"message":"example","comment":"example"}]}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}A list of products with information about the status of the cards.Example{"offerCards":[{"offerId":"example","mapping":{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"},"parameterValues":[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}],"cardStatus":"HAS_CARD_CAN_NOT_UPDATE","contentRating":0,"averageContentRating":0,"contentRatingStatus":"UPDATING","recommendations":[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}],"groupId":"example","errors":[{"message":"example","comment":"example"}],"warnings":[{"message":"example","comment":"example"}]}],"paging":{"nextPageToken":"example"}} | offerCards | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleaverageContentRatingType: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue.cardStatusType: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGNcontentRatingType: integerThe rating of the card.contentRatingStatusType: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUALerrorsType: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}]groupIdType: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:examplemappingType: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}parameterValuesType: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}]recommendationsType: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}]warningsType: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}]The product list page with information about the status of the cards.Example[{"offerId":"example","mapping":{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"},"parameterValues":[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}],"cardStatus":"HAS_CARD_CAN_NOT_UPDATE","contentRating":0,"averageContentRating":0,"contentRatingStatus":"UPDATING","recommendations":[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}],"groupId":"example","errors":[{"message":"example","comment":"example"}],"warnings":[{"message":"example","comment":"example"}]}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | averageContentRating | Type: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue. | cardStatus | Type: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGN | contentRating | Type: integerThe rating of the card. | contentRatingStatus | Type: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUAL | errors | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example | groupId | Type: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:example | mapping | Type: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"} | marketSku | Type: integerThe ID of the product card on the Market.Min value:1 | marketCategoryId | Type: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category. | marketCategoryName | Type: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:example | marketModelName | Type: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:example | marketSkuName | Type: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:example | parameterValues | Type: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}] | parameterId | Type: integerThe identifier of the characteristic.Min value:1 | unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used. | value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example | valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM. | recommendations | Type: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}] | type | Type: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT | percent | Type: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:true | remainingRatingPoints | Type: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100 | warnings | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example | paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+offerCards | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleaverageContentRatingType: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue.cardStatusType: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGNcontentRatingType: integerThe rating of the card.contentRatingStatusType: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUALerrorsType: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}]groupIdType: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:examplemappingType: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}parameterValuesType: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}]recommendationsType: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}]warningsType: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}]The product list page with information about the status of the cards.Example[{"offerId":"example","mapping":{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"},"parameterValues":[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}],"cardStatus":"HAS_CARD_CAN_NOT_UPDATE","contentRating":0,"averageContentRating":0,"contentRatingStatus":"UPDATING","recommendations":[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}],"groupId":"example","errors":[{"message":"example","comment":"example"}],"warnings":[{"message":"example","comment":"example"}]}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | averageContentRating | Type: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue. | cardStatus | Type: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGN | contentRating | Type: integerThe rating of the card. | contentRatingStatus | Type: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUAL | errors | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example | groupId | Type: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:example | mapping | Type: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"} | marketSku | Type: integerThe ID of the product card on the Market.Min value:1 | marketCategoryId | Type: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category. | marketCategoryName | Type: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:example | marketModelName | Type: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:example | marketSkuName | Type: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:example | parameterValues | Type: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}] | parameterId | Type: integerThe identifier of the characteristic.Min value:1 | unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used. | value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example | valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM. | recommendations | Type: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}] | type | Type: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT | percent | Type: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:true | remainingRatingPoints | Type: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100 | warnings | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+averageContentRating | Type: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue.
+cardStatus | Type: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGN
+contentRating | Type: integerThe rating of the card.
+contentRatingStatus | Type: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUAL
+errors | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example
+comment | Type: stringExplanation.Example:example
+message | Type: stringThe type of error.Example:example
+groupId | Type: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:example
+mapping | Type: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"} | marketSku | Type: integerThe ID of the product card on the Market.Min value:1 | marketCategoryId | Type: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category. | marketCategoryName | Type: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:example | marketModelName | Type: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:example | marketSkuName | Type: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:example
+marketSku | Type: integerThe ID of the product card on the Market.Min value:1
+marketCategoryId | Type: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.
+marketCategoryName | Type: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:example
+marketModelName | Type: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:example
+marketSkuName | Type: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:example
+parameterValues | Type: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}] | parameterId | Type: integerThe identifier of the characteristic.Min value:1 | unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used. | value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example | valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+parameterId | Type: integerThe identifier of the characteristic.Min value:1
+unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.
+value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example
+valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+recommendations | Type: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}] | type | Type: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT | percent | Type: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:true | remainingRatingPoints | Type: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100
+type | Type: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT
+percent | Type: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:true
+remainingRatingPoints | Type: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100
+warnings | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example
+comment | Type: stringExplanation.Example:example
+message | Type: stringThe type of error.Example:example
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example result
+
+offerCards | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleaverageContentRatingType: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue.cardStatusType: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGNcontentRatingType: integerThe rating of the card.contentRatingStatusType: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUALerrorsType: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}]groupIdType: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:examplemappingType: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}parameterValuesType: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}]recommendationsType: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}]warningsType: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}]The product list page with information about the status of the cards.Example[{"offerId":"example","mapping":{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"},"parameterValues":[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}],"cardStatus":"HAS_CARD_CAN_NOT_UPDATE","contentRating":0,"averageContentRating":0,"contentRatingStatus":"UPDATING","recommendations":[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}],"groupId":"example","errors":[{"message":"example","comment":"example"}],"warnings":[{"message":"example","comment":"example"}]}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | averageContentRating | Type: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue. | cardStatus | Type: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGN | contentRating | Type: integerThe rating of the card. | contentRatingStatus | Type: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUAL | errors | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example | groupId | Type: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:example | mapping | Type: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"} | marketSku | Type: integerThe ID of the product card on the Market.Min value:1 | marketCategoryId | Type: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category. | marketCategoryName | Type: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:example | marketModelName | Type: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:example | marketSkuName | Type: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:example | parameterValues | Type: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}] | parameterId | Type: integerThe identifier of the characteristic.Min value:1 | unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used. | value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example | valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM. | recommendations | Type: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}] | type | Type: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT | percent | Type: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:true | remainingRatingPoints | Type: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100 | warnings | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+averageContentRating | Type: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue.
+cardStatus | Type: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGN
+contentRating | Type: integerThe rating of the card.
+contentRatingStatus | Type: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUAL
+errors | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example
+comment | Type: stringExplanation.Example:example
+message | Type: stringThe type of error.Example:example
+groupId | Type: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:example
+mapping | Type: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"} | marketSku | Type: integerThe ID of the product card on the Market.Min value:1 | marketCategoryId | Type: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category. | marketCategoryName | Type: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:example | marketModelName | Type: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:example | marketSkuName | Type: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:example
+marketSku | Type: integerThe ID of the product card on the Market.Min value:1
+marketCategoryId | Type: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.
+marketCategoryName | Type: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:example
+marketModelName | Type: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:example
+marketSkuName | Type: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:example
+parameterValues | Type: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}] | parameterId | Type: integerThe identifier of the characteristic.Min value:1 | unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used. | value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example | valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+parameterId | Type: integerThe identifier of the characteristic.Min value:1
+unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.
+value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example
+valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+recommendations | Type: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}] | type | Type: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT | percent | Type: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:true | remainingRatingPoints | Type: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100
+type | Type: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT
+percent | Type: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:true
+remainingRatingPoints | Type: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100
+warnings | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example
+comment | Type: stringExplanation.Example:example
+message | Type: stringThe type of error.Example:example
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example offerCards
+
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+averageContentRating | Type: integerThe average rating of the card for products of the category indicated inmarketCategoryId.Returned only if the parameterwithRecommendationsit matterstrue.
+cardStatus | Type: stringProduct card status:HAS_CARD_CAN_NOT_UPDATE— The Market card.HAS_CARD_CAN_UPDATE— You can add it.HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.NO_CARD_NEED_CONTENT— Create a card.NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.NO_CARD_ERRORS— It was not created due to an error.NO_CARD_PROCESSING— We check the data.NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGN
+contentRating | Type: integerThe rating of the card.
+contentRatingStatus | Type: stringThe status of calculating the rating of the product card and recommendations:UPDATING— the rating is updated.ACTUAL— the rating is current.Enum:UPDATING,ACTUAL
+errors | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleErrors in the content that prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example
+comment | Type: stringExplanation.Example:example
+message | Type: stringThe type of error.Example:example
+groupId | Type: stringThe identifier of the product group.Products that are grouped together will have the same identifier.How to combine products on a cardExample:example
+mapping | Type: objectAll of 2 typesType: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}Information about the products in the catalog.Example{"marketSku":1,"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"} | marketSku | Type: integerThe ID of the product card on the Market.Min value:1 | marketCategoryId | Type: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category. | marketCategoryName | Type: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:example | marketModelName | Type: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:example | marketSkuName | Type: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:example
+marketSku | Type: integerThe ID of the product card on the Market.Min value:1
+marketCategoryId | Type: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.
+marketCategoryName | Type: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:example
+marketModelName | Type: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:example
+marketSkuName | Type: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:example
+parameterValues | Type: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Min items:1Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}] | parameterId | Type: integerThe identifier of the characteristic.Min value:1 | unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used. | value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example | valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+parameterId | Type: integerThe identifier of the characteristic.Min value:1
+unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.
+value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example
+valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+recommendations | Type: object[]typeType: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNTpercentType: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:trueremainingRatingPointsType: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100A list of recommendations for filling out the card.Returned only if the parameterwithRecommendationsit matterstrue.Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.Min items:1Example[{"type":"HAS_VIDEO","percent":0,"remainingRatingPoints":1}] | type | Type: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT | percent | Type: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:true | remainingRatingPoints | Type: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100
+type | Type: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT
+percent | Type: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:true
+remainingRatingPoints | Type: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100
+warnings | Type: object[]commentType: stringExplanation.Example:examplemessageType: stringThe type of error.Example:exampleContent-related warnings that do not prevent the product from being placed in the showcase.Min items:1Example[{"message":"example","comment":"example"}] | comment | Type: stringExplanation.Example:example | message | Type: stringThe type of error.Example:example
+comment | Type: stringExplanation.Example:example
+message | Type: stringThe type of error.Example:example offerId Type: string Your SKU — the product ID in your system.
+Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example averageContentRating Type: integer The average rating of the card for products of the category indicated inmarketCategoryId.
+
+marketCategoryId Returned only if the parameterwithRecommendationsit matterstrue.
+
+withRecommendations
+
+true cardStatus Type: string Product card status:
+
+• HAS_CARD_CAN_NOT_UPDATE— The Market card.
+
+HAS_CARD_CAN_NOT_UPDATE
+• HAS_CARD_CAN_UPDATE— You can add it.
+
+HAS_CARD_CAN_UPDATE
+• HAS_CARD_CAN_UPDATE_ERRORS— The changes have not been accepted.
+
+HAS_CARD_CAN_UPDATE_ERRORS
+• HAS_CARD_CAN_UPDATE_PROCESSING— Changes are under review.
+
+HAS_CARD_CAN_UPDATE_PROCESSING
+• NO_CARD_NEED_CONTENT— Create a card.
+
+NO_CARD_NEED_CONTENT
+• NO_CARD_MARKET_WILL_CREATE— Creates a Marketplace.
+
+NO_CARD_MARKET_WILL_CREATE
+• NO_CARD_ERRORS— It was not created due to an error.
+
+NO_CARD_ERRORS
+• NO_CARD_PROCESSING— We check the data.
+
+NO_CARD_PROCESSING
+• NO_CARD_ADD_TO_CAMPAIGN— Place the product in the store.
+
+NO_CARD_ADD_TO_CAMPAIGN
+Enum:HAS_CARD_CAN_NOT_UPDATE,HAS_CARD_CAN_UPDATE,HAS_CARD_CAN_UPDATE_ERRORS,HAS_CARD_CAN_UPDATE_PROCESSING,NO_CARD_NEED_CONTENT,NO_CARD_MARKET_WILL_CREATE,NO_CARD_ERRORS,NO_CARD_PROCESSING,NO_CARD_ADD_TO_CAMPAIGN
+
+HAS_CARD_CAN_NOT_UPDATE
+
+HAS_CARD_CAN_UPDATE
+
+HAS_CARD_CAN_UPDATE_ERRORS
+
+HAS_CARD_CAN_UPDATE_PROCESSING
+
+NO_CARD_NEED_CONTENT
+
+NO_CARD_MARKET_WILL_CREATE
+
+NO_CARD_ERRORS
+
+NO_CARD_PROCESSING
+
+NO_CARD_ADD_TO_CAMPAIGN contentRating Type: integer The rating of the card. contentRatingStatus Type: string
+The status of calculating the rating of the product card and recommendations:
+
+• UPDATING— the rating is updated.
+
+UPDATING
+• ACTUAL— the rating is current.
+
+ACTUAL Enum:UPDATING,ACTUAL
+
+UPDATING
+
+ACTUAL errors
+
+comment | Type: stringExplanation.Example:example
+message | Type: stringThe type of error.Example:example comment Type: string Explanation. Example:example
+
+example message Type: string The type of error. Example:example
+
+example Errors in the content that prevent the product from being placed in the showcase. Min items:1
+
+1
+
+[
+{
+"message": "example",
+"comment": "example"
+}
+]
+
+[
+{
+"message": "example",
+"comment": "example"
+}
+]
+groupId Type: string The identifier of the product group.
+Products that are grouped together will have the same identifier. How to combine products on a card Example:example
+
+example mapping Type: object
+
+• Type: objectmarketSkuType: integerThe ID of the product card on the Market.Min value:1A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).Based on the verification results, the Market can link the product to a more suitable card.Example{"marketSku":1}
+Type: object
+
+marketSku | Type: integerThe ID of the product card on the Market.Min value:1 marketSku Type: integer
+The ID of the product card on the Market. Min value:1
+
+1
+A card on the Market that, from your point of view, fits the product. To determine the ID of the appropriate card, use the search in the cabinet (Products→Catalog→Upload products).
+Based on the verification results, the Market can link the product to a more suitable card.
+
+{
+"marketSku": 1
+}
+
+{
+"marketSku": 1
+}
+
+• Type: objectmarketCategoryIdType: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.marketCategoryNameType: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:examplemarketModelNameType: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:examplemarketSkuNameType: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:exampleExample{"marketSkuName":"example","marketModelName":"example","marketCategoryId":0,"marketCategoryName":"example"}
+Type: object
+
+marketCategoryId | Type: integerID of the category on the Market that the product belongs to.It may be missing from the response if the Market has not yet determined the product category.
+marketCategoryName | Type: stringThe name of the card's category on the Market.It may be missing from the response if the Market has not yet determined the product category.Example:example
+marketModelName | Type: stringThe name of the model on the Market.It may not be included in the response if the product is not linked to the card yet.Example:example
+marketSkuName | Type: stringThe name of the product card.It may not be included in the response if the product is not linked to the card yet.Example:example
+marketCategoryId Type: integer ID of the category on the Market that the product belongs to. It may be missing from the response if the Market has not yet determined the product category.
+marketCategoryName Type: string The name of the card's category on the Market. It may be missing from the response if the Market has not yet determined the product category.
+Example:example
+
+example marketModelName Type: string The name of the model on the Market. It may not be included in the response if the product is not linked to the card yet.
+Example:example
+
+example marketSkuName Type: string The name of the product card. It may not be included in the response if the product is not linked to the card yet.
+Example:example
+
+example
+
+{
+"marketSkuName": "example",
+"marketModelName": "example",
+"marketCategoryId": 0,
+"marketCategoryName": "example"
+}
+
+{
+"marketSkuName": "example",
+"marketModelName": "example",
+"marketCategoryId": 0,
+"marketCategoryName": "example"
+}
+
+Information about the products in the catalog.
+
+{
+"marketSku": 1,
+"marketSkuName": "example",
+"marketModelName": "example",
+"marketCategoryId": 0,
+"marketCategoryName": "example"
+}
+
+{
+"marketSku": 1,
+"marketSkuName": "example",
+"marketModelName": "example",
+"marketCategoryId": 0,
+"marketCategoryName": "example"
+}
+
+parameterValues
+
+parameterId | Type: integerThe identifier of the characteristic.Min value:1
+unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.
+value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example
+valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+parameterId Type: integer The identifier of the characteristic. Min value:1
+
+1 unitId Type: integer
+ID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.
+
+unitId value Type: string Meaning. For type characteristicsENUMsend:
+
+ENUM
+
+• Together withvalueId, if you take the value from the directory;
+
+valueId
+• withoutvalueId, if the value is its own.
+
+valueId Example:example
+
+example valueId Type: integer ID of the value.
+
+• Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.
+• Do not specify for your own values.
+• Only for type characteristicsENUM.
+
+ENUM A list of characteristics with their values. Min items:1
+
+1
+
+[
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+]
+
+[
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+]
+recommendations
+
+type | Type: stringA recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.1. Recommendations related to the main parametersEach such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.Recommendations for filling in the parameters inupdateOfferMappings:RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).RequirementsTITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).RequirementsDESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).RequirementsAVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).RequirementsFIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).RequirementsFIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).RequirementsAVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).RequirementsVIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.2. Recommendations related to characteristics by categoryEach such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.Recommendations:MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.3. Outdated recommendationsHAS_VIDEO.FILTERABLE.HAS_DESCRIPTION.HAS_BARCODE.Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT
+percent | Type: integerPercentage of implementation of the recommendation.Specified for certain types of recommendations:PICTURE_COUNT.VIDEO_COUNT.MAIN.ADDITIONAL.DISTINCTIVE.Min value:0Max value:100Exclusive max:true
+remainingRatingPoints | Type: integerThe maximum number of card rating points that can be obtained for following recommendations.Min value:1Max value:100
+type Type: string
+A recommendation for adding or replacing content. It is not refunded for cards that are filled with the Market or contain used goods.
+Some of the recommendations relate to thebasic parametersthat products of any category have. Other — to thosecharacteristicswhich the product has because it belongs to a certain category.
+1. Recommendations related to the main parameters
+Each such recommendation refers toa single parameter. To fill in this parameter, use the requestPOST v2/businesses/{businessId}/offer-mappings/update.
+Recommendations for filling in the parameters inupdateOfferMappings:
+
+updateOfferMappings
+
+• RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).
+RECOGNIZED_VENDOR— write the manufacturer's name as the manufacturer himself writes it (parametervendor).
+
+RECOGNIZED_VENDOR
+
+vendor
+• PICTURE_COUNT— add images (parameterpictures).RequirementsThe percentage of its completion is sent for the recommendation.
+PICTURE_COUNT— add images (parameterpictures).Requirements
+
+PICTURE_COUNT
+
+pictures The percentage of its completion is sent for the recommendation.
+• FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).Requirements
+FIRST_PICTURE_SIZE— replace the first image with a larger one (parameterpictures).Requirements
+
+FIRST_PICTURE_SIZE
+
+pictures
+• TITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).Requirements
+TITLE_LENGTH— change the name (parametername). Make a name according to the scheme: type + brand or manufacturer + model + features, if any (size, weight, color).Requirements
+
+TITLE_LENGTH
+
+name
+• DESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).Requirements
+DESCRIPTION_LENGTH— add a description of the recommended size (parameterdescription).Requirements
+
+DESCRIPTION_LENGTH
+
+description
+• AVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).Requirements
+AVERAGE_PICTURE_SIZE— replace all images with high-quality images (parameterpictures).Requirements
+
+AVERAGE_PICTURE_SIZE
+
+pictures
+• FIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).Requirements
+FIRST_VIDEO_LENGTH— add the first video of the recommended length (parametervideos).Requirements
+
+FIRST_VIDEO_LENGTH
+
+videos
+• FIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).Requirements
+FIRST_VIDEO_SIZE— replace the first video with a high-quality video (parametervideos).Requirements
+
+FIRST_VIDEO_SIZE
+
+videos
+• AVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).Requirements
+AVERAGE_VIDEO_SIZE— replace all videos with high-quality videos (parametervideos).Requirements
+
+AVERAGE_VIDEO_SIZE
+
+videos
+• VIDEO_COUNT— add at least one video (parametervideos).RequirementsThe percentage of its completion is sent for the recommendation.
+VIDEO_COUNT— add at least one video (parametervideos).Requirements
+
+VIDEO_COUNT
+
+videos The percentage of its completion is sent for the recommendation. 2. Recommendations related to characteristics by category
+Each such recommendation requires filling in one or more characteristics **. To find out exactly which characteristics you need to fill out, use the requestPOST v2/category/{categoryId}/parameters. For example, if you have received a recommendationMAIN, you need to fill in the characteristics that haveMAINin the arrayrecommendationTypes.
+
+MAIN
+
+MAIN
+
+recommendationTypes Recommendations:
+
+• MAIN— fill in the key product characteristics that are used in the search and filters.The percentage of its completion is sent for the recommendation.
+MAIN— fill in the key product characteristics that are used in the search and filters.
+
+MAIN The percentage of its completion is sent for the recommendation.
+• ADDITIONAL— fill in additional product specifications.The percentage of its completion is sent for the recommendation.
+ADDITIONAL— fill in additional product specifications.
+
+ADDITIONAL The percentage of its completion is sent for the recommendation.
+• DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.The percentage of its completion is sent for the recommendation.
+DISTINCTIVE— fill in the characteristics that distinguish the product options from each other.
+
+DISTINCTIVE The percentage of its completion is sent for the recommendation. 3. Outdated recommendations
+
+• HAS_VIDEO.
+
+HAS_VIDEO
+• FILTERABLE.
+
+FILTERABLE
+• HAS_DESCRIPTION.
+
+HAS_DESCRIPTION
+• HAS_BARCODE.
+
+HAS_BARCODE
+Enum:HAS_VIDEO,RECOGNIZED_VENDOR,MAIN,ADDITIONAL,DISTINCTIVE,FILTERABLE,PICTURE_COUNT,HAS_DESCRIPTION,HAS_BARCODE,FIRST_PICTURE_SIZE,TITLE_LENGTH,DESCRIPTION_LENGTH,AVERAGE_PICTURE_SIZE,FIRST_VIDEO_SIZE,FIRST_VIDEO_LENGTH,AVERAGE_VIDEO_SIZE,VIDEO_COUNT
+
+HAS_VIDEO
+
+RECOGNIZED_VENDOR
+
+MAIN
+
+ADDITIONAL
+
+DISTINCTIVE
+
+FILTERABLE
+
+PICTURE_COUNT
+
+HAS_DESCRIPTION
+
+HAS_BARCODE
+
+FIRST_PICTURE_SIZE
+
+TITLE_LENGTH
+
+DESCRIPTION_LENGTH
+
+AVERAGE_PICTURE_SIZE
+
+FIRST_VIDEO_SIZE
+
+FIRST_VIDEO_LENGTH
+
+AVERAGE_VIDEO_SIZE
+
+VIDEO_COUNT percent Type: integer Percentage of implementation of the recommendation. Specified for certain types of recommendations:
+
+• PICTURE_COUNT.
+
+PICTURE_COUNT
+• VIDEO_COUNT.
+
+VIDEO_COUNT
+• MAIN.
+
+MAIN
+• ADDITIONAL.
+
+ADDITIONAL
+• DISTINCTIVE.
+
+DISTINCTIVE Min value:0
+
+0 Max value:100
+
+100 Exclusive max:true
+
+true remainingRatingPoints Type: integer The maximum number of card rating points that can be obtained for following recommendations.
+Min value:1
+
+1 Max value:100
+
+100 A list of recommendations for filling out the card. Returned only if the parameterwithRecommendationsit matterstrue.
+
+withRecommendations
+
+true
+Yandex.Market recommendations help you fill out the card so that it is easier for customers to find your product and decide to make a purchase.
+Min items:1
+
+1
+
+[
+{
+"type": "HAS_VIDEO",
+"percent": 0,
+"remainingRatingPoints": 1
+}
+]
+
+[
+{
+"type": "HAS_VIDEO",
+"percent": 0,
+"remainingRatingPoints": 1
+}
+]
+warnings
+
+comment | Type: stringExplanation.Example:example
+message | Type: stringThe type of error.Example:example comment Type: string Explanation. Example:example
+
+example message Type: string The type of error. Example:example
+
+example Content-related warnings that do not prevent the product from being placed in the showcase. Min items:1
+
+1
+
+[
+{
+"message": "example",
+"comment": "example"
+}
+]
+
+[
+{
+"message": "example",
+"comment": "example"
+}
+]
+The product list page with information about the status of the cards.
+
+[
+{
+"offerId": "example",
+"mapping": {
+"marketSku": 1,
+"marketSkuName": "example",
+"marketModelName": "example",
+"marketCategoryId": 0,
+"marketCategoryName": "example"
+},
+"parameterValues": [
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+],
+"cardStatus": "HAS_CARD_CAN_NOT_UPDATE",
+"contentRating": 0,
+"averageContentRating": 0,
+"contentRatingStatus": "UPDATING",
+"recommendations": [
+{
+"type": "HAS_VIDEO",
+"percent": 0,
+"remainingRatingPoints": 1
+}
+],
+"groupId": "example",
+"errors": [
+{
+"message": "example",
+"comment": "example"
+}
+],
+"warnings": [
+{
+"message": "example",
+"comment": "example"
+}
+]
+}
+]
+
+[
+{
+"offerId": "example",
+"mapping": {
+"marketSku": 1,
+"marketSkuName": "example",
+"marketModelName": "example",
+"marketCategoryId": 0,
+"marketCategoryName": "example"
+},
+"parameterValues": [
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+],
+"cardStatus": "HAS_CARD_CAN_NOT_UPDATE",
+"contentRating": 0,
+"averageContentRating": 0,
+"contentRatingStatus": "UPDATING",
+"recommendations": [
+{
+"type": "HAS_VIDEO",
+"percent": 0,
+"remainingRatingPoints": 1
+}
+],
+"groupId": "example",
+"errors": [
+{
+"message": "example",
+"comment": "example"
+}
+],
+"warnings": [
+{
+"message": "example",
+"comment": "example"
+}
+]
+}
+]
+
+paging
+
+nextPageToken | Type: stringID of the next results page.Example:example nextPageToken Type: string ID of the next results page.
+Example:example
+
+example The ID of the next page.
+
+{
+"nextPageToken": "example"
+}
+
+{
+"nextPageToken": "example"
+}
+A list of products with information about the status of the cards.
+
+{
+"offerCards": [
+{
+"offerId": "example",
+"mapping": {
+"marketSku": 1,
+"marketSkuName": "example",
+"marketModelName": "example",
+"marketCategoryId": 0,
+"marketCategoryName": "example"
+},
+"parameterValues": [
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+],
+"cardStatus": "HAS_CARD_CAN_NOT_UPDATE",
+"contentRating": 0,
+"averageContentRating": 0,
+"contentRatingStatus": "UPDATING",
+"recommendations": [
+{
+"type": "HAS_VIDEO",
+"percent": 0,
+"remainingRatingPoints": 1
+}
+],
+"groupId": "example",
+"errors": [
+{
+"message": "example",
+"comment": "example"
+}
+],
+"warnings": [
+{
+"message": "example",
+"comment": "example"
+}
+]
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+
+{
+"offerCards": [
+{
+"offerId": "example",
+"mapping": {
+"marketSku": 1,
+"marketSkuName": "example",
+"marketModelName": "example",
+"marketCategoryId": 0,
+"marketCategoryName": "example"
+},
+"parameterValues": [
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+],
+"cardStatus": "HAS_CARD_CAN_NOT_UPDATE",
+"contentRating": 0,
+"averageContentRating": 0,
+"contentRatingStatus": "UPDATING",
+"recommendations": [
+{
+"type": "HAS_VIDEO",
+"percent": 0,
+"remainingRatingPoints": 1
+}
+],
+"groupId": "example",
+"errors": [
+{
+"message": "example",
+"comment": "example"
+}
+],
+"warnings": [
+{
+"message": "example",
+"comment": "example"
+}
+]
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+
+{
+"result": {
+"offerCards": [
+{
+"offerId": "example",
+"mapping": {},
+"parameterValues": [
+{}
+],
+"cardStatus": "HAS_CARD_CAN_NOT_UPDATE",
+"contentRating": 0,
+"averageContentRating": 0,
+"contentRatingStatus": "UPDATING",
+"recommendations": [
+{}
+],
+"groupId": "example",
+"errors": [
+{}
+],
+"warnings": [
+{}
+]
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+{
+"result": {
+"offerCards": [
+{
+"offerId": "example",
+"mapping": {},
+"parameterValues": [
+{}
+],
+"cardStatus": "HAS_CARD_CAN_NOT_UPDATE",
+"contentRating": 0,
+"averageContentRating": 0,
+"contentRatingStatus": "UPDATING",
+"recommendations": [
+{}
+],
+"groupId": "example",
+"errors": [
+{}
+],
+"warnings": [
+{}
+]
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

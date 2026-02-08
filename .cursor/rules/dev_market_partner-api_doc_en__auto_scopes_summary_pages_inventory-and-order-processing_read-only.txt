@@ -1,0 +1,87 @@
+View order information
+The name of the access in the OpenAPI specification: inventory-and-order-processing:read-only.
+
+Orders
+
+Method | Method description
+POST v1/businesses/{businessId}/orders | Information about orders in the cabinet
+POST v2/campaigns/{campaignId}/orders/{orderId}/identifiers/status | Marking code verification statuses
+GET v2/campaigns/{campaignId}/orders/{orderId}/buyer | Information about the buyer — an individual
+POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyer | Information about the buyer — a legal entity
+POST v2/campaigns/{campaignId}/orders/{orderId}/documents | Information about documents Method Method description
+POST v1/businesses/{businessId}/orders Information about orders in the cabinet POST v2/campaigns/{campaignId}/orders/{orderId}/identifiers/status
+Marking code verification statuses GET v2/campaigns/{campaignId}/orders/{orderId}/buyer Information about the buyer — an individual
+POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyer Information about the buyer — a legal entity
+POST v2/campaigns/{campaignId}/orders/{orderId}/documents Information about documents
+
+Shipments FBS
+
+Method | Method description
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId} | Getting information about a single shipment
+PUT v2/campaigns/{campaignId}/first-mile/shipments | Getting information about multiple shipments Method
+Method description GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId} Getting information about a single shipment
+PUT v2/campaigns/{campaignId}/first-mile/shipments Getting information about multiple shipments
+
+Shortcuts FBS and DBS
+
+Method | Method description
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data | Data for self-label production
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/info | Getting information about the ability to print labels
+Method Method description GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data Data for self-label production
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/info Getting information about the ability to print labels
+
+Non-purchases and refunds
+
+Method | Method description
+GET v2/campaigns/{campaignId}/returns | List of non-purchases and refunds
+GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId} | Information about non-purchase or refund
+GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/application | Receiving a refund request
+GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/{itemId}/image/{imageHash} | Receiving photos of items in a refund
+Method Method description GET v2/campaigns/{campaignId}/returns List of non-purchases and refunds GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}
+Information about non-purchase or refund GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/application
+Receiving a refund request
+GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/{itemId}/image/{imageHash}
+Receiving photos of items in a refund
+
+Reports and documents
+
+Method | Method description
+POST v2/campaigns/{campaignId}/stats/orders | Detailed information on orders Method Method description
+POST v2/campaigns/{campaignId}/stats/orders Detailed information on orders
+
+Quality index
+
+Method | Method description
+POST v2/businesses/{businessId}/ratings/quality | Store Quality Index
+POST v2/campaigns/{campaignId}/ratings/quality/details | Orders that affected the quality index Method
+Method description POST v2/businesses/{businessId}/ratings/quality Store Quality Index POST v2/campaigns/{campaignId}/ratings/quality/details
+Orders that affected the quality index
+
+Warehouses
+
+Method | Method description
+POST v2/businesses/{businessId}/warehouses | List of warehouses Method Method description POST v2/businesses/{businessId}/warehouses
+List of warehouses
+
+Viewing additional information
+
+Method | Method description
+GET v2/campaigns | User's Store List
+GET v2/campaigns/{campaignId} | Store Information
+POST v2/businesses/{businessId}/settings | Cabinet Settings
+GET v2/campaigns/{campaignId}/settings | Store Settings
+POST v2/categories/tree | The category tree
+GET v2/reports/info/{reportId} | Getting a given report or document
+GET v2/warehouses | Market Warehouse IDs
+POST v2/auth/token | Getting information about the authorization token
+GET v2/delivery/services | Directory of delivery services
+POST v2/regions/countries | List of valid country codes
+GET v2/regions | Search for regions by their name
+GET v2/regions/{regionId} | Information about the region
+GET v2/regions/{regionId}/children | Information about child regions Method Method description GET v2/campaigns
+User's Store List GET v2/campaigns/{campaignId} Store Information POST v2/businesses/{businessId}/settings
+Cabinet Settings GET v2/campaigns/{campaignId}/settings Store Settings POST v2/categories/tree The category tree
+GET v2/reports/info/{reportId} Getting a given report or document GET v2/warehouses Market Warehouse IDs
+POST v2/auth/token Getting information about the authorization token GET v2/delivery/services Directory of delivery services
+POST v2/regions/countries List of valid country codes GET v2/regions Search for regions by their name
+GET v2/regions/{regionId} Information about the region GET v2/regions/{regionId}/children Information about child regions

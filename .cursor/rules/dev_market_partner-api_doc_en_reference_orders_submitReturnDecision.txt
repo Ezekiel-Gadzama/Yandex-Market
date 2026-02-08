@@ -1,0 +1,1017 @@
+Transfer and confirmation of the refund decision
+The method is available forall models.
+
+• inventory-and-order-processing —Order processing and inventory
+• all-methods — Full account management
+Allows you to perform one of the following operations:
+
+• For all models:send a list of refund solutions and confirm them.
+For all models:send a list of refund solutions and confirm them.
+• For the model DBS:confirm the decision submitted toPOST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision. To do this, use a request without a body.
+For the model DBS:confirm the decision submitted toPOST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision. To do this, use a request without a body.
+
+⚙️ Limit:10,000 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit
+
+https://api.partner.market.yandex.ru/v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit
+
+Path parameters
+
+Name | Description
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+orderId | Type: integerThe order ID.
+returnId | Type: integerID of a non-purchase or refund. Name Description campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 orderId Type: integer The order ID. returnId Type: integer ID of a non-purchase or refund.
+
+Body
+
+{
+"returnItemDecisions": [
+{
+"returnItemId": 0,
+"decisionType": "FAST_REFUND_MONEY",
+"decisionReasonType": "ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED",
+"comment": "example"
+}
+]
+}
+
+{
+"returnItemDecisions": [
+{
+"returnItemId": 0,
+"decisionType": "FAST_REFUND_MONEY",
+"decisionReasonType": "ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED",
+"comment": "example"
+}
+]
+}
+
+Name | Description
+returnItemDecisions | Type: object[]decisionTypeType: stringRefund decision:FAST_REFUND_MONEY— return the money to the buyer without returning the product.REFUND_MONEY— refund the money for the product to the buyer.REFUND_MONEY_INCLUDING_SHIPMENT— refund the buyer the money for the product and the return shipment.REPAIR— repair the product.REPLACE— replace the product.SEND_TO_EXAMINATION— take the product for examination.DECLINE_REFUND— refuse a refund.OTHER_DECISION— another solution.Enum:FAST_REFUND_MONEY,REFUND_MONEY,REFUND_MONEY_INCLUDING_SHIPMENT,REPAIR,REPLACE,SEND_TO_EXAMINATION,DECLINE_REFUND,OTHER_DECISIONreturnItemIdType: integerThe product ID in the refund.commentType: stringComment on the solution. Specify:forREFUND_MONEY_INCLUDING_SHIPMENT— the cost of the return shipment.forREPAIR— when you eliminate the defects of the product.forDECLINE_REFUND— the reason for the refusal.forOTHER_DECISION— what kind of solution do you propose.Example:exampledecisionReasonTypeType: stringReason for refusal:ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED— the problem with the product has not been confirmed.MECHANICAL_DAMAGE— there is mechanical damage to the product.WARRANTY_PERIOD_HAS_EXPIRED— the warranty period has expired.CONFIGURATION_OR_PACKAGING_COMPROMISED— the package or packaging is broken.PRODUCT_APPEARANCE_COMPROMISED— the presentation has been violated.WARRANTY_TERMS_VIOLATED— the warranty conditions have been violated.DEVICE_ACTIVATED— the device is activated.Enum:ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED,MECHANICAL_DAMAGE,WARRANTY_PERIOD_HAS_EXPIRED,CONFIGURATION_OR_PACKAGING_COMPROMISED,PRODUCT_APPEARANCE_COMPROMISED,WARRANTY_TERMS_VIOLATED,DEVICE_ACTIVATEDDecisions on goods in return.Min items:1Example[{"returnItemId":0,"decisionType":"FAST_REFUND_MONEY","decisionReasonType":"ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED","comment":"example"}] | decisionType | Type: stringRefund decision:FAST_REFUND_MONEY— return the money to the buyer without returning the product.REFUND_MONEY— refund the money for the product to the buyer.REFUND_MONEY_INCLUDING_SHIPMENT— refund the buyer the money for the product and the return shipment.REPAIR— repair the product.REPLACE— replace the product.SEND_TO_EXAMINATION— take the product for examination.DECLINE_REFUND— refuse a refund.OTHER_DECISION— another solution.Enum:FAST_REFUND_MONEY,REFUND_MONEY,REFUND_MONEY_INCLUDING_SHIPMENT,REPAIR,REPLACE,SEND_TO_EXAMINATION,DECLINE_REFUND,OTHER_DECISION | returnItemId | Type: integerThe product ID in the refund. | comment | Type: stringComment on the solution. Specify:forREFUND_MONEY_INCLUDING_SHIPMENT— the cost of the return shipment.forREPAIR— when you eliminate the defects of the product.forDECLINE_REFUND— the reason for the refusal.forOTHER_DECISION— what kind of solution do you propose.Example:example | decisionReasonType | Type: stringReason for refusal:ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED— the problem with the product has not been confirmed.MECHANICAL_DAMAGE— there is mechanical damage to the product.WARRANTY_PERIOD_HAS_EXPIRED— the warranty period has expired.CONFIGURATION_OR_PACKAGING_COMPROMISED— the package or packaging is broken.PRODUCT_APPEARANCE_COMPROMISED— the presentation has been violated.WARRANTY_TERMS_VIOLATED— the warranty conditions have been violated.DEVICE_ACTIVATED— the device is activated.Enum:ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED,MECHANICAL_DAMAGE,WARRANTY_PERIOD_HAS_EXPIRED,CONFIGURATION_OR_PACKAGING_COMPROMISED,PRODUCT_APPEARANCE_COMPROMISED,WARRANTY_TERMS_VIOLATED,DEVICE_ACTIVATED
+decisionType | Type: stringRefund decision:FAST_REFUND_MONEY— return the money to the buyer without returning the product.REFUND_MONEY— refund the money for the product to the buyer.REFUND_MONEY_INCLUDING_SHIPMENT— refund the buyer the money for the product and the return shipment.REPAIR— repair the product.REPLACE— replace the product.SEND_TO_EXAMINATION— take the product for examination.DECLINE_REFUND— refuse a refund.OTHER_DECISION— another solution.Enum:FAST_REFUND_MONEY,REFUND_MONEY,REFUND_MONEY_INCLUDING_SHIPMENT,REPAIR,REPLACE,SEND_TO_EXAMINATION,DECLINE_REFUND,OTHER_DECISION
+returnItemId | Type: integerThe product ID in the refund.
+comment | Type: stringComment on the solution. Specify:forREFUND_MONEY_INCLUDING_SHIPMENT— the cost of the return shipment.forREPAIR— when you eliminate the defects of the product.forDECLINE_REFUND— the reason for the refusal.forOTHER_DECISION— what kind of solution do you propose.Example:example
+decisionReasonType | Type: stringReason for refusal:ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED— the problem with the product has not been confirmed.MECHANICAL_DAMAGE— there is mechanical damage to the product.WARRANTY_PERIOD_HAS_EXPIRED— the warranty period has expired.CONFIGURATION_OR_PACKAGING_COMPROMISED— the package or packaging is broken.PRODUCT_APPEARANCE_COMPROMISED— the presentation has been violated.WARRANTY_TERMS_VIOLATED— the warranty conditions have been violated.DEVICE_ACTIVATED— the device is activated.Enum:ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED,MECHANICAL_DAMAGE,WARRANTY_PERIOD_HAS_EXPIRED,CONFIGURATION_OR_PACKAGING_COMPROMISED,PRODUCT_APPEARANCE_COMPROMISED,WARRANTY_TERMS_VIOLATED,DEVICE_ACTIVATED
+Name Description returnItemDecisions
+
+decisionType | Type: stringRefund decision:FAST_REFUND_MONEY— return the money to the buyer without returning the product.REFUND_MONEY— refund the money for the product to the buyer.REFUND_MONEY_INCLUDING_SHIPMENT— refund the buyer the money for the product and the return shipment.REPAIR— repair the product.REPLACE— replace the product.SEND_TO_EXAMINATION— take the product for examination.DECLINE_REFUND— refuse a refund.OTHER_DECISION— another solution.Enum:FAST_REFUND_MONEY,REFUND_MONEY,REFUND_MONEY_INCLUDING_SHIPMENT,REPAIR,REPLACE,SEND_TO_EXAMINATION,DECLINE_REFUND,OTHER_DECISION
+returnItemId | Type: integerThe product ID in the refund.
+comment | Type: stringComment on the solution. Specify:forREFUND_MONEY_INCLUDING_SHIPMENT— the cost of the return shipment.forREPAIR— when you eliminate the defects of the product.forDECLINE_REFUND— the reason for the refusal.forOTHER_DECISION— what kind of solution do you propose.Example:example
+decisionReasonType | Type: stringReason for refusal:ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED— the problem with the product has not been confirmed.MECHANICAL_DAMAGE— there is mechanical damage to the product.WARRANTY_PERIOD_HAS_EXPIRED— the warranty period has expired.CONFIGURATION_OR_PACKAGING_COMPROMISED— the package or packaging is broken.PRODUCT_APPEARANCE_COMPROMISED— the presentation has been violated.WARRANTY_TERMS_VIOLATED— the warranty conditions have been violated.DEVICE_ACTIVATED— the device is activated.Enum:ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED,MECHANICAL_DAMAGE,WARRANTY_PERIOD_HAS_EXPIRED,CONFIGURATION_OR_PACKAGING_COMPROMISED,PRODUCT_APPEARANCE_COMPROMISED,WARRANTY_TERMS_VIOLATED,DEVICE_ACTIVATED
+decisionType Type: string Refund decision:
+
+• FAST_REFUND_MONEY— return the money to the buyer without returning the product.
+FAST_REFUND_MONEY— return the money to the buyer without returning the product.
+
+FAST_REFUND_MONEY
+• REFUND_MONEY— refund the money for the product to the buyer.
+REFUND_MONEY— refund the money for the product to the buyer.
+
+REFUND_MONEY
+• REFUND_MONEY_INCLUDING_SHIPMENT— refund the buyer the money for the product and the return shipment.
+REFUND_MONEY_INCLUDING_SHIPMENT— refund the buyer the money for the product and the return shipment.
+
+REFUND_MONEY_INCLUDING_SHIPMENT
+• REPAIR— repair the product.
+REPAIR— repair the product.
+
+REPAIR
+• REPLACE— replace the product.
+REPLACE— replace the product.
+
+REPLACE
+• SEND_TO_EXAMINATION— take the product for examination.
+SEND_TO_EXAMINATION— take the product for examination.
+
+SEND_TO_EXAMINATION
+• DECLINE_REFUND— refuse a refund.
+DECLINE_REFUND— refuse a refund.
+
+DECLINE_REFUND
+• OTHER_DECISION— another solution.
+OTHER_DECISION— another solution.
+
+OTHER_DECISION
+Enum:FAST_REFUND_MONEY,REFUND_MONEY,REFUND_MONEY_INCLUDING_SHIPMENT,REPAIR,REPLACE,SEND_TO_EXAMINATION,DECLINE_REFUND,OTHER_DECISION
+
+FAST_REFUND_MONEY
+
+REFUND_MONEY
+
+REFUND_MONEY_INCLUDING_SHIPMENT
+
+REPAIR
+
+REPLACE
+
+SEND_TO_EXAMINATION
+
+DECLINE_REFUND
+
+OTHER_DECISION returnItemId Type: integer The product ID in the refund. comment Type: string Comment on the solution. Specify:
+
+• forREFUND_MONEY_INCLUDING_SHIPMENT— the cost of the return shipment.
+forREFUND_MONEY_INCLUDING_SHIPMENT— the cost of the return shipment.
+
+REFUND_MONEY_INCLUDING_SHIPMENT
+• forREPAIR— when you eliminate the defects of the product.
+forREPAIR— when you eliminate the defects of the product.
+
+REPAIR
+• forDECLINE_REFUND— the reason for the refusal.
+forDECLINE_REFUND— the reason for the refusal.
+
+DECLINE_REFUND
+• forOTHER_DECISION— what kind of solution do you propose.
+forOTHER_DECISION— what kind of solution do you propose.
+
+OTHER_DECISION Example:example
+
+example decisionReasonType Type: string Reason for refusal:
+
+• ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED— the problem with the product has not been confirmed.
+
+ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED
+• MECHANICAL_DAMAGE— there is mechanical damage to the product.
+
+MECHANICAL_DAMAGE
+• WARRANTY_PERIOD_HAS_EXPIRED— the warranty period has expired.
+
+WARRANTY_PERIOD_HAS_EXPIRED
+• CONFIGURATION_OR_PACKAGING_COMPROMISED— the package or packaging is broken.
+
+CONFIGURATION_OR_PACKAGING_COMPROMISED
+• PRODUCT_APPEARANCE_COMPROMISED— the presentation has been violated.
+
+PRODUCT_APPEARANCE_COMPROMISED
+• WARRANTY_TERMS_VIOLATED— the warranty conditions have been violated.
+
+WARRANTY_TERMS_VIOLATED
+• DEVICE_ACTIVATED— the device is activated.
+
+DEVICE_ACTIVATED
+Enum:ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED,MECHANICAL_DAMAGE,WARRANTY_PERIOD_HAS_EXPIRED,CONFIGURATION_OR_PACKAGING_COMPROMISED,PRODUCT_APPEARANCE_COMPROMISED,WARRANTY_TERMS_VIOLATED,DEVICE_ACTIVATED
+
+ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED
+
+MECHANICAL_DAMAGE
+
+WARRANTY_PERIOD_HAS_EXPIRED
+
+CONFIGURATION_OR_PACKAGING_COMPROMISED
+
+PRODUCT_APPEARANCE_COMPROMISED
+
+WARRANTY_TERMS_VIOLATED
+
+DEVICE_ACTIVATED Decisions on goods in return. Min items:1
+
+1
+
+[
+{
+"returnItemId": 0,
+"decisionType": "FAST_REFUND_MONEY",
+"decisionReasonType": "ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED",
+"comment": "example"
+}
+]
+
+[
+{
+"returnItemId": 0,
+"decisionType": "FAST_REFUND_MONEY",
+"decisionReasonType": "ISSUE_WITH_THE_PRODUCT_WAS_NOT_CONFIRMED",
+"comment": "example"
+}
+]
+
+Responses
+200 OK
+The status of the operation.
+
+Body
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

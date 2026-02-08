@@ -1,0 +1,852 @@
+List of valid country codes
+The method is available for models:FBY,FBS,ExpressandDBS.
+
+• inventory-and-order-processing —Order processing and inventory
+• inventory-and-order-processing:read-only —View order information
+• pricing —Manage prices
+• pricing:read-only —View prices
+• offers-and-cards-management —Manage products and cards
+• offers-and-cards-management:read-only —View products and cards
+• promotion —Product promotion
+• promotion:read-only —View promotion information
+• finance-and-accounting —View financial data and reports
+• communication —Customer communication
+• settings-management —Store settings
+• supplies-management:read-only —View FBY requests
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns a list of countries with their codes in the format ISO 3166-1 alpha-2.
+Country of manufacturecountryCodeit will be needed when selling goods from abroad for business.Instruction manual
+
+countryCode
+
+⚙️ Limit:100 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/regions/countries
+
+https://api.partner.market.yandex.ru/v2/regions/countries
+
+Responses
+200 OK
+A list of countries with their codes in the format ISO 3166-1 alpha-2.
+
+Body
+
+{
+"countries": [
+{
+"region": {
+"id": 0,
+"name": "example",
+"type": "OTHER",
+"parent": null
+},
+"countryCode": "RU"
+}
+]
+}
+
+{
+"countries": [
+{
+"region": {
+"id": 0,
+"name": "example",
+"type": "OTHER",
+"parent": null
+},
+"countryCode": "RU"
+}
+]
+}
+
+Name | Description
+countries | Type: object[]countryCodeType: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RUregionType: objectidType: integerID of the region.nameType: stringThe name of the region.Example:exampletypeType: stringThe type of region.Possible values:CITY_DISTRICT— the area of the city.CITY— a large city.CONTINENT— the continent.COUNTRY_DISTRICT— area.COUNTRY— country.REGION— region.REPUBLIC_AREA— the district of the subject of the federation.REPUBLIC— the subject of the Federation.SUBWAY_STATION— the metro station.VILLAGE— city.OTHER— unknown region.Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREAparentType: unknownInformation about the parent region.Parent regions are specified up to the country level.Example:nullThe delivery region.Example{"id":0,"name":"example","type":"OTHER","parent":null}A list of countries with their codes in the format ISO 3166-1 alpha-2.Example[{"region":{"id":0,"name":"example","type":"OTHER","parent":null},"countryCode":"RU"}] | countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU | region | Type: objectidType: integerID of the region.nameType: stringThe name of the region.Example:exampletypeType: stringThe type of region.Possible values:CITY_DISTRICT— the area of the city.CITY— a large city.CONTINENT— the continent.COUNTRY_DISTRICT— area.COUNTRY— country.REGION— region.REPUBLIC_AREA— the district of the subject of the federation.REPUBLIC— the subject of the Federation.SUBWAY_STATION— the metro station.VILLAGE— city.OTHER— unknown region.Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREAparentType: unknownInformation about the parent region.Parent regions are specified up to the country level.Example:nullThe delivery region.Example{"id":0,"name":"example","type":"OTHER","parent":null} | id | Type: integerID of the region. | name | Type: stringThe name of the region.Example:example | type | Type: stringThe type of region.Possible values:CITY_DISTRICT— the area of the city.CITY— a large city.CONTINENT— the continent.COUNTRY_DISTRICT— area.COUNTRY— country.REGION— region.REPUBLIC_AREA— the district of the subject of the federation.REPUBLIC— the subject of the Federation.SUBWAY_STATION— the metro station.VILLAGE— city.OTHER— unknown region.Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREA | parent | Type: unknownInformation about the parent region.Parent regions are specified up to the country level.Example:null
+countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU
+region | Type: objectidType: integerID of the region.nameType: stringThe name of the region.Example:exampletypeType: stringThe type of region.Possible values:CITY_DISTRICT— the area of the city.CITY— a large city.CONTINENT— the continent.COUNTRY_DISTRICT— area.COUNTRY— country.REGION— region.REPUBLIC_AREA— the district of the subject of the federation.REPUBLIC— the subject of the Federation.SUBWAY_STATION— the metro station.VILLAGE— city.OTHER— unknown region.Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREAparentType: unknownInformation about the parent region.Parent regions are specified up to the country level.Example:nullThe delivery region.Example{"id":0,"name":"example","type":"OTHER","parent":null} | id | Type: integerID of the region. | name | Type: stringThe name of the region.Example:example | type | Type: stringThe type of region.Possible values:CITY_DISTRICT— the area of the city.CITY— a large city.CONTINENT— the continent.COUNTRY_DISTRICT— area.COUNTRY— country.REGION— region.REPUBLIC_AREA— the district of the subject of the federation.REPUBLIC— the subject of the Federation.SUBWAY_STATION— the metro station.VILLAGE— city.OTHER— unknown region.Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREA | parent | Type: unknownInformation about the parent region.Parent regions are specified up to the country level.Example:null
+id | Type: integerID of the region.
+name | Type: stringThe name of the region.Example:example
+type | Type: stringThe type of region.Possible values:CITY_DISTRICT— the area of the city.CITY— a large city.CONTINENT— the continent.COUNTRY_DISTRICT— area.COUNTRY— country.REGION— region.REPUBLIC_AREA— the district of the subject of the federation.REPUBLIC— the subject of the Federation.SUBWAY_STATION— the metro station.VILLAGE— city.OTHER— unknown region.Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREA
+parent | Type: unknownInformation about the parent region.Parent regions are specified up to the country level.Example:null
+Name Description countries
+
+countryCode | Type: stringThe country of manufacture is in the ISO 3166-1 alpha-2 format.How to getMin length:2Max length:2Pattern:^[A-Z]{2}$Example:RU
+region | Type: objectidType: integerID of the region.nameType: stringThe name of the region.Example:exampletypeType: stringThe type of region.Possible values:CITY_DISTRICT— the area of the city.CITY— a large city.CONTINENT— the continent.COUNTRY_DISTRICT— area.COUNTRY— country.REGION— region.REPUBLIC_AREA— the district of the subject of the federation.REPUBLIC— the subject of the Federation.SUBWAY_STATION— the metro station.VILLAGE— city.OTHER— unknown region.Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREAparentType: unknownInformation about the parent region.Parent regions are specified up to the country level.Example:nullThe delivery region.Example{"id":0,"name":"example","type":"OTHER","parent":null} | id | Type: integerID of the region. | name | Type: stringThe name of the region.Example:example | type | Type: stringThe type of region.Possible values:CITY_DISTRICT— the area of the city.CITY— a large city.CONTINENT— the continent.COUNTRY_DISTRICT— area.COUNTRY— country.REGION— region.REPUBLIC_AREA— the district of the subject of the federation.REPUBLIC— the subject of the Federation.SUBWAY_STATION— the metro station.VILLAGE— city.OTHER— unknown region.Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREA | parent | Type: unknownInformation about the parent region.Parent regions are specified up to the country level.Example:null
+id | Type: integerID of the region.
+name | Type: stringThe name of the region.Example:example
+type | Type: stringThe type of region.Possible values:CITY_DISTRICT— the area of the city.CITY— a large city.CONTINENT— the continent.COUNTRY_DISTRICT— area.COUNTRY— country.REGION— region.REPUBLIC_AREA— the district of the subject of the federation.REPUBLIC— the subject of the Federation.SUBWAY_STATION— the metro station.VILLAGE— city.OTHER— unknown region.Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREA
+parent | Type: unknownInformation about the parent region.Parent regions are specified up to the country level.Example:null
+countryCode Type: string The country of manufacture is in the ISO 3166-1 alpha-2 format.How to get Min length:2
+
+2 Max length:2
+
+2 Pattern:^[A-Z]{2}$
+
+^[A-Z]{2}$ Example:RU
+
+RU region
+
+id | Type: integerID of the region.
+name | Type: stringThe name of the region.Example:example
+type | Type: stringThe type of region.Possible values:CITY_DISTRICT— the area of the city.CITY— a large city.CONTINENT— the continent.COUNTRY_DISTRICT— area.COUNTRY— country.REGION— region.REPUBLIC_AREA— the district of the subject of the federation.REPUBLIC— the subject of the Federation.SUBWAY_STATION— the metro station.VILLAGE— city.OTHER— unknown region.Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREA
+parent | Type: unknownInformation about the parent region.Parent regions are specified up to the country level.Example:null
+id Type: integer ID of the region. name Type: string The name of the region. Example:example
+
+example type Type: string The type of region. Possible values:
+
+• CITY_DISTRICT— the area of the city.
+CITY_DISTRICT— the area of the city.
+
+CITY_DISTRICT
+• CITY— a large city.
+CITY— a large city.
+
+CITY
+• CONTINENT— the continent.
+CONTINENT— the continent.
+
+CONTINENT
+• COUNTRY_DISTRICT— area.
+COUNTRY_DISTRICT— area.
+
+COUNTRY_DISTRICT
+• COUNTRY— country.
+COUNTRY— country.
+
+COUNTRY
+• REGION— region.
+REGION— region.
+
+REGION
+• REPUBLIC_AREA— the district of the subject of the federation.
+REPUBLIC_AREA— the district of the subject of the federation.
+
+REPUBLIC_AREA
+• REPUBLIC— the subject of the Federation.
+REPUBLIC— the subject of the Federation.
+
+REPUBLIC
+• SUBWAY_STATION— the metro station.
+SUBWAY_STATION— the metro station.
+
+SUBWAY_STATION
+• VILLAGE— city.
+VILLAGE— city.
+
+VILLAGE
+• OTHER— unknown region.
+OTHER— unknown region.
+
+OTHER
+Enum:OTHER,CONTINENT,REGION,COUNTRY,COUNTRY_DISTRICT,REPUBLIC,CITY,VILLAGE,CITY_DISTRICT,SUBWAY_STATION,REPUBLIC_AREA
+
+OTHER
+
+CONTINENT
+
+REGION
+
+COUNTRY
+
+COUNTRY_DISTRICT
+
+REPUBLIC
+
+CITY
+
+VILLAGE
+
+CITY_DISTRICT
+
+SUBWAY_STATION
+
+REPUBLIC_AREA parent Type: unknown Information about the parent region. Parent regions are specified up to the country level.
+Example:null
+
+null The delivery region.
+
+{
+"id": 0,
+"name": "example",
+"type": "OTHER",
+"parent": null
+}
+
+{
+"id": 0,
+"name": "example",
+"type": "OTHER",
+"parent": null
+}
+A list of countries with their codes in the format ISO 3166-1 alpha-2.
+
+[
+{
+"region": {
+"id": 0,
+"name": "example",
+"type": "OTHER",
+"parent": null
+},
+"countryCode": "RU"
+}
+]
+
+[
+{
+"region": {
+"id": 0,
+"name": "example",
+"type": "OTHER",
+"parent": null
+},
+"countryCode": "RU"
+}
+]
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

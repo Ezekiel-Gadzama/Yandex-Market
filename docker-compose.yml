@@ -29,6 +29,7 @@ services:
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-yandex_user}:${POSTGRES_PASSWORD:-yandex_password}@postgres:5432/${POSTGRES_DB:-yandex_market}
       - YANDEX_MARKET_API_TOKEN=${YANDEX_MARKET_API_TOKEN:-}
+      - YANDEX_BUSINESS_ID=${YANDEX_BUSINESS_ID:-}
       - YANDEX_MARKET_CAMPAIGN_ID=${YANDEX_MARKET_CAMPAIGN_ID:-}
       - YANDEX_MARKET_API_URL=${YANDEX_MARKET_API_URL:-https://api.partner.market.yandex.ru}
       - SMTP_HOST=${SMTP_HOST:-}

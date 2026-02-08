@@ -1,0 +1,1072 @@
+Adding a new or changing a created comment
+The method is available forall models.
+
+• communication —Customer communication
+• all-methods — Full account management
+Adds a new store comment or modifies a comment that the store left earlier. To create a comment on a review, send only the review ID.feedbackId.
+
+feedbackId To add a comment to another comment, send:
+
+• feedbackId— The review ID.
+
+feedbackId
+• comment.parentId— ID of the parent comment.
+
+comment.parentId To edit a comment, send:
+
+• feedbackId— The review ID.
+
+feedbackId
+• comment.id— id of the comment to edit.
+
+comment.id If you transmit at the same timecomment.parentIdandcomment.id, an existing comment will be changed.
+
+comment.parentId
+
+comment.id
+
+⚙️ Limit:1,000 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/goods-feedback/comments/update
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/goods-feedback/comments/update
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Body
+
+{
+"feedbackId": 0,
+"comment": {
+"id": 0,
+"parentId": 0,
+"text": "example"
+}
+}
+
+{
+"feedbackId": 0,
+"comment": {
+"id": 0,
+"parentId": 0,
+"text": "example"
+}
+}
+
+Name | Description
+comment | Type: objecttextType: stringThe text of the comment.It must not contain the store's contacts or links to websites other than Yandex.Market.Min length:1Max length:4096Example:exampleidType: integerID of the review comment.parentIdType: integerID of the parent comment to respond to.A comment on a review or other comment.Example{"id":0,"parentId":0,"text":"example"} | text | Type: stringThe text of the comment.It must not contain the store's contacts or links to websites other than Yandex.Market.Min length:1Max length:4096Example:example | id | Type: integerID of the review comment. | parentId | Type: integerID of the parent comment to respond to.
+text | Type: stringThe text of the comment.It must not contain the store's contacts or links to websites other than Yandex.Market.Min length:1Max length:4096Example:example
+id | Type: integerID of the review comment.
+parentId | Type: integerID of the parent comment to respond to.
+feedbackId | Type: integerThe review ID. Name Description comment
+
+text | Type: stringThe text of the comment.It must not contain the store's contacts or links to websites other than Yandex.Market.Min length:1Max length:4096Example:example
+id | Type: integerID of the review comment.
+parentId | Type: integerID of the parent comment to respond to. text Type: string The text of the comment.
+It must not contain the store's contacts or links to websites other than Yandex.Market. Min length:1
+
+1 Max length:4096
+
+4096 Example:example
+
+example id Type: integer ID of the review comment. parentId Type: integer ID of the parent comment to respond to.
+A comment on a review or other comment.
+
+{
+"id": 0,
+"parentId": 0,
+"text": "example"
+}
+
+{
+"id": 0,
+"parentId": 0,
+"text": "example"
+}
+feedbackId Type: integer The review ID.
+
+Responses
+200 OK
+Information about the added or changed comment.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"id": 0,
+"text": "example",
+"canModify": true,
+"parentId": 0,
+"author": {
+"type": "USER",
+"name": "example"
+},
+"status": "PUBLISHED",
+"feedbackId": 0
+}
+}
+
+{
+"status": "OK",
+"result": {
+"id": 0,
+"text": "example",
+"canModify": true,
+"parentId": 0,
+"author": {
+"type": "USER",
+"name": "example"
+},
+"status": "PUBLISHED",
+"feedbackId": 0
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectfeedbackIdType: integerThe review ID.idType: integerID of the review comment.statusType: stringComment status:PUBLISHED— published.UNMODERATED— not verified.BANNED— blocked.DELETED— deleted.Enum:PUBLISHED,UNMODERATED,BANNED,DELETEDtextType: stringThe text of the comment.It must not contain the store's contacts or links to websites other than Yandex.Market.Min length:1Max length:4096Example:exampleauthorType: objectnameType: stringThe name of the author or the name of the cabinet.Example:exampletypeType: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESSInformation about the comment's author.Example{"type":"USER","name":"example"}canModifyType: booleanWhether the seller can edit the comment or delete it.parentIdType: integerID of the parent comment.Comment on the review.Example{"id":0,"text":"example","canModify":true,"parentId":0,"author":{"type":"USER","name":"example"},"status":"PUBLISHED","feedbackId":0}Example{"result":{"id":0,"text":"example","canModify":true,"parentId":0,"author":{"type":"USER","name":"example"},"status":"PUBLISHED","feedbackId":0}}
+
+result | Type: objectfeedbackIdType: integerThe review ID.idType: integerID of the review comment.statusType: stringComment status:PUBLISHED— published.UNMODERATED— not verified.BANNED— blocked.DELETED— deleted.Enum:PUBLISHED,UNMODERATED,BANNED,DELETEDtextType: stringThe text of the comment.It must not contain the store's contacts or links to websites other than Yandex.Market.Min length:1Max length:4096Example:exampleauthorType: objectnameType: stringThe name of the author or the name of the cabinet.Example:exampletypeType: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESSInformation about the comment's author.Example{"type":"USER","name":"example"}canModifyType: booleanWhether the seller can edit the comment or delete it.parentIdType: integerID of the parent comment.Comment on the review.Example{"id":0,"text":"example","canModify":true,"parentId":0,"author":{"type":"USER","name":"example"},"status":"PUBLISHED","feedbackId":0} | feedbackId | Type: integerThe review ID. | id | Type: integerID of the review comment. | status | Type: stringComment status:PUBLISHED— published.UNMODERATED— not verified.BANNED— blocked.DELETED— deleted.Enum:PUBLISHED,UNMODERATED,BANNED,DELETED | text | Type: stringThe text of the comment.It must not contain the store's contacts or links to websites other than Yandex.Market.Min length:1Max length:4096Example:example | author | Type: objectnameType: stringThe name of the author or the name of the cabinet.Example:exampletypeType: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESSInformation about the comment's author.Example{"type":"USER","name":"example"} | name | Type: stringThe name of the author or the name of the cabinet.Example:example | type | Type: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESS | canModify | Type: booleanWhether the seller can edit the comment or delete it. | parentId | Type: integerID of the parent comment.
+feedbackId | Type: integerThe review ID.
+id | Type: integerID of the review comment.
+status | Type: stringComment status:PUBLISHED— published.UNMODERATED— not verified.BANNED— blocked.DELETED— deleted.Enum:PUBLISHED,UNMODERATED,BANNED,DELETED
+text | Type: stringThe text of the comment.It must not contain the store's contacts or links to websites other than Yandex.Market.Min length:1Max length:4096Example:example
+author | Type: objectnameType: stringThe name of the author or the name of the cabinet.Example:exampletypeType: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESSInformation about the comment's author.Example{"type":"USER","name":"example"} | name | Type: stringThe name of the author or the name of the cabinet.Example:example | type | Type: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESS
+name | Type: stringThe name of the author or the name of the cabinet.Example:example
+type | Type: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESS
+canModify | Type: booleanWhether the seller can edit the comment or delete it.
+parentId | Type: integerID of the parent comment. result
+
+feedbackId | Type: integerThe review ID.
+id | Type: integerID of the review comment.
+status | Type: stringComment status:PUBLISHED— published.UNMODERATED— not verified.BANNED— blocked.DELETED— deleted.Enum:PUBLISHED,UNMODERATED,BANNED,DELETED
+text | Type: stringThe text of the comment.It must not contain the store's contacts or links to websites other than Yandex.Market.Min length:1Max length:4096Example:example
+author | Type: objectnameType: stringThe name of the author or the name of the cabinet.Example:exampletypeType: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESSInformation about the comment's author.Example{"type":"USER","name":"example"} | name | Type: stringThe name of the author or the name of the cabinet.Example:example | type | Type: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESS
+name | Type: stringThe name of the author or the name of the cabinet.Example:example
+type | Type: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESS
+canModify | Type: booleanWhether the seller can edit the comment or delete it.
+parentId | Type: integerID of the parent comment. feedbackId Type: integer The review ID. id Type: integer
+ID of the review comment. status Type: string Comment status:
+
+• PUBLISHED— published.
+
+PUBLISHED
+• UNMODERATED— not verified.
+
+UNMODERATED
+• BANNED— blocked.
+
+BANNED
+• DELETED— deleted.
+
+DELETED Enum:PUBLISHED,UNMODERATED,BANNED,DELETED
+
+PUBLISHED
+
+UNMODERATED
+
+BANNED
+
+DELETED text Type: string The text of the comment. It must not contain the store's contacts or links to websites other than Yandex.Market.
+Min length:1
+
+1 Max length:4096
+
+4096 Example:example
+
+example author
+
+name | Type: stringThe name of the author or the name of the cabinet.Example:example
+type | Type: stringType of author:USER— user.BUSINESS— office.Enum:USER,BUSINESS name Type: string The name of the author or the name of the cabinet.
+Example:example
+
+example type Type: string Type of author:
+
+• USER— user.
+
+USER
+• BUSINESS— office.
+
+BUSINESS Enum:USER,BUSINESS
+
+USER
+
+BUSINESS Information about the comment's author.
+
+{
+"type": "USER",
+"name": "example"
+}
+
+{
+"type": "USER",
+"name": "example"
+}
+canModify Type: boolean Whether the seller can edit the comment or delete it.
+parentId Type: integer ID of the parent comment. Comment on the review.
+
+{
+"id": 0,
+"text": "example",
+"canModify": true,
+"parentId": 0,
+"author": {
+"type": "USER",
+"name": "example"
+},
+"status": "PUBLISHED",
+"feedbackId": 0
+}
+
+{
+"id": 0,
+"text": "example",
+"canModify": true,
+"parentId": 0,
+"author": {
+"type": "USER",
+"name": "example"
+},
+"status": "PUBLISHED",
+"feedbackId": 0
+}
+
+{
+"result": {
+"id": 0,
+"text": "example",
+"canModify": true,
+"parentId": 0,
+"author": {
+"type": "USER",
+"name": "example"
+},
+"status": "PUBLISHED",
+"feedbackId": 0
+}
+}
+
+{
+"result": {
+"id": 0,
+"text": "example",
+"canModify": true,
+"parentId": 0,
+"author": {
+"type": "USER",
+"name": "example"
+},
+"status": "PUBLISHED",
+"feedbackId": 0
+}
+}
+
+400 Bad Request
+The request contains incorrect data.Learn more about errors when working with product reviews
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

@@ -1,0 +1,732 @@
+Outdated methods and parameters
+Stay tuned for documentation updates inThe Telegram channel.
+
+2025
+December 17th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId} | The methods of receiving the store's orders have been deprecated. Use them insteadPOST v1/businesses/{businessId}/orders.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}
+The methods of receiving the store's orders have been deprecated. Use them insteadPOST v1/businesses/{businessId}/orders.
+
+September 5th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/label | The parameter has been deprecatedshipmentId.
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameter has been deprecatedidinOrderShipmentDTO.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/label
+The parameter has been deprecatedshipmentId.
+
+shipmentId
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameter has been deprecatedidinOrderShipmentDTO.
+
+id
+
+OrderShipmentDTO
+
+August 15th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/prices/generate | The method has been deprecated. Instead, usePOST v2/reports/goods-prices/generate.
+Methods or documentation pages Description of the changes POST v2/reports/prices/generate
+
+POST v2/reports/prices/generate The method has been deprecated. Instead, usePOST v2/reports/goods-prices/generate.
+
+August 1st
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/settings | The parameters have been deprecatedshowInContext,showInPremiumanduseOpenStat.
+GET v2/campaigns/{campaignId}/region | An outdated method has been removed. Methods or documentation pages
+Description of the changes GET v2/campaigns/{campaignId}/settings The parameters have been deprecatedshowInContext,showInPremiumanduseOpenStat.
+
+showInContext
+
+showInPremium
+
+useOpenStat GET v2/campaigns/{campaignId}/region
+
+GET v2/campaigns/{campaignId}/region An outdated method has been removed.
+
+July 31
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/outlets/{outletId}GET v2/campaigns/{campaignId}/outlets | The parameters have been deprecatedshopOutletIdandworkingTime. Use them insteadshopOutletCodeandworkingSchedule.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/outlets/{outletId}GET v2/campaigns/{campaignId}/outlets
+The parameters have been deprecatedshopOutletIdandworkingTime. Use them insteadshopOutletCodeandworkingSchedule.
+
+shopOutletId
+
+workingTime
+
+shopOutletCode
+
+workingSchedule
+
+July 25th
+
+Methods or documentation pages | Description of the changes
+POST v2/categories/max-sale-quantum | The method has been deprecated.
+POST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offers | The parameter has been deprecatedquantum.
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings | The parameter has been deprecatedfirstVideoAsCover.
+Methods or documentation pages Description of the changes POST v2/categories/max-sale-quantum The method has been deprecated.
+POST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offers The parameter has been deprecatedquantum.
+
+quantum POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings
+The parameter has been deprecatedfirstVideoAsCover.
+
+firstVideoAsCover
+
+July 16
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/returnsGET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId} | The parameter has been deprecatedidinLogisticPickupPointDTO.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/returnsGET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}
+The parameter has been deprecatedidinLogisticPickupPointDTO.
+
+id
+
+LogisticPickupPointDTO
+
+June 30
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision | The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision
+The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit.
+
+June 4th
+
+Methods or documentation pages | Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes | The method has been deprecated. Instead, usePUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+Methods or documentation pages Description of the changes PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes
+The method has been deprecated. Instead, usePUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+
+May 29th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/offersGET v2/campaigns/{campaignId}/offers/allGET v2/campaigns/{campaignId}/feedsGET v2/campaigns/{campaignId}/feeds/{feedId}GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logsPOST v2/campaigns/{campaignId}/feeds/{feedId}/paramsPOST v2/campaigns/{campaignId}/feeds/{feedId}/refresh | Outdated methods have been removed.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/offersGET v2/campaigns/{campaignId}/offers/allGET v2/campaigns/{campaignId}/feedsGET v2/campaigns/{campaignId}/feeds/{feedId}GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logsPOST v2/campaigns/{campaignId}/feeds/{feedId}/paramsPOST v2/campaigns/{campaignId}/feeds/{feedId}/refresh
+
+GET v2/campaigns/{campaignId}/offers
+
+GET v2/campaigns/{campaignId}/offers/all
+
+GET v2/campaigns/{campaignId}/feeds
+
+GET v2/campaigns/{campaignId}/feeds/{feedId}
+
+GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logs
+
+POST v2/campaigns/{campaignId}/feeds/{feedId}/params
+
+POST v2/campaigns/{campaignId}/feeds/{feedId}/refresh Outdated methods have been removed.
+
+April 24th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/update | The parameter has been deprecatedcofinancePrice.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-mappings/update
+The parameter has been deprecatedcofinancePrice.
+
+cofinancePrice
+
+April 16
+
+Methods or documentation pages | Description of the changes
+Methods where these types of discounts are transferred or returned. | Outdated discount types have been removed:YANDEX_PLUSYANDEX_EMPLOYEELIMITED_FREE_DELIVERY_PROMOFREE_DELIVERY_THRESHOLDMULTICART_DISCOUNTFREE_DELIVERY_FOR_LDIFREE_DELIVERY_FOR_LSCFREE_PICKUPSUPPLIER_MULTICART_DISCOUNTANNOUNCEMENT_PROMOEMPTY_PROMOBLOCKING_PROMOMARKET_DEALMARKET_PRIMEBERU_PLUS
+Methods or documentation pages Description of the changes Methods where these types of discounts are transferred or returned.
+Outdated discount types have been removed:YANDEX_PLUSYANDEX_EMPLOYEELIMITED_FREE_DELIVERY_PROMOFREE_DELIVERY_THRESHOLDMULTICART_DISCOUNTFREE_DELIVERY_FOR_LDIFREE_DELIVERY_FOR_LSCFREE_PICKUPSUPPLIER_MULTICART_DISCOUNTANNOUNCEMENT_PROMOEMPTY_PROMOBLOCKING_PROMOMARKET_DEALMARKET_PRIMEBERU_PLUS
+
+YANDEX_PLUS
+
+YANDEX_EMPLOYEE
+
+LIMITED_FREE_DELIVERY_PROMO
+
+FREE_DELIVERY_THRESHOLD
+
+MULTICART_DISCOUNT
+
+FREE_DELIVERY_FOR_LDI
+
+FREE_DELIVERY_FOR_LSC
+
+FREE_PICKUP
+
+SUPPLIER_MULTICART_DISCOUNT
+
+ANNOUNCEMENT_PROMO
+
+EMPTY_PROMO
+
+BLOCKING_PROMO
+
+MARKET_DEAL
+
+MARKET_PRIME
+
+BERU_PLUS
+
+April 11
+
+Methods or documentation pages | Description of the changes
+Methods where these parameters are passed or returned. | The parameters have been deprecatedmarketModelId,marketModelName,modelIdsandmodelId.
+GET v2/models/{modelId}POST v2/modelsGET v2/models/{modelId}/offersPOST v2/models/offersGET v2/models | The methods have been deprecated.
+Methods or documentation pages Description of the changes Methods where these parameters are passed or returned.
+The parameters have been deprecatedmarketModelId,marketModelName,modelIdsandmodelId.
+
+marketModelId
+
+marketModelName
+
+modelIds
+
+modelId
+GET v2/models/{modelId}POST v2/modelsGET v2/models/{modelId}/offersPOST v2/models/offersGET v2/models
+
+GET v2/models/{modelId}
+
+POST v2/models
+
+GET v2/models/{modelId}/offers
+
+POST v2/models/offers
+
+GET v2/models The methods have been deprecated.
+
+March 31
+
+Methods or documentation pages | Description of the changes
+GET v2/businesses/{businessId}/warehouses | The method has been deprecated. Instead, usePOST v2/businesses/{businessId}/warehouses.
+Methods or documentation pages Description of the changes GET v2/businesses/{businessId}/warehouses The method has been deprecated. Instead, usePOST v2/businesses/{businessId}/warehouses.
+
+March 7th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/returnsGET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId} | The parameters have been deprecatedrefundAmountandpartnerCompensation. Use them insteadamountandpartnerCompensationAmount.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/returnsGET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}
+The parameters have been deprecatedrefundAmountandpartnerCompensation. Use them insteadamountandpartnerCompensationAmount.
+
+refundAmount
+
+partnerCompensation
+
+amount
+
+partnerCompensationAmount
+
+March, 3rd
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/loginsGET v2/campaigns/by_login/{login} | Outdated methods have been removed.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/loginsGET v2/campaigns/by_login/{login}
+
+GET v2/campaigns/{campaignId}/logins
+
+GET v2/campaigns/by_login/{login} Outdated methods have been removed.
+
+February 20th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offers | The parameter has been deprecatedavailable. Instead, use methods to hide goods from the showcase:GET v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offers/delete
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offers/updatePOST v2/campaigns/{campaignId}/offers
+The parameter has been deprecatedavailable. Instead, use methods to hide goods from the showcase:GET v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offers/delete
+
+available
+
+February 13th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameter has been deprecateddetails.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameter has been deprecateddetails.
+
+details
+
+February 10th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/suggestions | The method has been deprecated. Methods or documentation pages
+Description of the changes POST v2/businesses/{businessId}/offer-mappings/suggestions The method has been deprecated.
+
+February 4th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/promos/offers | The parameter has been deprecatedstatusType. Instead, usestatuses.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/promos/offers
+The parameter has been deprecatedstatusType. Instead, usestatuses.
+
+statusType
+
+statuses
+
+February 3rd
+
+Methods or documentation pages | Description of the changes
+GET campaigns/{campaignId}/feedback/updates | An outdated method has been removed. Methods or documentation pages
+Description of the changes GET campaigns/{campaignId}/feedback/updates
+
+GET campaigns/{campaignId}/feedback/updates An outdated method has been removed.
+
+January 20th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/bids/recommendations | The parameter has been deprecatedpriceRecommendations.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/bids/recommendations
+The parameter has been deprecatedpriceRecommendations.
+
+priceRecommendations
+
+January 14th
+
+Methods or documentation pages | Description of the changes
+All methods where passed or returnedoffset. | An outdated parameter has been deletedoffset. Methods or documentation pages
+Description of the changes All methods where passed or returnedoffset.
+
+offset An outdated parameter has been deletedoffset.
+
+offset
+
+2024
+December 27th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/loginsGET v2/campaigns/by_login/{login} | The methods have been deprecated.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/loginsGET v2/campaigns/by_login/{login}
+
+GET v2/campaigns/{campaignId}/logins
+
+GET v2/campaigns/by_login/{login} The methods have been deprecated.
+
+December 17th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameter has been deprecatedidindelivery.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameter has been deprecatedidindelivery.
+
+id
+
+delivery
+
+December 16th
+
+Methods or documentation pages | Description of the changes
+Instructions and methods of working with the push scheme. | The pages were deleted.We do not recommend setting up new integrations with the push component.
+Methods or documentation pages Description of the changes Instructions and methods of working with the push scheme.
+The pages were deleted.We do not recommend setting up new integrations with the push component.
+
+November 29th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings | The parameter has been deprecatedcustomsCommodityCode. Instead, usecommodityCodeswith the typeCUSTOMS_COMMODITY_CODE.
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data | The parameter has been deprecatedurl.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings
+The parameter has been deprecatedcustomsCommodityCode. Instead, usecommodityCodeswith the typeCUSTOMS_COMMODITY_CODE.
+
+customsCommodityCode
+
+commodityCodes
+
+CUSTOMS_COMMODITY_CODE GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data The parameter has been deprecatedurl.
+
+url
+
+November 28th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/update | The parameter has been deprecatedcategory. Instead, usemarketCategoryId.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-mappings/update
+The parameter has been deprecatedcategory. Instead, usemarketCategoryId.
+
+category
+
+marketCategoryId
+
+November 20th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods | The parameter has been deprecatedcode. Instead, usecodes.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods
+The parameter has been deprecatedcode. Instead, usecodes.
+
+code
+
+codes
+
+November 6
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/stats/orders | Money transfer methods have been deprecatedCASHBACK,MARKETPLACEandSPLIT.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/stats/orders
+Money transfer methods have been deprecatedCASHBACK,MARKETPLACEandSPLIT.
+
+CASHBACK
+
+MARKETPLACE
+
+SPLIT
+
+August 26th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-cardsPOST v2/category/{categoryId}/parameters | The recommendations were considered outdatedHAS_VIDEO,FILTERABLE,HAS_DESCRIPTIONandHAS_BARCODE.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-cardsPOST v2/category/{categoryId}/parameters
+The recommendations were considered outdatedHAS_VIDEO,FILTERABLE,HAS_DESCRIPTIONandHAS_BARCODE.
+
+HAS_VIDEO
+
+FILTERABLE
+
+HAS_DESCRIPTION
+
+HAS_BARCODE
+
+August 21st
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/feeds/{feedId}/categoriesGET v2/campaigns/{campaignId}/feeds/categories | Outdated methods have been removed.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/feeds/{feedId}/categoriesGET v2/campaigns/{campaignId}/feeds/categories
+
+GET v2/campaigns/{campaignId}/feeds/{feedId}/categories
+
+GET v2/campaigns/{campaignId}/feeds/categories Outdated methods have been removed.
+
+August 15th
+
+Methods or documentation pages | Description of the changes
+GET campaigns/{campaignId}/feedback/updates | The method has been deprecated. Methods or documentation pages
+Description of the changes GET campaigns/{campaignId}/feedback/updates
+
+GET campaigns/{campaignId}/feedback/updates The method has been deprecated.
+
+August 8th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-prices/suggestions | The method has been deprecated. Instead, usePOST v2/reports/goods-prices/generate.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offer-prices/suggestions
+
+POST v2/campaigns/{campaignId}/offer-prices/suggestions The method has been deprecated. Instead, usePOST v2/reports/goods-prices/generate.
+
+August 5th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/region | The method has been deprecated. Instead, useGET v2/campaigns/{campaignId}/settings.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/region
+
+GET v2/campaigns/{campaignId}/region The method has been deprecated. Instead, useGET v2/campaigns/{campaignId}/settings.
+
+August 2nd
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-prices/updates | Outdated parameters have been deletedidandshopSku.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offer-prices/updates
+Outdated parameters have been deletedidandshopSku.
+
+id
+
+shopSku
+
+July 19th
+
+Methods or documentation pages | Description of the changes
+POST cart | The parameter has been deprecatedsubsidy. Methods or documentation pages Description of the changes
+POST cart
+
+POST cart The parameter has been deprecatedsubsidy.
+
+subsidy
+
+July 11th
+
+Methods or documentation pages | Description of the changes
+DELETE v2/campaigns/{campaignId}/hidden-offers | The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/hidden-offers/delete.
+Methods or documentation pages Description of the changes DELETE v2/campaigns/{campaignId}/hidden-offers
+
+DELETE v2/campaigns/{campaignId}/hidden-offers The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/hidden-offers/delete.
+
+July 9th
+
+Methods or documentation pages | Description of the changes
+POST order/acceptPOST order/statusPOST order/cancellation/notify | The parameter has been deprecatedsubsidy. Instead, usesubsidies.
+Methods or documentation pages Description of the changes POST order/acceptPOST order/statusPOST order/cancellation/notify
+
+POST order/accept
+
+POST order/status
+
+POST order/cancellation/notify The parameter has been deprecatedsubsidy. Instead, usesubsidies.
+
+subsidy
+
+subsidies
+
+July 5th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameter has been deprecatedbuyerTotalBeforeDiscount.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameter has been deprecatedbuyerTotalBeforeDiscount.
+
+buyerTotalBeforeDiscount
+
+July 4th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST order/acceptPOST order/statusPOST order/cancellation/notify | An outdated parameter has been deletedstatus.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST order/acceptPOST order/statusPOST order/cancellation/notify
+
+POST order/accept
+
+POST order/status
+
+POST order/cancellation/notify An outdated parameter has been deletedstatus.
+
+status
+
+June 24th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameters have been deprecatedpriceBeforeDiscount,buyerItemsTotalandbuyerTotal.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameters have been deprecatedpriceBeforeDiscount,buyerItemsTotalandbuyerTotal.
+
+priceBeforeDiscount
+
+buyerItemsTotal
+
+buyerTotal
+
+June 5th
+
+Methods or documentation pages | Description of the changes
+POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings | The parameter has been deprecatedparams. Instead, useparameterValues.
+Methods or documentation pages Description of the changes POST v2/businesses/{businessId}/offer-mappings/updatePOST v2/businesses/{businessId}/offer-mappings
+The parameter has been deprecatedparams. Instead, useparameterValues.
+
+params
+
+parameterValues
+
+June 4th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/hidden-offers | An outdated parameter has been deletedtotal.
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders | Outdated parameters have been deletedtotal,subsidyTotalandtotalWithSubsidy.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/hidden-offers
+An outdated parameter has been deletedtotal.
+
+total
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders
+Outdated parameters have been deletedtotal,subsidyTotalandtotalWithSubsidy.
+
+total
+
+subsidyTotal
+
+totalWithSubsidy
+
+May 17
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-prices/updates | An outdated parameter has been deletedmarketSku.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offer-prices/updates
+An outdated parameter has been deletedmarketSku.
+
+marketSku
+
+16th of May
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-prices/updatesGET v2/campaigns/{campaignId}/offer-prices | An outdated parameter has been deletedfeed.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/offer-prices/updatesGET v2/campaigns/{campaignId}/offer-prices
+An outdated parameter has been deletedfeed.
+
+feed
+
+April 24th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/offer-prices | The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/offer-prices.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/offer-prices
+The method has been deprecated. Instead, usePOST v2/campaigns/{campaignId}/offer-prices.
+
+April 19th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST order/acceptPOST order/statusPOST order/cancellation/notify | The parameter has been deprecatedstatus.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/statusPOST order/acceptPOST order/statusPOST order/cancellation/notify
+
+POST order/accept
+
+POST order/status
+
+POST order/cancellation/notify The parameter has been deprecatedstatus.
+
+status
+
+April 18th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status | The parameter has been deprecatedprice.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}PUT v2/campaigns/{campaignId}/orders/{orderId}/status
+The parameter has been deprecatedprice.
+
+price
+
+April 11
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/statusPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/cis | An outdated parameter has been deletedfeedCategoryId.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/statusPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/cis
+
+PUT v2/campaigns/{campaignId}/orders/{orderId}/cis An outdated parameter has been deletedfeedCategoryId.
+
+feedCategoryId
+
+April 10th
+
+Methods or documentation pages | Description of the changes
+POST v2/reports/united-marketplace-services/generatePOST v2/reports/united-netting/generate | The parameters have been deprecateddateTimeFromanddateTimeTo. Use them insteaddateFromanddateTo.
+Methods or documentation pages Description of the changes POST v2/reports/united-marketplace-services/generatePOST v2/reports/united-netting/generate
+The parameters have been deprecateddateTimeFromanddateTimeTo. Use them insteaddateFromanddateTo.
+
+dateTimeFrom
+
+dateTimeTo
+
+dateFrom
+
+dateTo
+
+March 15th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/statusPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/cis | The parameter has been deprecatedfeedCategoryId.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/ordersPUT v2/campaigns/{campaignId}/orders/{orderId}/statusPUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/cis
+
+PUT v2/campaigns/{campaignId}/orders/{orderId}/cis The parameter has been deprecatedfeedCategoryId.
+
+feedCategoryId
+
+February 8
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId} | The parameter has been deprecatedphone.To get the buyer's phone number, use the methodGET v2/campaigns/{campaignId}/orders/{orderId}/buyer.
+Methods or documentation pages Description of the changes GET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}
+The parameter has been deprecatedphone.To get the buyer's phone number, use the methodGET v2/campaigns/{campaignId}/orders/{orderId}/buyer.
+
+phone
+
+1st of February
+
+Methods or documentation pages | Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId} | The parameter has been deprecatedshopSku. Instead, useofferId.
+Methods or documentation pages Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/ordersGET v2/campaigns/{campaignId}/orders/{orderId}
+The parameter has been deprecatedshopSku. Instead, useofferId.
+
+shopSku
+
+offerId
+
+January 22
+
+Methods or documentation pages | Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders | The parameters have been deprecatedtotal,subsidyTotalandtotalWithSubsidy.
+Methods or documentation pages Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/statusGET v2/campaigns/{campaignId}/orders/{orderId}GET v2/campaigns/{campaignId}/orders
+The parameters have been deprecatedtotal,subsidyTotalandtotalWithSubsidy.
+
+total
+
+subsidyTotal
+
+totalWithSubsidy
+
+January 18th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offersDELETE v2/campaigns/{campaignId}/hidden-offers | Outdated parameters have been deletedcommentandpriority.
+Methods or documentation pages Description of the changes
+GET v2/campaigns/{campaignId}/hidden-offersPOST v2/campaigns/{campaignId}/hidden-offersDELETE v2/campaigns/{campaignId}/hidden-offers
+
+DELETE v2/campaigns/{campaignId}/hidden-offers Outdated parameters have been deletedcommentandpriority.
+
+comment
+
+priority
+
+January 17th
+
+Methods or documentation pages | Description of the changes
+GET v2/campaigns/{campaignId}/hidden-offers | An outdated parameter has been deletedfeed_id. Methods or documentation pages
+Description of the changes GET v2/campaigns/{campaignId}/hidden-offers An outdated parameter has been deletedfeed_id.
+
+feed_id
+
+2023
+December 26th
+
+Methods or documentation pages | Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxesPUT v2/campaigns/{campaignId}/orders/{orderId}/items | Marked the methods obsolete for the model FBS. Use them insteadPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+Methods or documentation pages Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiersPUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxesPUT v2/campaigns/{campaignId}/orders/{orderId}/items
+Marked the methods obsolete for the model FBS. Use them insteadPUT v2/campaigns/{campaignId}/orders/{orderId}/boxes.
+
+September 25th
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/price-quarantine | The parameters have been deprecatedcurrentPriceandlastValidPrice. Use them insteadparams.
+Methods or documentation pages Description of the changes POST v2/campaigns/{campaignId}/price-quarantine
+The parameters have been deprecatedcurrentPriceandlastValidPrice. Use them insteadparams.
+
+currentPrice
+
+lastValidPrice
+
+params
+
+June 22nd
+
+Methods or documentation pages | Description of the changes
+POST v2/campaigns/{campaignId}/offer-mapping-entries/suggestionsPOST v2/campaigns/{campaignId}/offer-mapping-entries/updatesGET v2/campaigns/{campaignId}/offer-mapping-entriesGET v2/campaigns/{campaignId}/offersGET v2/campaigns/{campaignId}/offers/allGET v2/campaigns/{campaignId}/feedsGET v2/campaigns/{campaignId}/feeds/{feedId}GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logsPOST v2/campaigns/{campaignId}/feeds/{feedId}/paramsPOST v2/campaigns/{campaignId}/feeds/{feedId}/refresh | The methods have been deprecated.
+Methods or documentation pages Description of the changes
+POST v2/campaigns/{campaignId}/offer-mapping-entries/suggestionsPOST v2/campaigns/{campaignId}/offer-mapping-entries/updatesGET v2/campaigns/{campaignId}/offer-mapping-entriesGET v2/campaigns/{campaignId}/offersGET v2/campaigns/{campaignId}/offers/allGET v2/campaigns/{campaignId}/feedsGET v2/campaigns/{campaignId}/feeds/{feedId}GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logsPOST v2/campaigns/{campaignId}/feeds/{feedId}/paramsPOST v2/campaigns/{campaignId}/feeds/{feedId}/refresh
+
+GET v2/campaigns/{campaignId}/offers
+
+GET v2/campaigns/{campaignId}/offers/all
+
+GET v2/campaigns/{campaignId}/feeds
+
+GET v2/campaigns/{campaignId}/feeds/{feedId}
+
+GET v2/campaigns/{campaignId}/feeds/{feedId}/index-logs
+
+POST v2/campaigns/{campaignId}/feeds/{feedId}/params
+
+POST v2/campaigns/{campaignId}/feeds/{feedId}/refresh The methods have been deprecated.
+
+May 30th
+
+Methods or documentation pages | Description of the changes
+PUT v2/campaigns/{campaignId}/orders/{orderId}/cis | The method has been deprecated. Instead, usePUT v2/campaigns/{campaignId}/orders/{orderId}/identifiers
+Methods or documentation pages Description of the changes PUT v2/campaigns/{campaignId}/orders/{orderId}/cis
+
+PUT v2/campaigns/{campaignId}/orders/{orderId}/cis
+The method has been deprecated. Instead, usePUT v2/campaigns/{campaignId}/orders/{orderId}/identifiers

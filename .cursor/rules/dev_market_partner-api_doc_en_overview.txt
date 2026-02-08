@@ -1,0 +1,74 @@
+Overview of methods
+Cabinet-level methods
+Some of the methods fromthe list— for example, product catalog managers — they work at the level ofcabinetregardless of which models are connected and used.What is a cabinet?
+The cabinet ID is passed in the path parameters. —businessId. Example:POST v2/businesses/{businessId}/settings
+
+businessId
+
+POST v2/businesses/{businessId}/settings How to get the cabinet ID
+
+Methods at the store level
+There are methods that work with individualshopsinside the office.What is a store on the Market?
+To call them, you need a campaign ID.campaignId. Example:GET v2/campaigns/{campaignId}/orders/{orderId}
+
+campaignId
+
+GET v2/campaigns/{campaignId}/orders/{orderId} How to get the campaign ID Some of these methods are listed inthe general listsome work only for certain placement models:
+
+• FBY
+• FBS
+• Express
+• DBS
+Comparison of methods by models
+
+Methods for getting reports
+Resourcereportsallows you to request and receive reports on your work on the Market. Example:POST v2/reports/shows-sales/generate
+
+reports
+
+POST v2/reports/shows-sales/generate Depending on the type of report, you may need bothbusinessId, so andcampaignId.How to get
+
+businessId
+
+campaignId
+For example, to start generating a turnover report —POST v2/reports/goods-turnover/generate, the campaign ID is required —campaignId.
+
+campaignId Requests to reports
+
+Reference methods
+No identifiers are required in queries that provide general information that is not specific to a particular business.businessIdorcampaignId.
+
+businessId
+
+campaignId
+
+Shared resources | The information they return
+auth | information about Api-Key-the token
+categories | Market categories
+models | product models
+regions | how is the region represented in the Market's geobase?
+tariffs | Yandex.Market rates
+warehouses | Market warehouses
+
+auth
+
+categories
+
+models
+
+regions
+
+tariffs
+
+warehouses
+
+How to get cabinet and campaign IDs
+To get the IDsbusinessIdandcampaignId, make a requestGET v2/campaigns. It returns all the IDs that the specified authorization token allows access to.
+
+businessId
+
+campaignId
+The campaign ID can also be found in the merchant's account on the Market. — click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.

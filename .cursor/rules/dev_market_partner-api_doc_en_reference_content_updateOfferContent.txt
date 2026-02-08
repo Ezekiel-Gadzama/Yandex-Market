@@ -1,0 +1,1487 @@
+Editing product category characteristics
+The method is available for models:FBY, FBS, Express and DBS.
+
+• offers-and-cards-management —Manage products and cards
+• all-methods — Full account management
+Edits product characteristics that are specific to the category it belongs to. Here is only what belongs to a specific category.
+If you need to change the main parameters of the product (name, description, images, video, manufacturer, barcode), use the requestPOST v2/businesses/{businessId}/offer-mappings/update.
+To remove the characteristics that are set in the parameters with the typestring, pass an empty value.
+
+string The data in the catalog is not updated instantly It takes up to a few minutes.
+
+⚙️ Limit:10,000 items per minute
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/offer-cards/update
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/offer-cards/update
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Body
+
+{
+"offersContent": [
+{
+"offerId": "example",
+"categoryId": 0,
+"parameterValues": [
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+]
+}
+]
+}
+
+{
+"offersContent": [
+{
+"offerId": "example",
+"categoryId": 0,
+"parameterValues": [
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+]
+}
+]
+}
+
+Name | Description
+offersContent | Type: object[]categoryIdType: integerThe ID of the category on the Market.When changing the category, make sure that the product characteristics and their values in the parameterparameterValuesyou are submitting for a new category.You can get a list of Market categories using a request.POST v2/categories/tree.Min value:0Exclusive min:trueofferIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleparameterValuesType: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Whenchangingcharacteristics, transmit only those whose value needs to be updated. If incategoryIdyou are changing the category, the values of the common characteristics for the old and new categories will remain, and you do not need to transfer them.Read more in"Transfer of characteristic values".Min items:1Max items:300Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}]A list of products with the specified characteristics.Min items:1Max items:100Example[{"offerId":"example","categoryId":0,"parameterValues":[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}]}] | categoryId | Type: integerThe ID of the category on the Market.When changing the category, make sure that the product characteristics and their values in the parameterparameterValuesyou are submitting for a new category.You can get a list of Market categories using a request.POST v2/categories/tree.Min value:0Exclusive min:true | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | parameterValues | Type: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Whenchangingcharacteristics, transmit only those whose value needs to be updated. If incategoryIdyou are changing the category, the values of the common characteristics for the old and new categories will remain, and you do not need to transfer them.Read more in"Transfer of characteristic values".Min items:1Max items:300Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}] | parameterId | Type: integerThe identifier of the characteristic.Min value:1 | unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used. | value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example | valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+categoryId | Type: integerThe ID of the category on the Market.When changing the category, make sure that the product characteristics and their values in the parameterparameterValuesyou are submitting for a new category.You can get a list of Market categories using a request.POST v2/categories/tree.Min value:0Exclusive min:true
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+parameterValues | Type: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Whenchangingcharacteristics, transmit only those whose value needs to be updated. If incategoryIdyou are changing the category, the values of the common characteristics for the old and new categories will remain, and you do not need to transfer them.Read more in"Transfer of characteristic values".Min items:1Max items:300Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}] | parameterId | Type: integerThe identifier of the characteristic.Min value:1 | unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used. | value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example | valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+parameterId | Type: integerThe identifier of the characteristic.Min value:1
+unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.
+value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example
+valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+Name Description offersContent
+
+categoryId | Type: integerThe ID of the category on the Market.When changing the category, make sure that the product characteristics and their values in the parameterparameterValuesyou are submitting for a new category.You can get a list of Market categories using a request.POST v2/categories/tree.Min value:0Exclusive min:true
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+parameterValues | Type: object[]parameterIdType: integerThe identifier of the characteristic.Min value:1unitIdType: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.valueType: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:examplevalueIdType: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.A list of characteristics with their values.Whenchangingcharacteristics, transmit only those whose value needs to be updated. If incategoryIdyou are changing the category, the values of the common characteristics for the old and new categories will remain, and you do not need to transfer them.Read more in"Transfer of characteristic values".Min items:1Max items:300Example[{"parameterId":1,"unitId":0,"valueId":0,"value":"example"}] | parameterId | Type: integerThe identifier of the characteristic.Min value:1 | unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used. | value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example | valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+parameterId | Type: integerThe identifier of the characteristic.Min value:1
+unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.
+value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example
+valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+categoryId Type: integer The ID of the category on the Market.
+When changing the category, make sure that the product characteristics and their values in the parameterparameterValuesyou are submitting for a new category.
+
+parameterValues You can get a list of Market categories using a request.POST v2/categories/tree. Min value:0
+
+0 Exclusive min:true
+
+true offerId Type: string Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example parameterValues
+
+parameterId | Type: integerThe identifier of the characteristic.Min value:1
+unitId | Type: integerID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.
+value | Type: stringMeaning.For type characteristicsENUMsend:Together withvalueId, if you take the value from the directory;withoutvalueId, if the value is its own.Example:example
+valueId | Type: integerID of the value.Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.Do not specify for your own values.Only for type characteristicsENUM.
+parameterId Type: integer The identifier of the characteristic. Min value:1
+
+1 unitId Type: integer
+ID of the unit of measurement. If you did not pass the parameterunitId, the default unit of measurement is used.
+
+unitId value Type: string Meaning. For type characteristicsENUMsend:
+
+ENUM
+
+• Together withvalueId, if you take the value from the directory;
+
+valueId
+• withoutvalueId, if the value is its own.
+
+valueId Example:example
+
+example valueId Type: integer ID of the value.
+
+• Be sure to specify the identifier if you are transmitting a value from the list of acceptable values received from the Market.
+• Do not specify for your own values.
+• Only for type characteristicsENUM.
+
+ENUM A list of characteristics with their values.
+Whenchangingcharacteristics, transmit only those whose value needs to be updated. If incategoryIdyou are changing the category, the values of the common characteristics for the old and new categories will remain, and you do not need to transfer them.
+
+categoryId Read more in"Transfer of characteristic values". Min items:1
+
+1 Max items:300
+
+300
+
+[
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+]
+
+[
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+]
+A list of products with the specified characteristics.
+Min items:1
+
+1 Max items:100
+
+100
+
+[
+{
+"offerId": "example",
+"categoryId": 0,
+"parameterValues": [
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+]
+}
+]
+
+[
+{
+"offerId": "example",
+"categoryId": 0,
+"parameterValues": [
+{
+"parameterId": 1,
+"unitId": 0,
+"valueId": 0,
+"value": "example"
+}
+]
+}
+]
+
+Responses
+200 OK
+The request was executed correctly, and the data has been processed. Answer200by itself, it does not mean that the values passed are correct.
+
+200
+Be sure to look at the details of the response.:status, as well as a list of errors (results.errors) and comments (results.warnings), if there are any.
+
+status
+
+results.errors
+
+results.warnings
+
+• If an error is returned for at least one product (results.errors), fieldstatus=ERROR. Changes to all transferred items will not be applied.
+
+results.errors
+
+status
+
+ERROR
+• If there are no errors, but at least one product has a comment returned (results.warnings), fieldstatus=OK, and the changes will be applied.
+
+results.warnings
+
+status
+
+OK If instatusIt's backERROR, make sure that:
+
+status
+
+ERROR
+
+• All required specifications are filled in.
+• the characteristics actually exist in the specified categories;
+• the values correspond to the characteristics;
+• your own values have the desired data type.
+Fields will help you find problems.errorsandwarnings.
+
+errors
+
+warnings
+
+Body
+
+{
+"status": "OK",
+"results": [
+{
+"offerId": "example",
+"errors": [
+{}
+],
+"warnings": [
+{}
+]
+}
+]
+}
+
+{
+"status": "OK",
+"results": [
+{
+"offerId": "example",
+"errors": [
+{}
+],
+"warnings": [
+{}
+]
+}
+]
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultsType: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleerrorsType: object[]messageType: stringThe text of the error or warning.Example:exampletypeType: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERSparameterIdType: integerID of the feature that the error or warning is associated with.Mistakes.If there is an error for at least one product, the information in the catalog will not be updated for all transferred products.Min items:1Example[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}]warningsType: object[]messageType: stringThe text of the error or warning.Example:exampletypeType: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERSparameterIdType: integerID of the feature that the error or warning is associated with.Warnings.The information in the catalog will be updated.Min items:1Example[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}]Errors and warnings that appeared when processing the transmitted values. Each item in the list corresponds to one product.If there are no errors or warnings, the field is not passed.Min items:1Example[{"offerId":"example","errors":[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}],"warnings":[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}]}]Example{"results":[{"offerId":"example","errors":[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}],"warnings":[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}]}]}
+
+results | Type: object[]offerIdType: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:exampleerrorsType: object[]messageType: stringThe text of the error or warning.Example:exampletypeType: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERSparameterIdType: integerID of the feature that the error or warning is associated with.Mistakes.If there is an error for at least one product, the information in the catalog will not be updated for all transferred products.Min items:1Example[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}]warningsType: object[]messageType: stringThe text of the error or warning.Example:exampletypeType: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERSparameterIdType: integerID of the feature that the error or warning is associated with.Warnings.The information in the catalog will be updated.Min items:1Example[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}]Errors and warnings that appeared when processing the transmitted values. Each item in the list corresponds to one product.If there are no errors or warnings, the field is not passed.Min items:1Example[{"offerId":"example","errors":[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}],"warnings":[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}]}] | offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example | errors | Type: object[]messageType: stringThe text of the error or warning.Example:exampletypeType: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERSparameterIdType: integerID of the feature that the error or warning is associated with.Mistakes.If there is an error for at least one product, the information in the catalog will not be updated for all transferred products.Min items:1Example[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}] | message | Type: stringThe text of the error or warning.Example:example | type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS | parameterId | Type: integerID of the feature that the error or warning is associated with. | warnings | Type: object[]messageType: stringThe text of the error or warning.Example:exampletypeType: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERSparameterIdType: integerID of the feature that the error or warning is associated with.Warnings.The information in the catalog will be updated.Min items:1Example[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}] | message | Type: stringThe text of the error or warning.Example:example | type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS | parameterId | Type: integerID of the feature that the error or warning is associated with.
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+errors | Type: object[]messageType: stringThe text of the error or warning.Example:exampletypeType: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERSparameterIdType: integerID of the feature that the error or warning is associated with.Mistakes.If there is an error for at least one product, the information in the catalog will not be updated for all transferred products.Min items:1Example[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}] | message | Type: stringThe text of the error or warning.Example:example | type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS | parameterId | Type: integerID of the feature that the error or warning is associated with.
+message | Type: stringThe text of the error or warning.Example:example
+type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS
+parameterId | Type: integerID of the feature that the error or warning is associated with.
+warnings | Type: object[]messageType: stringThe text of the error or warning.Example:exampletypeType: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERSparameterIdType: integerID of the feature that the error or warning is associated with.Warnings.The information in the catalog will be updated.Min items:1Example[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}] | message | Type: stringThe text of the error or warning.Example:example | type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS | parameterId | Type: integerID of the feature that the error or warning is associated with.
+message | Type: stringThe text of the error or warning.Example:example
+type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS
+parameterId | Type: integerID of the feature that the error or warning is associated with. results
+
+offerId | Type: stringYour SKU — the product ID in your system.Usage rules SKU:For each product SKU there must be one.Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.WarningSpaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.What is SKU and how to assign itMin length:1Max length:255Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$Example:example
+errors | Type: object[]messageType: stringThe text of the error or warning.Example:exampletypeType: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERSparameterIdType: integerID of the feature that the error or warning is associated with.Mistakes.If there is an error for at least one product, the information in the catalog will not be updated for all transferred products.Min items:1Example[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}] | message | Type: stringThe text of the error or warning.Example:example | type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS | parameterId | Type: integerID of the feature that the error or warning is associated with.
+message | Type: stringThe text of the error or warning.Example:example
+type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS
+parameterId | Type: integerID of the feature that the error or warning is associated with.
+warnings | Type: object[]messageType: stringThe text of the error or warning.Example:exampletypeType: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERSparameterIdType: integerID of the feature that the error or warning is associated with.Warnings.The information in the catalog will be updated.Min items:1Example[{"type":"OFFER_NOT_FOUND","parameterId":0,"message":"example"}] | message | Type: stringThe text of the error or warning.Example:example | type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS | parameterId | Type: integerID of the feature that the error or warning is associated with.
+message | Type: stringThe text of the error or warning.Example:example
+type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS
+parameterId | Type: integerID of the feature that the error or warning is associated with. offerId Type: string
+Your SKU — the product ID in your system. Usage rules SKU:
+
+• For each product SKU there must be one.
+For each product SKU there must be one.
+• Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+Already set SKU it cannot be released and reused for another product. Each product should receive a new identifier that has never been used in your catalog before.
+SKU The product can be changed in the seller's account on the Market. Read about how to do this.in the Help of the Market for sellers.
+Warning
+Spaces at the beginning and end of the value are automatically deleted. For example," SKU123 "and"SKU123"they will be treated as identical values.
+
+" SKU123 "
+
+"SKU123" What is SKU and how to assign it Min length:1
+
+1 Max length:255
+
+255 Pattern:^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$
+
+^(?=.*\S.*)[^\x00-\x08\x0A-\x1f\x7f]{1,255}$ Example:example
+
+example errors
+
+message | Type: stringThe text of the error or warning.Example:example
+type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS
+parameterId | Type: integerID of the feature that the error or warning is associated with. message Type: string
+The text of the error or warning. Example:example
+
+example type Type: string Types of errors and warnings:
+
+• OFFER_NOT_FOUND— there is no such product in the catalog.
+
+OFFER_NOT_FOUND
+• UNKNOWN_CATEGORY— an unknown category is specified.
+
+UNKNOWN_CATEGORY
+• INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.
+
+INVALID_CATEGORY
+• UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.
+
+UNKNOWN_PARAMETER
+• UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.
+
+UNEXPECTED_BOOLEAN_VALUE
+• NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.
+
+NUMBER_FORMAT
+• INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.
+
+INVALID_UNIT_ID
+• INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.
+
+INVALID_GROUP_ID_LENGTH
+• INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.
+
+INVALID_GROUP_ID_CHARACTERS
+You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.
+Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS
+
+OFFER_NOT_FOUND
+
+UNKNOWN_CATEGORY
+
+INVALID_CATEGORY
+
+UNKNOWN_PARAMETER
+
+UNEXPECTED_BOOLEAN_VALUE
+
+NUMBER_FORMAT
+
+INVALID_UNIT_ID
+
+INVALID_GROUP_ID_LENGTH
+
+INVALID_GROUP_ID_CHARACTERS parameterId Type: integer ID of the feature that the error or warning is associated with.
+Mistakes.
+If there is an error for at least one product, the information in the catalog will not be updated for all transferred products.
+Min items:1
+
+1
+
+[
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+]
+
+[
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+]
+warnings
+
+message | Type: stringThe text of the error or warning.Example:example
+type | Type: stringTypes of errors and warnings:OFFER_NOT_FOUND— there is no such product in the catalog.UNKNOWN_CATEGORY— an unknown category is specified.INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS
+parameterId | Type: integerID of the feature that the error or warning is associated with. message Type: string
+The text of the error or warning. Example:example
+
+example type Type: string Types of errors and warnings:
+
+• OFFER_NOT_FOUND— there is no such product in the catalog.
+
+OFFER_NOT_FOUND
+• UNKNOWN_CATEGORY— an unknown category is specified.
+
+UNKNOWN_CATEGORY
+• INVALID_CATEGORY— a non-leaf category is specified. Specify the one that has no child categories.
+
+INVALID_CATEGORY
+• UNKNOWN_PARAMETER— A characteristic has been transmitted that is not among the characteristics of the category.
+
+UNKNOWN_PARAMETER
+• UNEXPECTED_BOOLEAN_VALUE— something else is passed instead of the boolean value.
+
+UNEXPECTED_BOOLEAN_VALUE
+• NUMBER_FORMAT— a string is passed that does not represent a number, instead of a number.
+
+NUMBER_FORMAT
+• INVALID_UNIT_ID— the unit of measurement that is unacceptable for the characteristic has been passed.
+
+INVALID_UNIT_ID
+• INVALID_GROUP_ID_LENGTH— the allowed character value is exceeded in the name — 255.
+
+INVALID_GROUP_ID_LENGTH
+• INVALID_GROUP_ID_CHARACTERS— passedinvalid characters.
+
+INVALID_GROUP_ID_CHARACTERS
+You can check which category characteristics are available for a given category and get their settings using a request.POST v2/category/{categoryId}/parameters.
+Enum:OFFER_NOT_FOUND,UNKNOWN_CATEGORY,INVALID_CATEGORY,UNKNOWN_PARAMETER,UNEXPECTED_BOOLEAN_VALUE,NUMBER_FORMAT,INVALID_UNIT_ID,INVALID_GROUP_ID_LENGTH,INVALID_GROUP_ID_CHARACTERS
+
+OFFER_NOT_FOUND
+
+UNKNOWN_CATEGORY
+
+INVALID_CATEGORY
+
+UNKNOWN_PARAMETER
+
+UNEXPECTED_BOOLEAN_VALUE
+
+NUMBER_FORMAT
+
+INVALID_UNIT_ID
+
+INVALID_GROUP_ID_LENGTH
+
+INVALID_GROUP_ID_CHARACTERS parameterId Type: integer ID of the feature that the error or warning is associated with.
+Warnings. The information in the catalog will be updated. Min items:1
+
+1
+
+[
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+]
+
+[
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+]
+
+Errors and warnings that appeared when processing the transmitted values. Each item in the list corresponds to one product.
+If there are no errors or warnings, the field is not passed. Min items:1
+
+1
+
+[
+{
+"offerId": "example",
+"errors": [
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+],
+"warnings": [
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+]
+}
+]
+
+[
+{
+"offerId": "example",
+"errors": [
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+],
+"warnings": [
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+]
+}
+]
+
+{
+"results": [
+{
+"offerId": "example",
+"errors": [
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+],
+"warnings": [
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+]
+}
+]
+}
+
+{
+"results": [
+{
+"offerId": "example",
+"errors": [
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+],
+"warnings": [
+{
+"type": "OFFER_NOT_FOUND",
+"parameterId": 0,
+"message": "example"
+}
+]
+}
+]
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+423 Locked
+The specified method cannot be applied to the resource.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version. ASCII characters 0 through 31 (except 9) and 127 are prohibited.from the table.
+
+Was the article helpful?

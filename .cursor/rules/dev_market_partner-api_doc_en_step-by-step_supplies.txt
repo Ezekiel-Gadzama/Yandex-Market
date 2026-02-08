@@ -1,0 +1,82 @@
+FBY-requests for the supply of goods to the warehouse, export or disposal
+For information on how to create an application and deliver the goods to the warehouse, seeYandex.Market Help for sellers.
+Yandex Market API allows you to:
+
+• to receive information:about requests for delivery, export or disposal —POST v2/campaigns/{campaignId}/supply-requests;about the products in the application —POST v2/campaigns/{campaignId}/supply-requests/items;
+• about requests for delivery, export or disposal —POST v2/campaigns/{campaignId}/supply-requests;
+• about the products in the application —POST v2/campaigns/{campaignId}/supply-requests/items;
+• download documents on request —POST v2/campaigns/{campaignId}/supply-requests/documents;
+• generate barcodes and assign them to specified products —POST v1/businesses/{businessId}/offer-mappings/barcodes/generate;
+• receive a file with product barcodes in the application that need to be glued to the product itself or opaque packaging, —POST v1/reports/documents/barcodes/generate.
+
+Get information about applications
+Make a requestPOST v2/campaigns/{campaignId}/supply-requests, where specify the campaign IDcampaignIdand the necessary parameters for filtering and sorting.
+
+campaignId Application statusstatusreflects its status at the time of the request
+
+status It can change.
+
+What are the types of applications?
+
+• Types of applications:SUPPLY— delivery of goods to the warehouse;WITHDRAW— export of goods from the warehouse;UTILIZATION— disposal of goods.Subtypes of applications
+Types of applications:
+
+• SUPPLY— delivery of goods to the warehouse;
+
+SUPPLY
+• WITHDRAW— export of goods from the warehouse;
+
+WITHDRAW
+• UTILIZATION— disposal of goods.
+
+UTILIZATION Subtypes of applications
+• Parent and child, if there was:delivery to the storage warehouse;multi-delivery;additional delivery;disposal or removal of rejected goods.In this case, the parameters will be returnedparentLink(link to the parent application) andchildrenLinks(links to child applications).
+Parent and child, if there was:
+
+• delivery to the storage warehouse;
+• multi-delivery;
+• additional delivery;
+• disposal or removal of rejected goods.
+In this case, the parameters will be returnedparentLink(link to the parent application) andchildrenLinks(links to child applications).
+
+parentLink
+
+childrenLinks
+• Depending on the logistics:For supplies that go directly to the storage warehouse. The parameter will be returnedtargetLocation— information about the storage warehouse or PVZ.With goods that go through the transit warehouse. The parameter will also be returnedtransitLocation— information about the transit warehouse or PVZ.
+Depending on the logistics:
+
+• For supplies that go directly to the storage warehouse. The parameter will be returnedtargetLocation— information about the storage warehouse or PVZ.
+
+targetLocation
+• With goods that go through the transit warehouse. The parameter will also be returnedtransitLocation— information about the transit warehouse or PVZ.
+
+transitLocation
+
+Get a list of products in the application and information about them
+Make a requestPOST v2/campaigns/{campaignId}/supply-requests/items, where specify the campaign ID (campaignId) and applications (requestId).
+
+campaignId
+
+requestId
+
+Get the application documents
+Make a requestPOST v2/campaigns/{campaignId}/supply-requests/documents, where specify the campaign ID (campaignId) and applications (requestId).
+
+campaignId
+
+requestId
+
+It may be useful
+
+Report or API method | What information does it give
+Turnover Report | How your products are sold from the Market's warehouses.Deliver goods that are running out to the warehouse on time, and pick up those that are being sold out slowly.
+Report on the movement of goods | How many items have been delivered, ordered, returned by customers, moved to another warehouse, or taken out by you.
+Warehouse balance report | The remaining items in all Market warehouses, as well as how many items are available for order, how many defective items, etc.
+Store Quality Index | The value of the store quality index and its components. Report or API method What information does it give
+Turnover Report How your products are sold from the Market's warehouses.
+Deliver goods that are running out to the warehouse on time, and pick up those that are being sold out slowly.
+Report on the movement of goods
+How many items have been delivered, ordered, returned by customers, moved to another warehouse, or taken out by you.
+Warehouse balance report
+The remaining items in all Market warehouses, as well as how many items are available for order, how many defective items, etc.
+Store Quality Index The value of the store quality index and its components. Read about what it is inYandex.Market Help for sellers.

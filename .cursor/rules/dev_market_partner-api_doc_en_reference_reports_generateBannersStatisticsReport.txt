@@ -1,0 +1,954 @@
+The structure and content of the reports are subject to change without prior notice. For example, a new column may be added or the name of the sheet may change.
+
+Coverage Promotion Report
+The method is available forall models. Not yet available for Market Yandex Go sellers.
+
+• promotion —Product promotion
+• finance-and-accounting —View financial data and reports
+• all-methods — Full account management
+Starts the generation of a summary report on the coverage promotion. What kind of report is this:for banners,for push notifications.
+You can find out the generation status and get a link to the finished report using a request.GET v2/reports/info/{reportId}.
+Explanation of the report columns:
+
+CSV column name | JSON column name | XLSX column name | Value type
+DATE | date | Дата | string
+CAMPAIGN_TYPE | campaignType | Тип кампании | string
+CAMPAIGN_ID | campaignId | ID кампании | integer
+CAMPAIGN_NAME | campaignName | Название кампании | string
+SHOWS | shows | Показы, шт. | integer
+COVERAGE | coverage | Охват, чел. | integer
+CLICKS | clicks | Клики, шт. | integer
+CTR | ctr | CTR, % | number
+SHOWS_FREQUENCY | showsFrequency | Частота показа | number
+WATCHED_VIDEO_25 | watchedVideo25 | Просмотры 25% | number
+WATCHED_VIDEO_50 | watchedVideo50 | Просмотры 50% | number
+WATCHED_VIDEO_75 | watchedVideo75 | Просмотры 75% | number
+WATCHED_VIDEO_100 | watchedVideo100 | Просмотры 100% | number
+VTR_25 | vtr25 | VTR 25% | number
+VTR_50 | vtr50 | VTR 50% | number
+VTR_75 | vtr75 | VTR 75% | number
+VTR_100 | vtr100 | VTR 100% | number
+TURN_ON_VOLUME | turnOnVolume | Включения звука | integer
+TURN_OFF_VOLUME | turnOffVolume | Выключения звука | integer
+CART_ADDICTION | cartAddiction | Добавления в корзину, шт. | integer
+ORDERED_COUNT | orderedCount | Заказанные товары, шт. | integer
+CONVERSION | conversion | Конверсия в заказы, % | number
+ORDERED_AMOUNT | orderedAmount | Стоимость заказанных товаров, ₽ | number
+CPO | cpo | СРО, ₽ | number
+COST | cost | Расчётные расходы, ₽ | number
+CPM | cpm | CPM, ₽ | number
+CPV | cpv | CPV, ₽ | number
+REAL_COST | realCost | Фактические расходы (с НДС), ₽ | number
+DEDUCTED_BONUSES | deductedBonuses | Списано бонусов | number
+DRR | drr | Доля расчётных расходов
+от выручки с баннером, % | number CSV column name JSON column name
+XLSX column name Value type DATE date Дата string CAMPAIGN_TYPE campaignType Тип кампании string CAMPAIGN_ID
+campaignId ID кампании integer CAMPAIGN_NAME campaignName Название кампании string SHOWS shows Показы, шт.
+integer COVERAGE coverage Охват, чел. integer CLICKS clicks Клики, шт. integer CTR ctr CTR, % number
+SHOWS_FREQUENCY showsFrequency Частота показа number WATCHED_VIDEO_25 watchedVideo25 Просмотры 25% number
+WATCHED_VIDEO_50 watchedVideo50 Просмотры 50% number WATCHED_VIDEO_75 watchedVideo75 Просмотры 75% number
+WATCHED_VIDEO_100 watchedVideo100 Просмотры 100% number VTR_25 vtr25 VTR 25% number VTR_50 vtr50 VTR 50%
+number VTR_75 vtr75 VTR 75% number VTR_100 vtr100 VTR 100% number TURN_ON_VOLUME turnOnVolume Включения звука
+integer TURN_OFF_VOLUME turnOffVolume Выключения звука integer CART_ADDICTION cartAddiction Добавления в корзину, шт.
+integer ORDERED_COUNT orderedCount Заказанные товары, шт. integer CONVERSION conversion Конверсия в заказы, %
+number ORDERED_AMOUNT orderedAmount Стоимость заказанных товаров, ₽ number CPO cpo СРО, ₽ number COST
+cost Расчётные расходы, ₽ number CPM cpm CPM, ₽ number CPV cpv CPV, ₽ number REAL_COST realCost Фактические расходы (с НДС), ₽
+number DEDUCTED_BONUSES deductedBonuses Списано бонусов number DRR drr Доля расчётных расходов
+от выручки с баннером, %
+number
+
+CSV column name | JSON column name | XLSX column name | Value type
+DATE | date | Дата | string
+CAMPAIGN_TYPE | campaignType | Тип кампании | string
+CAMPAIGN_ID | campaignId | ID кампании | integer
+CAMPAIGN_NAME | campaignName | Название кампании | string
+SERVICE_TYPE | serviceType | Площадка | string
+SHOWS | shows | Показы, шт. | integer
+COVERAGE | coverage | Охват, чел. | integer
+CLICKS | clicks | Клики, шт. | integer
+CTR | ctr | CTR, % | number
+SHOWS_FREQUENCY | showsFrequency | Частота показа | number
+WATCHED_VIDEO_25 | watchedVideo25 | Просмотры 25% | number
+WATCHED_VIDEO_50 | watchedVideo50 | Просмотры 50% | number
+WATCHED_VIDEO_75 | watchedVideo75 | Просмотры 75% | number
+WATCHED_VIDEO_100 | watchedVideo100 | Просмотры 100% | number
+VTR_25 | vtr25 | VTR 25% | number
+VTR_50 | vtr50 | VTR 50% | number
+VTR_75 | vtr75 | VTR 75% | number
+VTR_100 | vtr100 | VTR 100% | number
+TURN_ON_VOLUME | turnOnVolume | Включения звука | integer
+TURN_OFF_VOLUME | turnOffVolume | Выключения звука | integer
+CART_ADDICTION | cartAddiction | Добавления в корзину, шт. | integer
+ORDERED_COUNT | orderedCount | Заказанные товары, шт. | integer
+CONVERSION | conversion | Конверсия в заказы, % | number
+ORDERED_AMOUNT | orderedAmount | Стоимость заказанных товаров, ₽ | number
+CPO | cpo | СРО, ₽ | number
+COST | cost | Расчётные расходы, ₽ | number
+CPM | cpm | CPM, ₽ | number
+CPV | cpv | CPV, ₽ | number
+DRR | drr | Доля расчётных расходов
+от выручки с баннером, % | number CSV column name JSON column name
+XLSX column name Value type DATE date Дата string CAMPAIGN_TYPE campaignType Тип кампании string CAMPAIGN_ID
+campaignId ID кампании integer CAMPAIGN_NAME campaignName Название кампании string SERVICE_TYPE serviceType
+Площадка string SHOWS shows Показы, шт. integer COVERAGE coverage Охват, чел. integer CLICKS clicks Клики, шт.
+integer CTR ctr CTR, % number SHOWS_FREQUENCY showsFrequency Частота показа number WATCHED_VIDEO_25 watchedVideo25
+Просмотры 25% number WATCHED_VIDEO_50 watchedVideo50 Просмотры 50% number WATCHED_VIDEO_75 watchedVideo75
+Просмотры 75% number WATCHED_VIDEO_100 watchedVideo100 Просмотры 100% number VTR_25 vtr25 VTR 25% number
+VTR_50 vtr50 VTR 50% number VTR_75 vtr75 VTR 75% number VTR_100 vtr100 VTR 100% number TURN_ON_VOLUME
+turnOnVolume Включения звука integer TURN_OFF_VOLUME turnOffVolume Выключения звука integer CART_ADDICTION
+cartAddiction Добавления в корзину, шт. integer ORDERED_COUNT orderedCount Заказанные товары, шт. integer
+CONVERSION conversion Конверсия в заказы, % number ORDERED_AMOUNT orderedAmount Стоимость заказанных товаров, ₽
+number CPO cpo СРО, ₽ number COST cost Расчётные расходы, ₽ number CPM cpm CPM, ₽ number CPV cpv CPV, ₽
+number DRR drr Доля расчётных расходов
+от выручки с баннером, % number
+
+CSV column name | JSON column name | XLSX column name | Value type
+DATE | date | Дата | string
+CAMPAIGN_TYPE | campaignType | Тип кампании | string
+CAMPAIGN_ID | campaignId | ID кампании | integer
+CAMPAIGN_NAME | campaignName | Название кампании | string
+SERVICE_TYPE | serviceType | Площадка | string
+CREATIVE_FORMAT | creativeFormat | Формат | string
+POSITION_NUMBER | positionNumber | Номер варианта | string
+CREATIVE_HASH | creativeHash | Id варианта | string
+CREATIVE_URL | creativeUrl | Ссылка на креатив | string
+COPYRIGHT | copyright | Копирайт | string
+SHOWS | shows | Показы, шт. | integer
+COVERAGE | coverage | Охват, чел. | integer
+CLICKS | clicks | Клики, шт. | integer
+CTR | ctr | CTR, % | number
+SHOWS_FREQUENCY | showsFrequency | Частота показа | number
+WATCHED_VIDEO_25 | watchedVideo25 | Просмотры 25% | number
+WATCHED_VIDEO_50 | watchedVideo50 | Просмотры 50% | number
+WATCHED_VIDEO_75 | watchedVideo75 | Просмотры 75% | number
+WATCHED_VIDEO_100 | watchedVideo100 | Просмотры 100% | number
+VTR_25 | vtr25 | VTR 25% | number
+VTR_50 | vtr50 | VTR 50% | number
+VTR_75 | vtr75 | VTR 75% | number
+VTR_100 | vtr100 | VTR 100% | number
+TURN_ON_VOLUME | turnOnVolume | Включения звука | integer
+TURN_OFF_VOLUME | turnOffVolume | Выключения звука | integer
+CART_ADDICTION | cartAddiction | Добавления в корзину, шт. | integer
+ORDERED_COUNT | orderedCount | Заказанные товары, шт. | integer
+CONVERSION | conversion | Конверсия в заказы, % | number
+ORDERED_AMOUNT | orderedAmount | Стоимость заказанных товаров, ₽ | number
+CPO | cpo | СРО, ₽ | number
+COST | cost | Расчётные расходы, ₽ | number
+CPM | cpm | CPM, ₽ | number
+CPV | cpv | CPV, ₽ | number
+DRR | drr | Доля расчётных расходов от выручки с кампании, % | number CSV column name JSON column name
+XLSX column name Value type DATE date Дата string CAMPAIGN_TYPE campaignType Тип кампании string CAMPAIGN_ID
+campaignId ID кампании integer CAMPAIGN_NAME campaignName Название кампании string SERVICE_TYPE serviceType
+Площадка string CREATIVE_FORMAT creativeFormat Формат string POSITION_NUMBER positionNumber Номер варианта
+string CREATIVE_HASH creativeHash Id варианта string CREATIVE_URL creativeUrl Ссылка на креатив string
+COPYRIGHT copyright Копирайт string SHOWS shows Показы, шт. integer COVERAGE coverage Охват, чел. integer
+CLICKS clicks Клики, шт. integer CTR ctr CTR, % number SHOWS_FREQUENCY showsFrequency Частота показа
+number WATCHED_VIDEO_25 watchedVideo25 Просмотры 25% number WATCHED_VIDEO_50 watchedVideo50 Просмотры 50%
+number WATCHED_VIDEO_75 watchedVideo75 Просмотры 75% number WATCHED_VIDEO_100 watchedVideo100 Просмотры 100%
+number VTR_25 vtr25 VTR 25% number VTR_50 vtr50 VTR 50% number VTR_75 vtr75 VTR 75% number VTR_100 vtr100
+VTR 100% number TURN_ON_VOLUME turnOnVolume Включения звука integer TURN_OFF_VOLUME turnOffVolume Выключения звука
+integer CART_ADDICTION cartAddiction Добавления в корзину, шт. integer ORDERED_COUNT orderedCount Заказанные товары, шт.
+integer CONVERSION conversion Конверсия в заказы, % number ORDERED_AMOUNT orderedAmount Стоимость заказанных товаров, ₽
+number CPO cpo СРО, ₽ number COST cost Расчётные расходы, ₽ number CPM cpm CPM, ₽ number CPV cpv CPV, ₽
+number DRR drr Доля расчётных расходов от выручки с кампании, % number
+
+⚙️ Limit:100 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/reports/banners-statistics/generate
+
+https://api.partner.market.yandex.ru/v2/reports/banners-statistics/generate
+
+Query parameters
+
+Name | Description
+format | Type: stringThe format of the report or document.
+Report format:FILE— the spreadsheet file (XLSX).CSV— A ZIP archive with CSV files for each report sheet.JSON— A ZIP archive with JSON files for each report sheet.Default:FILEEnum:FILE,CSV,JSON
+Name Description format Type: string The format of the report or document.
+Report format:
+
+• FILE— the spreadsheet file (XLSX).
+
+FILE
+• CSV— A ZIP archive with CSV files for each report sheet.
+
+CSV
+• JSON— A ZIP archive with JSON files for each report sheet.
+
+JSON Default:FILE
+
+FILE Enum:FILE,CSV,JSON
+
+FILE
+
+CSV
+
+JSON
+
+Body
+
+{
+"businessId": 1,
+"dateFrom": "2025-08-22",
+"dateTo": "2025-09-22"
+}
+
+{
+"businessId": 1,
+"dateFrom": "2025-08-22",
+"dateTo": "2025-09-22"
+}
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+dateFrom | Type: string<date>The beginning of the period, inclusive.Date format:YYYY-MM-DD.Example:2025-08-22
+dateTo | Type: string<date>End of the period, inclusive.Date format:YYYY-MM-DD.Example:2025-09-22 Name
+Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1 dateFrom Type: string<date> The beginning of the period, inclusive. Date format:YYYY-MM-DD.
+
+YYYY-MM-DD Example:2025-08-22
+
+2025-08-22 dateTo Type: string<date> End of the period, inclusive. Date format:YYYY-MM-DD.
+
+YYYY-MM-DD Example:2025-09-22
+
+2025-09-22
+
+Responses
+200 OK
+In response, you receive an identifier that allows you to find out the generation status and download the finished report.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+{
+"status": "OK",
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectestimatedGenerationTimeType: integerExpected generation time in milliseconds.reportIdType: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:exampleThe ID that will be needed to track the generation status and receive the finished report or document.Example{"reportId":"example","estimatedGenerationTime":0}Example{"result":{"reportId":"example","estimatedGenerationTime":0}}
+
+result | Type: objectestimatedGenerationTimeType: integerExpected generation time in milliseconds.reportIdType: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:exampleThe ID that will be needed to track the generation status and receive the finished report or document.Example{"reportId":"example","estimatedGenerationTime":0} | estimatedGenerationTime | Type: integerExpected generation time in milliseconds. | reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+estimatedGenerationTime | Type: integerExpected generation time in milliseconds.
+reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+result
+
+estimatedGenerationTime | Type: integerExpected generation time in milliseconds.
+reportId | Type: stringThe ID that will be needed to track the generation status and receive the finished report or document.Example:example
+estimatedGenerationTime Type: integer Expected generation time in milliseconds. reportId Type: string
+The ID that will be needed to track the generation status and receive the finished report or document.
+Example:example
+
+example
+The ID that will be needed to track the generation status and receive the finished report or document.
+
+{
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+
+{
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+
+{
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+{
+"result": {
+"reportId": "example",
+"estimatedGenerationTime": 0
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

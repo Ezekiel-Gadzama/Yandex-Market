@@ -4,8 +4,6 @@ from typing import List, Dict, Any, Optional
 from pydantic import BaseModel
 from app.database import get_db
 from app.services.yandex_api import YandexMarketAPI
-from app.services.telegram_bot import telegram_bot
-import asyncio
 
 router = APIRouter()
 
@@ -85,7 +83,7 @@ def reply_to_product_review(
     reply: ReplyRequest,
     db: Session = Depends(get_db)
 ):
-    """Reply to a product review and send Telegram notification"""
+    """Reply to a product review"""
     try:
         yandex_api = YandexMarketAPI()
         
@@ -95,14 +93,6 @@ def reply_to_product_review(
         
         # Send reply
         result = yandex_api.reply_to_review(review_id, reply.text)
-        
-        # Send Telegram notification
-        if telegram_bot and review_data:
-            asyncio.create_task(
-                telegram_bot.send_review_reply_notification(
-                    review_data, reply.text, "product"
-                )
-            )
         
         return result
     except Exception as e:
@@ -166,7 +156,7 @@ def reply_to_shop_review(
     reply: ReplyRequest,
     db: Session = Depends(get_db)
 ):
-    """Reply to a shop review and send Telegram notification"""
+    """Reply to a shop review"""
     try:
         yandex_api = YandexMarketAPI()
         
@@ -176,14 +166,6 @@ def reply_to_shop_review(
         
         # Send reply
         result = yandex_api.reply_to_shop_review(review_id, reply.text)
-        
-        # Send Telegram notification
-        if telegram_bot and review_data:
-            asyncio.create_task(
-                telegram_bot.send_review_reply_notification(
-                    review_data, reply.text, "shop"
-                )
-            )
         
         return result
     except Exception as e:

@@ -1,0 +1,28 @@
+Receiving orders: API survey or notifications
+Choose one of the following methods: API notifications (recommended) or through a regular survey of order information.
+
+Method 1. API notifications
+
+• Enable request acceptancePOST notification. How to work with notifications:Instruction manual
+• Receive order events and request details immediately:POST v1/businesses/{businessId}/orders
+• Notification types and data format:POST notification
+
+Method 2. Regular API survey
+
+• Request order lists:POST v1/businesses/{businessId}/orders
+• POST v1/businesses/{businessId}/orders
+• Use filters:fromDateandtoDate— range of delivery dates for sampling new ordersupdatedAtFromandupdatedAtTo— selection of orders with changes
+• fromDateandtoDate— range of delivery dates for sampling new orders
+
+fromDate
+
+toDate
+• updatedAtFromandupdatedAtTo— selection of orders with changes
+
+updatedAtFrom
+
+updatedAtTo
+• Observe the polling intervals:Express — every 10-15 minutesFBS, DBS — at least once an hour
+• Express — every 10-15 minutes
+• FBS, DBS — at least once an hour
+• To process a specific order, get the details using the methodPOST v1/businesses/{businessId}/orders

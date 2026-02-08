@@ -1,0 +1,1216 @@
+List of warehouses
+The method is available for models:FBS, Express and DBS.
+
+• inventory-and-order-processing —Order processing and inventory
+• inventory-and-order-processing:read-only —View order information
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns a list of warehouses and information about them. Restriction for the parameterlimit
+
+limit Do not transmit a value greater than 25.
+
+⚙️ Limit:1,000 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/warehouses
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/warehouses
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Query parameters
+
+Name | Description
+limit | Type: integerThe number of values per page.Min value:1
+page_token | Type: stringID of the results page.If the parameter is omitted, the first page is returned.We recommend transmitting the value of the output parameternextPageToken, received during the last request.If setpage_tokenand the request has parameterspageandpageSizethey are ignored.Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+Name Description limit Type: integer The number of values per page. Min value:1
+
+1 page_token Type: string ID of the results page. If the parameter is omitted, the first page is returned.
+We recommend transmitting the value of the output parameternextPageToken, received during the last request.
+
+nextPageToken If setpage_tokenand the request has parameterspageandpageSizethey are ignored.
+
+page_token
+
+page
+
+pageSize Example:eyBuZXh0SWQ6IDIzNDIgfQ==
+
+eyBuZXh0SWQ6IDIzNDIgfQ==
+
+Body
+
+{
+"components": [
+"ADDRESS"
+],
+"campaignIds": [
+1
+]
+}
+
+{
+"components": [
+"ADDRESS"
+],
+"campaignIds": [
+1
+]
+}
+
+Name | Description
+campaignIds | Type: integer[] | nullA list of campaign IDs of those stores whose warehouses need to be returned.You can find them using a query.GET v2/campaignsor find it in the seller's office on the Market — click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not use store IDs instead, which are listed in the seller's account on the Market next to the store name and in some reports.Min items:1Max items:25Unique items:trueExample[1]
+components | Type: string[] | nullProperties of warehouses that need to be returned. If some parameter value is omitted, this information will not be included in the response.Pass the parameter only if you need the information it returns.You can pass multiple values at once.Min items:1Unique items:trueExample["ADDRESS"]
+Name Description campaignIds Type: integer[] | null A list of campaign IDs of those stores whose warehouses need to be returned.
+You can find them using a query.GET v2/campaignsor find it in the seller's office on the Market — click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not use store IDs instead, which are listed in the seller's account on the Market next to the store name and in some reports.
+Min items:1
+
+1 Max items:25
+
+25 Unique items:true
+
+true
+
+[
+1
+]
+
+[
+1
+]
+components Type: string[] | null
+Properties of warehouses that need to be returned. If some parameter value is omitted, this information will not be included in the response.
+Pass the parameter only if you need the information it returns. You can pass multiple values at once.
+Min items:1
+
+1 Unique items:true
+
+true
+
+[
+"ADDRESS"
+]
+
+[
+"ADDRESS"
+]
+
+Responses
+200 OK
+The list of warehouses and their properties that you requested.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"groupInfo": {},
+"address": {},
+"status": {}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+{
+"status": "OK",
+"result": {
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"groupInfo": {},
+"address": {},
+"status": {}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectwarehousesType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible for the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}groupInfoType: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0}statusType: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"}List of warehouses.Example[{"id":0,"name":"example","campaignId":1,"express":true,"groupInfo":{"name":"example","id":0},"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}},"status":{"status":"DISABLED_MANUALLY"}}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}Information about warehouses in the cabinet.Example{"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"groupInfo":{"name":"example","id":0},"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}},"status":{"status":"DISABLED_MANUALLY"}}],"paging":{"nextPageToken":"example"}}Example{"result":{"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"groupInfo":{"name":"example","id":0},"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{}},"status":{"status":"DISABLED_MANUALLY"}}],"paging":{"nextPageToken":"example"}}}
+
+result | Type: objectwarehousesType: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible for the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}groupInfoType: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0}statusType: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"}List of warehouses.Example[{"id":0,"name":"example","campaignId":1,"express":true,"groupInfo":{"name":"example","id":0},"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}},"status":{"status":"DISABLED_MANUALLY"}}]pagingType: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"}Information about warehouses in the cabinet.Example{"warehouses":[{"id":0,"name":"example","campaignId":1,"express":true,"groupInfo":{"name":"example","id":0},"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}},"status":{"status":"DISABLED_MANUALLY"}}],"paging":{"nextPageToken":"example"}} | warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible for the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}groupInfoType: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0}statusType: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"}List of warehouses.Example[{"id":0,"name":"example","campaignId":1,"express":true,"groupInfo":{"name":"example","id":0},"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}},"status":{"status":"DISABLED_MANUALLY"}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible for the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example | groupInfo | Type: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0} | id | Type: integerID of the warehouse group. | name | Type: stringThe name of the group that the warehouse belongs to.Example:example | status | Type: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"} | status | Type: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHER | paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible for the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}groupInfoType: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0}statusType: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"}List of warehouses.Example[{"id":0,"name":"example","campaignId":1,"express":true,"groupInfo":{"name":"example","id":0},"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}},"status":{"status":"DISABLED_MANUALLY"}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible for the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example | groupInfo | Type: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0} | id | Type: integerID of the warehouse group. | name | Type: stringThe name of the group that the warehouse belongs to.Example:example | status | Type: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"} | status | Type: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHER
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible for the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example
+groupInfo | Type: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0} | id | Type: integerID of the warehouse group. | name | Type: stringThe name of the group that the warehouse belongs to.Example:example
+id | Type: integerID of the warehouse group.
+name | Type: stringThe name of the group that the warehouse belongs to.Example:example
+status | Type: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"} | status | Type: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHER
+status | Type: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHER
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example result
+
+warehouses | Type: object[]campaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1expressType: booleanIs delivery possible for the model Express.idType: integerThe warehouse ID.nameType: stringThe name of the warehouse.Example:exampleaddressType: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}}groupInfoType: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0}statusType: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"}List of warehouses.Example[{"id":0,"name":"example","campaignId":1,"express":true,"groupInfo":{"name":"example","id":0},"address":{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}},"status":{"status":"DISABLED_MANUALLY"}}] | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | express | Type: booleanIs delivery possible for the model Express. | id | Type: integerThe warehouse ID. | name | Type: stringThe name of the warehouse.Example:example | address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example | groupInfo | Type: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0} | id | Type: integerID of the warehouse group. | name | Type: stringThe name of the group that the warehouse belongs to.Example:example | status | Type: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"} | status | Type: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHER
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible for the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example
+groupInfo | Type: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0} | id | Type: integerID of the warehouse group. | name | Type: stringThe name of the group that the warehouse belongs to.Example:example
+id | Type: integerID of the warehouse group.
+name | Type: stringThe name of the group that the warehouse belongs to.Example:example
+status | Type: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"} | status | Type: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHER
+status | Type: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHER
+paging | Type: objectnextPageTokenType: stringID of the next results page.Example:exampleThe ID of the next page.Example{"nextPageToken":"example"} | nextPageToken | Type: stringID of the next results page.Example:example
+nextPageToken | Type: stringID of the next results page.Example:example warehouses
+
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+express | Type: booleanIs delivery possible for the model Express.
+id | Type: integerThe warehouse ID.
+name | Type: stringThe name of the warehouse.Example:example
+address | Type: objectcityType: stringCity.Max length:200Example:examplegpsType: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5}blockType: stringBuilding number.Max length:16Example:examplebuildingType: stringBuilding number.Max length:16Example:examplenumberType: stringThe house number.Max length:256Example:examplestreetType: stringStreet.Max length:512Example:exampleWarehouse address.Example{"city":"example","street":"example","number":"example","building":"example","block":"example","gps":{"latitude":0.5,"longitude":0.5}} | city | Type: stringCity.Max length:200Example:example | gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude. | block | Type: stringBuilding number.Max length:16Example:example | building | Type: stringBuilding number.Max length:16Example:example | number | Type: stringThe house number.Max length:256Example:example | street | Type: stringStreet.Max length:512Example:example
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example
+groupInfo | Type: objectidType: integerID of the warehouse group.nameType: stringThe name of the group that the warehouse belongs to.Example:exampleInformation about the group to which the warehouse belongs.It is returned only for warehouses in groups.What are warehouse groups and why are they needed?Example{"name":"example","id":0} | id | Type: integerID of the warehouse group. | name | Type: stringThe name of the group that the warehouse belongs to.Example:example
+id | Type: integerID of the warehouse group.
+name | Type: stringThe name of the group that the warehouse belongs to.Example:example
+status | Type: objectstatusType: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHERInformation about the status of the warehouse.Example{"status":"DISABLED_MANUALLY"} | status | Type: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHER
+status | Type: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHER
+campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 express Type: boolean Is delivery possible for the model Express. id Type: integer The warehouse ID.
+name Type: string The name of the warehouse. Example:example
+
+example address
+
+city | Type: stringCity.Max length:200Example:example
+gps | Type: objectlatitudeType: numberWidth.longitudeType: numberLongitude.GPS coordinates of latitude and longitude.Example{"latitude":0.5,"longitude":0.5} | latitude | Type: numberWidth. | longitude | Type: numberLongitude.
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude.
+block | Type: stringBuilding number.Max length:16Example:example
+building | Type: stringBuilding number.Max length:16Example:example
+number | Type: stringThe house number.Max length:256Example:example
+street | Type: stringStreet.Max length:512Example:example city Type: string City. Max length:200
+
+200 Example:example
+
+example gps
+
+latitude | Type: numberWidth.
+longitude | Type: numberLongitude. latitude Type: number Width. longitude Type: number Longitude. GPS coordinates of latitude and longitude.
+
+{
+"latitude": 0.5,
+"longitude": 0.5
+}
+
+{
+"latitude": 0.5,
+"longitude": 0.5
+}
+block Type: string Building number. Max length:16
+
+16 Example:example
+
+example building Type: string Building number. Max length:16
+
+16 Example:example
+
+example number Type: string The house number. Max length:256
+
+256 Example:example
+
+example street Type: string Street. Max length:512
+
+512 Example:example
+
+example Warehouse address.
+
+{
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+
+{
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+}
+
+groupInfo
+
+id | Type: integerID of the warehouse group.
+name | Type: stringThe name of the group that the warehouse belongs to.Example:example id Type: integer
+ID of the warehouse group. name Type: string The name of the group that the warehouse belongs to. Example:example
+
+example Information about the group to which the warehouse belongs. It is returned only for warehouses in groups.
+What are warehouse groups and why are they needed?
+
+{
+"name": "example",
+"id": 0
+}
+
+{
+"name": "example",
+"id": 0
+}
+status
+
+status | Type: stringWarehouse status:DISABLED_MANUALLY– disabled by you.OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.Enum:DISABLED_MANUALLY,OTHER
+status Type: string Warehouse status:
+
+• DISABLED_MANUALLY– disabled by you.
+
+DISABLED_MANUALLY
+• OTHER– different status. For example, a warehouse is enabled or disabled by Yandex. Market.
+
+OTHER Enum:DISABLED_MANUALLY,OTHER
+
+DISABLED_MANUALLY
+
+OTHER Information about the status of the warehouse.
+
+{
+"status": "DISABLED_MANUALLY"
+}
+
+{
+"status": "DISABLED_MANUALLY"
+}
+List of warehouses.
+
+[
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"groupInfo": {
+"name": "example",
+"id": 0
+},
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+},
+"status": {
+"status": "DISABLED_MANUALLY"
+}
+}
+]
+
+[
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"groupInfo": {
+"name": "example",
+"id": 0
+},
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+},
+"status": {
+"status": "DISABLED_MANUALLY"
+}
+}
+]
+
+paging
+
+nextPageToken | Type: stringID of the next results page.Example:example nextPageToken Type: string ID of the next results page.
+Example:example
+
+example The ID of the next page.
+
+{
+"nextPageToken": "example"
+}
+
+{
+"nextPageToken": "example"
+}
+Information about warehouses in the cabinet.
+
+{
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"groupInfo": {
+"name": "example",
+"id": 0
+},
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+},
+"status": {
+"status": "DISABLED_MANUALLY"
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+
+{
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"groupInfo": {
+"name": "example",
+"id": 0
+},
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {
+"latitude": 0.5,
+"longitude": 0.5
+}
+},
+"status": {
+"status": "DISABLED_MANUALLY"
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+
+{
+"result": {
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"groupInfo": {
+"name": "example",
+"id": 0
+},
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {}
+},
+"status": {
+"status": "DISABLED_MANUALLY"
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+{
+"result": {
+"warehouses": [
+{
+"id": 0,
+"name": "example",
+"campaignId": 1,
+"express": true,
+"groupInfo": {
+"name": "example",
+"id": 0
+},
+"address": {
+"city": "example",
+"street": "example",
+"number": "example",
+"building": "example",
+"block": "example",
+"gps": {}
+},
+"status": {
+"status": "DISABLED_MANUALLY"
+}
+}
+],
+"paging": {
+"nextPageToken": "example"
+}
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

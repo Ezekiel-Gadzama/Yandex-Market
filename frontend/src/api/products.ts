@@ -1,6 +1,7 @@
 import apiClient from './client'
 
 export interface Product {
+  // Essential local fields
   id: number
   name: string
   description?: string
@@ -12,29 +13,15 @@ export interface Product {
   yandex_market_id?: string
   yandex_market_sku?: string
   email_template_id?: number
+  documentation_id?: number
   is_active: boolean
   is_synced: boolean
   profit: number
   profit_percentage: number
   created_at: string
   updated_at?: string
-  // Yandex Market fields
-  yandex_model?: string
-  yandex_category_id?: string
-  yandex_category_path?: string
-  yandex_brand?: string
-  yandex_platform?: string
-  yandex_localization?: string
-  yandex_publication_type?: string
-  yandex_activation_territory?: string
-  yandex_edition?: string
-  yandex_series?: string
-  yandex_age_restriction?: string
-  yandex_activation_instructions?: boolean
-  original_price?: number
-  discount_percentage?: number
-  yandex_images?: string[]
-  yandex_videos?: string[]
+  // Full Yandex JSON data (all Yandex fields are stored here)
+  yandex_full_data?: Record<string, any>
 }
 
 export interface ProductCreate {
@@ -48,58 +35,26 @@ export interface ProductCreate {
   yandex_market_id?: string
   yandex_market_sku?: string
   email_template_id?: number
+  documentation_id?: number
   is_active?: boolean
-  // Yandex Market fields
-  yandex_model?: string
-  yandex_category_id?: string
-  yandex_category_path?: string
-  yandex_brand?: string
-  yandex_platform?: string
-  yandex_localization?: string
-  yandex_publication_type?: string
-  yandex_activation_territory?: string
-  yandex_edition?: string
-  yandex_series?: string
-  yandex_age_restriction?: string
-  yandex_activation_instructions?: boolean
-  original_price?: number
-  discount_percentage?: number
-  yandex_images?: string[]
-  yandex_videos?: string[]
+  yandex_full_data?: Record<string, any>  // For parameterValues and other Yandex fields
 }
 
 export interface ProductUpdate {
-  name?: string
-  description?: string
-  product_type?: 'digital' | 'physical'
+  // Essential local-only fields
   cost_price?: number
-  selling_price?: number
   supplier_url?: string
   supplier_name?: string
-  email_template_id?: number
+  email_template_id?: number | null
+  documentation_id?: number | null
   is_active?: boolean
-  // Yandex Market fields
-  yandex_model?: string
-  yandex_category_id?: string
-  yandex_category_path?: string
-  yandex_brand?: string
-  yandex_platform?: string
-  yandex_localization?: string
-  yandex_publication_type?: string
-  yandex_activation_territory?: string
-  yandex_edition?: string
-  yandex_series?: string
-  yandex_age_restriction?: string
-  yandex_activation_instructions?: boolean
-  original_price?: number
-  discount_percentage?: number
-  yandex_images?: string[]
-  yandex_videos?: string[]
+  // Dynamic field updates from Yandex JSON (all Yandex fields are edited here)
+  yandex_field_updates?: Record<string, any>
 }
 
 export const productsApi = {
-  getAll: async (params?: { is_active?: boolean; product_type?: string }) => {
-    const response = await apiClient.get<Product[]>('/products', { params })
+  getAll: async (params?: { is_active?: boolean; product_type?: string; search?: string }) => {
+    const response = await apiClient.get<Product[]>('/products/', { params })
     return response.data
   },
   
@@ -109,7 +64,7 @@ export const productsApi = {
   },
   
   create: async (data: ProductCreate) => {
-    const response = await apiClient.post<Product>('/products', data)
+    const response = await apiClient.post<Product>('/products/', data)
     return response.data
   },
   
@@ -118,14 +73,7 @@ export const productsApi = {
     return response.data
   },
   
-  delete: async (id: number) => {
-    await apiClient.delete(`/products/${id}`)
-  },
-  
-  uploadToYandex: async (id: number) => {
-    const response = await apiClient.post(`/products/${id}/upload-to-yandex`)
-    return response.data
-  },
+  // uploadToYandex removed - products can only be synced from Yandex Market
   
   generateKeys: async (id: number, count: number = 10) => {
     const response = await apiClient.post(`/products/${id}/generate-keys`, null, {

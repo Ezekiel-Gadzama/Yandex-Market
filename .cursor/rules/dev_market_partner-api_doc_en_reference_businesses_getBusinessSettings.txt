@@ -1,0 +1,1245 @@
+Cabinet Settings
+The method is available for models:FBY, FBS, Express and DBS.
+
+• inventory-and-order-processing —Order processing and inventory
+• inventory-and-order-processing:read-only —View order information
+• pricing —Manage prices
+• pricing:read-only —View prices
+• offers-and-cards-management —Manage products and cards
+• offers-and-cards-management:read-only —View products and cards
+• promotion —Product promotion
+• promotion:read-only —View promotion information
+• finance-and-accounting —View financial data and reports
+• communication —Customer communication
+• settings-management —Store settings
+• supplies-management:read-only —View FBY requests
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns information about the account settings, the ID of which is specified in the request.
+
+⚙️ Limit:1,000 requests per hour
+
+Request
+POST
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/settings
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/settings
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Responses
+200 OK
+Cabinet settings.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"info": {
+"id": 1,
+"name": "example"
+},
+"settings": {
+"onlyDefaultPrice": true,
+"currency": "RUR"
+}
+}
+}
+
+{
+"status": "OK",
+"result": {
+"info": {
+"id": 1,
+"name": "example"
+},
+"settings": {
+"onlyDefaultPrice": true,
+"currency": "RUR"
+}
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectinfoType: objectidType: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1nameType: stringBusiness name.Example:exampleInformation about the cabinet.Example{"id":1,"name":"example"}settingsType: objectcurrencyType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEonlyDefaultPriceType: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.Cabinet settings.Example{"onlyDefaultPrice":true,"currency":"RUR"}Information about the account and its settings.Example{"info":{"id":1,"name":"example"},"settings":{"onlyDefaultPrice":true,"currency":"RUR"}}Example{"result":{"info":{"id":1,"name":"example"},"settings":{"onlyDefaultPrice":true,"currency":"RUR"}}}
+
+result | Type: objectinfoType: objectidType: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1nameType: stringBusiness name.Example:exampleInformation about the cabinet.Example{"id":1,"name":"example"}settingsType: objectcurrencyType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEonlyDefaultPriceType: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.Cabinet settings.Example{"onlyDefaultPrice":true,"currency":"RUR"}Information about the account and its settings.Example{"info":{"id":1,"name":"example"},"settings":{"onlyDefaultPrice":true,"currency":"RUR"}} | info | Type: objectidType: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1nameType: stringBusiness name.Example:exampleInformation about the cabinet.Example{"id":1,"name":"example"} | id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1 | name | Type: stringBusiness name.Example:example | settings | Type: objectcurrencyType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEonlyDefaultPriceType: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.Cabinet settings.Example{"onlyDefaultPrice":true,"currency":"RUR"} | currency | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | onlyDefaultPrice | Type: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.
+info | Type: objectidType: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1nameType: stringBusiness name.Example:exampleInformation about the cabinet.Example{"id":1,"name":"example"} | id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1 | name | Type: stringBusiness name.Example:example
+id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+name | Type: stringBusiness name.Example:example
+settings | Type: objectcurrencyType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEonlyDefaultPriceType: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.Cabinet settings.Example{"onlyDefaultPrice":true,"currency":"RUR"} | currency | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | onlyDefaultPrice | Type: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.
+currency | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+onlyDefaultPrice | Type: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.
+result
+
+info | Type: objectidType: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1nameType: stringBusiness name.Example:exampleInformation about the cabinet.Example{"id":1,"name":"example"} | id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1 | name | Type: stringBusiness name.Example:example
+id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+name | Type: stringBusiness name.Example:example
+settings | Type: objectcurrencyType: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UEonlyDefaultPriceType: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.Cabinet settings.Example{"onlyDefaultPrice":true,"currency":"RUR"} | currency | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE | onlyDefaultPrice | Type: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.
+currency | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+onlyDefaultPrice | Type: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.
+info
+
+id | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+name | Type: stringBusiness name.Example:example id Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns.
+ℹ️What is a cabinet and a store on the Market? Min value:1
+
+1 name Type: string Business name. Example:example
+
+example Information about the cabinet.
+
+{
+"id": 1,
+"name": "example"
+}
+
+{
+"id": 1,
+"name": "example"
+}
+settings
+
+currency | Type: stringCurrency codes:RUR— the Russian ruble.UAH— the Ukrainian hryvnia.BYR— the Belarusian ruble.KZT— Kazakhstani tenge.UZS— Uzbek sum.Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+onlyDefaultPrice | Type: booleanProduct price management:false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.
+currency Type: string Currency codes:
+
+• RUR— the Russian ruble.
+
+RUR
+• UAH— the Ukrainian hryvnia.
+
+UAH
+• BYR— the Belarusian ruble.
+
+BYR
+• KZT— Kazakhstani tenge.
+
+KZT
+• UZS— Uzbek sum.
+
+UZS
+Enum:RUR,USD,EUR,UAH,AUD,GBP,BYR,BYN,DKK,ISK,KZT,CAD,CNY,NOK,XDR,SGD,TRY,SEK,CHF,JPY,AZN,ALL,DZD,AOA,ARS,AMD,AFN,BHD,BGN,BOB,BWP,BND,BRL,BIF,HUF,VEF,KPW,VND,GMD,GHS,GNF,HKD,GEL,AED,EGP,ZMK,ILS,INR,IDR,JOD,IQD,IRR,YER,QAR,KES,KGS,COP,CDF,CRC,KWD,CUP,LAK,LVL,SLL,LBP,LYD,SZL,LTL,MUR,MRO,MKD,MWK,MGA,MYR,MAD,MXN,MZN,MDL,MNT,NPR,NGN,NIO,NZD,OMR,PKR,PYG,PEN,PLN,KHR,SAR,RON,SCR,SYP,SKK,SOS,SDG,SRD,TJS,THB,TWD,BDT,TZS,TND,TMM,UGX,UZS,UYU,PHP,DJF,XAF,XOF,HRK,CZK,CLP,LKR,EEK,ETB,RSD,ZAR,KRW,NAD,TL,UE
+
+RUR
+
+USD
+
+EUR
+
+UAH
+
+AUD
+
+GBP
+
+BYR
+
+BYN
+
+DKK
+
+ISK
+
+KZT
+
+CAD
+
+CNY
+
+NOK
+
+XDR
+
+SGD
+
+TRY
+
+SEK
+
+CHF
+
+JPY
+
+AZN
+
+ALL
+
+DZD
+
+AOA
+
+ARS
+
+AMD
+
+AFN
+
+BHD
+
+BGN
+
+BOB
+
+BWP
+
+BND
+
+BRL
+
+BIF
+
+HUF
+
+VEF
+
+KPW
+
+VND
+
+GMD
+
+GHS
+
+GNF
+
+HKD
+
+GEL
+
+AED
+
+EGP
+
+ZMK
+
+ILS
+
+INR
+
+IDR
+
+JOD
+
+IQD
+
+IRR
+
+YER
+
+QAR
+
+KES
+
+KGS
+
+COP
+
+CDF
+
+CRC
+
+KWD
+
+CUP
+
+LAK
+
+LVL
+
+SLL
+
+LBP
+
+LYD
+
+SZL
+
+LTL
+
+MUR
+
+MRO
+
+MKD
+
+MWK
+
+MGA
+
+MYR
+
+MAD
+
+MXN
+
+MZN
+
+MDL
+
+MNT
+
+NPR
+
+NGN
+
+NIO
+
+NZD
+
+OMR
+
+PKR
+
+PYG
+
+PEN
+
+PLN
+
+KHR
+
+SAR
+
+RON
+
+SCR
+
+SYP
+
+SKK
+
+SOS
+
+SDG
+
+SRD
+
+TJS
+
+THB
+
+TWD
+
+BDT
+
+TZS
+
+TND
+
+TMM
+
+UGX
+
+UZS
+
+UYU
+
+PHP
+
+DJF
+
+XAF
+
+XOF
+
+HRK
+
+CZK
+
+CLP
+
+LKR
+
+EEK
+
+ETB
+
+RSD
+
+ZAR
+
+KRW
+
+NAD
+
+TL
+
+UE onlyDefaultPrice Type: boolean Product price management:
+
+• false— You can set a price that is valid:in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.
+
+false
+
+• in all cabinet stores —POST v2/businesses/{businessId}/offer-prices/updates;
+• in a specific store —POST v2/campaigns/{campaignId}/offer-prices/updates.
+• true— You can only set the price that is valid in all stores in the cabinet., —POST v2/businesses/{businessId}/offer-prices/updates.
+
+true Cabinet settings.
+
+{
+"onlyDefaultPrice": true,
+"currency": "RUR"
+}
+
+{
+"onlyDefaultPrice": true,
+"currency": "RUR"
+}
+Information about the account and its settings.
+
+{
+"info": {
+"id": 1,
+"name": "example"
+},
+"settings": {
+"onlyDefaultPrice": true,
+"currency": "RUR"
+}
+}
+
+{
+"info": {
+"id": 1,
+"name": "example"
+},
+"settings": {
+"onlyDefaultPrice": true,
+"currency": "RUR"
+}
+}
+
+{
+"result": {
+"info": {
+"id": 1,
+"name": "example"
+},
+"settings": {
+"onlyDefaultPrice": true,
+"currency": "RUR"
+}
+}
+}
+
+{
+"result": {
+"info": {
+"id": 1,
+"name": "example"
+},
+"settings": {
+"onlyDefaultPrice": true,
+"currency": "RUR"
+}
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

@@ -1,0 +1,45 @@
+Working with warehouses
+Yandex Market API It allows you to get information about warehouses, as well as disable them to temporarily hide goods from the showcase, and turn them back on.
+
+Find out warehouse statuses
+Make a requestPOST v2/businesses/{businessId}/warehouseswhere to specify:
+
+• campaign IDs —campaignIds;
+
+campaignIds
+• warehouse property — parametercomponentswith the valueSTATUS.
+
+components
+
+STATUS
+
+Find out the groups of warehouses for transferring leftovers
+If the warehouses are grouped, you only need to transfer the leftovers forany onewarehouse. — The information for the other warehouses in this group will be updated automatically.What are warehouse groups and why are they needed?
+To find out which warehouses are grouped, get information about all warehouses. To do this, make a requestPOST v2/businesses/{businessId}/warehouseswhere to specify the campaign IDs —campaignIds. ParametercomponentsYou don't need to transmit it.
+
+campaignIds
+
+components If the warehouse's response is:
+
+• There is no parametergroupInfo— he is not in the group. Transfer the leftovers by specifying the campaign ID of the store that is associated with the warehouse.
+
+groupInfo
+• The parameter returnedgroupInfo— The warehouse is grouped together. Warehouses with the same nameidinWarehouseGroupInfoDTOthey belong to the same group. Transfer the leftovers by specifying the campaign ID of any store in this group.
+
+groupInfo
+
+id
+
+WarehouseGroupInfoDTO How to transfer leftovers
+
+Disable or enable storage
+If you want to temporarily remove goods from the showcase, disconnect the warehouse where they are located. To do this, make a requestPOST v2/campaigns/{campaignId}/warehouse/status, where pass the parameterenabledwith the valuefalse. The goods will be hidden from the showcase in 15 minutes.
+
+enabled
+
+false
+To enable the warehouse, make the same request, but the parameterenabledmust take the valuetrue. After switching on, the goods will return to the showcase in 15 minutes, and if the warehouse has been turned off for 30 days or longer — after 4 hours.
+
+enabled
+
+true

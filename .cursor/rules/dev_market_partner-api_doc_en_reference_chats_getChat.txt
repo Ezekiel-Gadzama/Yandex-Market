@@ -1,0 +1,1148 @@
+Getting a chat by ID
+The method is available forall models.
+
+• communication —Customer communication
+• all-methods — Full account management
+• all-methods:read-only — View all data
+Returns the chat by its ID. Enable API notifications Yandex.Market will send you a request.POST notificationwhen a new chat or message appears.
+How to work with notifications
+
+⚙️ Limit:1,000 requests per hour
+
+Request
+GET
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/chat
+
+https://api.partner.market.yandex.ru/v2/businesses/{businessId}/chat
+
+Path parameters
+
+Name | Description
+businessId | Type: integerCabinet ID. To find out, use the requestGET v2/campaigns.ℹ️What is a cabinet and a store on the Market?Min value:1
+Name Description businessId Type: integer Cabinet ID. To find out, use the requestGET v2/campaigns. ℹ️What is a cabinet and a store on the Market?
+Min value:1
+
+1
+
+Query parameters
+
+Name | Description
+chatId | Type: integerThe chat ID.Min value:1 Name Description chatId Type: integer The chat ID. Min value:1
+
+1
+
+Responses
+200 OK
+Information about the chat.
+
+Body
+
+{
+"status": "OK",
+"result": {
+"chatId": 1,
+"orderId": 1,
+"context": {
+"type": "ORDER",
+"customer": {
+"name": "example",
+"publicId": "example"
+},
+"campaignId": 1,
+"orderId": 1,
+"returnId": 1
+},
+"type": "CHAT",
+"status": "NEW",
+"createdAt": "2017-11-21T00:00:00+03:00",
+"updatedAt": "2017-11-21T00:00:00+03:00"
+}
+}
+
+{
+"status": "OK",
+"result": {
+"chatId": 1,
+"orderId": 1,
+"context": {
+"type": "ORDER",
+"customer": {
+"name": "example",
+"publicId": "example"
+},
+"campaignId": 1,
+"orderId": 1,
+"returnId": 1
+},
+"type": "CHAT",
+"status": "NEW",
+"createdAt": "2017-11-21T00:00:00+03:00",
+"updatedAt": "2017-11-21T00:00:00+03:00"
+}
+}
+
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objectresultType: objectchatIdType: integerThe chat ID.Min value:1contextType: objecttypeType: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECTcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1customerType: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"}orderIdType: integerThe order ID.It is returned for orders and refunds.Min value:1returnIdType: integerThe refund ID.It is returned only for refunds.Min value:1Information about the order or refund for which the chat was started.Example{"type":"ORDER","customer":{"name":"example","publicId":"example"},"campaignId":1,"orderId":1,"returnId":1}createdAtType: string<date-time>Date and time when the chat was created.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00statusType: stringChat status:NEW— a new chat.WAITING_FOR_CUSTOMER— We need a buyer's response.WAITING_FOR_PARTNER— We need the store's response.WAITING_FOR_ARBITER— We need an arbitrator's response.WAITING_FOR_MARKET— We need a response from Yandex. Market.FINISHED— The chat is over.Enum:NEW,WAITING_FOR_CUSTOMER,WAITING_FOR_PARTNER,WAITING_FOR_ARBITER,WAITING_FOR_MARKET,FINISHEDtypeType: stringChat type:CHAT— chat with the buyer.ARBITRAGE— dispute.Enum:CHAT,ARBITRAGEupdatedAtType: string<date-time>The date and time of the last message in the chat.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00orderIdType: integerThe order ID.Min value:1Information about the chat.Example{"chatId":1,"orderId":1,"context":{"type":"ORDER","customer":{"name":"example","publicId":"example"},"campaignId":1,"orderId":1,"returnId":1},"type":"CHAT","status":"NEW","createdAt":"2017-11-21T00:00:00+03:00","updatedAt":"2017-11-21T00:00:00+03:00"}Example{"result":{"chatId":1,"orderId":1,"context":{"type":"ORDER","customer":{"name":"example","publicId":"example"},"campaignId":1,"orderId":1,"returnId":1},"type":"CHAT","status":"NEW","createdAt":"2017-11-21T00:00:00+03:00","updatedAt":"2017-11-21T00:00:00+03:00"}}
+
+result | Type: objectchatIdType: integerThe chat ID.Min value:1contextType: objecttypeType: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECTcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1customerType: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"}orderIdType: integerThe order ID.It is returned for orders and refunds.Min value:1returnIdType: integerThe refund ID.It is returned only for refunds.Min value:1Information about the order or refund for which the chat was started.Example{"type":"ORDER","customer":{"name":"example","publicId":"example"},"campaignId":1,"orderId":1,"returnId":1}createdAtType: string<date-time>Date and time when the chat was created.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00statusType: stringChat status:NEW— a new chat.WAITING_FOR_CUSTOMER— We need a buyer's response.WAITING_FOR_PARTNER— We need the store's response.WAITING_FOR_ARBITER— We need an arbitrator's response.WAITING_FOR_MARKET— We need a response from Yandex. Market.FINISHED— The chat is over.Enum:NEW,WAITING_FOR_CUSTOMER,WAITING_FOR_PARTNER,WAITING_FOR_ARBITER,WAITING_FOR_MARKET,FINISHEDtypeType: stringChat type:CHAT— chat with the buyer.ARBITRAGE— dispute.Enum:CHAT,ARBITRAGEupdatedAtType: string<date-time>The date and time of the last message in the chat.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00orderIdType: integerThe order ID.Min value:1Information about the chat.Example{"chatId":1,"orderId":1,"context":{"type":"ORDER","customer":{"name":"example","publicId":"example"},"campaignId":1,"orderId":1,"returnId":1},"type":"CHAT","status":"NEW","createdAt":"2017-11-21T00:00:00+03:00","updatedAt":"2017-11-21T00:00:00+03:00"} | chatId | Type: integerThe chat ID.Min value:1 | context | Type: objecttypeType: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECTcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1customerType: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"}orderIdType: integerThe order ID.It is returned for orders and refunds.Min value:1returnIdType: integerThe refund ID.It is returned only for refunds.Min value:1Information about the order or refund for which the chat was started.Example{"type":"ORDER","customer":{"name":"example","publicId":"example"},"campaignId":1,"orderId":1,"returnId":1} | type | Type: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECT | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | customer | Type: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"} | name | Type: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:example | publicId | Type: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:example | orderId | Type: integerThe order ID.It is returned for orders and refunds.Min value:1 | returnId | Type: integerThe refund ID.It is returned only for refunds.Min value:1 | createdAt | Type: string<date-time>Date and time when the chat was created.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00 | status | Type: stringChat status:NEW— a new chat.WAITING_FOR_CUSTOMER— We need a buyer's response.WAITING_FOR_PARTNER— We need the store's response.WAITING_FOR_ARBITER— We need an arbitrator's response.WAITING_FOR_MARKET— We need a response from Yandex. Market.FINISHED— The chat is over.Enum:NEW,WAITING_FOR_CUSTOMER,WAITING_FOR_PARTNER,WAITING_FOR_ARBITER,WAITING_FOR_MARKET,FINISHED | type | Type: stringChat type:CHAT— chat with the buyer.ARBITRAGE— dispute.Enum:CHAT,ARBITRAGE | updatedAt | Type: string<date-time>The date and time of the last message in the chat.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00 | orderId | Type: integerThe order ID.Min value:1
+chatId | Type: integerThe chat ID.Min value:1
+context | Type: objecttypeType: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECTcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1customerType: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"}orderIdType: integerThe order ID.It is returned for orders and refunds.Min value:1returnIdType: integerThe refund ID.It is returned only for refunds.Min value:1Information about the order or refund for which the chat was started.Example{"type":"ORDER","customer":{"name":"example","publicId":"example"},"campaignId":1,"orderId":1,"returnId":1} | type | Type: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECT | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | customer | Type: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"} | name | Type: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:example | publicId | Type: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:example | orderId | Type: integerThe order ID.It is returned for orders and refunds.Min value:1 | returnId | Type: integerThe refund ID.It is returned only for refunds.Min value:1
+type | Type: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECT
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+customer | Type: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"} | name | Type: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:example | publicId | Type: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:example
+name | Type: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:example
+publicId | Type: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:example
+orderId | Type: integerThe order ID.It is returned for orders and refunds.Min value:1
+returnId | Type: integerThe refund ID.It is returned only for refunds.Min value:1
+createdAt | Type: string<date-time>Date and time when the chat was created.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+status | Type: stringChat status:NEW— a new chat.WAITING_FOR_CUSTOMER— We need a buyer's response.WAITING_FOR_PARTNER— We need the store's response.WAITING_FOR_ARBITER— We need an arbitrator's response.WAITING_FOR_MARKET— We need a response from Yandex. Market.FINISHED— The chat is over.Enum:NEW,WAITING_FOR_CUSTOMER,WAITING_FOR_PARTNER,WAITING_FOR_ARBITER,WAITING_FOR_MARKET,FINISHED
+type | Type: stringChat type:CHAT— chat with the buyer.ARBITRAGE— dispute.Enum:CHAT,ARBITRAGE
+updatedAt | Type: string<date-time>The date and time of the last message in the chat.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+orderId | Type: integerThe order ID.Min value:1 result
+
+chatId | Type: integerThe chat ID.Min value:1
+context | Type: objecttypeType: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECTcampaignIdType: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1customerType: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"}orderIdType: integerThe order ID.It is returned for orders and refunds.Min value:1returnIdType: integerThe refund ID.It is returned only for refunds.Min value:1Information about the order or refund for which the chat was started.Example{"type":"ORDER","customer":{"name":"example","publicId":"example"},"campaignId":1,"orderId":1,"returnId":1} | type | Type: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECT | campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1 | customer | Type: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"} | name | Type: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:example | publicId | Type: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:example | orderId | Type: integerThe order ID.It is returned for orders and refunds.Min value:1 | returnId | Type: integerThe refund ID.It is returned only for refunds.Min value:1
+type | Type: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECT
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+customer | Type: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"} | name | Type: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:example | publicId | Type: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:example
+name | Type: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:example
+publicId | Type: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:example
+orderId | Type: integerThe order ID.It is returned for orders and refunds.Min value:1
+returnId | Type: integerThe refund ID.It is returned only for refunds.Min value:1
+createdAt | Type: string<date-time>Date and time when the chat was created.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+status | Type: stringChat status:NEW— a new chat.WAITING_FOR_CUSTOMER— We need a buyer's response.WAITING_FOR_PARTNER— We need the store's response.WAITING_FOR_ARBITER— We need an arbitrator's response.WAITING_FOR_MARKET— We need a response from Yandex. Market.FINISHED— The chat is over.Enum:NEW,WAITING_FOR_CUSTOMER,WAITING_FOR_PARTNER,WAITING_FOR_ARBITER,WAITING_FOR_MARKET,FINISHED
+type | Type: stringChat type:CHAT— chat with the buyer.ARBITRAGE— dispute.Enum:CHAT,ARBITRAGE
+updatedAt | Type: string<date-time>The date and time of the last message in the chat.Date format: ISO 8601 with an offset relative to UTC.Example:2017-11-21T00:00:00+03:00
+orderId | Type: integerThe order ID.Min value:1 chatId Type: integer The chat ID. Min value:1
+
+1 context
+
+type | Type: stringType of context:ORDER— chat on request.Chats about orders and refundsRETURN— refund chat (FBY, FBS and Express).Chats about orders and refundsDIRECT— the chat that the customer started.Messages from customersEnum:ORDER,RETURN,DIRECT
+campaignId | Type: integerThe ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:blockCampaign ID;tabQuery log→ drop-down list in the blockShow logs.⚠️ Do not confuse it with:the store's identifier, which is displayed in the merchant's personal account.advertising campaigns.Min value:1
+customer | Type: objectnameType: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:examplepublicIdType: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:exampleInformation about the buyer in the chat.Example{"name":"example","publicId":"example"} | name | Type: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:example | publicId | Type: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:example
+name | Type: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:example
+publicId | Type: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:example
+orderId | Type: integerThe order ID.It is returned for orders and refunds.Min value:1
+returnId | Type: integerThe refund ID.It is returned only for refunds.Min value:1 type Type: string Type of context:
+
+• ORDER— chat on request.Chats about orders and refunds
+
+ORDER
+• RETURN— refund chat (FBY, FBS and Express).Chats about orders and refunds
+
+RETURN
+• DIRECT— the chat that the customer started.Messages from customers
+
+DIRECT Enum:ORDER,RETURN,DIRECT
+
+ORDER
+
+RETURN
+
+DIRECT campaignId Type: integer
+The ID of the campaign (store) — The technical identifier that represents your store in the Yandex Market system when working through the API. It is uniquely linked to your store, but it is intended only for automated interaction.
+You can find it using a queryGET v2/campaignsor find it in the seller's office on the Market. Click on your account icon →Settingsand in the menu on the left, selectAPIs and modules:
+
+• blockCampaign ID;
+• tabQuery log→ drop-down list in the blockShow logs.
+⚠️ Do not confuse it with:
+
+• the store's identifier, which is displayed in the merchant's personal account.
+• advertising campaigns.
+Min value:1
+
+1 customer
+
+name | Type: stringThe buyer's public name in Yandex Passport, which is displayed in Yandex services.Min length:1Example:example
+publicId | Type: stringThe public user ID in Yandex Passport.Examples where it is usedThe market:https://market.yandex.ru/user/{public-id}/reviewsZen:https://zen.yandex.ru/user/{public-id}Reviews:https://yandex.ru/user/{public-id}Read more about public data inYandex ID documentation.Min length:1Example:example
+name Type: string The buyer's public name in Yandex Passport, which is displayed in Yandex services.
+Min length:1
+
+1 Example:example
+
+example publicId Type: string The public user ID in Yandex Passport.
+
+• The market:https://market.yandex.ru/user/{public-id}/reviews
+
+https://market.yandex.ru/user/{public-id}/reviews
+• Zen:https://zen.yandex.ru/user/{public-id}
+
+https://zen.yandex.ru/user/{public-id}
+• Reviews:https://yandex.ru/user/{public-id}
+
+https://yandex.ru/user/{public-id} Read more about public data inYandex ID documentation. Min length:1
+
+1 Example:example
+
+example Information about the buyer in the chat.
+
+{
+"name": "example",
+"publicId": "example"
+}
+
+{
+"name": "example",
+"publicId": "example"
+}
+orderId Type: integer The order ID. It is returned for orders and refunds.
+Min value:1
+
+1 returnId Type: integer The refund ID. It is returned only for refunds. Min value:1
+
+1 Information about the order or refund for which the chat was started.
+
+{
+"type": "ORDER",
+"customer": {
+"name": "example",
+"publicId": "example"
+},
+"campaignId": 1,
+"orderId": 1,
+"returnId": 1
+}
+
+{
+"type": "ORDER",
+"customer": {
+"name": "example",
+"publicId": "example"
+},
+"campaignId": 1,
+"orderId": 1,
+"returnId": 1
+}
+
+createdAt Type: string<date-time> Date and time when the chat was created. Date format: ISO 8601 with an offset relative to UTC.
+Example:2017-11-21T00:00:00+03:00
+
+2017-11-21T00:00:00+03:00 status Type: string Chat status:
+
+• NEW— a new chat.
+
+NEW
+• WAITING_FOR_CUSTOMER— We need a buyer's response.
+
+WAITING_FOR_CUSTOMER
+• WAITING_FOR_PARTNER— We need the store's response.
+
+WAITING_FOR_PARTNER
+• WAITING_FOR_ARBITER— We need an arbitrator's response.
+
+WAITING_FOR_ARBITER
+• WAITING_FOR_MARKET— We need a response from Yandex. Market.
+
+WAITING_FOR_MARKET
+• FINISHED— The chat is over.
+
+FINISHED Enum:NEW,WAITING_FOR_CUSTOMER,WAITING_FOR_PARTNER,WAITING_FOR_ARBITER,WAITING_FOR_MARKET,FINISHED
+
+NEW
+
+WAITING_FOR_CUSTOMER
+
+WAITING_FOR_PARTNER
+
+WAITING_FOR_ARBITER
+
+WAITING_FOR_MARKET
+
+FINISHED type Type: string Chat type:
+
+• CHAT— chat with the buyer.
+
+CHAT
+• ARBITRAGE— dispute.
+
+ARBITRAGE Enum:CHAT,ARBITRAGE
+
+CHAT
+
+ARBITRAGE updatedAt Type: string<date-time> The date and time of the last message in the chat. Date format: ISO 8601 with an offset relative to UTC.
+Example:2017-11-21T00:00:00+03:00
+
+2017-11-21T00:00:00+03:00 orderId Type: integer The order ID. Min value:1
+
+1 Information about the chat.
+
+{
+"chatId": 1,
+"orderId": 1,
+"context": {
+"type": "ORDER",
+"customer": {
+"name": "example",
+"publicId": "example"
+},
+"campaignId": 1,
+"orderId": 1,
+"returnId": 1
+},
+"type": "CHAT",
+"status": "NEW",
+"createdAt": "2017-11-21T00:00:00+03:00",
+"updatedAt": "2017-11-21T00:00:00+03:00"
+}
+
+{
+"chatId": 1,
+"orderId": 1,
+"context": {
+"type": "ORDER",
+"customer": {
+"name": "example",
+"publicId": "example"
+},
+"campaignId": 1,
+"orderId": 1,
+"returnId": 1
+},
+"type": "CHAT",
+"status": "NEW",
+"createdAt": "2017-11-21T00:00:00+03:00",
+"updatedAt": "2017-11-21T00:00:00+03:00"
+}
+
+{
+"result": {
+"chatId": 1,
+"orderId": 1,
+"context": {
+"type": "ORDER",
+"customer": {
+"name": "example",
+"publicId": "example"
+},
+"campaignId": 1,
+"orderId": 1,
+"returnId": 1
+},
+"type": "CHAT",
+"status": "NEW",
+"createdAt": "2017-11-21T00:00:00+03:00",
+"updatedAt": "2017-11-21T00:00:00+03:00"
+}
+}
+
+{
+"result": {
+"chatId": 1,
+"orderId": 1,
+"context": {
+"type": "ORDER",
+"customer": {
+"name": "example",
+"publicId": "example"
+},
+"campaignId": 1,
+"orderId": 1,
+"returnId": 1
+},
+"type": "CHAT",
+"status": "NEW",
+"createdAt": "2017-11-21T00:00:00+03:00",
+"updatedAt": "2017-11-21T00:00:00+03:00"
+}
+}
+
+400 Bad Request
+The request contains incorrect data.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+401 Unauthorized
+The authorization data is not specified in the request.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+403 Forbidden
+The authorization data is incorrect or access to the resource is prohibited.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+404 Not Found
+The requested resource was not found.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+420 Method Failure
+The resource access limit has been exceeded.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+500 Internal Server Error
+Internal error of the Market.More information about the error
+
+Body
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+Type: object
+
+• Type: objectAll of 2 typesType: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}A standard wrapper for server errors.Example{"status":"OK","errors":[{"code":"example","message":"example"}]}
+Type: object
+
+• Type: objectstatusType: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERRORThe standard wrapper for server responses.Example{"status":"OK"}
+Type: object
+
+status | Type: stringThe type of response.
+Possible values:OK— There are no errors.ERROR— an error occurred while processing the request.Enum:OK,ERROR
+status Type: string The type of response.
+Possible values:
+
+• OK— There are no errors.
+
+OK
+• ERROR— an error occurred while processing the request.
+
+ERROR Enum:OK,ERROR
+
+OK
+
+ERROR The standard wrapper for server responses.
+
+{
+"status": "OK"
+}
+
+{
+"status": "OK"
+}
+
+• Type: objecterrorsType: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}]Example{"errors":[{"code":"example","message":"example"}]}
+Type: object
+
+errors | Type: object[]codeType: stringThe error code.Example:examplemessageType: stringDescription of the error.Example:exampleA list of errors.Min items:1Example[{"code":"example","message":"example"}] | code | Type: stringThe error code.Example:example | message | Type: stringDescription of the error.Example:example
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example errors
+
+code | Type: stringThe error code.Example:example
+message | Type: stringDescription of the error.Example:example code Type: string The error code. Example:example
+
+example message Type: string Description of the error. Example:example
+
+example A list of errors. Min items:1
+
+1
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+[
+{
+"code": "example",
+"message": "example"
+}
+]
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+A standard wrapper for server errors.
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+{
+"status": "OK",
+"errors": [
+{
+"code": "example",
+"message": "example"
+}
+]
+}
+
+No longer supported, please use an alternative and newer version.
+
+Was the article helpful?

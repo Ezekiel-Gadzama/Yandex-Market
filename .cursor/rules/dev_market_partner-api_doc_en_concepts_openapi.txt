@@ -1,0 +1,56 @@
+Specification OpenAPI
+Specification OpenAPI for the store's requests to the Market, it is availableon GitHub. You can use it to simplify and speed up integration development.
+
+How to generate a client Yandex Market API for sellers
+The specification will help you generate client files in any language or framework that it supports. OpenAPI- the generator. This can greatly simplify integration with Yandex.Market via the API.
+
+Get the specification via git
+There are two ways:
+
+• Run the commandgit clone https://github.com/yandex-market/yandex-market-partner-api.git
+
+git clone https://github.com/yandex-market/yandex-market-partner-api.git
+• Download the archive from the repository via GitHub web UI: Click the green button in the upper-right cornerCodeand in the drop-down list, selectDownload ZIP.
+
+Code
+
+Download ZIP
+
+Installation OpenAPI-generator via package managers
+Generator documentation:https://openapi-generator.tech/docs/installation For npm (any OS)npm install @openapitools/openapi-generator-cli -g
+
+npm install @openapitools/openapi-generator-cli -g For Homebrew (macOS)brew install openapi-generator
+
+brew install openapi-generator For Scoop (Windows)scoop install openapi-generator-cli
+
+scoop install openapi-generator-cli
+
+Customer Generation
+For npm (any OS)
+
+npx @openapitools/openapi-generator-cli generate -i <path_to_openapi.yaml> -g <lang> -o <output_path>
+
+npx @openapitools/openapi-generator-cli generate -i <path_to_openapi.yaml> -g <lang> -o <output_path>
+
+For other package managers
+
+openapi-generator generate -i <path_to_openapi.yaml> -g <lang> -o <output_path>
+
+openapi-generator generate -i <path_to_openapi.yaml> -g <lang> -o <output_path>
+The values of the query parts:
+<lang>— generator parameter for the selected language or framework.
+
+<lang> <output_path>— the output directory where the generated client code will be placed.
+
+<output_path> <path_to_openapi.yaml>— the file path openapi.yaml of this specification.
+
+<path_to_openapi.yaml> Examples of generators:
+
+• go
+• java
+• javascript
+• kotlin
+• php
+• python
+• ruby
+The full list of generators is available at:https://openapi-generator.tech/docs/generators

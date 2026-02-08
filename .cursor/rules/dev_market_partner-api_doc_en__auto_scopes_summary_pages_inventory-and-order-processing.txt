@@ -1,0 +1,149 @@
+Order processing and inventory
+The name of the access in the OpenAPI specification: inventory-and-order-processing.
+
+Products
+
+Method | Method description
+POST v1/reports/documents/barcodes/generate | Getting a barcode file Method Method description POST v1/reports/documents/barcodes/generate
+Getting a barcode file
+
+Orders
+
+Method | Method description
+POST v1/businesses/{businessId}/orders | Information about orders in the cabinet
+PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes | Order preparation
+POST v2/campaigns/{campaignId}/orders/{orderId}/external-id | Transmitting an external order ID
+PUT v2/campaigns/{campaignId}/orders/{orderId}/status | Changing the status of an order
+POST v2/campaigns/{campaignId}/orders/status-update | Changing the statuses of multiple orders
+PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiers | Transfer of unit marking codes
+POST v2/campaigns/{campaignId}/orders/{orderId}/identifiers/status | Marking code verification statuses
+PUT v2/campaigns/{campaignId}/orders/{orderId}/verifyEac | Sending the confirmation code
+PUT v2/campaigns/{campaignId}/orders/{orderId}/items | Removing items from an order or reducing their number
+POST v2/campaigns/{campaignId}/orders/{orderId}/delivery/track | Sending the parcel's track number
+PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/date | Changing the order delivery date
+PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/storage-limit | Order retention period extension
+GET v2/campaigns/{campaignId}/orders/{orderId}/buyer | Information about the buyer — an individual
+PUT v2/campaigns/{campaignId}/orders/{orderId}/cancellation/accept | Cancellation of the order by the buyer
+POST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods | Transfer of digital goods keys
+POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyer | Information about the buyer — a legal entity
+POST v2/campaigns/{campaignId}/orders/{orderId}/documents | Information about documents Method Method description
+POST v1/businesses/{businessId}/orders Information about orders in the cabinet PUT v2/campaigns/{campaignId}/orders/{orderId}/boxes
+Order preparation POST v2/campaigns/{campaignId}/orders/{orderId}/external-id Transmitting an external order ID
+PUT v2/campaigns/{campaignId}/orders/{orderId}/status Changing the status of an order POST v2/campaigns/{campaignId}/orders/status-update
+Changing the statuses of multiple orders PUT v2/campaigns/{campaignId}/orders/{orderId}/identifiers Transfer of unit marking codes
+POST v2/campaigns/{campaignId}/orders/{orderId}/identifiers/status Marking code verification statuses
+PUT v2/campaigns/{campaignId}/orders/{orderId}/verifyEac Sending the confirmation code PUT v2/campaigns/{campaignId}/orders/{orderId}/items
+Removing items from an order or reducing their number POST v2/campaigns/{campaignId}/orders/{orderId}/delivery/track
+Sending the parcel's track number PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/date Changing the order delivery date
+PUT v2/campaigns/{campaignId}/orders/{orderId}/delivery/storage-limit Order retention period extension
+GET v2/campaigns/{campaignId}/orders/{orderId}/buyer Information about the buyer — an individual PUT v2/campaigns/{campaignId}/orders/{orderId}/cancellation/accept
+Cancellation of the order by the buyer POST v2/campaigns/{campaignId}/orders/{orderId}/deliverDigitalGoods
+Transfer of digital goods keys POST v2/campaigns/{campaignId}/orders/{orderId}/business-buyer Information about the buyer — a legal entity
+POST v2/campaigns/{campaignId}/orders/{orderId}/documents Information about documents
+
+Shipments FBS
+
+Method | Method description
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId} | Getting information about a single shipment
+PUT v2/campaigns/{campaignId}/first-mile/shipments | Getting information about multiple shipments
+POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm | Shipment confirmation
+GET v2/campaigns/{campaignId}/shipments/reception-transfer-act | Confirmation of the nearest shipment and receipt of the acceptance certificate for it
+POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/transfer | Transferring orders to the next shipment
+PUT v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallets | Transfer of the number of packages for confidential acceptance
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/act | Receipt of the acceptance certificate
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/discrepancy-act | Receiving a certificate of discrepancies
+POST v2/reports/documents/shipment-list/generate | Getting the Assembly sheet
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/transportation-waybill | Receipt of the bill of lading
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/inbound-act | Receiving the actual acceptance and transfer certificate
+Method Method description GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId} Getting information about a single shipment
+PUT v2/campaigns/{campaignId}/first-mile/shipments Getting information about multiple shipments POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/confirm
+Shipment confirmation GET v2/campaigns/{campaignId}/shipments/reception-transfer-act Confirmation of the nearest shipment and receipt of the acceptance certificate for it
+POST v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/transfer Transferring orders to the next shipment
+PUT v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallets Transfer of the number of packages for confidential acceptance
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/act Receipt of the acceptance certificate
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/discrepancy-act Receiving a certificate of discrepancies
+POST v2/reports/documents/shipment-list/generate Getting the Assembly sheet GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/transportation-waybill
+Receipt of the bill of lading GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/inbound-act
+Receiving the actual acceptance and transfer certificate
+
+Shortcuts FBS and DBS
+
+Method | Method description
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/label | Ready‑made label-sticker for the box in the order
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels | Ready‑made labels-stickers for all boxes in one order
+POST v2/reports/documents/labels/generate | Ready‑made labels-stickers for all boxes in several orders
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data | Data for self-label production
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/info | Getting information about the ability to print labels
+GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallet/labels | Labels for trust acceptance
+Method Method description GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/shipments/{shipmentId}/boxes/{boxId}/label
+Ready‑made label-sticker for the box in the order GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels
+Ready‑made labels-stickers for all boxes in one order POST v2/reports/documents/labels/generate Ready‑made labels-stickers for all boxes in several orders
+GET v2/campaigns/{campaignId}/orders/{orderId}/delivery/labels/data Data for self-label production GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/orders/info
+Getting information about the ability to print labels GET v2/campaigns/{campaignId}/first-mile/shipments/{shipmentId}/pallet/labels
+Labels for trust acceptance
+
+Non-purchases and refunds
+
+Method | Method description
+GET v2/campaigns/{campaignId}/returns | List of non-purchases and refunds
+GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId} | Information about non-purchase or refund
+GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/application | Receiving a refund request
+GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/{itemId}/image/{imageHash} | Receiving photos of items in a refund
+POST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit | Transfer and confirmation of the refund decision
+Method Method description GET v2/campaigns/{campaignId}/returns List of non-purchases and refunds GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}
+Information about non-purchase or refund GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/application
+Receiving a refund request
+GET v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/{itemId}/image/{imageHash}
+Receiving photos of items in a refund POST v2/campaigns/{campaignId}/orders/{orderId}/returns/{returnId}/decision/submit
+Transfer and confirmation of the refund decision
+
+Reports and documents
+
+Method | Method description
+POST v2/campaigns/{campaignId}/stats/orders | Detailed information on orders
+POST v2/reports/united-orders/generate | Order Report
+POST v2/reports/united-returns/generate | Report on non-purchases and refunds
+POST v2/reports/goods-movement/generate | Report on the movement of goods
+POST v2/reports/jewelry-fiscal/generate | Jewelry Order Report Method Method description POST v2/campaigns/{campaignId}/stats/orders
+Detailed information on orders POST v2/reports/united-orders/generate Order Report POST v2/reports/united-returns/generate
+Report on non-purchases and refunds POST v2/reports/goods-movement/generate Report on the movement of goods
+POST v2/reports/jewelry-fiscal/generate Jewelry Order Report
+
+Quality index
+
+Method | Method description
+POST v2/businesses/{businessId}/ratings/quality | Store Quality Index
+POST v2/campaigns/{campaignId}/ratings/quality/details | Orders that affected the quality index Method
+Method description POST v2/businesses/{businessId}/ratings/quality Store Quality Index POST v2/campaigns/{campaignId}/ratings/quality/details
+Orders that affected the quality index
+
+Warehouses
+
+Method | Method description
+POST v2/businesses/{businessId}/warehouses | List of warehouses
+POST v2/campaigns/{campaignId}/warehouse/status | Changing the warehouse status Method Method description
+POST v2/businesses/{businessId}/warehouses List of warehouses POST v2/campaigns/{campaignId}/warehouse/status
+Changing the warehouse status
+
+Viewing additional information
+
+Method | Method description
+GET v2/campaigns | User's Store List
+GET v2/campaigns/{campaignId} | Store Information
+POST v2/businesses/{businessId}/settings | Cabinet Settings
+GET v2/campaigns/{campaignId}/settings | Store Settings
+POST v2/categories/tree | The category tree
+GET v2/reports/info/{reportId} | Getting a given report or document
+GET v2/warehouses | Market Warehouse IDs
+POST v2/auth/token | Getting information about the authorization token
+GET v2/delivery/services | Directory of delivery services
+POST v2/regions/countries | List of valid country codes
+GET v2/regions | Search for regions by their name
+GET v2/regions/{regionId} | Information about the region
+GET v2/regions/{regionId}/children | Information about child regions Method Method description GET v2/campaigns
+User's Store List GET v2/campaigns/{campaignId} Store Information POST v2/businesses/{businessId}/settings
+Cabinet Settings GET v2/campaigns/{campaignId}/settings Store Settings POST v2/categories/tree The category tree
+GET v2/reports/info/{reportId} Getting a given report or document GET v2/warehouses Market Warehouse IDs
+POST v2/auth/token Getting information about the authorization token GET v2/delivery/services Directory of delivery services
+POST v2/regions/countries List of valid country codes GET v2/regions Search for regions by their name
+GET v2/regions/{regionId} Information about the region GET v2/regions/{regionId}/children Information about child regions

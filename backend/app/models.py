@@ -1,4 +1,6 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, Enum as SQLEnum
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, Enum as SQLEnum, Table, UniqueConstraint
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from datetime import datetime
 import enum
@@ -14,6 +16,7 @@ class OrderStatus(str, enum.Enum):
     PENDING = "pending"
     PROCESSING = "processing"
     COMPLETED = "completed"
+    FINISHED = "finished"  # Marked as finished after completing buyer interaction
     CANCELLED = "cancelled"
     FAILED = "failed"
 
@@ -57,9 +60,23 @@ class Product(Base):
     original_price = Column(Float)  # Original price before discount
     discount_percentage = Column(Float, default=0)  # Discount percentage
     
-    # Media
-    yandex_images = Column(Text)  # JSON array of image URLs
-    yandex_videos = Column(Text)  # JSON array of video URLs
+    # Physical product details
+    barcode = Column(String)  # Product barcode (EAN, UPC, etc.)
+    width_cm = Column(Float)  # Width in cm
+    height_cm = Column(Float)  # Height in cm
+    length_cm = Column(Float)  # Length/depth in cm
+    weight_kg = Column(Float)  # Weight in kg
+    
+    # Tax and pricing
+    vat_rate = Column(String, default="NOT_APPLICABLE")  # VAT: NOT_APPLICABLE, VAT_0, VAT_10, VAT_20
+    crossed_out_price = Column(Float)  # Original price (for showing discounts)
+    
+    # Certificate-specific fields (for digital gift certificates)
+    certificate_type = Column(String)  # Type of certificate
+    delivery_type = Column(String)  # Type of delivery
+    monetary_certificate_type = Column(String)  # Type of monetary certificate
+    certificate_theme = Column(String)  # Theme/design of certificate
+    certificate_design = Column(String)  # Design details
     
     # Inventory/Stock Management (for FBS model - not applicable for DBS digital products)
     stock_quantity = Column(Integer, default=0)  # Current stock quantity
@@ -68,15 +85,21 @@ class Product(Base):
     # Email template for activation
     email_template_id = Column(Integer, ForeignKey("email_templates.id"), nullable=True)
     
+    # Documentation for order fulfillment
+    documentation_id = Column(Integer, ForeignKey("documentations.id"), nullable=True)
+    
+    # Product status
+    is_active = Column(Boolean, default=True)  # Whether the product is active/available
+    
+    # Activation Keys Tracking
+    generated_keys = Column(JSONB, default=list)  # List of {key, timestamp, order_id} objects
+    
+    # Full Yandex Market data (complete JSON from API)
+    yandex_full_data = Column(JSONB, nullable=True)  # Complete product data from Yandex Market API
+    
     # Metadata
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    is_active = Column(Boolean, default=True)
-    
-    # Note: Relationships removed - use queries instead
-    # To get orders: db.query(Order).filter(Order.product_id == self.id).all()
-    # To get activation_keys: db.query(ActivationKey).filter(ActivationKey.product_id == self.id).all()
-    # To get email_template: db.query(EmailTemplate).filter(EmailTemplate.id == self.email_template_id).first()
     
     @property
     def profit(self) -> float:
@@ -96,10 +119,15 @@ class EmailTemplate(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
-    subject = Column(String, nullable=False)
-    body = Column(Text, nullable=False)  # HTML template with placeholders
+    body = Column(Text, nullable=False)  # Plain text template body (with formatting stored as text)
+    random_key = Column(Boolean, default=True)  # If True, activation key is auto-generated
+    required_login = Column(Boolean, default=False)  # If True, adds "Done! the operator..." text
+    activate_till_days = Column(Integer, default=30)  # Number of days until activation code expires (for Yandex deliverDigitalGoods)
     
-    # Placeholders: {order_number}, {product_name}, {activation_code}, {expiry_date}, {instructions}
+    # Unified media attachments (URLs only - Yandex API doesn't support file uploads)
+    # Format: [{"url": "...", "type": "image|video|file", "name": "..."}, ...]
+    attachments = Column(JSONB, default=list)  # List of attachment objects with url, type, and name
+    
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
@@ -123,78 +151,59 @@ class ActivationKey(Base):
     # To get order: db.query(Order).filter(Order.activation_key_id == self.id).first()
 
 
-class ProductVariant(Base):
-    """Product variants/options (e.g., different editions, platforms, territories with different prices)"""
-    __tablename__ = "product_variants"
+class AppSettings(Base):
+    """Application settings (singleton - only one record)"""
+    __tablename__ = "app_settings"
     
     id = Column(Integer, primary_key=True, index=True)
-    product_id = Column(Integer, ForeignKey("products.id"), nullable=False, index=True)
     
-    # Variant identification
-    variant_name = Column(String, nullable=False)  # e.g., "Enhanced Edition•Kazakhstan•PC"
-    variant_sku = Column(String, unique=True, index=True)  # Unique SKU for this variant
+    # Processing time
+    processing_time_min = Column(Integer, default=20)  # Minimum processing time in minutes
+    processing_time_max = Column(Integer, nullable=True)  # Maximum processing time in minutes (optional)
+    maximum_wait_time_value = Column(Integer, nullable=True)  # Maximum wait time numeric value
+    maximum_wait_time_unit = Column(String, nullable=True)  # Unit: 'minutes', 'hours', 'days', 'weeks'
     
-    # Variant-specific attributes
-    edition = Column(String)  # e.g., "Enhanced Edition", "Premium Edition"
-    platform = Column(String)  # e.g., "PC", "PlayStation 4, PlayStation 5"
-    activation_territory = Column(String)  # e.g., "Kazakhstan", "all countries"
-    localization = Column(String)  # e.g., "Russian subtitles and interface"
+    # Working hours
+    working_hours_text = Column(Text, nullable=True)
     
-    # Variant pricing
-    selling_price = Column(Float, nullable=False)
-    original_price = Column(Float, nullable=True)
-    cost_price = Column(Float, nullable=False)  # Cost for this specific variant
+    # Company email
+    company_email = Column(String, nullable=True)
     
-    # Variant status
-    is_active = Column(Boolean, default=True)
-    stock_quantity = Column(Integer, default=0)  # Stock for this variant
+    # Yandex Market Business API - override .env if set
+    yandex_api_token = Column(String, nullable=True)
+    yandex_business_id = Column(String, nullable=True)  # Business ID (primary)
+    yandex_campaign_id = Column(String, nullable=True)  # Campaign ID (legacy)
+    yandex_api_url = Column(String, default="https://api.partner.market.yandex.ru")
     
-    # Yandex Market integration
-    yandex_market_id = Column(String, unique=True, index=True, nullable=True)
-    yandex_market_sku = Column(String, unique=True, index=True, nullable=True)
-    is_synced = Column(Boolean, default=False)
+    # SMTP Configuration - override .env if set
+    smtp_host = Column(String, nullable=True)
+    smtp_port = Column(Integer, nullable=True)
+    smtp_password = Column(String, nullable=True)
+    from_email = Column(String, nullable=True)
+    
+    # Security
+    secret_key = Column(String, nullable=True)
+    
+    # Order Activation Settings
+    auto_activation_enabled = Column(Boolean, default=False)  # If True, automatically send activation when order comes in
     
     # Metadata
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
-    # Note: Relationships removed - use queries instead
-    # To get product: db.query(Product).filter(Product.id == self.product_id).first()
-    
-    @property
-    def profit(self) -> float:
-        """Calculate profit per unit for this variant"""
-        return self.selling_price - self.cost_price
-    
-    @property
-    def profit_percentage(self) -> float:
-        """Calculate profit percentage for this variant"""
-        if self.cost_price == 0:
-            return 0
-        return ((self.selling_price - self.cost_price) / self.cost_price) * 100
 
 
-class ProductTemplate(Base):
-    __tablename__ = "product_templates"
-    
-    id = Column(Integer, primary_key=True, index=True)
-    name = Column(String, nullable=False, index=True)
-    
-    # Store all product fields as JSON
-    template_data = Column(Text, nullable=False)  # JSON string containing all product fields
-    
-    # Metadata
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
-    # Note: Relationships removed - use queries instead
 
 
 class Order(Base):
     __tablename__ = "orders"
+    __table_args__ = (
+        # Composite unique constraint: one Order record per (yandex_order_id, product_id) combination
+        # This allows multiple Order records for the same Yandex order (one per product/item)
+        UniqueConstraint('yandex_order_id', 'product_id', name='uq_order_yandex_product'),
+    )
     
     id = Column(Integer, primary_key=True, index=True)
-    yandex_order_id = Column(String, unique=True, nullable=False, index=True)
+    yandex_order_id = Column(String, nullable=False, index=True)  # Removed unique=True - can have multiple orders per Yandex order
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     
     # Customer information
@@ -206,6 +215,10 @@ class Order(Base):
     quantity = Column(Integer, default=1)
     total_amount = Column(Float, nullable=False)
     status = Column(SQLEnum(OrderStatus), default=OrderStatus.PENDING, nullable=False)
+    yandex_status = Column(String, nullable=True)  # Raw Yandex order status
+    
+    # Full Yandex order data (includes items with IDs needed for digital goods delivery)
+    yandex_order_data = Column(JSONB, nullable=True)
     
     # Fulfillment
     activation_code_sent = Column(Boolean, default=False)
@@ -221,10 +234,91 @@ class Order(Base):
     # To get product: db.query(Product).filter(Product.id == self.product_id).first()
     # To get activation_key: db.query(ActivationKey).filter(ActivationKey.id == self.activation_key_id).first()
     
-    def get_profit(self, db) -> float:
-        """Calculate profit for this order (requires db session)"""
-        from app import models
-        product = db.query(models.Product).filter(models.Product.id == self.product_id).first()
-        if product:
-            return self.total_amount - (product.cost_price * self.quantity)
-        return 0
+    @property
+    def profit(self) -> float:
+        """Calculate profit for this order.
+        
+        Uses the SQLAlchemy session bound to the object (if available) to look up
+        the product's cost_price. Returns 0.0 if product can't be found.
+        """
+        try:
+            from sqlalchemy import inspect
+            session = inspect(self).session
+            if session:
+                from app import models
+                product = session.query(models.Product).filter(models.Product.id == self.product_id).first()
+                if product:
+                    return self.total_amount - (product.cost_price * self.quantity)
+        except Exception:
+            pass
+        return 0.0
+
+
+# Association table for client-product many-to-many relationship with purchase tracking
+client_products = Table(
+    'client_products',
+    Base.metadata,
+    Column('client_id', Integer, ForeignKey('clients.id', ondelete='CASCADE'), primary_key=True),
+    Column('product_id', Integer, ForeignKey('products.id', ondelete='CASCADE'), primary_key=True),
+    Column('quantity', Integer, default=1),  # How many times this product was purchased
+    Column('first_purchase_date', DateTime(timezone=True), server_default=func.now()),
+    Column('last_purchase_date', DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+)
+
+
+class Client(Base):
+    """Clients for marketing email campaigns"""
+    __tablename__ = "clients"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    email = Column(String, unique=True, nullable=False, index=True)
+    
+    # Relationship with products (purchase history)
+    purchased_products = relationship(
+        "Product",
+        secondary=client_products,
+        backref="clients_who_purchased"
+    )
+    
+    # Metadata
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class MarketingEmailTemplate(Base):
+    """Email templates for marketing campaigns"""
+    __tablename__ = "marketing_email_templates"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    subject = Column(String, nullable=False)
+    body = Column(Text, nullable=False)  # Rich text body with HTML formatting
+    
+    # Unified media attachments
+    # Format: [{"url": "...", "type": "image|video|file", "name": "..."}, ...]
+    attachments = Column(JSONB, default=list)  # List of attachment objects with url, type, and name
+    
+    # Metadata
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class Documentation(Base):
+    __tablename__ = "documentations"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False, index=True)
+    description = Column(Text)  # Optional description
+    
+    # Documentation can be file upload, link, or rich text content
+    file_url = Column(String, nullable=True)  # URL to uploaded file
+    link_url = Column(String, nullable=True)  # External link URL
+    content = Column(Text, nullable=True)  # Rich text content (HTML)
+    
+    # Type: 'file', 'link', or 'text'
+    type = Column(String, nullable=False, default='file')  # 'file', 'link', or 'text'
+    
+    # Metadata
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())

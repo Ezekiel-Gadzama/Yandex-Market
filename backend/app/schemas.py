@@ -6,90 +6,38 @@ from app.models import ProductType, OrderStatus
 
 
 # Product Schemas
+# Products are only synced from Yandex Market, not created manually
+# All Yandex data is stored in yandex_full_data JSON field
+
 class ProductBase(BaseModel):
+    """Base product schema - only essential local fields"""
     name: str
     description: Optional[str] = None
     product_type: ProductType = ProductType.DIGITAL
-    cost_price: float = Field(gt=0, description="Cost to buy from supplier")
-    selling_price: float = Field(gt=0, description="Price on Yandex Market")
+    cost_price: float = Field(ge=0, description="Cost to buy from supplier")
+    selling_price: float = Field(ge=0, description="Price on Yandex Market")
     supplier_url: Optional[str] = None
     supplier_name: Optional[str] = None
     yandex_market_id: Optional[str] = None
     yandex_market_sku: Optional[str] = None
     email_template_id: Optional[int] = None
+    documentation_id: Optional[int] = None
     is_active: bool = True
-    
-    # Yandex Market product details
-    yandex_model: Optional[str] = "DBS"  # Model type (DBS for digital products)
-    yandex_category_id: Optional[str] = None
-    yandex_category_path: Optional[str] = None
-    yandex_brand: Optional[str] = None
-    yandex_platform: Optional[str] = None
-    yandex_localization: Optional[str] = None
-    yandex_publication_type: Optional[str] = None
-    yandex_activation_territory: Optional[str] = "all countries"
-    yandex_edition: Optional[str] = None
-    yandex_series: Optional[str] = None
-    yandex_age_restriction: Optional[str] = None
-    yandex_activation_instructions: Optional[bool] = True
-    
-    # Pricing and discounts
-    original_price: Optional[float] = None
-    discount_percentage: Optional[float] = 0
-    
-    # Media (JSON arrays as strings)
-    yandex_images: Optional[List[str]] = None
-    yandex_videos: Optional[List[str]] = None
-    
-    # Inventory/Stock Management
-    stock_quantity: Optional[int] = None
-    warehouse_id: Optional[int] = None
-    
-    # Inventory/Stock Management (for FBS model)
-    stock_quantity: Optional[int] = 0
-    warehouse_id: Optional[int] = None
-
-
-class ProductCreate(ProductBase):
-    pass
+    # All Yandex fields are stored in yandex_full_data JSON, not as individual fields
 
 
 class ProductUpdate(BaseModel):
-    name: Optional[str] = None
-    description: Optional[str] = None
-    product_type: Optional[ProductType] = None
-    cost_price: Optional[float] = Field(None, gt=0)
-    selling_price: Optional[float] = Field(None, gt=0)
+    """Update product - only local-only fields and dynamic Yandex JSON updates"""
+    # Essential local-only fields (not in Yandex)
+    cost_price: Optional[float] = Field(None, ge=0)
     supplier_url: Optional[str] = None
     supplier_name: Optional[str] = None
     email_template_id: Optional[int] = None
+    documentation_id: Optional[int] = None
     is_active: Optional[bool] = None
     
-    # Yandex Market product details
-    yandex_model: Optional[str] = None
-    yandex_category_id: Optional[str] = None
-    yandex_category_path: Optional[str] = None
-    yandex_brand: Optional[str] = None
-    yandex_platform: Optional[str] = None
-    yandex_localization: Optional[str] = None
-    yandex_publication_type: Optional[str] = None
-    yandex_activation_territory: Optional[str] = None
-    yandex_edition: Optional[str] = None
-    yandex_series: Optional[str] = None
-    yandex_age_restriction: Optional[str] = None
-    yandex_activation_instructions: Optional[bool] = None
-    
-    # Pricing and discounts
-    original_price: Optional[float] = None
-    discount_percentage: Optional[float] = None
-    
-    # Media
-    yandex_images: Optional[List[str]] = None
-    yandex_videos: Optional[List[str]] = None
-    
-    # Inventory/Stock Management
-    stock_quantity: Optional[int] = None
-    warehouse_id: Optional[int] = None
+    # Dynamic field updates from Yandex JSON (all Yandex fields are edited here)
+    yandex_field_updates: Optional[Dict[str, Any]] = None
 
 
 class Product(ProductBase):
@@ -97,6 +45,7 @@ class Product(ProductBase):
     profit: float
     profit_percentage: float
     is_synced: bool
+    yandex_full_data: Optional[Dict[str, Any]] = None  # Complete Yandex JSON data
     created_at: datetime
     updated_at: Optional[datetime] = None
     
@@ -107,8 +56,10 @@ class Product(ProductBase):
 # Email Template Schemas
 class EmailTemplateBase(BaseModel):
     name: str
-    subject: str
-    body: str
+    body: str  # Plain text template body
+    random_key: bool = True  # If True, activation key is auto-generated
+    required_login: bool = False  # If True, adds "Done! the operator..." text
+    activate_till_days: int = 30  # Number of days until activation code expires (for Yandex deliverDigitalGoods)
 
 
 class EmailTemplateCreate(EmailTemplateBase):
@@ -117,8 +68,10 @@ class EmailTemplateCreate(EmailTemplateBase):
 
 class EmailTemplateUpdate(BaseModel):
     name: Optional[str] = None
-    subject: Optional[str] = None
     body: Optional[str] = None
+    random_key: Optional[bool] = None
+    required_login: Optional[bool] = None
+    activate_till_days: Optional[int] = None
 
 
 class EmailTemplate(EmailTemplateBase):
@@ -172,12 +125,36 @@ class OrderUpdate(BaseModel):
     activation_key_id: Optional[int] = None
 
 
+class OrderItem(BaseModel):
+    """Represents a single product/item in an order"""
+    product_id: Optional[int] = None  # None if product not in database
+    product_name: str
+    quantity: int
+    item_price: float  # Price per item
+    item_total: float  # Total for this item (item_price * quantity)
+    yandex_item_id: Optional[int] = None
+    yandex_offer_id: Optional[str] = None
+    activation_code_sent: bool = False
+    activation_key_id: Optional[int] = None
+    email_template_id: Optional[int] = None
+    documentation_id: Optional[int] = None
+    
+    class Config:
+        from_attributes = True
+
 class Order(OrderBase):
     id: int
     status: OrderStatus
+    yandex_status: Optional[str] = None
+    yandex_order_data: Optional[Dict[str, Any]] = None
     activation_code_sent: bool
     activation_code_sent_at: Optional[datetime] = None
-    profit: float
+    activation_key_id: Optional[int] = None
+    profit: float = 0.0
+    product_name: Optional[str] = None  # Product name for display (first product)
+    items: Optional[List[OrderItem]] = None  # All products/items in this order
+    items_count: Optional[int] = None  # Number of products in this order
+    delivery_type: Optional[str] = None  # "DIGITAL" or "DELIVERY" from Yandex API
     created_at: datetime
     updated_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
@@ -192,7 +169,11 @@ class DashboardStats(BaseModel):
     active_products: int
     total_orders: int
     pending_orders: int
+    processing_orders: int
     completed_orders: int
+    cancelled_orders: int
+    finished_orders: int
+    successful_orders: int  # completed + finished
     total_revenue: float
     total_profit: float
     total_cost: float
@@ -227,82 +208,155 @@ class SyncResult(BaseModel):
     errors: List[str] = []
 
 
-# Product Template Schemas
-class ProductTemplateBase(BaseModel):
-    name: str
-    template_data: Dict[str, Any]  # All product fields as a dictionary
+# App Settings Schemas
+class AppSettingsBase(BaseModel):
+    processing_time_min: int = Field(ge=1, description="Minimum processing time in minutes")
+    processing_time_max: Optional[int] = Field(None, ge=1, description="Maximum processing time in minutes (optional)")
+    maximum_wait_time_value: Optional[int] = Field(None, ge=1, description="Maximum wait time value")
+    maximum_wait_time_unit: Optional[str] = Field(None, description="Unit: minutes, hours, days, weeks")
+    working_hours_text: Optional[str] = None
+    company_email: Optional[str] = None
+    
+    # Yandex Market Business API - optional overrides for .env
+    yandex_api_token: Optional[str] = None
+    yandex_business_id: Optional[str] = None  # Primary identifier for Business API
+    yandex_campaign_id: Optional[str] = None  # Legacy support
+    yandex_api_url: str = Field(default="https://api.partner.market.yandex.ru")
+    
+    # SMTP - optional overrides for .env
+    smtp_host: Optional[str] = None
+    smtp_port: Optional[int] = None
+    smtp_password: Optional[str] = None
+    from_email: Optional[str] = None
+    
+    # Security
+    secret_key: Optional[str] = None
+    
+    
+    # Order Activation Settings
+    auto_activation_enabled: bool = False  # If True, automatically send activation when order comes in
 
 
-class ProductTemplateCreate(ProductTemplateBase):
-    pass
+class AppSettingsUpdate(BaseModel):
+    processing_time_min: Optional[int] = Field(None, ge=1)
+    processing_time_max: Optional[int] = Field(None, ge=1)
+    maximum_wait_time_value: Optional[int] = Field(None, ge=1)
+    maximum_wait_time_unit: Optional[str] = None
+    working_hours_text: Optional[str] = None
+    company_email: Optional[str] = None
+    yandex_api_token: Optional[str] = None
+    yandex_business_id: Optional[str] = None
+    yandex_campaign_id: Optional[str] = None
+    yandex_client_secret: Optional[str] = None
+    yandex_api_url: Optional[str] = None
+    smtp_host: Optional[str] = None
+    smtp_port: Optional[int] = None
+    smtp_password: Optional[str] = None
+    from_email: Optional[str] = None
+    secret_key: Optional[str] = None
+    auto_activation_enabled: Optional[bool] = None
 
 
-class ProductTemplateUpdate(BaseModel):
-    name: Optional[str] = None
-    template_data: Optional[Dict[str, Any]] = None
-
-
-class ProductTemplate(ProductTemplateBase):
+class AppSettings(AppSettingsBase):
     id: int
     created_at: datetime
     updated_at: Optional[datetime] = None
-    
-    @validator('template_data', pre=True)
-    def parse_template_data(cls, v):
-        if isinstance(v, str):
-            try:
-                return json.loads(v)
-            except json.JSONDecodeError:
-                return {}
-        return v
     
     class Config:
         from_attributes = True
 
 
-# Product Variant Schemas
-class ProductVariantBase(BaseModel):
-    variant_name: str  # e.g., "Enhanced Edition•Kazakhstan•PC"
-    variant_sku: Optional[str] = None
-    edition: Optional[str] = None
-    platform: Optional[str] = None
-    activation_territory: Optional[str] = None
-    localization: Optional[str] = None
-    selling_price: float = Field(gt=0)
-    original_price: Optional[float] = None
-    cost_price: float = Field(gt=0)
-    is_active: bool = True
-    stock_quantity: int = 0
+# Client Schemas
+class ClientBase(BaseModel):
+    name: str
+    email: EmailStr
+
+class ClientCreate(ClientBase):
+    purchased_product_ids: Optional[List[int]] = []
+
+class ClientUpdate(BaseModel):
+    name: Optional[str] = None
+    email: Optional[EmailStr] = None
+    purchased_product_ids: Optional[List[int]] = None
+
+class Client(ClientBase):
+    id: int
+    purchased_product_ids: List[int] = []
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
 
 
-class ProductVariantCreate(ProductVariantBase):
+# Marketing Email Template Schemas
+class MarketingEmailTemplateBase(BaseModel):
+    name: str
+    subject: str
+    body: str  # Rich text body with HTML formatting
+
+class MarketingEmailTemplateCreate(MarketingEmailTemplateBase):
+    pass
+
+class MarketingEmailTemplateUpdate(BaseModel):
+    name: Optional[str] = None
+    subject: Optional[str] = None
+    body: Optional[str] = None
+    attachments: Optional[List[Dict[str, Any]]] = None  # Unified attachments: [{"url": "...", "type": "image|video|file", "name": "..."}, ...]
+
+class MarketingEmailTemplate(MarketingEmailTemplateBase):
+    id: int
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+
+# Documentation Schemas
+class DocumentationBase(BaseModel):
+    name: str
+    description: Optional[str] = Field(None, max_length=120, description="Description with a maximum of 120 characters")
+    file_url: Optional[str] = None
+    link_url: Optional[str] = None
+    content: Optional[str] = None  # Rich text content (HTML)
+    type: str = 'file'  # 'file', 'link', or 'text'
+
+
+class DocumentationCreate(DocumentationBase):
     pass
 
 
-class ProductVariantUpdate(BaseModel):
-    variant_name: Optional[str] = None
-    variant_sku: Optional[str] = None
-    edition: Optional[str] = None
-    platform: Optional[str] = None
-    activation_territory: Optional[str] = None
-    localization: Optional[str] = None
-    selling_price: Optional[float] = Field(None, gt=0)
-    original_price: Optional[float] = None
-    cost_price: Optional[float] = Field(None, gt=0)
-    is_active: Optional[bool] = None
-    stock_quantity: Optional[int] = None
+class DocumentationUpdate(BaseModel):
+    name: Optional[str] = None
+    description: Optional[str] = Field(None, max_length=120, description="Description with a maximum of 120 characters")
+    file_url: Optional[str] = None
+    link_url: Optional[str] = None
+    content: Optional[str] = None
+    type: Optional[str] = None
 
 
-class ProductVariant(ProductVariantBase):
+class Documentation(DocumentationBase):
     id: int
-    product_id: int
-    yandex_market_id: Optional[str] = None
-    yandex_market_sku: Optional[str] = None
-    is_synced: bool
-    profit: float
-    profit_percentage: float
     created_at: datetime
     updated_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+
+# Product Analytics Schemas
+class ProductAnalytics(BaseModel):
+    product_id: int
+    product_name: str
+    total_orders: int
+    completed_orders: int
+    total_revenue: float
+    total_profit: float
+    profit_margin: float
+    average_order_value: float
+    period_start: Optional[datetime] = None
+    period_end: Optional[datetime] = None
     
     class Config:
         from_attributes = True

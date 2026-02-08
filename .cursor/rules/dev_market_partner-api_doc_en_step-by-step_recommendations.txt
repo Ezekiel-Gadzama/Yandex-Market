@@ -1,0 +1,29 @@
+Yandex.Market recommendations for cards
+Sometimes in response toPOST v2/businesses/{businessId}/offer-cardsyou will receiverecommendationsby filling out the cards in the fieldrecommendations.
+
+recommendations
+See the type of recommendation you received in the fieldrecommendations→type. Find this type in the documentation and see which product fields relate to this type of recommendation:
+
+recommendations
+
+type
+
+• See the documentation for the meaning of the recommendation and which parameter needs to be changed or filled in.
+• Edit the parameter using a requestPOST v2/businesses/{businessId}/offer-mappings/update.
+• See the documentation for the meaning of the recommendation.
+• Make a requestPOST v2/category/{categoryId}/parameters.
+• Select the characteristics from the response that are in the arrayrecommendationTypesthere is the right type. For example, if you received a recommendation likeMAIN, you need characteristics markedMAINinrecommendationTypes.
+
+recommendationTypes
+
+MAIN
+
+MAIN
+
+recommendationTypes
+• Send the values of the characteristics using a requestPOST v2/businesses/{businessId}/offer-cards/update.
+Also read the instructions
+
+• Adding and editing products
+• Changing categorical characteristics
+• Managing goods in the archive

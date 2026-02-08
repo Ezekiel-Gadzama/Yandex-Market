@@ -1,0 +1,35 @@
+View FBY requests
+The name of the access in the OpenAPI specification: supplies-management:read-only.
+
+FBY-applications
+
+Method | Method description
+POST v2/campaigns/{campaignId}/supply-requests | Receiving information about orders for delivery, removal and disposal
+POST v2/campaigns/{campaignId}/supply-requests/items | Receipt of goods in an application for delivery, export or disposal
+POST v2/campaigns/{campaignId}/supply-requests/documents | Receipt of documents on the application for delivery, export or disposal
+Method Method description POST v2/campaigns/{campaignId}/supply-requests Receiving information about orders for delivery, removal and disposal
+POST v2/campaigns/{campaignId}/supply-requests/items Receipt of goods in an application for delivery, export or disposal
+POST v2/campaigns/{campaignId}/supply-requests/documents Receipt of documents on the application for delivery, export or disposal
+
+Viewing additional information
+
+Method | Method description
+GET v2/campaigns | User's Store List
+GET v2/campaigns/{campaignId} | Store Information
+POST v2/businesses/{businessId}/settings | Cabinet Settings
+GET v2/campaigns/{campaignId}/settings | Store Settings
+POST v2/categories/tree | The category tree
+GET v2/reports/info/{reportId} | Getting a given report or document
+GET v2/warehouses | Market Warehouse IDs
+POST v2/auth/token | Getting information about the authorization token
+GET v2/delivery/services | Directory of delivery services
+POST v2/regions/countries | List of valid country codes
+GET v2/regions | Search for regions by their name
+GET v2/regions/{regionId} | Information about the region
+GET v2/regions/{regionId}/children | Information about child regions Method Method description GET v2/campaigns
+User's Store List GET v2/campaigns/{campaignId} Store Information POST v2/businesses/{businessId}/settings
+Cabinet Settings GET v2/campaigns/{campaignId}/settings Store Settings POST v2/categories/tree The category tree
+GET v2/reports/info/{reportId} Getting a given report or document GET v2/warehouses Market Warehouse IDs
+POST v2/auth/token Getting information about the authorization token GET v2/delivery/services Directory of delivery services
+POST v2/regions/countries List of valid country codes GET v2/regions Search for regions by their name
+GET v2/regions/{regionId} Information about the region GET v2/regions/{regionId}/children Information about child regions

@@ -1,0 +1,16 @@
+## Files that need API path fixes (remove leading slash, ensure trailing slash):
+
+1. frontend/src/api/products.ts
+2. frontend/src/api/orders.ts  
+3. frontend/src/api/clients.ts
+4. frontend/src/api/productTemplates.ts
+5. frontend/src/api/activationTemplates.ts (formerly emailTemplates)
+
+All API calls need:
+- Remove leading `/` 
+- Add trailing `/` for list endpoints
+- Keep trailing `/` for detail endpoints
+
+Pattern: 
+- `/products/${id}` → `products/${id}/`
+- `/products` → `products/`

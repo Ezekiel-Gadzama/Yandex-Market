@@ -42,34 +42,34 @@ export interface RatingSummary {
 
 export const reviewsApi = {
   getProductReviews: async (productId?: string, limit: number = 50) => {
-    const response = await apiClient.get<ReviewResponse>('/reviews/products', {
+    const response = await apiClient.get<ReviewResponse>('reviews/products', {
       params: { product_id: productId, limit }
     })
     return response.data
   },
   
   getProductRating: async (productId: string) => {
-    const response = await apiClient.get<RatingSummary>(`/reviews/products/${productId}/rating`)
+    const response = await apiClient.get<RatingSummary>(`reviews/products/${productId}/rating`)
     return response.data
   },
   
   replyToProductReview: async (reviewId: string, text: string) => {
-    const response = await apiClient.post(`/reviews/products/${reviewId}/reply`, { text })
+    const response = await apiClient.post(`reviews/products/${reviewId}/reply`, { text })
     return response.data
   },
   
   getShopReviews: async (limit: number = 50) => {
-    const response = await apiClient.get<ReviewResponse>('/reviews/shop', { params: { limit } })
+    const response = await apiClient.get<ReviewResponse>('reviews/shop', { params: { limit } })
     return response.data
   },
   
   getShopRating: async () => {
-    const response = await apiClient.get<RatingSummary>('/reviews/shop/rating')
+    const response = await apiClient.get<RatingSummary>('reviews/shop/rating')
     return response.data
   },
   
   replyToShopReview: async (reviewId: string, text: string) => {
-    const response = await apiClient.post(`/reviews/shop/${reviewId}/reply`, { text })
+    const response = await apiClient.post(`reviews/shop/${reviewId}/reply`, { text })
     return response.data
   },
 }
