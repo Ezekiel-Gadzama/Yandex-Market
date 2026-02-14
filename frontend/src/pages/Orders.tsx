@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ordersApi } from '../api/orders'
 import { productsApi } from '../api/products'
@@ -6,7 +6,9 @@ import { documentationsApi } from '../api/documentations'
 import { chatApi, ChatMessage } from '../api/chat'
 import { settingsApi } from '../api/settings'
 import { activationTemplatesApi } from '../api/activationTemplates'
-import { CheckCircle, Mail, RefreshCw, Search, FileText, MessageCircle, X, Send, AlertCircle, ChevronDown, ChevronRight } from 'lucide-react'
+import { clientsApi } from '../api/clients'
+import { mediaApi } from '../api/media'
+import { CheckCircle, Mail, RefreshCw, Search, FileText, MessageCircle, X, Send, AlertCircle, ChevronDown, ChevronRight, UserPlus } from 'lucide-react'
 import { format } from 'date-fns'
 import ConfirmationModal from '../components/ConfirmationModal'
 
@@ -27,6 +29,7 @@ export default function Orders() {
   const [docViewerModal, setDocViewerModal] = useState<{ isOpen: boolean; productId: number | null }>({ isOpen: false, productId: null })
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set())
   const [refreshSuccess, setRefreshSuccess] = useState(false)
+  const [createClientModal, setCreateClientModal] = useState<{ isOpen: boolean; orderId: string | null; customerName: string | null }>({ isOpen: false, orderId: null, customerName: null })
   const queryClient = useQueryClient()
   
   const toggleOrderExpansion = (yandexOrderId: string) => {
@@ -470,7 +473,7 @@ export default function Orders() {
                     </>
                   )}
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {format(new Date(order.created_at), 'MMM d, yyyy HH:mm')}
+                    {format(new Date(order.order_created_at || order.created_at), 'MMM d, yyyy HH:mm')}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     {hasMultipleItems ? (
@@ -537,6 +540,43 @@ export default function Orders() {
                           title="Complete Order"
                         >
                           <CheckCircle className="h-5 w-5" />
+                        </button>
+                      )}
+                      {order.status === 'finished' && !order.has_client && (
+                        <button
+                          onClick={async () => {
+                            // Check if client already exists by buyer_id (auto-append)
+                            try {
+                              // Try to auto-append if buyer_id exists (pass undefined for email, not empty string)
+                              await clientsApi.createFromOrder(order.yandex_order_id, undefined, order.customer_name || undefined)
+                              showNotification('success', 'Order appended to existing client automatically!')
+                              // Immediately invalidate queries to update UI
+                              await queryClient.invalidateQueries({ queryKey: ['orders'] })
+                              await queryClient.invalidateQueries({ queryKey: ['clients'] })
+                              // Refetch orders to get updated has_client flag
+                              refetch()
+                            } catch (error: any) {
+                              // If auto-append fails (no buyer_id match), show modal for email input
+                              if (error.response?.status === 400 && error.response?.data?.detail?.includes('Email is required')) {
+                                setCreateClientModal({ 
+                                  isOpen: true, 
+                                  orderId: order.yandex_order_id,
+                                  customerName: order.customer_name || null
+                                })
+                              } else if (error.response?.status === 400 && error.response?.data?.detail?.includes('already exists')) {
+                                // Client already exists - refresh to update has_client flag
+                                showNotification('success', error.response?.data?.detail || 'Client already exists for this order')
+                                await queryClient.invalidateQueries({ queryKey: ['orders'] })
+                                refetch()
+                              } else {
+                                showNotification('error', error.response?.data?.detail || 'Failed to create client')
+                              }
+                            }
+                          }}
+                          className="text-blue-600 hover:text-blue-900"
+                          title="Create Client"
+                        >
+                          <UserPlus className="h-5 w-5" />
                         </button>
                       )}
                       <OrderChatButton orderId={order.yandex_order_id} onOpenChat={handleOpenOrderChat} />
@@ -704,6 +744,23 @@ export default function Orders() {
         />
       )}
 
+      {/* Create Client Modal */}
+      {createClientModal.isOpen && createClientModal.orderId && (
+        <CreateClientFromOrderModal
+          orderId={createClientModal.orderId}
+          customerName={createClientModal.customerName}
+          onClose={() => setCreateClientModal({ isOpen: false, orderId: null, customerName: null })}
+          onSuccess={async () => {
+            setCreateClientModal({ isOpen: false, orderId: null, customerName: null })
+            showNotification('success', 'Client created successfully!')
+            // Immediately invalidate and refetch to update UI
+            await queryClient.invalidateQueries({ queryKey: ['orders'] })
+            await queryClient.invalidateQueries({ queryKey: ['clients'] })
+            refetch()
+          }}
+        />
+      )}
+
       {/* Notification Popup */}
       {notification.isOpen && (
         <div className="fixed top-4 right-4 z-[60] animate-in slide-in-from-top">
@@ -733,15 +790,34 @@ export default function Orders() {
 
 // Order Chat Button Component with Unread Count Badge
 function OrderChatButton({ orderId, onOpenChat }: { orderId: string; onOpenChat: (orderId: string) => void }) {
+  const queryClient = useQueryClient()
   const { data: unreadCount } = useQuery({
     queryKey: ['order-chat-unread', orderId],
     queryFn: () => chatApi.getUnreadCount(orderId),
     refetchInterval: 10000, // Refresh every 10 seconds
   })
 
+  const handleClick = async () => {
+    // Optimistically update unread count to 0 immediately
+    queryClient.setQueryData(['order-chat-unread', orderId], 0)
+    
+    // Mark as read immediately when button is clicked
+    try {
+      await chatApi.markAsRead(orderId)
+      // Force immediate refetch of unread count to get accurate value
+      await queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] })
+    } catch (error) {
+      console.error('Failed to mark chat as read:', error)
+      // If marking as read fails, refetch to get the actual count
+      await queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] })
+    }
+    // Open the chat modal
+    onOpenChat(orderId)
+  }
+
   return (
     <button
-      onClick={() => onOpenChat(orderId)}
+      onClick={handleClick}
       className="relative text-indigo-600 hover:text-indigo-900"
       title="View Chat"
     >
@@ -765,6 +841,19 @@ function OrderChatModal({ orderId, onClose }: { orderId: string; onClose: () => 
     queryFn: () => chatApi.getOrderMessages(orderId),
     refetchInterval: 5000, // Refresh every 5 seconds
   })
+
+  // Mark messages as read when modal opens (backup in case button click didn't work)
+  React.useEffect(() => {
+    // Mark as read when modal opens
+    chatApi.markAsRead(orderId).then(() => {
+      // Force immediate refetch of unread count
+      queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] })
+    }).catch((error) => {
+      console.error('Failed to mark chat as read:', error)
+      // Still refetch to refresh
+      queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] })
+    })
+  }, [orderId, queryClient])
 
   const sendMessageMutation = useMutation({
     mutationFn: (text: string) => chatApi.sendOrderMessage(orderId, text),
@@ -1072,7 +1161,7 @@ function DocumentationViewerModal({ productId, onClose }: { productId: number | 
               <FileText className="h-16 w-16 mx-auto mb-4 text-blue-500" />
               <p className="text-gray-700 mb-4">This documentation is a file attachment.</p>
               <a
-                href={documentation.file_url}
+                href={mediaApi.encodeFileUrl(documentation.file_url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"
@@ -1222,6 +1311,112 @@ function ManualActivationModal({
             {isLoading ? 'Sending...' : 'Send Activation'}
           </button>
         </div>
+      </div>
+    </div>
+  )
+}
+
+// Create Client From Order Modal Component
+function CreateClientFromOrderModal({
+  orderId,
+  customerName,
+  onClose,
+  onSuccess,
+}: {
+  orderId: string
+  customerName: string | null
+  onClose: () => void
+  onSuccess: () => void
+}) {
+  const [email, setEmail] = useState('')
+  const [name, setName] = useState(customerName || '')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email.trim()) {
+      alert('Please enter an email address')
+      return
+    }
+
+    setIsLoading(true)
+    try {
+      await clientsApi.createFromOrder(orderId, email.trim(), name.trim() || undefined)
+      onSuccess()
+    } catch (error: any) {
+      const errorMsg = error.response?.data?.detail || error.message
+      if (errorMsg.includes('already exists')) {
+        alert('Client already exists for this order. The order has been appended to the existing client.')
+        onSuccess() // Refresh anyway
+      } else {
+        alert('Failed to create client: ' + errorMsg)
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center p-4 z-50">
+      <div className="bg-white rounded-lg max-w-md w-full p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-bold text-gray-900">Create Client from Order</h2>
+          <button
+            onClick={onClose}
+            className="text-gray-400 hover:text-gray-600"
+            disabled={isLoading}
+          >
+            <X className="h-6 w-6" />
+          </button>
+        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email *
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isLoading}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Name (Optional)
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder={customerName || 'Enter client name'}
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={isLoading}
+            />
+            <p className="mt-1 text-xs text-gray-500">
+              {customerName ? `Default: ${customerName}` : 'Leave empty to use order customer name'}
+            </p>
+          </div>
+          <div className="flex justify-end space-x-3 pt-4 border-t">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={isLoading}
+              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 disabled:opacity-50"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading || !email.trim()}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? 'Creating...' : 'Create Client'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   )

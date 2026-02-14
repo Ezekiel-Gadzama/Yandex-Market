@@ -31,9 +31,11 @@ export interface Order {
   items?: OrderItem[]  // All products/items in this order
   items_count?: number  // Number of products in this order
   delivery_type?: 'DIGITAL' | 'DELIVERY' | null  // Delivery type from Yandex API
+  has_client?: boolean  // Whether a client already exists for this order
   created_at: string
   updated_at?: string
   completed_at?: string
+  order_created_at?: string  // Actual order creation date from Yandex API
 }
 
 export const ordersApi = {

@@ -220,7 +220,7 @@ class OrderService:
         if result["success"]:
             # Accept order on Yandex Market
             try:
-                self.yandex_api.accept_order(order.yandex_order_id)
+                self._get_yandex_api().accept_order(order.yandex_order_id)
             except Exception as e:
                 # Log error but don't fail
                 print(f"Failed to accept order on Yandex Market: {str(e)}")
@@ -355,7 +355,7 @@ class OrderService:
         # According to Yandex docs, we must deliver ALL items in the order
         print(f"🔍 Fetching fresh order details from Yandex for order {yandex_order_id}")
         try:
-            yandex_order_data = self.yandex_api.get_order(yandex_order_id)
+            yandex_order_data = self._get_yandex_api().get_order(yandex_order_id)
         except Exception as e:
             print(f"⚠️  Failed to fetch order from Yandex API: {str(e)}")
             # Fallback to stored data
@@ -622,7 +622,7 @@ class OrderService:
         
         try:
             # Send all items in one API call
-            self.yandex_api.deliver_digital_goods(
+            self._get_yandex_api().deliver_digital_goods(
                 order_id=yandex_order_id,
                 items=delivery_items
             )
@@ -642,7 +642,7 @@ class OrderService:
             # Trigger a status refresh from Yandex API to get the actual status
             # This ensures we get DELIVERED status if the order was delivered
             try:
-                fresh_order_data = self.yandex_api.get_order(yandex_order_id)
+                fresh_order_data = self._get_yandex_api().get_order(yandex_order_id)
                 fresh_status = fresh_order_data.get("status")
                 if fresh_status:
                     from app.routers.webhooks import _map_yandex_status
@@ -751,7 +751,7 @@ class OrderService:
             
             # Send activation code and instructions to Yandex Market
             # Uses deliverDigitalGoods endpoint via complete_order wrapper
-            self.yandex_api.complete_order(
+            self._get_yandex_api().complete_order(
                 order_id=order.yandex_order_id,
                 activation_code=code_to_send,
                 activation_instructions=activation_instructions,

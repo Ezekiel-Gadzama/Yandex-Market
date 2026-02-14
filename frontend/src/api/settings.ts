@@ -13,10 +13,12 @@ export interface AppSettings {
   yandex_campaign_id?: string
   smtp_host?: string
   smtp_port?: number
+  smtp_user?: string
   smtp_password?: string
   from_email?: string
   secret_key?: string
   auto_activation_enabled: boolean
+  auto_append_clients: boolean
   created_at: string
   updated_at?: string
 }
@@ -33,10 +35,12 @@ export interface AppSettingsUpdate {
   yandex_campaign_id?: string
   smtp_host?: string
   smtp_port?: number
+  smtp_user?: string
   smtp_password?: string
   from_email?: string
   secret_key?: string
   auto_activation_enabled?: boolean
+  auto_append_clients?: boolean
 }
 
 export const settingsApi = {

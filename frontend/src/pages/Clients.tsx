@@ -2,10 +2,13 @@ import { useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { clientsApi, ClientCreate, ClientUpdate } from '../api/clients'
 import { productsApi } from '../api/products'
+import { useAuth } from '../contexts/AuthContext'
 import { UserPlus, Edit2, Trash2, X } from 'lucide-react'
 import ConfirmationModal from '../components/ConfirmationModal'
 
 export default function Clients() {
+  const { user } = useAuth()
+  const hasClientRight = user?.is_admin || user?.permissions.client_right
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [selectedClient, setSelectedClient] = useState<any>(null)
@@ -17,7 +20,7 @@ export default function Clients() {
   const [endDate, setEndDate] = useState<string>('')
   const [formValid, setFormValid] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; clientId: number | null }>({ isOpen: false, clientId: null })
-  const [incrementConfirm, setIncrementConfirm] = useState<{ isOpen: boolean; clientId: number | null; productId: number | null }>({ isOpen: false, clientId: null, productId: null })
+  const [incrementConfirm, setIncrementConfirm] = useState<{ isOpen: boolean; clientId: number | null; productId: number | null; productName: string | null }>({ isOpen: false, clientId: null, productId: null, productName: null })
   const addClientFormRef = useRef<HTMLFormElement>(null)
   const queryClient = useQueryClient()
   
@@ -59,6 +62,10 @@ export default function Clients() {
       setIsEditModalOpen(false)
       setSelectedClient(null)
       setSelectedProducts([])
+      setProductSearchTerm('')
+    },
+    onError: () => {
+      // Keep selectedProducts on error so user can retry
     },
   })
 
@@ -74,6 +81,20 @@ export default function Clients() {
       clientsApi.incrementPurchase(clientId, productId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['clients'] })
+    },
+  })
+
+  const decrementMutation = useMutation({
+    mutationFn: ({ clientId, productId }: { clientId: number; productId: number }) =>
+      clientsApi.decrementPurchase(clientId, productId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['clients'] })
+      if (data.previous_last_purchase_date) {
+        // Notification removed as requested
+      }
+    },
+    onError: (error: any) => {
+      alert('Failed to decrement purchase: ' + (error.response?.data?.detail || error.message))
     },
   })
 
@@ -100,7 +121,6 @@ export default function Clients() {
         purchased_product_ids: selectedProducts,
       },
     })
-    setSelectedProducts([])
   }
 
   const toggleProduct = (productId: number) => {
@@ -116,20 +136,27 @@ export default function Clients() {
   }
 
   const handleIncrement = (clientId: number, productId: number) => {
-    setIncrementConfirm({ isOpen: true, clientId, productId })
+    const product = products.find(p => p.id === productId)
+    setIncrementConfirm({ isOpen: true, clientId, productId, productName: product?.name || 'this product' })
+  }
+
+  const handleDecrement = (clientId: number, productId: number) => {
+    decrementMutation.mutate({ clientId, productId })
   }
 
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900">Clients</h1>
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
-        >
-          <UserPlus className="h-5 w-5 mr-2" />
-          Add Client
-        </button>
+        {hasClientRight && (
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+          >
+            <UserPlus className="h-5 w-5 mr-2" />
+            Add Client
+          </button>
+        )}
       </div>
 
       {/* Filters */}
@@ -234,19 +261,37 @@ export default function Clients() {
                         <div className="space-y-1">
                           {products
                             .filter(p => client.purchased_product_ids.includes(p.id))
-                            .map((product) => (
-                              <div key={product.id} className="flex items-center justify-between bg-gray-50 p-2 rounded">
-                                <span className="text-xs">{product.name}</span>
-                                <button
-                                  onClick={() => handleIncrement(client.id, product.id)}
-                                  disabled={incrementMutation.isPending}
-                                  className="ml-2 px-2 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
-                                  title="Increment purchase count"
-                                >
-                                  +1
-                                </button>
-                              </div>
-                            ))}
+                            .map((product) => {
+                              const quantity = client.product_quantities?.[product.id] || 1
+                              return (
+                                <div key={product.id} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                                  <span className="text-xs">{product.name}</span>
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-xs font-semibold text-gray-700 px-1">{quantity}</span>
+                                    {hasClientRight && (
+                                      <>
+                                        <button
+                                          onClick={() => handleDecrement(client.id, product.id)}
+                                          disabled={decrementMutation.isPending}
+                                          className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                                          title="Decrement purchase count (disabled if last purchase was more than 7 days ago)"
+                                        >
+                                          -1
+                                        </button>
+                                        <button
+                                          onClick={() => handleIncrement(client.id, product.id)}
+                                          disabled={incrementMutation.isPending}
+                                          className="px-2 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
+                                          title="Increment purchase count"
+                                        >
+                                          +1
+                                        </button>
+                                      </>
+                                    )}
+                                  </div>
+                                </div>
+                              )
+                            })}
                         </div>
                       ) : (
                         <span className="text-xs text-gray-400">No purchases</span>
@@ -256,23 +301,27 @@ export default function Clients() {
                       {new Date(client.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <button
-                        onClick={() => {
-                          setSelectedClient(client)
-                          setSelectedProducts(client.purchased_product_ids || [])
-                          setProductSearchTerm('')
-                          setIsEditModalOpen(true)
-                        }}
-                        className="text-blue-600 hover:text-blue-900 mr-4"
-                      >
-                        <Edit2 className="h-5 w-5" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(client.id)}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </button>
+                      {hasClientRight && (
+                        <>
+                          <button
+                            onClick={() => {
+                              setSelectedClient(client)
+                              setSelectedProducts(client.purchased_product_ids || [])
+                              setProductSearchTerm('')
+                              setIsEditModalOpen(true)
+                            }}
+                            className="text-blue-600 hover:text-blue-900 mr-4"
+                          >
+                            <Edit2 className="h-5 w-5" />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(client.id)}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            <Trash2 className="h-5 w-5" />
+                          </button>
+                        </>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -408,6 +457,8 @@ export default function Clients() {
                 onClick={() => {
                   setIsEditModalOpen(false)
                   setSelectedClient(null)
+                  setSelectedProducts([])
+                  setProductSearchTerm('')
                 }}
                 className="text-gray-400 hover:text-gray-600"
               >
@@ -486,6 +537,8 @@ export default function Clients() {
                   onClick={() => {
                     setIsEditModalOpen(false)
                     setSelectedClient(null)
+                    setSelectedProducts([])
+                    setProductSearchTerm('')
                   }}
                   className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
@@ -525,7 +578,7 @@ export default function Clients() {
       <ConfirmationModal
         isOpen={incrementConfirm.isOpen}
         title="Increment Purchase Count"
-        message="Increment purchase count for this product?"
+        message={`Increment purchase count for ${incrementConfirm.productName || 'this product'}?`}
         confirmText="Increment"
         cancelText="Cancel"
         variant="info"
@@ -533,9 +586,9 @@ export default function Clients() {
           if (incrementConfirm.clientId && incrementConfirm.productId) {
             incrementMutation.mutate({ clientId: incrementConfirm.clientId, productId: incrementConfirm.productId })
           }
-          setIncrementConfirm({ isOpen: false, clientId: null, productId: null })
+          setIncrementConfirm({ isOpen: false, clientId: null, productId: null, productName: null })
         }}
-        onCancel={() => setIncrementConfirm({ isOpen: false, clientId: null, productId: null })}
+        onCancel={() => setIncrementConfirm({ isOpen: false, clientId: null, productId: null, productName: null })}
       />
     </div>
   )

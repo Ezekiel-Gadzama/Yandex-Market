@@ -6,18 +6,8 @@ class Settings(BaseSettings):
     # Database
     DATABASE_URL: str = "postgresql://yandex_user:yandex_password@postgres:5432/yandex_market"
     
-    # Yandex Market Business API
-    YANDEX_MARKET_API_TOKEN: Optional[str] = None
-    YANDEX_BUSINESS_ID: Optional[str] = None
-    YANDEX_MARKET_CAMPAIGN_ID: Optional[str] = None  # Legacy - kept for backwards compatibility
-    YANDEX_MARKET_API_URL: str = "https://api.partner.market.yandex.ru"
-    
-    # Email Configuration
-    SMTP_HOST: Optional[str] = None
-    SMTP_PORT: int = 587
-    SMTP_USER: Optional[str] = None
-    SMTP_PASSWORD: Optional[str] = None
-    FROM_EMAIL: str = "noreply@market.yandex.ru"
+    # Note: Yandex Market API and SMTP settings are now configured per business in the Settings page
+    # Each business must configure their own Yandex API credentials and SMTP settings
     
     # Security
     SECRET_KEY: str = "your-secret-key-change-in-production"

@@ -12,35 +12,38 @@ from app.database import SessionLocal
 class YandexMarketAPI:
     """Service for interacting with Yandex Market Partner API"""
     
-    def __init__(self):
-        # Use .env first, then database if value exists in database
-        # Start with .env values
-        self.base_url = settings.YANDEX_MARKET_API_URL
-        self.api_token = settings.YANDEX_MARKET_API_TOKEN
-        # Strip whitespace from business_id and campaign_id if they're strings
-        self.business_id = settings.YANDEX_BUSINESS_ID.strip() if isinstance(settings.YANDEX_BUSINESS_ID, str) else settings.YANDEX_BUSINESS_ID
-        self.campaign_id = settings.YANDEX_MARKET_CAMPAIGN_ID.strip() if isinstance(settings.YANDEX_MARKET_CAMPAIGN_ID, str) else settings.YANDEX_MARKET_CAMPAIGN_ID
+    def __init__(self, business_id: int = None, db=None):
+        """Initialize YandexMarketAPI with business-specific settings
         
-        # Override with database values if they exist (and are not empty)
-        db = SessionLocal()
+        Args:
+            business_id: The business ID to get settings for (required)
+            db: Database session (optional, will create one if not provided)
+        """
+        if not business_id:
+            raise ValueError("business_id is required. Each business must configure their own Yandex API settings.")
+        
+        # Get settings from database for this business
+        if db is None:
+            db = SessionLocal()
+            close_db = True
+        else:
+            close_db = False
+        
         try:
-            app_settings = db.query(models.AppSettings).first()
-            if app_settings:
-                # Only use database value if it's not None/empty
-                # This allows .env values to be used as fallback if database value is empty
-                if app_settings.yandex_api_token and app_settings.yandex_api_token.strip():
-                    self.api_token = app_settings.yandex_api_token
-                if app_settings.yandex_business_id and app_settings.yandex_business_id.strip():
-                    self.business_id = app_settings.yandex_business_id
-                if app_settings.yandex_campaign_id and app_settings.yandex_campaign_id.strip():
-                    self.campaign_id = app_settings.yandex_campaign_id
-                if app_settings.yandex_api_url and app_settings.yandex_api_url.strip():
-                    self.base_url = app_settings.yandex_api_url
+            from app.services.config_validator import validate_yandex_config
+            app_settings = validate_yandex_config(business_id, db)
+            
+            # Use database settings only
+            self.api_token = app_settings.yandex_api_token.strip() if app_settings.yandex_api_token else None
+            self.business_id = app_settings.yandex_business_id.strip() if app_settings.yandex_business_id else None
+            self.campaign_id = app_settings.yandex_campaign_id.strip() if app_settings.yandex_campaign_id else None
+            self.base_url = app_settings.yandex_api_url.strip() if app_settings.yandex_api_url else "https://api.partner.market.yandex.ru"
         finally:
-            db.close()
+            if close_db:
+                db.close()
         
         if not self.api_token:
-            raise ValueError("YANDEX_MARKET_API_TOKEN is required. Create a token in Yandex Market Partner dashboard.")
+            raise ValueError("Yandex Market API token is not configured. Please configure it in the Settings page.")
         
         # Detect token type: ACMA tokens work with Campaign API, OAuth tokens work with Business API
         self.is_acma_token = self.api_token.startswith("ACMA:")
@@ -49,7 +52,7 @@ class YandexMarketAPI:
             # ACMA tokens use Campaign API for products/orders - need campaign_id
             # But can also use Business API for reviews if business_id is provided
             if not self.campaign_id:
-                raise ValueError("YANDEX_MARKET_CAMPAIGN_ID is required when using ACMA tokens. ACMA tokens work with Campaign API endpoints.")
+                raise ValueError("Yandex Market Campaign ID is required when using ACMA tokens. Please configure it in the Settings page.")
             if self.business_id:
                 print("ℹ️  Using ACMA token with Campaign API (campaign_id: {}) and Business API (business_id: {})".format(self.campaign_id, self.business_id))
             else:
@@ -57,7 +60,7 @@ class YandexMarketAPI:
         else:
             # OAuth tokens use Business API - need business_id
             if not self.business_id:
-                raise ValueError("YANDEX_BUSINESS_ID is required when using OAuth tokens. OAuth tokens work with Business API endpoints.")
+                raise ValueError("Yandex Market Business ID is required when using OAuth tokens. Please configure it in the Settings page.")
             print("ℹ️  Using OAuth token with Business API (business_id: {})".format(self.business_id))
     
     def _get_api_base_path(self) -> str:

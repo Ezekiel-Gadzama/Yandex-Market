@@ -14,6 +14,8 @@ export interface Product {
   yandex_market_sku?: string
   email_template_id?: number
   documentation_id?: number
+  yandex_purchase_link?: string
+  usage_period?: number
   is_active: boolean
   is_synced: boolean
   profit: number
@@ -47,6 +49,8 @@ export interface ProductUpdate {
   supplier_name?: string
   email_template_id?: number | null
   documentation_id?: number | null
+  yandex_purchase_link?: string | null
+  usage_period?: number | null
   is_active?: boolean
   // Dynamic field updates from Yandex JSON (all Yandex fields are edited here)
   yandex_field_updates?: Record<string, any>

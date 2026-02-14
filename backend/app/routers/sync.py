@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from pathlib import Path
 import json
 from app.database import get_db
 from app import models, schemas
 from app.services.yandex_api import YandexMarketAPI
+from app.auth import get_current_active_user, get_business_id
+from app.services.config_validator import ConfigurationError, format_config_error_response
 
 router = APIRouter()
 
@@ -62,7 +64,11 @@ def _is_digital_product(yandex_product_data: dict) -> bool:
 
 
 @router.post("/", response_model=schemas.SyncResult)
-def sync_all(force: bool = False, db: Session = Depends(get_db)):
+def sync_all(
+    force: bool = False,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """
     Sync all data FROM Yandex Market TO local database (one-way sync)
     
@@ -72,10 +78,10 @@ def sync_all(force: bool = False, db: Session = Depends(get_db)):
     """
     try:
         # Sync products
-        products_result = sync_products(force=force, db=db)
+        products_result = sync_products(force=force, current_user=current_user, db=db)
         
         # Sync orders
-        orders_result = sync_orders(db=db)
+        orders_result = sync_orders(current_user=current_user, db=db)
         
         return schemas.SyncResult(
             success=True,
@@ -85,12 +91,21 @@ def sync_all(force: bool = False, db: Session = Depends(get_db)):
             products_pushed=0,
             errors=products_result.errors
         )
+    except ConfigurationError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=format_config_error_response(e)
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Sync failed: {str(e)}")
 
 
 @router.post("/products", response_model=schemas.SyncResult)
-def sync_products(force: bool = False, db: Session = Depends(get_db)):
+def sync_products(
+    force: bool = False,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """
     Sync products FROM Yandex Market TO local database (one-way sync)
     
@@ -100,7 +115,11 @@ def sync_products(force: bool = False, db: Session = Depends(get_db)):
     - Preserves only local-only fields (cost_price, supplier info) that don't exist in Yandex
     """
     try:
-        yandex_api = YandexMarketAPI()
+        from app.auth import get_business_id
+        from app.services.config_validator import ConfigurationError, format_config_error_response
+        
+        business_id = get_business_id(current_user)
+        yandex_api = YandexMarketAPI(business_id=business_id, db=db)
         yandex_products = yandex_api.get_products()
         
         products_synced = 0
@@ -128,11 +147,20 @@ def sync_products(force: bool = False, db: Session = Depends(get_db)):
                     yandex_id
                 )
                 
-                # Check if product already exists
+                # Check if product already exists for this business
+                # Also check for products without business_id (legacy) and update them
                 existing_product = db.query(models.Product).filter(
+                    (models.Product.business_id == business_id) |
+                    (models.Product.business_id.is_(None))
+                ).filter(
                     (models.Product.yandex_market_id == yandex_id) |
                     (models.Product.yandex_market_sku == yandex_sku)
                 ).first()
+                
+                # If we found a product without business_id, update it
+                if existing_product and existing_product.business_id is None:
+                    existing_product.business_id = business_id
+                    db.flush()  # Flush to ensure business_id is set before continuing
                 
                 if existing_product:
                     if not force and existing_product.is_synced:
@@ -282,7 +310,8 @@ def sync_products(force: bool = False, db: Session = Depends(get_db)):
                         is_synced=True,
                         product_type=models.ProductType.DIGITAL if is_digital else models.ProductType.PHYSICAL,
                         is_active=is_active,
-                        yandex_full_data=yandex_product  # Store complete Yandex JSON (includes product card data)
+                        yandex_full_data=yandex_product,  # Store complete Yandex JSON (includes product card data)
+                        business_id=business_id  # Set business_id for multi-tenancy
                     )
                     
                     print(f"  ✅ Created new product: {product_name} (offerId: {yandex_id}, type: {'digital' if is_digital else 'physical'}, price: {selling_price})")
@@ -309,14 +338,18 @@ def sync_products(force: bool = False, db: Session = Depends(get_db)):
 
 
 @router.post("/orders", response_model=dict)
-def sync_orders(db: Session = Depends(get_db)):
+def sync_orders(
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Sync orders from Yandex Market"""
     from app.services.yandex_api import YandexMarketAPI
     from app.main import _parse_yandex_order
     from app.services.order_service import OrderService
     
     try:
-        yandex_api = YandexMarketAPI()
+        business_id = get_business_id(current_user)
+        yandex_api = YandexMarketAPI(business_id=business_id, db=db)
         orders_data = yandex_api.get_orders()
         
         orders_created = 0
@@ -332,11 +365,12 @@ def sync_orders(db: Session = Depends(get_db)):
         
         for order_data in orders_list:
             try:
-                parsed_orders = _parse_yandex_order(order_data, db)
+                parsed_orders = _parse_yandex_order(order_data, db, business_id=business_id)
                 
                 for new_order, product in parsed_orders:
-                    # Check if order already exists
+                    # Check if order already exists for this business
                     existing = db.query(models.Order).filter(
+                        models.Order.business_id == business_id,
                         models.Order.yandex_order_id == new_order.yandex_order_id,
                         models.Order.product_id == new_order.product_id
                     ).first()
@@ -349,7 +383,7 @@ def sync_orders(db: Session = Depends(get_db)):
                         
                         # Auto-fulfill digital products
                         if product.product_type == models.ProductType.DIGITAL:
-                            order_service = OrderService(db)
+                            order_service = OrderService(db, business_id=business_id)
                             order_service.auto_fulfill_order(new_order)
                 
             except Exception as e:
@@ -368,6 +402,12 @@ def sync_orders(db: Session = Depends(get_db)):
             "orders_created": orders_created,
             "orders_updated": orders_updated
         }
+    except ConfigurationError as e:
+        db.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=format_config_error_response(e)
+        )
     except Exception as e:
         db.rollback()
         raise HTTPException(status_code=500, detail=f"Order sync failed: {str(e)}")

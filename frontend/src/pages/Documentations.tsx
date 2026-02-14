@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { documentationsApi, Documentation, DocumentationCreate } from '../api/documentations'
+import { mediaApi } from '../api/media'
 import { Plus, Edit, Trash2, X, FileText, Link as LinkIcon, Copy, Bold, Italic, Underline } from 'lucide-react'
 import ConfirmationModal from '../components/ConfirmationModal'
 
@@ -114,7 +115,7 @@ export default function Documentations() {
                       {doc.type === 'file' && doc.file_url && (
                         <span className="flex items-center">
                           <FileText className="h-4 w-4 mr-1" />
-                          {doc.file_url.split('/').pop()}
+                          {mediaApi.decodeFileName(doc.file_url)}
                         </span>
                       )}
                       {doc.type === 'link' && doc.link_url && (
@@ -367,7 +368,15 @@ function DocumentationModal({
                 </button>
                 {fileUrl && (
                   <div className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                    <span className="text-sm text-gray-700">{fileUrl.split('/').pop()}</span>
+                    <a
+                      href={mediaApi.encodeFileUrl(fileUrl)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-blue-600 hover:text-blue-800 hover:underline flex items-center"
+                    >
+                      <FileText className="h-4 w-4 mr-1" />
+                      {mediaApi.decodeFileName(fileUrl)}
+                    </a>
                     <button
                       type="button"
                       onClick={() => setFileUrl('')}

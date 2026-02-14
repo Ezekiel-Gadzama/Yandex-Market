@@ -5,9 +5,12 @@ import { activationTemplatesApi } from '../api/activationTemplates'
 import { documentationsApi } from '../api/documentations'
 import { reviewsApi } from '../api/reviews'
 import { mediaApi } from '../api/media'
+import { useAuth } from '../contexts/AuthContext'
 import { Eye, X, Star, CheckCircle, AlertCircle, RefreshCw } from 'lucide-react'
 
 export default function Products() {
+  const { user } = useAuth()
+  const canViewPrices = user?.is_admin || user?.permissions.view_product_prices
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null)
   const [showViewModal, setShowViewModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
@@ -192,19 +195,27 @@ export default function Products() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      ₽{(() => {
-                        // Try to get price from Yandex data first
-                        const yandexPrice = product.yandex_full_data?.basicPrice?.value || 
-                                          product.yandex_full_data?.campaignPrice?.value ||
-                                          product.yandex_full_data?.price
-                        return (yandexPrice || product.selling_price || 0).toLocaleString('ru-RU')
-                      })()}
+                      {canViewPrices ? (
+                        `₽${(() => {
+                          // Try to get price from Yandex data first
+                          const yandexPrice = product.yandex_full_data?.basicPrice?.value || 
+                                            product.yandex_full_data?.campaignPrice?.value ||
+                                            product.yandex_full_data?.price
+                          return (yandexPrice || product.selling_price || 0).toLocaleString('ru-RU')
+                        })()}`
+                      ) : (
+                        <span className="text-gray-400">—</span>
+                      )}
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm text-gray-900">
-                      {product.cost_price && product.cost_price > 0 ? (
-                        `₽${product.cost_price.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                      {canViewPrices ? (
+                        product.cost_price && product.cost_price > 0 ? (
+                          `₽${product.cost_price.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+                        ) : (
+                          <span className="text-gray-400">—</span>
+                        )
                       ) : (
                         <span className="text-gray-400">—</span>
                       )}
@@ -338,6 +349,8 @@ function ProductViewModal({
   onClose: () => void
   onUpdateProduct: (id: number, data: ProductUpdate) => void
 }) {
+  const { user } = useAuth()
+  const canViewPrices = user?.is_admin || user?.permissions.view_product_prices
   const [activeTab, setActiveTab] = useState<'details' | 'reviews'>('details')
   
   // Extract medias from yandex_full_data
@@ -439,10 +452,6 @@ function ProductViewModal({
                   <label className="block text-sm font-medium text-gray-700">Type</label>
                   <p className="mt-1 text-sm text-gray-900 capitalize">{product.product_type}</p>
                 </div>
-                <div className="col-span-2">
-                  <label className="block text-sm font-medium text-gray-700">Description</label>
-                  <p className="mt-1 text-sm text-gray-900">{product.description || 'N/A'}</p>
-                </div>
                 {product.product_type === 'digital' && (
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Activation Template</label>
@@ -465,13 +474,48 @@ function ProductViewModal({
                     }}
                   />
                 </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">Yandex Purchase Link (Optional)</label>
+                  <input
+                    type="url"
+                    defaultValue={product.yandex_purchase_link || ''}
+                    onChange={(e) => {
+                      onUpdateProduct(product.id, { yandex_purchase_link: e.target.value || null })
+                    }}
+                    placeholder="https://market.yandex.ru/..."
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">
+                    Link to purchase this product on Yandex Market
+                  </p>
+                </div>
+                {product.product_type === 'physical' && (
+                  <div className="col-span-2">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Usage Period (Days) (Optional)</label>
+                    <input
+                      type="number"
+                      min="1"
+                      defaultValue={product.usage_period || ''}
+                      onChange={(e) => {
+                        const value = e.target.value ? parseInt(e.target.value) : null
+                        onUpdateProduct(product.id, { usage_period: value })
+                      }}
+                      placeholder="30"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                    <p className="mt-1 text-xs text-gray-500">
+                      Number of days the product can be used (used instead of activation template period for physical products)
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 
             {/* Pricing */}
-            <div>
-              <h4 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Pricing</h4>
-              <div className="grid grid-cols-2 gap-4">
+            {canViewPrices && (
+              <div>
+                <h4 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Pricing</h4>
+                <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">Cost Price (₽)</label>
                   <input
@@ -525,6 +569,7 @@ function ProductViewModal({
                 )}
               </div>
             </div>
+            )}
 
             {/* Media Section */}
             <div>
@@ -984,12 +1029,12 @@ function DocumentationViewModal({
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700 mb-1">File</label>
               <a
-                href={doc.file_url}
+                href={mediaApi.encodeFileUrl(doc.file_url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-600 hover:text-blue-800 underline"
               >
-                {doc.file_url.split('/').pop() || 'View File'}
+                {mediaApi.decodeFileName(doc.file_url) || 'View File'}
               </a>
             </div>
           )}

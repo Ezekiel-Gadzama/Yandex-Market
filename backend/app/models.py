@@ -23,8 +23,15 @@ class OrderStatus(str, enum.Enum):
 
 class Product(Base):
     __tablename__ = "products"
+    __table_args__ = (
+        # Composite unique constraints: unique per business, not globally
+        UniqueConstraint('business_id', 'yandex_market_id', name='uq_product_business_yandex_id'),
+        UniqueConstraint('business_id', 'yandex_market_sku', name='uq_product_business_yandex_sku'),
+    )
     
     id = Column(Integer, primary_key=True, index=True)
+    # Business isolation - links product to admin's business
+    business_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String, nullable=False, index=True)
     description = Column(Text)
     product_type = Column(SQLEnum(ProductType), default=ProductType.DIGITAL, nullable=False)
@@ -38,8 +45,8 @@ class Product(Base):
     supplier_name = Column(String)
     
     # Yandex Market integration
-    yandex_market_id = Column(String, unique=True, index=True)  # Product ID on Yandex Market
-    yandex_market_sku = Column(String, unique=True, index=True)  # SKU on Yandex Market
+    yandex_market_id = Column(String, index=True)  # Product ID on Yandex Market (unique per business)
+    yandex_market_sku = Column(String, index=True)  # SKU on Yandex Market (unique per business)
     is_synced = Column(Boolean, default=False)  # Whether synced with Yandex Market
     
     # Yandex Market product details
@@ -88,6 +95,13 @@ class Product(Base):
     # Documentation for order fulfillment
     documentation_id = Column(Integer, ForeignKey("documentations.id"), nullable=True)
     
+    # Yandex purchase link (optional)
+    yandex_purchase_link = Column(String, nullable=True)  # Link to purchase product on Yandex Market
+    
+    # Usage period for physical products (optional, in days)
+    # Used instead of activation template expiry period for physical products
+    usage_period = Column(Integer, nullable=True)  # Number of days the product can be used
+    
     # Product status
     is_active = Column(Boolean, default=True)  # Whether the product is active/available
     
@@ -118,6 +132,8 @@ class EmailTemplate(Base):
     __tablename__ = "email_templates"
     
     id = Column(Integer, primary_key=True, index=True)
+    # Business isolation - links template to admin's business
+    business_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     body = Column(Text, nullable=False)  # Plain text template body (with formatting stored as text)
     random_key = Column(Boolean, default=True)  # If True, activation key is auto-generated
@@ -152,10 +168,12 @@ class ActivationKey(Base):
 
 
 class AppSettings(Base):
-    """Application settings (singleton - only one record)"""
+    """Application settings (one per business)"""
     __tablename__ = "app_settings"
     
     id = Column(Integer, primary_key=True, index=True)
+    # Business isolation - each business has its own settings
+    business_id = Column(Integer, ForeignKey("users.id"), nullable=False, unique=True, index=True)
     
     # Processing time
     processing_time_min = Column(Integer, default=20)  # Minimum processing time in minutes
@@ -175,9 +193,10 @@ class AppSettings(Base):
     yandex_campaign_id = Column(String, nullable=True)  # Campaign ID (legacy)
     yandex_api_url = Column(String, default="https://api.partner.market.yandex.ru")
     
-    # SMTP Configuration - override .env if set
+    # SMTP Configuration - required per business (no .env fallback)
     smtp_host = Column(String, nullable=True)
     smtp_port = Column(Integer, nullable=True)
+    smtp_user = Column(String, nullable=True)  # Added missing smtp_user field
     smtp_password = Column(String, nullable=True)
     from_email = Column(String, nullable=True)
     
@@ -186,6 +205,9 @@ class AppSettings(Base):
     
     # Order Activation Settings
     auto_activation_enabled = Column(Boolean, default=False)  # If True, automatically send activation when order comes in
+    
+    # Client Management Settings
+    auto_append_clients = Column(Boolean, default=False)  # If True, automatically append client orders when customer name matches
     
     # Metadata
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -203,6 +225,8 @@ class Order(Base):
     )
     
     id = Column(Integer, primary_key=True, index=True)
+    # Business isolation - links order to admin's business
+    business_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     yandex_order_id = Column(String, nullable=False, index=True)  # Removed unique=True - can have multiple orders per Yandex order
     product_id = Column(Integer, ForeignKey("products.id"), nullable=False)
     
@@ -210,6 +234,7 @@ class Order(Base):
     customer_name = Column(String)
     customer_email = Column(String, index=True)
     customer_phone = Column(String)
+    buyer_id = Column(String, index=True, nullable=True)  # Yandex buyer ID for tracking same client across orders
     
     # Order details
     quantity = Column(Integer, default=1)
@@ -229,6 +254,7 @@ class Order(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     completed_at = Column(DateTime(timezone=True), nullable=True)
+    order_created_at = Column(DateTime(timezone=True), nullable=True)  # Actual order creation date from Yandex API (creationDate)
     
     # Note: Relationships removed - use queries instead
     # To get product: db.query(Product).filter(Product.id == self.product_id).first()
@@ -262,7 +288,10 @@ client_products = Table(
     Column('product_id', Integer, ForeignKey('products.id', ondelete='CASCADE'), primary_key=True),
     Column('quantity', Integer, default=1),  # How many times this product was purchased
     Column('first_purchase_date', DateTime(timezone=True), server_default=func.now()),
-    Column('last_purchase_date', DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
+    Column('last_purchase_date', DateTime(timezone=True), server_default=func.now(), onupdate=func.now()),
+    # Store all purchase dates for this product (JSON array of datetime strings)
+    # Used to track history for -1 button functionality
+    Column('purchase_dates_history', JSONB, default=list)  # List of purchase date strings
 )
 
 
@@ -271,8 +300,14 @@ class Client(Base):
     __tablename__ = "clients"
     
     id = Column(Integer, primary_key=True, index=True)
+    # Business isolation - links client to admin's business
+    business_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False, index=True)
+    buyer_id = Column(String, unique=True, index=True, nullable=True)  # Yandex buyer ID for tracking same client across orders
+    
+    # List of order IDs associated with this client
+    order_ids = Column(JSONB, default=list)  # List of yandex_order_id strings
     
     # Relationship with products (purchase history)
     purchased_products = relationship(
@@ -291,6 +326,8 @@ class MarketingEmailTemplate(Base):
     __tablename__ = "marketing_email_templates"
     
     id = Column(Integer, primary_key=True, index=True)
+    # Business isolation - links template to admin's business
+    business_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String, nullable=False)
     subject = Column(String, nullable=False)
     body = Column(Text, nullable=False)  # Rich text body with HTML formatting
@@ -299,7 +336,27 @@ class MarketingEmailTemplate(Base):
     # Format: [{"url": "...", "type": "image|video|file", "name": "..."}, ...]
     attachments = Column(JSONB, default=list)  # List of attachment objects with url, type, and name
     
+    # Frequency and auto-broadcast settings
+    frequency_days = Column(Integer, nullable=True)  # Frequency in days for auto-broadcast
+    auto_broadcast_enabled = Column(Boolean, default=False)  # If True, automatically broadcast based on frequency
+    
+    # Default template flag (pinned at top, cannot be deleted or duplicated)
+    is_default = Column(Boolean, default=False)  # If True, this is the default template for unique client emails
+    
     # Metadata
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class ChatReadStatus(Base):
+    """Track when chat messages were last viewed for each order"""
+    __tablename__ = "chat_read_status"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    order_id = Column(String, nullable=False, unique=True, index=True)  # yandex_order_id
+    last_viewed_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
+    last_message_id = Column(String, nullable=True)  # Last message ID that was viewed
+    
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -308,6 +365,8 @@ class Documentation(Base):
     __tablename__ = "documentations"
     
     id = Column(Integer, primary_key=True, index=True)
+    # Business isolation - links documentation to admin's business
+    business_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
     name = Column(String, nullable=False, index=True)
     description = Column(Text)  # Optional description
     
@@ -322,3 +381,43 @@ class Documentation(Base):
     # Metadata
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class User(Base):
+    """User accounts for authentication and authorization"""
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    email = Column(String, unique=True, nullable=False, index=True)
+    hashed_password = Column(String, nullable=False)
+    
+    # User role: 'admin' or 'staff'
+    is_admin = Column(Boolean, default=False, nullable=False)
+    
+    # Foreign key to admin who created this staff account (null for admin)
+    created_by_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    
+    # Password reset token (for password reset flow)
+    password_reset_token = Column(String, nullable=True, index=True)
+    password_reset_token_expires = Column(DateTime(timezone=True), nullable=True)
+    
+    # Permissions/Rights (stored as JSONB for flexibility)
+    # Each permission is a boolean flag
+    permissions = Column(JSONB, default=dict)  # {
+    #   "view_staff": bool,  # View and manage staff page
+    #   "view_settings": bool,  # View settings page
+    #   "client_right": bool,  # Includes: delete_client, edit_client, subtract_client_order, add_client (from clients page)
+    #   "view_marketing_emails": bool,  # View marketing emails page
+    #   "dashboard_right": bool,  # Includes: view revenue, profit margin, top products charts, revenue/profit in top selling products
+    #   "view_product_prices": bool  # Default: True (checked by default)
+    # }
+    
+    # Account status
+    is_active = Column(Boolean, default=True, nullable=False)
+    
+    # Metadata
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    
+    # Relationship to admin who created this user
+    created_by = relationship("User", remote_side=[id], backref="staff_members")

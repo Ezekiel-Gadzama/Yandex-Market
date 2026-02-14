@@ -5,6 +5,7 @@ from typing import List, Optional
 from datetime import datetime, timedelta
 from app.database import get_db
 from app import models, schemas
+from app.auth import get_current_active_user, has_permission, get_business_id
 
 router = APIRouter()
 
@@ -50,18 +51,23 @@ def get_dashboard_stats(
     period: Optional[str] = Query(None, description="Period: today, week, month, or all"),
     start_date: Optional[str] = Query(None, alias="start_date", description="Start date (ISO format) for custom range"),
     end_date: Optional[str] = Query(None, alias="end_date", description="End date (ISO format) for custom range"),
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """Get dashboard statistics with optional period filter or custom date range"""
-    total_products = db.query(models.Product).count()
-    active_products = db.query(models.Product).filter(models.Product.is_active == True).count()
+    """Get dashboard statistics with optional period filter or custom date range. Revenue/profit data requires dashboard_right permission."""
+    business_id = get_business_id(current_user)
+    total_products = db.query(models.Product).filter(models.Product.business_id == business_id).count()
+    active_products = db.query(models.Product).filter(
+        models.Product.business_id == business_id,
+        models.Product.is_active == True
+    ).count()
     
     # Get date range for period filter or custom dates
     start_date_dt, end_date_dt = _get_date_range(period, start_date, end_date)
     
     # Build order queries with period filter
     # Count unique orders by yandex_order_id (not individual order records)
-    base_query = db.query(models.Order)
+    base_query = db.query(models.Order).filter(models.Order.business_id == business_id)
     if start_date_dt:
         base_query = base_query.filter(models.Order.created_at >= start_date_dt)
     if end_date_dt:
@@ -86,43 +92,50 @@ def get_dashboard_stats(
     # Count successful orders (completed + finished)
     successful_orders = completed_orders + finished_orders
     
-    # Query for revenue/profit calculation (COMPLETED and FINISHED orders - both mean payment received)
-    completed_or_finished_query = base_query.filter(
-        (models.Order.status == models.OrderStatus.COMPLETED) |
-        (models.Order.status == models.OrderStatus.FINISHED)
-    )
+    # Check if user has permission to view analytics
+    has_dashboard_right = current_user.is_admin or has_permission(current_user, "dashboard_right")
     
-    # Calculate revenue and profit from COMPLETED and FINISHED orders (both mean payment received)
-    completed_or_finished_list = completed_or_finished_query.all()
+    # Calculate revenue and profit only if user has permission
+    total_revenue = 0.0
+    total_profit = 0.0
+    total_cost = 0.0
+    profit_margin = 0.0
     
-    # Group by yandex_order_id to avoid double-counting multi-item orders
-    orders_by_yandex_id = {}
-    for order in completed_or_finished_list:
-        yandex_id = order.yandex_order_id
-        if yandex_id not in orders_by_yandex_id:
-            orders_by_yandex_id[yandex_id] = []
-        orders_by_yandex_id[yandex_id].append(order)
-    
-    # Calculate revenue and profit (sum all items per unique order)
-    total_revenue = 0
-    total_profit = 0
-    for yandex_id, order_group in orders_by_yandex_id.items():
-        # Sum all items in this order
-        order_total = sum(o.total_amount for o in order_group)
-        total_revenue += order_total
+    if has_dashboard_right:
+        # Query for revenue/profit calculation (COMPLETED and FINISHED orders - both mean payment received)
+        completed_or_finished_query = base_query.filter(
+            (models.Order.status == models.OrderStatus.COMPLETED) |
+            (models.Order.status == models.OrderStatus.FINISHED)
+        )
         
-        # Calculate profit for all items
-        for order in order_group:
-            try:
-                total_profit += order.profit
-            except Exception as e:
-                print(f"Warning: Failed to calculate profit for order {order.id}: {str(e)}")
-                # Fallback: use order total as profit if product lookup fails
-                total_profit += order.total_amount
-    
-    total_cost = total_revenue - total_profit
-    
-    profit_margin = (total_profit / total_revenue * 100) if total_revenue > 0 else 0
+        # Calculate revenue and profit from COMPLETED and FINISHED orders (both mean payment received)
+        completed_or_finished_list = completed_or_finished_query.all()
+        
+        # Group by yandex_order_id to avoid double-counting multi-item orders
+        orders_by_yandex_id = {}
+        for order in completed_or_finished_list:
+            yandex_id = order.yandex_order_id
+            if yandex_id not in orders_by_yandex_id:
+                orders_by_yandex_id[yandex_id] = []
+            orders_by_yandex_id[yandex_id].append(order)
+        
+        # Calculate revenue and profit (sum all items per unique order)
+        for yandex_id, order_group in orders_by_yandex_id.items():
+            # Sum all items in this order
+            order_total = sum(o.total_amount for o in order_group)
+            total_revenue += order_total
+            
+            # Calculate profit for all items
+            for order in order_group:
+                try:
+                    total_profit += order.profit
+                except Exception as e:
+                    print(f"Warning: Failed to calculate profit for order {order.id}: {str(e)}")
+                    # Fallback: use order total as profit if product lookup fails
+                    total_profit += order.total_amount
+        
+        total_cost = total_revenue - total_profit
+        profit_margin = (total_profit / total_revenue * 100) if total_revenue > 0 else 0
     
     return schemas.DashboardStats(
         total_products=total_products,
@@ -147,11 +160,13 @@ def get_top_products(
     period: Optional[str] = Query(None, description="Period: today, week, month, or all"),
     start_date: Optional[str] = Query(None, alias="start_date", description="Start date (ISO format) for custom range"),
     end_date: Optional[str] = Query(None, alias="end_date", description="End date (ISO format) for custom range"),
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """Get top selling products with optional period filter or custom date range"""
+    """Get top selling products with optional period filter or custom date range. Revenue/profit data requires dashboard_right permission."""
     start_date_dt, end_date_dt = _get_date_range(period, start_date, end_date)
     
+    business_id = get_business_id(current_user)
     query = (
         db.query(
             models.Product.id,
@@ -162,6 +177,8 @@ def get_top_products(
         )
         .join(models.Order)
         .filter(
+            models.Product.business_id == business_id,
+            models.Order.business_id == business_id,
             (models.Order.status == models.OrderStatus.COMPLETED) |
             (models.Order.status == models.OrderStatus.FINISHED)
         )
@@ -180,27 +197,38 @@ def get_top_products(
         .all()
     )
     
+    # Check if user has permission to view analytics
+    has_dashboard_right = current_user.is_admin or has_permission(current_user, "dashboard_right")
+    
     return [
         schemas.TopProduct(
             product_id=product.id,
             product_name=product.name,
             total_sales=product.total_sales,
-            total_revenue=float(product.total_revenue or 0),
-            total_profit=float(product.total_profit or 0)
+            total_revenue=float(product.total_revenue or 0) if has_dashboard_right else 0.0,
+            total_profit=float(product.total_profit or 0) if has_dashboard_right else 0.0
         )
         for product in top_products
     ]
 
 
 @router.get("/recent-orders", response_model=List[schemas.Order])
-def get_recent_orders(limit: int = 10, db: Session = Depends(get_db)):
+def get_recent_orders(
+    limit: int = 10,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Get recent orders grouped by yandex_order_id (same logic as get_orders)"""
     from app.routers.orders import get_orders as get_orders_endpoint
+    
+    # Filter by business_id for data isolation
+    business_id = get_business_id(current_user)
     
     # Use the same logic as get_orders endpoint to ensure consistency
     # Get more orders to account for grouping
     orders = (
         db.query(models.Order)
+        .filter(models.Order.business_id == business_id)
         .order_by(desc(models.Order.created_at))
         .limit(limit * 10)  # Get more to account for grouping
         .all()
@@ -256,7 +284,10 @@ def get_recent_orders(limit: int = 10, db: Session = Depends(get_db)):
         
         # First, process items that have matching order records in database
         for o in order_group:
-            product = db.query(models.Product).filter(models.Product.id == o.product_id).first()
+            product = db.query(models.Product).filter(
+                models.Product.id == o.product_id,
+                models.Product.business_id == business_id
+            ).first()
             if product:
                 # Find matching Yandex item
                 yandex_item_id = None
@@ -311,12 +342,15 @@ def get_recent_orders(limit: int = 10, db: Session = Depends(get_db)):
             item_total = item_price * item_count
             item_name = yandex_item.get("offerName") or offer_id or "Unknown Product"
             
-            # Try to find product in database
+            # Try to find product in database - filter by business_id
             product = db.query(models.Product).filter(
-                (models.Product.yandex_market_id == offer_id) |
-                (models.Product.yandex_market_id == yandex_item.get("shopSku")) |
-                (models.Product.yandex_market_sku == offer_id) |
-                (models.Product.yandex_market_sku == yandex_item.get("shopSku"))
+                models.Product.business_id == business_id,
+                (
+                    (models.Product.yandex_market_id == offer_id) |
+                    (models.Product.yandex_market_id == yandex_item.get("shopSku")) |
+                    (models.Product.yandex_market_sku == offer_id) |
+                    (models.Product.yandex_market_sku == yandex_item.get("shopSku"))
+                )
             ).first()
             
             if product:
@@ -405,13 +439,14 @@ def get_dashboard_data(
     period: Optional[str] = Query(None, description="Period: today, week, month, or all"),
     start_date: Optional[str] = Query(None, alias="start_date", description="Start date (ISO format) for custom range"),
     end_date: Optional[str] = Query(None, alias="end_date", description="End date (ISO format) for custom range"),
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """Get complete dashboard data with optional period filter or custom date range"""
     try:
-        stats = get_dashboard_stats(period=period, start_date=start_date, end_date=end_date, db=db)
-        top_products = get_top_products(limit=10, period=period, start_date=start_date, end_date=end_date, db=db)
-        recent_orders = get_recent_orders(limit=10, db=db)
+        stats = get_dashboard_stats(period=period, start_date=start_date, end_date=end_date, current_user=current_user, db=db)
+        top_products = get_top_products(limit=10, period=period, start_date=start_date, end_date=end_date, current_user=current_user, db=db)
+        recent_orders = get_recent_orders(limit=10, current_user=current_user, db=db)
         
         return schemas.DashboardData(
             stats=stats,

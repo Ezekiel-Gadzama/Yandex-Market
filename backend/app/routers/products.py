@@ -6,6 +6,7 @@ import json
 from app.database import get_db
 from app import models, schemas
 from app.services.yandex_api import YandexMarketAPI
+from app.auth import get_current_active_user, get_business_id
 
 router = APIRouter()
 
@@ -45,10 +46,12 @@ def get_products(
     is_active: bool = None,
     product_type: str = None,
     search: str = Query(None, description="Search by name, description, or activation key"),
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """Get all products with optional filters"""
-    query = db.query(models.Product)
+    """Get all products with optional filters. Only returns products for the current user's business."""
+    business_id = get_business_id(current_user)
+    query = db.query(models.Product).filter(models.Product.business_id == business_id)
     
     if is_active is not None:
         query = query.filter(models.Product.is_active == is_active)
@@ -69,7 +72,7 @@ def get_products(
         # Search in generated_keys
         # We need to check if any key in the JSON array matches
         matching_product_ids = []
-        all_products = db.query(models.Product).all()
+        all_products = db.query(models.Product).filter(models.Product.business_id == business_id).all()
         for p in all_products:
             if p.generated_keys:
                 try:
@@ -120,7 +123,9 @@ def get_product_full_details(product_id: int, db: Session = Depends(get_db)):
         # Always try to refresh product card data to get latest media and details
         if product.is_synced and product.yandex_market_id:
             try:
-                yandex_api = YandexMarketAPI()
+                from app.services.config_validator import ConfigurationError, format_config_error_response
+                business_id = product.business_id  # Use product's business_id
+                yandex_api = YandexMarketAPI(business_id=business_id, db=db)
                 product_card = yandex_api.get_product_card(product.yandex_market_id)
                 if product_card:
                     # Merge product card data with existing yandex_full_data
@@ -144,13 +149,18 @@ def get_product_full_details(product_id: int, db: Session = Depends(get_db)):
                     
                     db.commit()
                     print(f"✅ Successfully refreshed product card for {product.yandex_market_id} (type: {'digital' if is_digital else 'physical'})")
+            except ConfigurationError as e:
+                print(f"⚠️  Warning: Configuration required - {e.message}")
+                # Continue with existing data if configuration is missing
             except Exception as e:
                 print(f"⚠️  Warning: Could not refresh product card: {str(e)}")
                 # Continue with existing data if card fetch fails
     elif product.is_synced and product.yandex_market_id:
         # Fallback: try to get from API if not stored locally
         try:
-            yandex_api = YandexMarketAPI()
+            from app.services.config_validator import ConfigurationError, format_config_error_response
+            business_id = product.business_id  # Use product's business_id
+            yandex_api = YandexMarketAPI(business_id=business_id, db=db)
             yandex_products = yandex_api.get_products()
             
             # Find matching product in Yandex
@@ -245,7 +255,10 @@ def update_product(
     # If product is synced with Yandex and we have Yandex field updates, push changes
     if is_synced and has_yandex_updates:
         try:
-            yandex_api = YandexMarketAPI()
+            from app.services.config_validator import ConfigurationError, format_config_error_response
+            from app.auth import get_business_id
+            business_id = db_product.business_id  # Use product's business_id
+            yandex_api = YandexMarketAPI(business_id=business_id, db=db)
             
             # Step 1: Push updates to Yandex using yandex_field_updates
             yandex_api.update_product(db_product, field_updates=yandex_field_updates)

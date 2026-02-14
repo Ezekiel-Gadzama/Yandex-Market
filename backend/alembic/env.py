@@ -8,7 +8,7 @@ import sys
 # Add the app directory to the path
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from app.database import Base
+from app.database import Base, encode_database_url
 from app.config import settings
 from app import models  # Import all models
 
@@ -21,8 +21,12 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-# Set the database URL from settings
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# Set the database URL from settings (with URL encoding for special characters)
+database_url = encode_database_url(settings.DATABASE_URL)
+# Escape % characters for ConfigParser (it uses % for variable interpolation)
+# Replace % with %% to escape it
+database_url_escaped = database_url.replace('%', '%%')
+config.set_main_option("sqlalchemy.url", database_url_escaped)
 
 # add your model's MetaData object here
 # for 'autogenerate' support

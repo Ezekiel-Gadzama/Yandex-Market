@@ -5,13 +5,22 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b81abc09-e3e4-49a3-98af-2872d0ce6742" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/Yandex Market.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/initial_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/initial_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/routers/clients.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/routers/clients.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/routers/marketing_emails.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/routers/marketing_emails.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app/schemas.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/clients.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/clients.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/marketingEmails.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/marketingEmails.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/orders.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/orders.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/products.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/products.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/api/settings.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/api/settings.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Clients.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Clients.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/MarketingEmails.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/MarketingEmails.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Orders.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Orders.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Products.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Products.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/src/pages/Settings.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/src/pages/Settings.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,21 +30,21 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 6
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6
+}</component>
   <component name="ProjectId" id="392ebcL4DVpHot8IKCDURyzrRYd" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;
   }
-}]]></component>
+}</component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>

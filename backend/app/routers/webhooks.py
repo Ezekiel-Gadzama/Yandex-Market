@@ -75,12 +75,18 @@ async def yandex_market_webhook(
                 new_yandex_status = order_data.get("status", "")
                 mapped_status = _map_yandex_status(new_yandex_status)
                 
+                # Extract buyer_id from order data
+                buyer = order_data.get("buyer", {})
+                buyer_id = buyer.get("id") if isinstance(buyer, dict) else None
+                
                 # Update all existing order records with the same yandex_order_id
                 # CRITICAL: Never override FINISHED status except with CANCELLED
                 for order_record in all_orders:
-                    # Always update yandex_order_data and yandex_status
+                    # Always update yandex_order_data, yandex_status, and buyer_id
                     order_record.yandex_order_data = order_data
                     order_record.yandex_status = new_yandex_status
+                    if buyer_id:
+                        order_record.buyer_id = buyer_id
                     
                     # CRITICAL: Never override FINISHED status except with CANCELLED
                     # FINISHED is a manual override that takes precedence over all Yandex API statuses
@@ -143,7 +149,9 @@ async def yandex_market_webhook(
                         # Extract buyer info
                         buyer = order_data.get("buyer", {})
                         buyer_name = None
+                        buyer_id = None
                         if isinstance(buyer, dict):
+                            buyer_id = buyer.get("id")  # Extract buyer ID
                             first_name = buyer.get("firstName", "")
                             last_name = buyer.get("lastName", "")
                             buyer_name = f"{first_name} {last_name}".strip() or None
@@ -155,9 +163,11 @@ async def yandex_market_webhook(
                         new_order = models.Order(
                             yandex_order_id=yandex_order_id,
                             product_id=product.id,
+                            business_id=product.business_id,  # Use product's business_id
                             customer_name=buyer_name,
                             customer_email=None,
                             customer_phone=None,
+                            buyer_id=buyer_id,  # Yandex buyer ID for tracking same client
                             quantity=item_count,
                             total_amount=item_total,
                             status=mapped_status,
@@ -169,8 +179,12 @@ async def yandex_market_webhook(
                         
                         # Auto-fulfill digital products
                         if product.product_type == models.ProductType.DIGITAL:
-                            order_service = OrderService(db)
-                            order_service.auto_fulfill_order(new_order)
+                            try:
+                                order_service = OrderService(db, business_id=product.business_id)
+                                order_service.auto_fulfill_order(new_order)
+                            except Exception as e:
+                                print(f"⚠️  Could not auto-fulfill order: {str(e)}")
+                                # Continue even if fulfillment fails
                         
                         existing_product_ids.add(product.id)  # Mark as processed
                         print(f"  ✅ Webhook: Created missing order record for product {product.id} ({product.name}) in order {yandex_order_id}")
@@ -183,7 +197,22 @@ async def yandex_market_webhook(
                 # Yandex API is source of truth - create ONE Order record per item
                 from app.main import _parse_yandex_order
                 
-                parsed_orders = _parse_yandex_order(order_data, db)
+                # Determine business_id from the first product in the order
+                # This ensures we only match products for the correct business
+                business_id = None
+                items = order_data.get("items", [])
+                for item in items:
+                    offer_id = item.get("offerId") or item.get("shopSku")
+                    if offer_id:
+                        product = db.query(models.Product).filter(
+                            (models.Product.yandex_market_id == offer_id) |
+                            (models.Product.yandex_market_sku == offer_id)
+                        ).first()
+                        if product and product.business_id:
+                            business_id = product.business_id
+                            break
+                
+                parsed_orders = _parse_yandex_order(order_data, db, business_id=business_id)
                 
                 if not parsed_orders:
                     items = order_data.get("items", [])
@@ -228,8 +257,12 @@ async def yandex_market_webhook(
                         
                         # Auto-fulfill digital products
                         if product.product_type == models.ProductType.DIGITAL:
-                            order_service = OrderService(db)
-                            order_service.auto_fulfill_order(new_order)
+                            try:
+                                order_service = OrderService(db, business_id=product.business_id)
+                                order_service.auto_fulfill_order(new_order)
+                            except Exception as e:
+                                print(f"⚠️  Could not auto-fulfill order: {str(e)}")
+                                # Continue even if fulfillment fails
                         
                         created_count += 1
                         print(f"  ✅ Webhook: Created order record for product {product.id} ({product.name}) in order {yandex_order_id}")

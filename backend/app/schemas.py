@@ -34,6 +34,8 @@ class ProductUpdate(BaseModel):
     supplier_name: Optional[str] = None
     email_template_id: Optional[int] = None
     documentation_id: Optional[int] = None
+    yandex_purchase_link: Optional[str] = None
+    usage_period: Optional[int] = Field(None, ge=1, description="Usage period in days for physical products")
     is_active: Optional[bool] = None
     
     # Dynamic field updates from Yandex JSON (all Yandex fields are edited here)
@@ -111,6 +113,7 @@ class OrderBase(BaseModel):
     customer_name: Optional[str] = None
     customer_email: Optional[EmailStr] = None
     customer_phone: Optional[str] = None
+    buyer_id: Optional[str] = None  # Yandex buyer ID
     quantity: int = 1
     total_amount: float
 
@@ -155,9 +158,11 @@ class Order(OrderBase):
     items: Optional[List[OrderItem]] = None  # All products/items in this order
     items_count: Optional[int] = None  # Number of products in this order
     delivery_type: Optional[str] = None  # "DIGITAL" or "DELIVERY" from Yandex API
+    has_client: Optional[bool] = False  # Whether a client already exists for this order
     created_at: datetime
     updated_at: Optional[datetime] = None
     completed_at: Optional[datetime] = None
+    order_created_at: Optional[datetime] = None  # Actual order creation date from Yandex API
     
     class Config:
         from_attributes = True
@@ -223,9 +228,10 @@ class AppSettingsBase(BaseModel):
     yandex_campaign_id: Optional[str] = None  # Legacy support
     yandex_api_url: str = Field(default="https://api.partner.market.yandex.ru")
     
-    # SMTP - optional overrides for .env
+    # SMTP - required per business (no .env fallback)
     smtp_host: Optional[str] = None
     smtp_port: Optional[int] = None
+    smtp_user: Optional[str] = None
     smtp_password: Optional[str] = None
     from_email: Optional[str] = None
     
@@ -235,6 +241,9 @@ class AppSettingsBase(BaseModel):
     
     # Order Activation Settings
     auto_activation_enabled: bool = False  # If True, automatically send activation when order comes in
+    
+    # Client Management Settings
+    auto_append_clients: bool = False  # If True, automatically append client orders when customer name matches
 
 
 class AppSettingsUpdate(BaseModel):
@@ -255,6 +264,7 @@ class AppSettingsUpdate(BaseModel):
     from_email: Optional[str] = None
     secret_key: Optional[str] = None
     auto_activation_enabled: Optional[bool] = None
+    auto_append_clients: Optional[bool] = None
 
 
 class AppSettings(AppSettingsBase):
@@ -282,6 +292,9 @@ class ClientUpdate(BaseModel):
 class Client(ClientBase):
     id: int
     purchased_product_ids: List[int] = []
+    product_quantities: Optional[Dict[int, int]] = {}  # Map of product_id -> quantity
+    buyer_id: Optional[str] = None  # Yandex buyer ID
+    order_ids: List[str] = []  # List of yandex_order_id strings
     created_at: datetime
     updated_at: Optional[datetime] = None
     
@@ -296,16 +309,25 @@ class MarketingEmailTemplateBase(BaseModel):
     body: str  # Rich text body with HTML formatting
 
 class MarketingEmailTemplateCreate(MarketingEmailTemplateBase):
-    pass
+    frequency_days: Optional[int] = Field(None, ge=1, description="Frequency in days for auto-broadcast")
+    auto_broadcast_enabled: bool = False
+    is_default: bool = False
 
 class MarketingEmailTemplateUpdate(BaseModel):
     name: Optional[str] = None
     subject: Optional[str] = None
     body: Optional[str] = None
     attachments: Optional[List[Dict[str, Any]]] = None  # Unified attachments: [{"url": "...", "type": "image|video|file", "name": "..."}, ...]
+    frequency_days: Optional[int] = Field(None, ge=1, description="Frequency in days for auto-broadcast")
+    auto_broadcast_enabled: Optional[bool] = None
+    is_default: Optional[bool] = None
 
 class MarketingEmailTemplate(MarketingEmailTemplateBase):
     id: int
+    attachments: Optional[List[Dict[str, Any]]] = []  # Unified attachments: [{"url": "...", "type": "image|video|file", "name": "..."}, ...]
+    frequency_days: Optional[int] = None
+    auto_broadcast_enabled: bool = False
+    is_default: bool = False
     created_at: datetime
     updated_at: Optional[datetime] = None
     
@@ -360,3 +382,71 @@ class ProductAnalytics(BaseModel):
     
     class Config:
         from_attributes = True
+
+
+# User and Authentication Schemas
+class UserBase(BaseModel):
+    email: EmailStr
+
+
+class UserCreate(UserBase):
+    password: str = Field(..., min_length=8)
+
+
+class UserSignup(UserCreate):
+    pass  # First user becomes admin
+
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+
+class PasswordResetRequest(BaseModel):
+    email: EmailStr
+
+
+class PasswordReset(BaseModel):
+    token: str
+    new_password: str = Field(..., min_length=8)
+
+
+class UserPermissions(BaseModel):
+    view_staff: bool = False
+    view_settings: bool = False
+    client_right: bool = False  # Includes: delete_client, edit_client, subtract_client_order, add_client (from clients page)
+    view_marketing_emails: bool = False
+    dashboard_right: bool = False  # Includes: view revenue, profit margin, top products charts, revenue/profit in top selling products
+    view_product_prices: bool = True  # Default: True
+
+
+class StaffCreate(BaseModel):
+    email: EmailStr
+
+
+class UserUpdate(BaseModel):
+    permissions: Optional[UserPermissions] = None
+    is_active: Optional[bool] = None
+
+
+class User(UserBase):
+    id: int
+    is_admin: bool
+    created_by_id: Optional[int] = None
+    permissions: UserPermissions
+    is_active: bool
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+    
+    class Config:
+        from_attributes = True
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: User
+
+
+class StaffCreate(BaseModel):
+    email: EmailStr

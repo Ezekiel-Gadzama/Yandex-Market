@@ -23,4 +23,9 @@ export const chatApi = {
     const response = await apiClient.get<{ unread_count: number }>(`chat/orders/${orderId}/unread-count`)
     return response.data.unread_count
   },
+  
+  markAsRead: async (orderId: string) => {
+    const response = await apiClient.post(`chat/orders/${orderId}/mark-read`)
+    return response.data
+  },
 }

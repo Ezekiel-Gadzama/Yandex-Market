@@ -4,6 +4,7 @@ from sqlalchemy import or_ as sql_or, func
 from typing import List
 from app.database import get_db
 from app import models, schemas
+from app.auth import get_current_active_user, get_business_id
 
 router = APIRouter()
 
@@ -11,10 +12,12 @@ router = APIRouter()
 @router.get("/", response_model=List[schemas.EmailTemplate])
 def get_email_templates(
     search: str = Query(None, description="Search by name or body"),
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """Get all email templates with optional search"""
-    query = db.query(models.EmailTemplate)
+    """Get all email templates with optional search. Only returns templates for the current user's business."""
+    business_id = get_business_id(current_user)
+    query = db.query(models.EmailTemplate).filter(models.EmailTemplate.business_id == business_id)
     
     if search:
         search_term = f"%{search.lower()}%"
@@ -30,18 +33,33 @@ def get_email_templates(
 
 
 @router.get("/{template_id}", response_model=schemas.EmailTemplate)
-def get_email_template(template_id: int, db: Session = Depends(get_db)):
-    """Get a single email template by ID"""
-    template = db.query(models.EmailTemplate).filter(models.EmailTemplate.id == template_id).first()
+def get_email_template(
+    template_id: int,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """Get a single email template by ID. Only returns template if it belongs to the current user's business."""
+    business_id = get_business_id(current_user)
+    template = db.query(models.EmailTemplate).filter(
+        models.EmailTemplate.id == template_id,
+        models.EmailTemplate.business_id == business_id
+    ).first()
     if not template:
         raise HTTPException(status_code=404, detail="Email template not found")
     return template
 
 
 @router.post("/", response_model=schemas.EmailTemplate, status_code=status.HTTP_201_CREATED)
-def create_email_template(template: schemas.EmailTemplateCreate, db: Session = Depends(get_db)):
+def create_email_template(
+    template: schemas.EmailTemplateCreate,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Create a new email template"""
-    db_template = models.EmailTemplate(**template.dict())
+    business_id = get_business_id(current_user)
+    template_data = template.dict()
+    template_data['business_id'] = business_id
+    db_template = models.EmailTemplate(**template_data)
     db.add(db_template)
     db.commit()
     db.refresh(db_template)

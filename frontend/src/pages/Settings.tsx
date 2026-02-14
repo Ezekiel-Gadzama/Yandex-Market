@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { settingsApi, AppSettingsUpdate } from '../api/settings'
 import { syncApi } from '../api/sync'
+import { useAuth } from '../contexts/AuthContext'
 import { RefreshCw, CheckCircle, Save, Edit2, X, AlertCircle } from 'lucide-react'
 
 export default function Settings() {
@@ -16,19 +17,49 @@ export default function Settings() {
     setTimeout(() => setNotification(prev => ({ ...prev, isOpen: false })), 4000)
   }
 
-  const { data: settings, isLoading: settingsLoading } = useQuery({
+  const { data: settings, isLoading: settingsLoading, error: settingsError } = useQuery({
     queryKey: ['app-settings'],
     queryFn: () => settingsApi.get(),
   })
 
+  const { user } = useAuth()
   const updateSettingsMutation = useMutation({
     mutationFn: (data: AppSettingsUpdate) => settingsApi.update(data),
-    onSuccess: () => {
+    onSuccess: async () => {
       queryClient.invalidateQueries({ queryKey: ['app-settings'] })
       showNotification('success', 'Settings saved successfully!')
+      
+      // Check if Yandex API is now configured and trigger sync
+      // Wait a bit for the settings to be fully saved, then fetch fresh settings
+      setTimeout(async () => {
+        try {
+          const freshSettings = await settingsApi.get()
+          const hasYandexConfig = freshSettings.yandex_api_token && 
+            (freshSettings.yandex_business_id || freshSettings.yandex_campaign_id)
+          
+          if (hasYandexConfig && user?.is_admin) {
+            try {
+              // Trigger automatic sync
+              await syncApi.syncAll(false)
+              showNotification('success', 'Settings saved and data sync started!')
+            } catch (syncError: any) {
+              // Don't show error for sync - it might fail if API is still being configured
+              const errorMsg = syncError?.response?.data?.detail || syncError?.message || 'Sync started in background'
+              console.log('Auto-sync:', errorMsg)
+            }
+          }
+        } catch (error) {
+          // Silently fail - sync will happen automatically later
+          console.log('Could not check settings for auto-sync')
+        }
+      }, 1500)
     },
-    onError: () => {
-      showNotification('error', 'Failed to save settings. Please try again.')
+    onError: (error: any) => {
+      const errorMessage = error?.response?.data?.detail?.message || 
+                          error?.response?.data?.detail || 
+                          error?.message || 
+                          'Failed to save settings. Please try again.'
+      showNotification('error', errorMessage)
     },
   })
 
@@ -59,6 +90,7 @@ export default function Settings() {
       yandex_campaign_id: (formData.get('yandex_campaign_id') as string) || undefined,
       smtp_host: (formData.get('smtp_host') as string) || undefined,
       smtp_port: formData.get('smtp_port') ? parseInt(formData.get('smtp_port') as string) : undefined,
+      smtp_user: (formData.get('smtp_user') as string) || undefined,
       smtp_password: (formData.get('smtp_password') as string) || undefined,
       from_email: (formData.get('from_email') as string) || undefined,
       secret_key: (formData.get('secret_key') as string) || undefined,
@@ -69,9 +101,27 @@ export default function Settings() {
       working_hours_text: (formData.get('working_hours_text') as string) || undefined,
       company_email: (formData.get('company_email') as string) || undefined,
       auto_activation_enabled: formData.get('auto_activation_enabled') === 'on',
+      auto_append_clients: formData.get('auto_append_clients') === 'on',
     }
     
     updateSettingsMutation.mutate(data)
+  }
+
+  if (settingsLoading) {
+    return <div className="text-center py-12">Loading settings...</div>
+  }
+
+  if (settingsError) {
+    const errorMessage = (settingsError as any)?.response?.data?.detail?.message || 
+                        (settingsError as any)?.response?.data?.detail || 
+                        (settingsError as any)?.message || 
+                        'Error loading settings. Please try again or contact your administrator.'
+    return (
+      <div className="text-center py-12">
+        <div className="text-red-600 font-medium mb-2">Error loading settings</div>
+        <div className="text-gray-600 text-sm">{errorMessage}</div>
+      </div>
+    )
   }
 
   return (
@@ -194,7 +244,6 @@ export default function Settings() {
                       <input
                         type="text"
                         name="yandex_business_id"
-                        placeholder="216649209"
                         defaultValue={settings.yandex_business_id || ''}
                         autoComplete="off"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -215,7 +264,6 @@ export default function Settings() {
                       <input
                         type="text"
                         name="yandex_campaign_id"
-                        placeholder="148991046"
                         defaultValue={settings.yandex_campaign_id || ''}
                         autoComplete="off"
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -269,6 +317,25 @@ export default function Settings() {
                         {settings.smtp_port || <span className="text-gray-400">Not set</span>}
                       </div>
                     )}
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      SMTP User (Email)
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="email"
+                        name="smtp_user"
+                        defaultValue={settings.smtp_user || settings.from_email || ''}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    ) : (
+                      <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                        {settings.smtp_user || settings.from_email || <span className="text-gray-400">Not set</span>}
+                      </div>
+                    )}
+                    <p className="text-xs text-gray-500 mt-1">Usually the same as From Email</p>
                   </div>
                   
                   <div>
@@ -494,6 +561,46 @@ export default function Settings() {
                     {settings.auto_activation_enabled 
                       ? "Orders will automatically be completed and activation codes sent to Yandex Market when they arrive. No need to manually click 'Send Activation'."
                       : "Orders will be fulfilled locally but you'll need to manually click 'Send Activation' to complete them on Yandex Market."}
+                  </p>
+                </div>
+              </div>
+
+              {/* Client Management Settings */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium text-gray-900 mb-4">Client Management Settings</h3>
+                <p className="text-sm text-gray-600 mb-4">
+                  Configure how clients are managed from orders.
+                </p>
+                
+                <div className="space-y-4">
+                  {isEditing ? (
+                    <label className="flex items-center">
+                      <input
+                        type="checkbox"
+                        name="auto_append_clients"
+                        defaultChecked={settings.auto_append_clients}
+                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">Automatically Append Client Orders</span>
+                    </label>
+                  ) : (
+                    <div className="flex items-center">
+                      <div className={`h-4 w-4 rounded border-2 flex items-center justify-center ${
+                        settings.auto_append_clients ? 'bg-gray-400 border-gray-400' : 'bg-gray-200 border-gray-300'
+                      }`}>
+                        {settings.auto_append_clients && (
+                          <svg className="h-3 w-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                        )}
+                      </div>
+                      <span className="ml-2 text-sm text-gray-500">Automatically Append Client Orders</span>
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-500 ml-6">
+                    {settings.auto_append_clients 
+                      ? "When an order is finished, if the customer name already exists in the database, automatically append the order information to the client (order IDs, products, and purchase dates)."
+                      : "Client orders must be manually created from the Orders page."}
                   </p>
                 </div>
               </div>

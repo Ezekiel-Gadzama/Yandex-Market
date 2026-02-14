@@ -4,6 +4,7 @@ from typing import List, Dict, Optional
 from app.database import get_db
 from app import models, schemas
 from app.services.order_service import OrderService
+from app.auth import get_current_active_user, get_business_id
 
 router = APIRouter()
 
@@ -16,9 +17,10 @@ def get_orders(
     start_date: str = None,
     end_date: str = None,
     refresh_status: bool = True,  # Optionally refresh order status from Yandex
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """Get all orders with optional filters.
+    """Get all orders with optional filters. Only returns orders for the current user's business.
     
     Orders are grouped by yandex_order_id. Each order group contains all items/products.
     
@@ -29,7 +31,8 @@ def get_orders(
     from app.services.yandex_api import YandexMarketAPI
     from app.config import settings
     
-    query = db.query(models.Order)
+    business_id = get_business_id(current_user)
+    query = db.query(models.Order).filter(models.Order.business_id == business_id)
     
     if status:
         # Special handling for "unfinished" filter - show all orders that are not finished
@@ -63,92 +66,100 @@ def get_orders(
     
     # Refresh order status from Yandex for orders that might be stale
     if refresh_status:
-        yandex_api = YandexMarketAPI()
-        unique_yandex_order_ids = set()
-        orders_to_refresh = []
-        
-        # Collect unique order IDs that need refreshing
-        for order in orders:
-            yandex_id = order.yandex_order_id
-            if yandex_id and yandex_id not in unique_yandex_order_ids:
-                unique_yandex_order_ids.add(yandex_id)
-                # Only refresh if order is in PROCESSING status (might have been delivered)
-                # or if yandex_status is missing/old
-                # NEVER refresh FINISHED orders - they are manually overridden and should not be updated
-                if (order.status != models.OrderStatus.FINISHED and 
-                    (order.status == models.OrderStatus.PROCESSING or 
-                     order.yandex_status in ["PROCESSING", None, ""])):
-                    orders_to_refresh.append(yandex_id)
-        
-        # Refresh orders in batch (limit to avoid too many API calls)
-        for yandex_id in orders_to_refresh[:10]:  # Limit to 10 refreshes per request
-            try:
-                print(f"🔄 Refreshing order status from Yandex for order {yandex_id}")
-                fresh_order_data = yandex_api.get_order(str(yandex_id))
-                
-                # Extract status from fresh data
-                fresh_status = fresh_order_data.get("status")
-                if fresh_status:
-                    # Update all order records with this yandex_order_id
-                    all_orders_for_id = db.query(models.Order).filter(
-                        models.Order.yandex_order_id == yandex_id
-                    ).all()
+        try:
+            from app.services.config_validator import ConfigurationError, format_config_error_response
+            yandex_api = YandexMarketAPI(business_id=business_id, db=db)
+            unique_yandex_order_ids = set()
+            orders_to_refresh = []
+            
+            # Collect unique order IDs that need refreshing
+            for order in orders:
+                yandex_id = order.yandex_order_id
+                if yandex_id and yandex_id not in unique_yandex_order_ids:
+                    unique_yandex_order_ids.add(yandex_id)
+                    # Only refresh if order is in PROCESSING status (might have been delivered)
+                    # or if yandex_status is missing/old
+                    # NEVER refresh FINISHED orders - they are manually overridden and should not be updated
+                    if (order.status != models.OrderStatus.FINISHED and 
+                        (order.status == models.OrderStatus.PROCESSING or 
+                         order.yandex_status in ["PROCESSING", None, ""])):
+                        orders_to_refresh.append(yandex_id)
+            
+            # Refresh orders in batch (limit to avoid too many API calls)
+            for yandex_id in orders_to_refresh[:10]:  # Limit to 10 refreshes per request
+                try:
+                    print(f"🔄 Refreshing order status from Yandex for order {yandex_id}")
+                    fresh_order_data = yandex_api.get_order(str(yandex_id))
                     
-                    for order_record in all_orders_for_id:
-                        # Update yandex_order_data with fresh data
-                        order_record.yandex_order_data = fresh_order_data
-                        order_record.yandex_status = fresh_status
+                    # Extract status from fresh data
+                    fresh_status = fresh_order_data.get("status")
+                    if fresh_status:
+                        # Update all order records with this yandex_order_id (filter by business_id)
+                        all_orders_for_id = db.query(models.Order).filter(
+                            models.Order.yandex_order_id == yandex_id,
+                            models.Order.business_id == business_id
+                        ).all()
                         
-                        # Only update status if it's not already FINISHED (manual override takes precedence)
-                        if order_record.status != models.OrderStatus.FINISHED:
-                            # Map Yandex status to our status
-                            from app.routers.webhooks import _map_yandex_status
-                            mapped_status = _map_yandex_status(fresh_status)
-                            order_record.status = mapped_status
+                        for order_record in all_orders_for_id:
+                            # Update yandex_order_data with fresh data
+                            order_record.yandex_order_data = fresh_order_data
+                            order_record.yandex_status = fresh_status
                             
-                            # Auto-complete if DELIVERED and activation codes are sent
-                            # But only if status is not FINISHED (already checked above)
-                            if fresh_status == "DELIVERED" and order_record.activation_code_sent:
-                                order_record.status = models.OrderStatus.COMPLETED
-                                if not order_record.completed_at:
-                                    order_record.completed_at = datetime.utcnow()
-                    
-                    db.commit()
-                    print(f"✅ Updated order {yandex_id} status to {fresh_status}")
-            except Exception as e:
-                print(f"⚠️  Could not refresh order {yandex_id} status: {str(e)}")
-                # Continue with cached data if refresh fails
-                db.rollback()
-                pass
-        
-        # Re-query orders after refresh to get updated status
-        # IMPORTANT: Re-query to get fresh data from database, especially for FINISHED status
-        if orders_to_refresh:
-            # Rebuild query to get fresh data
-            fresh_query = db.query(models.Order)
-            if status:
-                if status.lower() == "unfinished":
-                    fresh_query = fresh_query.filter(models.Order.status != models.OrderStatus.FINISHED)
-                else:
-                    status_upper = status.upper()
+                            # Only update status if it's not already FINISHED (manual override takes precedence)
+                            if order_record.status != models.OrderStatus.FINISHED:
+                                # Map Yandex status to our status
+                                from app.routers.webhooks import _map_yandex_status
+                                mapped_status = _map_yandex_status(fresh_status)
+                                order_record.status = mapped_status
+                                
+                                # Auto-complete if DELIVERED and activation codes are sent
+                                # But only if status is not FINISHED (already checked above)
+                                if fresh_status == "DELIVERED" and order_record.activation_code_sent:
+                                    order_record.status = models.OrderStatus.COMPLETED
+                                    if not order_record.completed_at:
+                                        order_record.completed_at = datetime.utcnow()
+                        
+                        db.commit()
+                        print(f"✅ Updated order {yandex_id} status to {fresh_status}")
+                except Exception as e:
+                    print(f"⚠️  Could not refresh order {yandex_id} status: {str(e)}")
+                    # Continue with cached data if refresh fails
+                    db.rollback()
+                    pass
+            
+            # Re-query orders after refresh to get updated status
+            # IMPORTANT: Re-query to get fresh data from database, especially for FINISHED status
+            if orders_to_refresh:
+                # Rebuild query to get fresh data (filter by business_id)
+                fresh_query = db.query(models.Order).filter(models.Order.business_id == business_id)
+                if status:
+                    if status.lower() == "unfinished":
+                        fresh_query = fresh_query.filter(models.Order.status != models.OrderStatus.FINISHED)
+                    else:
+                        status_upper = status.upper()
+                        try:
+                            status_enum = models.OrderStatus[status_upper]
+                            fresh_query = fresh_query.filter(models.Order.status == status_enum)
+                        except KeyError:
+                            pass
+                if start_date:
                     try:
-                        status_enum = models.OrderStatus[status_upper]
-                        fresh_query = fresh_query.filter(models.Order.status == status_enum)
-                    except KeyError:
+                        start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+                        fresh_query = fresh_query.filter(models.Order.created_at >= start_dt)
+                    except:
                         pass
-            if start_date:
-                try:
-                    start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
-                    fresh_query = fresh_query.filter(models.Order.created_at >= start_dt)
-                except:
-                    pass
-            if end_date:
-                try:
-                    end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
-                    fresh_query = fresh_query.filter(models.Order.created_at <= end_dt)
-                except:
-                    pass
-            orders = fresh_query.order_by(models.Order.created_at.desc()).offset(skip).limit(limit * 10).all()
+                if end_date:
+                    try:
+                        end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+                        fresh_query = fresh_query.filter(models.Order.created_at <= end_dt)
+                    except:
+                        pass
+                orders = fresh_query.order_by(models.Order.created_at.desc()).offset(skip).limit(limit * 10).all()
+        except ConfigurationError as e:
+            # Configuration error - log but don't fail the request
+            print(f"⚠️  Yandex API configuration required: {e.message}")
+        except Exception as e:
+            print(f"⚠️  Could not initialize Yandex API: {str(e)}")
     
     # Group orders by yandex_order_id
     orders_by_yandex_id = {}
@@ -209,7 +220,11 @@ def get_orders(
         
         # First, process items that have matching order records in database
         for o in order_group:
-            product = db.query(models.Product).filter(models.Product.id == o.product_id).first()
+            # Filter product by business_id to ensure data isolation
+            product = db.query(models.Product).filter(
+                models.Product.id == o.product_id,
+                models.Product.business_id == business_id
+            ).first()
             if product:
                 # Find matching Yandex item to get item ID
                 yandex_item_id = None
@@ -264,8 +279,10 @@ def get_orders(
             item_total = item_price * item_count
             item_name = yandex_item.get("offerName") or offer_id or "Unknown Product"
             
-            # Try to find product in database
+            # Try to find product in database (filter by business_id)
             product = db.query(models.Product).filter(
+                models.Product.business_id == business_id
+            ).filter(
                 (models.Product.yandex_market_id == offer_id) |
                 (models.Product.yandex_market_id == yandex_item.get("shopSku")) |
                 (models.Product.yandex_market_sku == offer_id) |
@@ -346,6 +363,22 @@ def get_orders(
             print(f"⚠️  Error ensuring digital products marked as sent: {str(e)}")
             db.rollback()
         
+        # Check if a client already exists for this order
+        # Query clients and check if order_id is in their order_ids array
+        has_client = False
+        # Use a simple Python check - it's fast enough for most use cases
+        # Query all clients for this business and check their order_ids (including empty arrays)
+        business_id = get_business_id(current_user)
+        all_clients = db.query(models.Client).filter(models.Client.business_id == business_id).all()
+        for client in all_clients:
+            # Check if order_ids exists and contains the yandex_id
+            if client.order_ids is not None:
+                # Handle both list and JSONB array formats
+                order_ids_list = client.order_ids if isinstance(client.order_ids, list) else []
+                if yandex_id in order_ids_list:
+                    has_client = True
+                    break
+        
         # Build order dict with items
         # IMPORTANT: Always use the actual status from database - FINISHED status takes precedence over Yandex API
         # Refresh base_order one more time to ensure we have the absolute latest status from database
@@ -359,6 +392,7 @@ def get_orders(
             "activation_code_sent": all_activation_sent,  # True only if ALL items have activation sent
             "delivery_type": delivery_type,  # "DIGITAL" or "DELIVERY"
             "status": base_order.status,  # CRITICAL: Use actual database status (FINISHED takes precedence over everything)
+            "has_client": has_client,  # Whether a client already exists for this order
         }
         
         # Convert to Order schema to ensure proper serialization
@@ -373,34 +407,53 @@ def get_orders(
 
 
 @router.get("/{order_id}", response_model=schemas.Order)
-def get_order(order_id: int, db: Session = Depends(get_db)):
+def get_order(
+    order_id: int,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Get a single order by ID"""
-    order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    business_id = get_business_id(current_user)
+    order = db.query(models.Order).filter(
+        models.Order.id == order_id,
+        models.Order.business_id == business_id
+    ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     return order
 
 
 @router.post("/", response_model=schemas.Order, status_code=status.HTTP_201_CREATED)
-def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
+def create_order(
+    order: schemas.OrderCreate,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Create a new order (typically from Yandex Market webhook)"""
-    # Check if order already exists
+    business_id = get_business_id(current_user)
+    # Check if order already exists for this business
     existing = db.query(models.Order).filter(
+        models.Order.business_id == business_id,
         models.Order.yandex_order_id == order.yandex_order_id
     ).first()
     
     if existing:
         raise HTTPException(status_code=400, detail="Order already exists")
     
-    db_order = models.Order(**order.dict())
+    order_data = order.dict()
+    order_data['business_id'] = business_id
+    db_order = models.Order(**order_data)
     db.add(db_order)
     db.commit()
     db.refresh(db_order)
     
     # Auto-process digital products
-    product = db.query(models.Product).filter(models.Product.id == db_order.product_id).first()
+    product = db.query(models.Product).filter(
+        models.Product.id == db_order.product_id,
+        models.Product.business_id == business_id
+    ).first()
     if product and product.product_type == models.ProductType.DIGITAL:
-        order_service = OrderService(db)
+        order_service = OrderService(db, business_id=business_id)
         order_service.auto_fulfill_order(db_order)
     
     return db_order
@@ -410,10 +463,15 @@ def create_order(order: schemas.OrderCreate, db: Session = Depends(get_db)):
 def update_order(
     order_id: int,
     order_update: schemas.OrderUpdate,
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """Update an order"""
-    db_order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    business_id = get_business_id(current_user)
+    db_order = db.query(models.Order).filter(
+        models.Order.id == order_id,
+        models.Order.business_id == business_id
+    ).first()
     if not db_order:
         raise HTTPException(status_code=404, detail="Order not found")
     
@@ -427,20 +485,32 @@ def update_order(
 
 
 @router.post("/{order_id}/fulfill", response_model=dict)
-def fulfill_order(order_id: int, db: Session = Depends(get_db)):
+def fulfill_order(
+    order_id: int,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Manually fulfill an order (assign activation key and send email)"""
-    order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    business_id = get_business_id(current_user)
+    order = db.query(models.Order).filter(
+        models.Order.id == order_id,
+        models.Order.business_id == business_id
+    ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     
-    product = db.query(models.Product).filter(models.Product.id == order.product_id).first()
+    # Filter product by business_id to ensure data isolation
+    product = db.query(models.Product).filter(
+        models.Product.id == order.product_id,
+        models.Product.business_id == business_id
+    ).first()
     if not product:
         raise HTTPException(status_code=404, detail="Product not found")
     
     if product.product_type != models.ProductType.DIGITAL:
         raise HTTPException(status_code=400, detail="Only digital products can be fulfilled with activation keys")
     
-    order_service = OrderService(db)
+    order_service = OrderService(db, business_id=business_id)
     result = order_service.fulfill_order(order)
     
     return result
@@ -450,6 +520,7 @@ def fulfill_order(order_id: int, db: Session = Depends(get_db)):
 def complete_order(
     order_id: int,
     body: Optional[Dict[str, Dict[int, str]]] = Body(None),
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """Complete order by sending activation code to Yandex Market for ALL items in the order
@@ -458,8 +529,12 @@ def complete_order(
         order_id: The order ID
         body: Optional JSON body with format: {"activation_keys": {product_id: "key", ...}}
     """
+    business_id = get_business_id(current_user)
     # Get the order
-    order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    order = db.query(models.Order).filter(
+        models.Order.id == order_id,
+        models.Order.business_id == business_id
+    ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     
@@ -468,10 +543,11 @@ def complete_order(
     if body and "activation_keys" in body:
         activation_keys = body["activation_keys"]
     
-    # Get ALL orders with the same yandex_order_id (one order record per item)
+    # Get ALL orders with the same yandex_order_id (one order record per item) for this business
     yandex_order_id = order.yandex_order_id
     all_orders = db.query(models.Order).filter(
-        models.Order.yandex_order_id == yandex_order_id
+        models.Order.yandex_order_id == yandex_order_id,
+        models.Order.business_id == business_id
     ).all()
     
     order_service = OrderService(db)
@@ -484,23 +560,32 @@ def complete_order(
 
 
 @router.post("/{order_id}/mark-finished", response_model=dict)
-def mark_order_finished(order_id: int, db: Session = Depends(get_db)):
+def mark_order_finished(
+    order_id: int,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Mark order as finished (after completing buyer interaction)
     
     This sets the status to FINISHED, which will not be overridden by Yandex API status updates.
     The UI will show "finished" even if Yandex API says DELIVERED.
     """
-    order = db.query(models.Order).filter(models.Order.id == order_id).first()
+    business_id = get_business_id(current_user)
+    order = db.query(models.Order).filter(
+        models.Order.id == order_id,
+        models.Order.business_id == business_id
+    ).first()
     if not order:
         raise HTTPException(status_code=404, detail="Order not found")
     
     if order.status != models.OrderStatus.COMPLETED:
         raise HTTPException(status_code=400, detail="Only completed orders can be marked as finished")
     
-    # Get ALL orders with the same yandex_order_id and update them all
+    # Get ALL orders with the same yandex_order_id and update them all (for this business)
     yandex_order_id = order.yandex_order_id
     all_orders = db.query(models.Order).filter(
-        models.Order.yandex_order_id == yandex_order_id
+        models.Order.yandex_order_id == yandex_order_id,
+        models.Order.business_id == business_id
     ).all()
     
     # Set status to FINISHED for all orders in this group

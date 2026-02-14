@@ -15,10 +15,18 @@ class ReviewChecker:
         self.last_checked_reviews: Set[str] = set()  # Store review IDs we've already notified about
         self.last_checked_shop_reviews: Set[str] = set()
     
-    async def check_for_new_reviews(self):
-        """Check for new product and shop reviews"""
+    async def check_for_new_reviews(self, business_id: int = None):
+        """Check for new product and shop reviews
+        
+        Args:
+            business_id: Business ID to check reviews for (required)
+        """
+        if not business_id:
+            print("[Review Checker] Skipping review check: business_id is required")
+            return
+        
         try:
-            yandex_api = YandexMarketAPI()
+            yandex_api = YandexMarketAPI(business_id=business_id)
             
             # Check product reviews
             product_reviews = yandex_api.get_product_reviews(limit=50)
@@ -50,11 +58,20 @@ class ReviewChecker:
         except Exception as e:
             print(f"[Review Checker] Error checking reviews: {str(e)}")
     
-    async def start_periodic_check(self, interval_minutes: int = 15):
-        """Start periodic review checking"""
+    async def start_periodic_check(self, interval_minutes: int = 15, business_id: int = None):
+        """Start periodic review checking
+        
+        Args:
+            interval_minutes: Interval between checks in minutes
+            business_id: Business ID to check reviews for (required)
+        """
+        if not business_id:
+            print("[Review Checker] Skipping periodic review check: business_id is required")
+            return
+        
         while True:
             try:
-                await self.check_for_new_reviews()
+                await self.check_for_new_reviews(business_id=business_id)
             except Exception as e:
                 print(f"[Review Checker] Error in periodic check: {str(e)}")
             

@@ -12,6 +12,9 @@ export interface MarketingEmailTemplate {
   subject: string
   body: string
   attachments?: Attachment[]
+  frequency_days?: number
+  auto_broadcast_enabled: boolean
+  is_default: boolean
   created_at: string
   updated_at?: string
 }
@@ -21,6 +24,9 @@ export interface MarketingEmailTemplateCreate {
   subject: string
   body: string
   attachments?: Attachment[]
+  frequency_days?: number
+  auto_broadcast_enabled?: boolean
+  is_default?: boolean
 }
 
 export interface MarketingEmailTemplateUpdate {
@@ -28,6 +34,9 @@ export interface MarketingEmailTemplateUpdate {
   subject?: string
   body?: string
   attachments?: Attachment[]
+  frequency_days?: number
+  auto_broadcast_enabled?: boolean
+  is_default?: boolean
 }
 
 export interface BroadcastFilters {
@@ -60,16 +69,21 @@ export const marketingEmailsApi = {
   },
 
   update: async (id: number, data: MarketingEmailTemplateUpdate): Promise<MarketingEmailTemplate> => {
-    const response = await apiClient.put(`marketing-emails/${id}/`, data)
+    const response = await apiClient.put(`marketing-emails/${id}`, data)
+    return response.data
+  },
+
+  getById: async (id: number): Promise<MarketingEmailTemplate> => {
+    const response = await apiClient.get(`marketing-emails/${id}`)
     return response.data
   },
 
   delete: async (id: number): Promise<void> => {
-    await apiClient.delete(`marketing-emails/${id}/`)
+    await apiClient.delete(`marketing-emails/${id}`)
   },
 
   broadcast: async (id: number, filters: BroadcastFilters): Promise<BroadcastResponse> => {
-    const response = await apiClient.post(`marketing-emails/${id}/broadcast/`, filters)
+    const response = await apiClient.post(`marketing-emails/${id}/broadcast`, filters)
     return response.data
   },
 }

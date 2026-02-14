@@ -3,14 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
 from app.database import engine, Base, SessionLocal
-from app.routers import products, orders, dashboard, email_templates as activation_templates, sync, webhooks, reviews, chat, media, inventory, settings as settings_router, clients, marketing_emails, documentations
+from app.routers import products, orders, dashboard, email_templates as activation_templates, sync, webhooks, reviews, chat, media, inventory, settings as settings_router, clients, marketing_emails, documentations, auth, staff
 from app.config import settings
 from app.initial_data import create_default_email_template
 from app.services.yandex_api import YandexMarketAPI
 from app.services.review_checker import review_checker
 from app import models
 import asyncio
-from datetime import datetime
+from datetime import datetime, timezone
 from concurrent.futures import ThreadPoolExecutor
 
 # Thread pool for running synchronous API calls
@@ -67,16 +67,23 @@ def _is_digital_product(yandex_product_data: dict) -> bool:
     print(f"  ❌ Product {offer_id}: Not a digital product (no parameterId 37693330 with electronic key)")
     return False
 
-def _sync_products_sync():
+def _sync_products_sync(business_id: int = None):
     """Sync products FROM Yandex Market TO local database (one-way sync)
     
     Always updates existing products to reflect changes from Yandex (like status changes).
     Preserves local-only fields (cost_price, supplier info, email_template_id, documentation_id).
+    
+    Args:
+        business_id: Business ID to sync products for (required)
     """
+    if not business_id:
+        print("⚠️  Cannot sync products: business_id is required")
+        return
+    
     try:
         db = SessionLocal()
         try:
-            yandex_api = YandexMarketAPI()
+            yandex_api = YandexMarketAPI(business_id=business_id, db=db)
             yandex_products = yandex_api.get_products()
             
             products_created = 0
@@ -288,7 +295,7 @@ def _sync_products_sync():
         import traceback
         traceback.print_exc()
 
-def _parse_yandex_order(yandex_order: dict, db) -> list:
+def _parse_yandex_order(yandex_order: dict, db, business_id: int = None) -> list:
     """Parse a Yandex Market order and create local Order records.
     
     Yandex orders contain an 'items' array. Each item has:
@@ -298,6 +305,11 @@ def _parse_yandex_order(yandex_order: dict, db) -> list:
     - count: Quantity
     - price: Price per unit
     - digitalItem: True for digital products
+    
+    Args:
+        yandex_order: The Yandex order data
+        db: Database session
+        business_id: Optional business_id to filter products (for multi-tenancy)
     
     Returns list of (new_order, product) tuples created.
     """
@@ -309,7 +321,9 @@ def _parse_yandex_order(yandex_order: dict, db) -> list:
     # Extract buyer info (Yandex uses 'buyer', not 'customer')
     buyer = yandex_order.get("buyer", {})
     buyer_name = None
+    buyer_id = None
     if isinstance(buyer, dict):
+        buyer_id = buyer.get("id")  # Extract buyer ID for client tracking
         first_name = buyer.get("firstName", "")
         last_name = buyer.get("lastName", "")
         buyer_name = f"{first_name} {last_name}".strip() or None
@@ -337,8 +351,16 @@ def _parse_yandex_order(yandex_order: dict, db) -> list:
             print(f"  ⚠️  Item in order {yandex_order_id} has no offerId, skipping")
             continue
         
+        # Note: _parse_yandex_order doesn't have business_id context
+        # Products should already be filtered by business_id when orders are synced
+        # This function is called from sync_orders which has business_id context
         # Match product by offerId (yandex_market_id) or shopSku (yandex_market_sku) or marketSku
-        product = db.query(models.Product).filter(
+        # Filter by business_id if provided (for multi-tenancy)
+        product_query = db.query(models.Product)
+        if business_id is not None:
+            product_query = product_query.filter(models.Product.business_id == business_id)
+        
+        product = product_query.filter(
             (models.Product.yandex_market_id == offer_id) |
             (models.Product.yandex_market_id == shop_sku) |
             (models.Product.yandex_market_sku == offer_id) |
@@ -347,15 +369,21 @@ def _parse_yandex_order(yandex_order: dict, db) -> list:
         
         # Also try matching by marketSku if available
         if not product and market_sku:
-            product = db.query(models.Product).filter(
+            product_query = db.query(models.Product)
+            if business_id is not None:
+                product_query = product_query.filter(models.Product.business_id == business_id)
+            product = product_query.filter(
                 (models.Product.yandex_market_sku == market_sku) |
                 (models.Product.yandex_market_id == market_sku)
             ).first()
         
         # If still no match, try searching in yandex_full_data JSON field
         if not product:
-            # Query all products and check their yandex_full_data for matching offerId/shopSku
-            all_products = db.query(models.Product).all()
+            # Query products (filtered by business_id if provided) and check their yandex_full_data
+            product_query = db.query(models.Product)
+            if business_id is not None:
+                product_query = product_query.filter(models.Product.business_id == business_id)
+            all_products = product_query.all()
             for p in all_products:
                 if p.yandex_full_data:
                     yandex_data = p.yandex_full_data
@@ -391,17 +419,32 @@ def _parse_yandex_order(yandex_order: dict, db) -> list:
         }
         local_status = status_mapping.get(order_status, models.OrderStatus.PENDING)
         
+        # Parse creationDate from Yandex order (format: "08-02-2026 18:00:14")
+        order_created_at = None
+        creation_date_str = yandex_order.get("creationDate")
+        if creation_date_str:
+            try:
+                        # Parse format: "08-02-2026 18:00:14" (DD-MM-YYYY HH:MM:SS)
+                        # Use the global datetime import
+                        order_created_at = datetime.strptime(creation_date_str, "%d-%m-%Y %H:%M:%S")
+            except Exception as e:
+                print(f"  ⚠️  Could not parse creationDate '{creation_date_str}': {str(e)}")
+                order_created_at = None
+        
         new_order = models.Order(
             yandex_order_id=yandex_order_id,
             product_id=product.id,
+            business_id=product.business_id,  # Use product's business_id
             customer_name=buyer_name,
             customer_email=None,  # Yandex doesn't expose buyer email for privacy
             customer_phone=None,  # Yandex doesn't expose buyer phone for privacy
+            buyer_id=buyer_id,  # Yandex buyer ID for tracking same client
             quantity=item_count,
             total_amount=item_total if item_total > 0 else float(total_amount),
             status=local_status,
             yandex_status=order_status,
             yandex_order_data=yandex_order,  # Store full order data (includes items[].id for delivery)
+            order_created_at=order_created_at,  # Actual order creation date from Yandex
         )
         
         created_orders.append((new_order, product))
@@ -411,6 +454,207 @@ def _parse_yandex_order(yandex_order: dict, db) -> list:
         print(f"    ⚠️  Warning: Only {len(created_orders)}/{len(items)} items matched products in database")
     
     return created_orders
+
+
+def _handle_cancelled_order_products(yandex_order_id: str, db):
+    """Remove products from clients when an order is cancelled"""
+    import json
+    from sqlalchemy import text
+    # Use the global datetime import from the top of the file
+    
+    try:
+        # Get all orders with this yandex_order_id that are cancelled
+        cancelled_orders = db.query(models.Order).filter(
+            models.Order.yandex_order_id == yandex_order_id,
+            models.Order.status == models.OrderStatus.CANCELLED
+        ).all()
+        
+        if not cancelled_orders:
+            return
+        
+        # Find clients that have this order_id in their order_ids list
+        all_clients = db.query(models.Client).all()
+        
+        for client in all_clients:
+            order_ids = client.order_ids or []
+            if yandex_order_id not in order_ids:
+                continue
+            
+            # Remove products from this cancelled order
+            for order in cancelled_orders:
+                product = db.query(models.Product).filter(models.Product.id == order.product_id).first()
+                if not product:
+                    continue
+                
+                # Check if client has this product
+                if product in client.purchased_products:
+                    # Get current quantity
+                    result = db.execute(text("""
+                        SELECT quantity FROM client_products 
+                        WHERE client_id = :client_id AND product_id = :product_id
+                    """), {"client_id": client.id, "product_id": product.id})
+                    row = result.first()
+                    
+                    if row:
+                        current_quantity = row[0]
+                        new_quantity = current_quantity - order.quantity
+                        
+                        if new_quantity <= 0:
+                            # Remove product from client
+                            db.execute(text("""
+                                DELETE FROM client_products 
+                                WHERE client_id = :client_id AND product_id = :product_id
+                            """), {"client_id": client.id, "product_id": product.id})
+                            print(f"  ✅ Removed product {product.id} ({product.name}) from client {client.id} (order {yandex_order_id} cancelled)")
+                        else:
+                            # Update quantity
+                            db.execute(text("""
+                                UPDATE client_products 
+                                SET quantity = :new_qty
+                                WHERE client_id = :client_id AND product_id = :product_id
+                            """), {
+                                "client_id": client.id,
+                                "product_id": product.id,
+                                "new_qty": new_quantity
+                            })
+                            print(f"  ✅ Reduced quantity for product {product.id} ({product.name}) for client {client.id} to {new_quantity} (order {yandex_order_id} cancelled)")
+                    
+                    # Remove order_id from client's order_ids list
+                    if yandex_order_id in order_ids:
+                        order_ids.remove(yandex_order_id)
+                        client.order_ids = order_ids
+                        client.updated_at = datetime.utcnow()
+        
+        db.commit()
+    except Exception as e:
+        print(f"  ⚠️  Error handling cancelled order products: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        db.rollback()
+
+
+def _auto_append_client_from_order(yandex_order_id: str, db):
+    """Automatically append client from order if auto_append_clients is enabled"""
+    try:
+        import json
+        from sqlalchemy import text
+        # Use the global datetime import, not a local one
+        
+        # Check if auto-append is enabled
+        app_settings = db.query(models.AppSettings).first()
+        if not app_settings or not app_settings.auto_append_clients:
+            return
+        
+        # Get all orders with this yandex_order_id
+        orders = db.query(models.Order).filter(
+            models.Order.yandex_order_id == yandex_order_id
+        ).all()
+        
+        if not orders:
+            return
+        
+        # Only process if order is FINISHED
+        if not all(o.status == models.OrderStatus.FINISHED for o in orders):
+            return
+        
+        # Get customer name from order
+        customer_name = orders[0].customer_name
+        if not customer_name:
+            return
+        
+        # Check if client with this name already exists
+        existing_client = db.query(models.Client).filter(
+            models.Client.name == customer_name
+        ).first()
+        
+        if not existing_client:
+            # Client doesn't exist, skip auto-append (user must create manually with email)
+            return
+        
+        # Client exists - append order information
+        
+        # Add order ID if not already present
+        order_ids = existing_client.order_ids or []
+        if yandex_order_id not in order_ids:
+            order_ids.append(yandex_order_id)
+            existing_client.order_ids = order_ids
+        
+        # Get order creation date
+        order_date = orders[0].order_created_at or orders[0].created_at
+        if order_date and order_date.tzinfo is None:
+            order_date = order_date.replace(tzinfo=timezone.utc)
+        
+        # Update products from this order
+        for order in orders:
+            product = db.query(models.Product).filter(models.Product.id == order.product_id).first()
+            if not product:
+                continue
+            
+            # Check if client already has this product
+            if product in existing_client.purchased_products:
+                # Increment quantity and update purchase history
+                result = db.execute(text("""
+                    SELECT purchase_dates_history FROM client_products 
+                    WHERE client_id = :client_id AND product_id = :product_id
+                """), {"client_id": existing_client.id, "product_id": product.id})
+                row = result.first()
+                
+                purchase_dates_history = row[0] if row and row[0] else []
+                if isinstance(purchase_dates_history, str):
+                    purchase_dates_history = json.loads(purchase_dates_history)
+                if not isinstance(purchase_dates_history, list):
+                    purchase_dates_history = []
+                
+                # Add current order date to history
+                order_date_str = order_date.isoformat() if order_date else datetime.utcnow().isoformat()
+                purchase_dates_history.append(order_date_str)
+                
+                # Update quantity and purchase history
+                db.execute(text("""
+                    UPDATE client_products 
+                    SET quantity = quantity + :qty,
+                        last_purchase_date = :order_date::timestamp,
+                        purchase_dates_history = :history::jsonb
+                    WHERE client_id = :client_id AND product_id = :product_id
+                """), {
+                    "client_id": existing_client.id,
+                    "product_id": product.id,
+                    "qty": order.quantity,
+                    "order_date": order_date_str,
+                    "history": json.dumps(purchase_dates_history)
+                })
+            else:
+                # Add new product to client
+                existing_client.purchased_products.append(product)
+                db.flush()
+                
+                # Set initial quantity and purchase history
+                order_date_str = order_date.isoformat() if order_date else datetime.utcnow().isoformat()
+                purchase_dates_history = [order_date_str]
+                
+                db.execute(text("""
+                    UPDATE client_products 
+                    SET quantity = :qty,
+                        first_purchase_date = :order_date::timestamp,
+                        last_purchase_date = :order_date::timestamp,
+                        purchase_dates_history = :history::jsonb
+                    WHERE client_id = :client_id AND product_id = :product_id
+                """), {
+                    "client_id": existing_client.id,
+                    "product_id": product.id,
+                    "qty": order.quantity,
+                    "order_date": order_date_str,
+                    "history": json.dumps(purchase_dates_history)
+                })
+        
+        existing_client.updated_at = datetime.utcnow()
+        db.commit()
+        print(f"  ✅ Auto-appended order {yandex_order_id} to existing client {existing_client.id} ({existing_client.name})")
+    except Exception as e:
+        print(f"  ⚠️  Error auto-appending client from order: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        db.rollback()
 
 
 def _ensure_digital_products_marked_as_sent(order_records, db):
@@ -483,12 +727,17 @@ def _auto_send_activations_for_existing_orders(db):
         
         print(f"[Auto-Send Activations] Found {len(orders_by_yandex_id)} unique orders to check")
         
-        order_service = OrderService(db)
         activations_sent = 0
         
         # Process each unique order
         for yandex_order_id, order_group in orders_by_yandex_id.items():
             try:
+                # Get business_id from first order in group
+                if not order_group:
+                    continue
+                business_id = order_group[0].business_id
+                order_service = OrderService(db, business_id=business_id)
+                
                 # Check if all products have activation templates
                 all_have_templates, missing_templates = order_service._check_all_products_have_templates(yandex_order_id)
                 
@@ -556,12 +805,20 @@ def _auto_send_activations_for_existing_orders(db):
         traceback.print_exc()
 
 
-def _sync_orders_sync():
-    """Synchronous order sync function - pulls orders from Yandex Market"""
+def _sync_orders_sync(business_id: int = None):
+    """Synchronous order sync function - pulls orders from Yandex Market
+    
+    Args:
+        business_id: Business ID to sync orders for (required)
+    """
+    if not business_id:
+        print("⚠️  Cannot sync orders: business_id is required")
+        return
+    
     try:
         db = SessionLocal()
         try:
-            yandex_api = YandexMarketAPI()
+            yandex_api = YandexMarketAPI(business_id=business_id, db=db)
             yandex_orders = yandex_api.get_orders()
             
             orders_created = 0
@@ -572,9 +829,17 @@ def _sync_orders_sync():
                     yandex_order_id = str(yandex_order.get("id"))
                     
                     # Check if order already exists
-                    existing_order = db.query(models.Order).filter(
-                        models.Order.yandex_order_id == yandex_order_id
-                    ).first()
+                    # Use a new session for each order to avoid transaction issues
+                    try:
+                        existing_order = db.query(models.Order).filter(
+                            models.Order.yandex_order_id == yandex_order_id
+                        ).first()
+                    except Exception as query_error:
+                        # If query fails (e.g., column doesn't exist), rollback and skip
+                        db.rollback()
+                        print(f"  ⚠️  Error querying order {yandex_order_id}: {str(query_error)}")
+                        print(f"      This may be due to missing database columns. Please run migrations.")
+                        continue
                     
                     if existing_order:
                         # Update ALL order records with the same yandex_order_id (one record per item)
@@ -587,6 +852,10 @@ def _sync_orders_sync():
                         
                         new_yandex_status = yandex_order.get("status", "")
                         if new_yandex_status:
+                            # Extract buyer_id from Yandex order
+                            buyer = yandex_order.get("buyer", {})
+                            buyer_id = buyer.get("id") if isinstance(buyer, dict) else None
+                            
                             # Map status
                             status_mapping = {
                                 "PROCESSING": models.OrderStatus.PROCESSING,
@@ -605,6 +874,10 @@ def _sync_orders_sync():
                             for order_record in all_orders:
                                 # Always update yandex_order_data to ensure it has latest items
                                 order_record.yandex_order_data = yandex_order
+                                
+                                # Update buyer_id if available
+                                if buyer_id:
+                                    order_record.buyer_id = buyer_id
                                 
                                 if order_record.yandex_status != new_yandex_status:
                                     order_record.yandex_status = new_yandex_status
@@ -678,6 +951,22 @@ def _sync_orders_sync():
                             # Ensure digital products with COMPLETED or FINISHED status show as sent
                             _ensure_digital_products_marked_as_sent(all_orders, db)
                             
+                            # Handle cancelled orders - remove products from clients
+                            # Only process if status actually changed to CANCELLED
+                            if mapped_status == models.OrderStatus.CANCELLED:
+                                # Check if any order record was previously not cancelled
+                                was_cancelled_before = all(o.status == models.OrderStatus.CANCELLED for o in all_orders)
+                                if not was_cancelled_before:
+                                    _handle_cancelled_order_products(yandex_order_id, db)
+                            
+                            # Auto-append client from order if enabled and order is FINISHED
+                            # Only process if status actually changed to FINISHED
+                            if mapped_status == models.OrderStatus.FINISHED:
+                                # Check if any order record was previously not finished
+                                was_finished_before = all(o.status == models.OrderStatus.FINISHED for o in all_orders)
+                                if not was_finished_before:
+                                    _auto_append_client_from_order(yandex_order_id, db)
+                            
                             # Check for new items in Yandex order that don't have order records yet
                             items = yandex_order.get("items", [])
                             for item in items:
@@ -698,7 +987,9 @@ def _sync_orders_sync():
                                     # Extract buyer info
                                     buyer = yandex_order.get("buyer", {})
                                     buyer_name = None
+                                    buyer_id = None
                                     if isinstance(buyer, dict):
+                                        buyer_id = buyer.get("id")  # Extract buyer ID for client tracking
                                         first_name = buyer.get("firstName", "")
                                         last_name = buyer.get("lastName", "")
                                         buyer_name = f"{first_name} {last_name}".strip() or None
@@ -707,17 +998,31 @@ def _sync_orders_sync():
                                     item_count = item.get("count", 1)
                                     item_total = float(item_price) * item_count
                                     
+                                    # Parse creationDate from Yandex order
+                                    order_created_at = None
+                                    creation_date_str = yandex_order.get("creationDate")
+                                    if creation_date_str:
+                                        try:
+                                            # Use the global datetime import
+                                            order_created_at = datetime.strptime(creation_date_str, "%d-%m-%Y %H:%M:%S")
+                                        except Exception as e:
+                                            print(f"  ⚠️  Could not parse creationDate '{creation_date_str}': {str(e)}")
+                                            order_created_at = None
+                                    
                                     new_order = models.Order(
                                         yandex_order_id=yandex_order_id,
                                         product_id=product.id,
+                                        business_id=product.business_id,  # Use product's business_id
                                         customer_name=buyer_name,
                                         customer_email=None,
                                         customer_phone=None,
+                                        buyer_id=buyer_id,  # Yandex buyer ID for tracking same client
                                         quantity=item_count,
                                         total_amount=item_total,
                                         status=mapped_status,
                                         yandex_status=new_yandex_status,
                                         yandex_order_data=yandex_order,
+                                        order_created_at=order_created_at,  # Actual order creation date from Yandex
                                     )
                                     db.add(new_order)
                                     db.flush()
@@ -736,7 +1041,8 @@ def _sync_orders_sync():
                     else:
                         # Parse and create new orders from items - Yandex API is source of truth
                         # Create ONE Order record per item in the Yandex order
-                        parsed_orders = _parse_yandex_order(yandex_order, db)
+                        # Note: _sync_orders_sync should pass business_id, but for backward compatibility, we allow None
+                        parsed_orders = _parse_yandex_order(yandex_order, db, business_id=business_id)
                         
                         if not parsed_orders:
                             items = yandex_order.get("items", [])
@@ -745,10 +1051,17 @@ def _sync_orders_sync():
                         
                         for new_order, product in parsed_orders:
                             # Check if this order record already exists (composite unique: yandex_order_id + product_id)
-                            existing = db.query(models.Order).filter(
-                                models.Order.yandex_order_id == new_order.yandex_order_id,
-                                models.Order.product_id == new_order.product_id
-                            ).first()
+                            try:
+                                existing = db.query(models.Order).filter(
+                                    models.Order.yandex_order_id == new_order.yandex_order_id,
+                                    models.Order.product_id == new_order.product_id
+                                ).first()
+                            except Exception as query_error:
+                                # If query fails (e.g., column doesn't exist), rollback and skip
+                                db.rollback()
+                                print(f"  ⚠️  Error querying order {new_order.yandex_order_id}: {str(query_error)}")
+                                print(f"      This may be due to missing database columns. Please run migrations.")
+                                continue
                             
                             if existing:
                                 # Update existing order record
@@ -776,6 +1089,8 @@ def _sync_orders_sync():
                                 orders_created += 1
                                 print(f"  ✅ Created order record for product {product.id} ({product.name}) in order {yandex_order_id}")
                 except Exception as e:
+                    # Rollback the transaction to clear the failed state
+                    db.rollback()
                     print(f"  ⚠️  Error processing order: {str(e)}")
                     import traceback
                     traceback.print_exc()
@@ -864,6 +1179,75 @@ async def lifespan(app: FastAPI):
             ADD COLUMN IF NOT EXISTS auto_activation_enabled BOOLEAN DEFAULT FALSE
         """))
         
+        # Add auto_append_clients column to app_settings table
+        db.execute(text("""
+            ALTER TABLE app_settings 
+            ADD COLUMN IF NOT EXISTS auto_append_clients BOOLEAN DEFAULT FALSE
+        """))
+        
+        # Add smtp_user column to app_settings table
+        db.execute(text("""
+            ALTER TABLE app_settings 
+            ADD COLUMN IF NOT EXISTS smtp_user VARCHAR
+        """))
+        
+        # Add yandex_purchase_link and usage_period columns to products table
+        db.execute(text("""
+            ALTER TABLE products 
+            ADD COLUMN IF NOT EXISTS yandex_purchase_link VARCHAR
+        """))
+        db.execute(text("""
+            ALTER TABLE products 
+            ADD COLUMN IF NOT EXISTS usage_period INTEGER
+        """))
+        
+        # Add order_created_at column to orders table (actual order creation date from Yandex)
+        db.execute(text("""
+            ALTER TABLE orders 
+            ADD COLUMN IF NOT EXISTS order_created_at TIMESTAMP WITH TIME ZONE
+        """))
+        
+        # Add order_ids column to clients table
+        db.execute(text("""
+            ALTER TABLE clients 
+            ADD COLUMN IF NOT EXISTS order_ids JSONB DEFAULT '[]'::jsonb
+        """))
+        
+        # Add purchase_dates_history column to client_products table
+        db.execute(text("""
+            ALTER TABLE client_products 
+            ADD COLUMN IF NOT EXISTS purchase_dates_history JSONB DEFAULT '[]'::jsonb
+        """))
+        
+        # Add frequency_days, auto_broadcast_enabled, and is_default columns to marketing_email_templates table
+        db.execute(text("""
+            ALTER TABLE marketing_email_templates 
+            ADD COLUMN IF NOT EXISTS frequency_days INTEGER
+        """))
+        db.execute(text("""
+            ALTER TABLE marketing_email_templates 
+            ADD COLUMN IF NOT EXISTS auto_broadcast_enabled BOOLEAN DEFAULT FALSE
+        """))
+        db.execute(text("""
+            ALTER TABLE marketing_email_templates 
+            ADD COLUMN IF NOT EXISTS is_default BOOLEAN DEFAULT FALSE
+        """))
+        
+        # Create chat_read_status table if it doesn't exist
+        db.execute(text("""
+            CREATE TABLE IF NOT EXISTS chat_read_status (
+                id SERIAL PRIMARY KEY,
+                order_id VARCHAR NOT NULL UNIQUE,
+                last_viewed_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+                last_message_id VARCHAR,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+                updated_at TIMESTAMP WITH TIME ZONE
+            )
+        """))
+        db.execute(text("""
+            CREATE INDEX IF NOT EXISTS idx_chat_read_status_order_id ON chat_read_status(order_id)
+        """))
+        
         # Migration: Remove Telegram columns from app_settings
         try:
             db.execute(text("""
@@ -915,6 +1299,122 @@ async def lifespan(app: FastAPI):
             print("✅ Removed media columns from products")
         except Exception as e:
             print(f"⚠️  Warning: Could not remove media columns: {str(e)}")
+        
+        # Migration: Fix unique constraints on products for multi-tenancy
+        # Change from global unique to per-business unique
+        try:
+            # First, update existing products without business_id to have business_id = 1 (first admin)
+            # This must happen BEFORE dropping constraints to avoid conflicts
+            # Get the first admin user's ID
+            first_admin = db.execute(text("""
+                SELECT id FROM users WHERE is_admin = true ORDER BY id LIMIT 1
+            """)).first()
+            
+            if first_admin:
+                admin_id = first_admin[0]
+                db.execute(text(f"""
+                    UPDATE products 
+                    SET business_id = {admin_id}
+                    WHERE business_id IS NULL
+                """))
+                db.commit()
+                print(f"✅ Updated existing products to have business_id = {admin_id}")
+            else:
+                print("⚠️  No admin user found - cannot update products without business_id")
+            
+            # Drop old unique constraints/indexes if they exist
+            db.execute(text("""
+                DROP INDEX IF EXISTS ix_products_yandex_market_id
+            """))
+            db.execute(text("""
+                DROP INDEX IF EXISTS ix_products_yandex_market_sku
+            """))
+            # Drop unique constraints if they exist
+            db.execute(text("""
+                ALTER TABLE products 
+                DROP CONSTRAINT IF EXISTS products_yandex_market_id_key
+            """))
+            db.execute(text("""
+                ALTER TABLE products 
+                DROP CONSTRAINT IF EXISTS products_yandex_market_sku_key
+            """))
+            
+            # Recreate indexes (non-unique, for performance)
+            db.execute(text("""
+                CREATE INDEX IF NOT EXISTS ix_products_yandex_market_id ON products(yandex_market_id)
+            """))
+            db.execute(text("""
+                CREATE INDEX IF NOT EXISTS ix_products_yandex_market_sku ON products(yandex_market_sku)
+            """))
+            
+            # Drop existing composite constraints if they exist (in case migration was partially run)
+            db.execute(text("""
+                ALTER TABLE products 
+                DROP CONSTRAINT IF EXISTS uq_product_business_yandex_id
+            """))
+            db.execute(text("""
+                ALTER TABLE products 
+                DROP CONSTRAINT IF EXISTS uq_product_business_yandex_sku
+            """))
+            
+            # Add composite unique constraints (unique per business)
+            # Only add if there are no duplicate (business_id, yandex_market_sku) pairs
+            db.execute(text("""
+                ALTER TABLE products 
+                ADD CONSTRAINT uq_product_business_yandex_id 
+                UNIQUE (business_id, yandex_market_id)
+            """))
+            db.execute(text("""
+                ALTER TABLE products 
+                ADD CONSTRAINT uq_product_business_yandex_sku 
+                UNIQUE (business_id, yandex_market_sku)
+            """))
+            
+            db.commit()
+            print("✅ Fixed product unique constraints for multi-tenancy")
+        except Exception as e:
+            db.rollback()
+            print(f"⚠️  Warning: Could not fix product unique constraints: {str(e)}")
+            import traceback
+            traceback.print_exc()
+        
+        # Migration: Update existing orders to have business_id from their products
+        try:
+            # Get the first admin user's ID
+            first_admin = db.execute(text("""
+                SELECT id FROM users WHERE is_admin = true ORDER BY id LIMIT 1
+            """)).first()
+            
+            if first_admin:
+                admin_id = first_admin[0]
+                # Update orders that don't have business_id by getting it from their product
+                db.execute(text(f"""
+                    UPDATE orders 
+                    SET business_id = (
+                        SELECT business_id 
+                        FROM products 
+                        WHERE products.id = orders.product_id
+                    )
+                    WHERE orders.business_id IS NULL
+                """))
+                
+                # For orders where product doesn't exist or product doesn't have business_id,
+                # set to first admin's ID as fallback
+                db.execute(text(f"""
+                    UPDATE orders 
+                    SET business_id = {admin_id}
+                    WHERE orders.business_id IS NULL
+                """))
+                
+                db.commit()
+                print(f"✅ Updated existing orders to have business_id")
+            else:
+                print("⚠️  No admin user found - cannot update orders without business_id")
+        except Exception as e:
+            db.rollback()
+            print(f"⚠️  Warning: Could not update orders business_id: {str(e)}")
+            import traceback
+            traceback.print_exc()
         
         # Migration: Update orders table to support multiple Order records per Yandex order
         # Remove unique constraint/index on yandex_order_id and add composite unique constraint
@@ -1026,41 +1526,45 @@ async def lifespan(app: FastAPI):
     except Exception:
         pass
     try:
-        from app.initial_data import create_default_settings
+        from app.initial_data import create_default_settings, create_default_marketing_email_template
         create_default_settings()
+        create_default_marketing_email_template()
     except Exception:
         pass
     
-    # Initial sync on startup - Products first, then orders (orders depend on products)
-    print("[Startup] Performing initial sync from Yandex Market...")
-    print("[Startup] Step 1: Syncing products...")
-    await auto_sync_products()
-    await asyncio.sleep(2)  # Small delay to ensure products are committed to database
-    print("[Startup] Step 2: Syncing orders...")
-    await auto_sync_orders()
+    # Initial sync on startup - DISABLED
+    # Each business must configure their own Yandex API settings in the Settings page
+    # Sync will only work when triggered manually by an admin who has configured their settings
+    print("[Startup] Skipping automatic sync - each business must configure their own Yandex API settings")
+    print("[Startup] Admins can trigger sync manually from the Sync page after configuring settings")
     
-    # Start periodic sync task
-    sync_task = asyncio.create_task(periodic_sync())
+    # Periodic sync is also disabled - requires business_id
+    # sync_task = asyncio.create_task(periodic_sync())
+    sync_task = None
     
-    # Start review checker task
-    review_checker_task = asyncio.create_task(review_checker.start_periodic_check(interval_minutes=15))
+    # Review checker is disabled - requires business_id
+    # Each business can check reviews manually or we can implement per-business review checking later
+    # review_checker_task = asyncio.create_task(review_checker.start_periodic_check(interval_minutes=15, business_id=None))
+    review_checker_task = None
     
     # Business summary task removed
     
     yield
     
     # Shutdown
-    sync_task.cancel()
-    review_checker_task.cancel()
+    if sync_task:
+        sync_task.cancel()
+        try:
+            await sync_task
+        except asyncio.CancelledError:
+            pass
+    if review_checker_task:
+        review_checker_task.cancel()
+        try:
+            await review_checker_task
+        except asyncio.CancelledError:
+            pass
     # Business summary task removed
-    try:
-        await sync_task
-    except asyncio.CancelledError:
-        pass
-    try:
-        await review_checker_task
-    except asyncio.CancelledError:
-        pass
     # Business summary task removed
 
 app = FastAPI(
@@ -1102,6 +1606,8 @@ app.include_router(settings_router.router, prefix="/api/settings", tags=["settin
 app.include_router(clients.router, prefix="/api/clients", tags=["clients"])
 app.include_router(marketing_emails.router, prefix="/api/marketing-emails", tags=["marketing-emails"])
 app.include_router(documentations.router, prefix="/api/documentations", tags=["documentations"])
+app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
+app.include_router(staff.router, prefix="/api/staff", tags=["staff"])
 
 
 @app.get("/")

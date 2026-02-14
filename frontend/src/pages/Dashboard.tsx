@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { dashboardApi, DateRange } from '../api/dashboard'
+import { useAuth } from '../contexts/AuthContext'
+import { settingsApi } from '../api/settings'
+import { syncApi } from '../api/sync'
 import { 
   Package, 
   ShoppingCart, 
@@ -15,12 +18,15 @@ import { format } from 'date-fns'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 
 export default function Dashboard() {
+  const { user } = useAuth()
+  const hasDashboardRight = user?.is_admin || user?.permissions.dashboard_right
   const [period, setPeriod] = useState<string>('all')
   const [dateRange, setDateRange] = useState<DateRange>({})
   const [tempDateRange, setTempDateRange] = useState<DateRange>({})
   const [showDatePicker, setShowDatePicker] = useState(false)
   const datePickerRef = useRef<HTMLDivElement>(null)
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set())
+  const hasCheckedSyncRef = useRef(false)
   
   const toggleOrderExpansion = (yandexOrderId: string) => {
     setExpandedOrders(prev => {
@@ -38,6 +44,36 @@ export default function Dashboard() {
     queryKey: ['dashboard', period, dateRange],
     queryFn: () => dashboardApi.getData(period, dateRange),
   })
+
+  // Check settings on mount and trigger sync if Yandex API is configured
+  useEffect(() => {
+    if (!user || !user.is_admin || hasCheckedSyncRef.current) return
+    
+    const checkAndSync = async () => {
+      hasCheckedSyncRef.current = true
+      
+      try {
+        const settings = await settingsApi.get()
+        const hasYandexConfig = settings.yandex_api_token && 
+          (settings.yandex_business_id || settings.yandex_campaign_id)
+        
+        if (hasYandexConfig) {
+          // Trigger sync in background (don't wait for it)
+          syncApi.syncAll(false).catch((error) => {
+            // Silently fail - sync will happen when user manually triggers it
+            console.log('Auto-sync on login:', error?.response?.data?.detail || error.message)
+          })
+        }
+      } catch (error) {
+        // Silently fail - settings might not be loaded yet
+        console.log('Could not check settings for auto-sync on login')
+      }
+    }
+    
+    // Small delay to ensure user is fully loaded
+    const timeoutId = setTimeout(checkAndSync, 1000)
+    return () => clearTimeout(timeoutId)
+  }, [user])
   
   // Close date picker when clicking outside
   useEffect(() => {
@@ -101,7 +137,16 @@ export default function Dashboard() {
   }
 
   if (error) {
-    return <div className="text-center py-12 text-red-600">Error loading dashboard</div>
+    const errorMessage = (error as any)?.response?.data?.detail?.message || 
+                         (error as any)?.response?.data?.detail || 
+                         (error as any)?.message || 
+                         'Error loading dashboard. Please try again or contact your administrator.'
+    return (
+      <div className="text-center py-12">
+        <div className="text-red-600 font-medium mb-2">Error loading dashboard</div>
+        <div className="text-gray-600 text-sm">{errorMessage}</div>
+      </div>
+    )
   }
 
   if (!data) return null
@@ -274,68 +319,74 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <DollarSign className="h-6 w-6 text-gray-400" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Revenue</dt>
-                  <dd className="text-lg font-medium text-gray-900">
-                    ₽{stats.total_revenue.toLocaleString('ru-RU', { minimumFractionDigits: 2 })}
-                  </dd>
-                  <dd className="text-sm text-gray-500">
-                    ₽{stats.total_profit.toLocaleString('ru-RU', { minimumFractionDigits: 2 })} profit
-                  </dd>
-                </dl>
+        {hasDashboardRight && (
+          <>
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <DollarSign className="h-6 w-6 text-gray-400" />
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">Total Revenue</dt>
+                      <dd className="text-lg font-medium text-gray-900">
+                        ₽{stats.total_revenue.toLocaleString('ru-RU', { minimumFractionDigits: 2 })}
+                      </dd>
+                      <dd className="text-sm text-gray-500">
+                        ₽{stats.total_profit.toLocaleString('ru-RU', { minimumFractionDigits: 2 })} profit
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="bg-white overflow-hidden shadow rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <TrendingUp className="h-6 w-6 text-gray-400" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Profit Margin</dt>
-                  <dd className="text-lg font-medium text-gray-900">
-                    {stats.profit_margin.toFixed(2)}%
-                  </dd>
-                  <dd className="text-sm text-gray-500">
-                    {stats.successful_orders} successful
-                  </dd>
-                </dl>
+            <div className="bg-white overflow-hidden shadow rounded-lg">
+              <div className="p-5">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <TrendingUp className="h-6 w-6 text-gray-400" />
+                  </div>
+                  <div className="ml-5 w-0 flex-1">
+                    <dl>
+                      <dt className="text-sm font-medium text-gray-500 truncate">Profit Margin</dt>
+                      <dd className="text-lg font-medium text-gray-900">
+                        {stats.profit_margin.toFixed(2)}%
+                      </dd>
+                      <dd className="text-sm text-gray-500">
+                        {stats.successful_orders} successful
+                      </dd>
+                    </dl>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Top Products Chart */}
-        <div className="bg-white shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Top Products (Revenue & Profit Chart)</h2>
-          {chartData.length > 0 ? (
-            <ResponsiveContainer width="100%" height={300}>
-              <BarChart data={chartData}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
-                <YAxis />
-                <Tooltip />
-                <Bar dataKey="revenue" fill="#3b82f6" name="Revenue" />
-                <Bar dataKey="profit" fill="#10b981" name="Profit" />
-              </BarChart>
-            </ResponsiveContainer>
-          ) : (
-            <p className="text-gray-500 text-center py-8">No sales data yet</p>
-          )}
-        </div>
+        {hasDashboardRight && (
+          <div className="bg-white shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium text-gray-900 mb-4">Top Products (Revenue & Profit Chart)</h2>
+            {chartData.length > 0 ? (
+              <ResponsiveContainer width="100%" height={300}>
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="revenue" fill="#3b82f6" name="Revenue" />
+                  <Bar dataKey="profit" fill="#10b981" name="Profit" />
+                </BarChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-gray-500 text-center py-8">No sales data yet</p>
+            )}
+          </div>
+        )}
 
         {/* Top Products List */}
         <div className="bg-white shadow rounded-lg p-6">
@@ -348,14 +399,16 @@ export default function Dashboard() {
                     <p className="text-sm font-medium text-gray-900">{product.product_name}</p>
                     <p className="text-sm text-gray-500">{product.total_sales} sales</p>
                   </div>
-                  <div className="text-right">
-                    <p className="text-sm font-medium text-gray-900">
-                      ₽{product.total_revenue.toLocaleString('ru-RU')}
-                    </p>
-                    <p className="text-sm text-green-600">
-                      ₽{product.total_profit.toLocaleString('ru-RU')} profit
-                    </p>
-                  </div>
+                  {hasDashboardRight && (
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-gray-900">
+                        ₽{product.total_revenue.toLocaleString('ru-RU')}
+                      </p>
+                      <p className="text-sm text-green-600">
+                        ₽{product.total_profit.toLocaleString('ru-RU')} profit
+                      </p>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

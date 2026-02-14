@@ -11,12 +11,38 @@ from app.config import settings
 class EmailService:
     """Service for sending emails"""
     
-    def __init__(self):
-        self.smtp_host = settings.SMTP_HOST
-        self.smtp_port = settings.SMTP_PORT
-        self.smtp_user = settings.SMTP_USER
-        self.smtp_password = settings.SMTP_PASSWORD
-        self.from_email = settings.FROM_EMAIL
+    def __init__(self, business_id: int, db=None):
+        """Initialize EmailService with SMTP settings from database
+        
+        Args:
+            business_id: The business ID to get settings for (required)
+            db: Optional database session (will create one if not provided)
+        """
+        if not business_id:
+            raise ValueError("business_id is required. Each business must configure their own SMTP settings.")
+        
+        # Get settings from database for this business
+        if db is None:
+            from app.database import SessionLocal
+            db = SessionLocal()
+            close_db = True
+        else:
+            close_db = False
+        
+        try:
+            from app.services.config_validator import validate_smtp_config
+            app_settings = validate_smtp_config(business_id, db)
+            
+            # Use database settings only
+            self.smtp_host = app_settings.smtp_host.strip() if app_settings.smtp_host else None
+            self.smtp_port = app_settings.smtp_port if app_settings.smtp_port else 587
+            # Use smtp_user if set, otherwise fall back to from_email (they're usually the same)
+            self.smtp_user = (app_settings.smtp_user.strip() if app_settings.smtp_user else None) or (app_settings.from_email.strip() if app_settings.from_email else None)
+            self.smtp_password = app_settings.smtp_password.strip() if app_settings.smtp_password else None
+            self.from_email = app_settings.from_email.strip() if app_settings.from_email else None
+        finally:
+            if close_db:
+                db.close()
     
     def _get_email_template(self, order: models.Order, db) -> str:
         """Get email template for order"""
@@ -156,4 +182,138 @@ class EmailService:
             
             return {"success": True, "message": "Activation email sent successfully"}
         except Exception as e:
+            return {"success": False, "message": f"Failed to send email: {str(e)}"}
+    
+    def send_email(
+        self,
+        to_email: str,
+        subject: str,
+        body: str,
+        is_html: bool = True
+    ) -> dict:
+        """Send a simple email
+        
+        Args:
+            to_email: Recipient email address
+            subject: Email subject
+            body: Email body (HTML or plain text)
+            is_html: Whether body is HTML (default: True)
+        
+        Returns:
+            dict with 'success' and 'message' keys
+        """
+        try:
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = subject
+            msg["From"] = self.from_email
+            msg["To"] = to_email
+            
+            if is_html:
+                msg.attach(MIMEText(body, "html"))
+            else:
+                msg.attach(MIMEText(body, "plain"))
+            
+            if not self.smtp_host or not self.smtp_user:
+                # In development, just log the email
+                print(f"📧 Email would be sent to {to_email}")
+                print(f"   Subject: {subject}")
+                print(f"   Body: {body}")
+                return {
+                    "success": True,
+                    "message": "Email logged (SMTP not configured)"
+                }
+            
+            with smtplib.SMTP(self.smtp_host, self.smtp_port) as server:
+                server.starttls()
+                server.login(self.smtp_user, self.smtp_password)
+                server.send_message(msg)
+            
+            return {"success": True, "message": "Email sent successfully"}
+        except Exception as e:
+            import traceback
+            print(f"⚠️  Error sending email to {to_email}: {str(e)}")
+            print(traceback.format_exc())
+            return {"success": False, "message": f"Failed to send email: {str(e)}"}
+    
+    def send_marketing_email(
+        self, 
+        to_email: str, 
+        subject: str, 
+        body: str, 
+        attachments: Optional[list] = None
+    ) -> dict:
+        """Send a marketing email to a client
+        
+        Args:
+            to_email: Recipient email address
+            subject: Email subject
+            body: Email body (HTML)
+            attachments: Optional list of attachment dicts with 'url', 'type', 'name'
+        
+        Returns:
+            dict with 'success' and 'message' keys
+        """
+        try:
+            msg = MIMEMultipart("alternative")
+            msg["Subject"] = subject
+            msg["From"] = self.from_email
+            msg["To"] = to_email
+            
+            msg.attach(MIMEText(body, "html"))
+            
+            # Handle attachments if provided
+            if attachments:
+                from email.mime.base import MIMEBase
+                from email import encoders
+                import requests
+                import os
+                from pathlib import Path
+                
+                for attachment in attachments:
+                    try:
+                        # Download attachment if it's a URL
+                        if attachment.get("url"):
+                            url = attachment["url"]
+                            # If it's a relative URL, make it absolute
+                            if url.startswith("/"):
+                                # Assume it's a media file from our server
+                                from app.config import settings
+                                url = f"{settings.PUBLIC_URL}{url}"
+                            
+                            response = requests.get(url, timeout=10)
+                            if response.status_code == 200:
+                                attachment_part = MIMEBase('application', 'octet-stream')
+                                attachment_part.set_payload(response.content)
+                                encoders.encode_base64(attachment_part)
+                                attachment_part.add_header(
+                                    'Content-Disposition',
+                                    f'attachment; filename= {attachment.get("name", "attachment")}'
+                                )
+                                msg.attach(attachment_part)
+                    except Exception as e:
+                        print(f"⚠️  Warning: Could not attach {attachment.get('name', 'file')}: {str(e)}")
+                        continue
+            
+            if not self.smtp_host or not self.smtp_user:
+                # In development, just log the email
+                print(f"📧 Email would be sent to {to_email}")
+                print(f"   Subject: {subject}")
+                print(f"   Body length: {len(body)} characters")
+                if attachments:
+                    print(f"   Attachments: {len(attachments)} file(s)")
+                return {
+                    "success": True, 
+                    "message": "Email logged (SMTP not configured). Configure SMTP_HOST, SMTP_USER, and SMTP_PASSWORD in .env to send actual emails."
+                }
+            
+            with smtplib.SMTP(self.smtp_host, self.smtp_port) as server:
+                server.starttls()
+                server.login(self.smtp_user, self.smtp_password)
+                server.send_message(msg)
+            
+            return {"success": True, "message": "Marketing email sent successfully"}
+        except Exception as e:
+            import traceback
+            print(f"⚠️  Error sending marketing email to {to_email}: {str(e)}")
+            print(traceback.format_exc())
             return {"success": False, "message": f"Failed to send email: {str(e)}"}

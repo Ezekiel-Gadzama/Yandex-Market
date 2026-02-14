@@ -209,8 +209,8 @@ export default function Reviews() {
         {isLoading ? (
           <div className="p-6 text-gray-600">Loading reviews…</div>
         ) : error ? (
-          <div className="p-6 text-red-600">
-            Failed to load reviews. {String((error as any)?.message ?? error)}
+          <div className="p-6 text-gray-500 text-center">
+            Reviews are not available at this time.
           </div>
         ) : reviews.length === 0 ? (
           <div className="p-6 text-gray-600">No reviews found.</div>

@@ -28,15 +28,8 @@ services:
       - ./media:/app/media
     environment:
       - DATABASE_URL=postgresql://${POSTGRES_USER:-yandex_user}:${POSTGRES_PASSWORD:-yandex_password}@postgres:5432/${POSTGRES_DB:-yandex_market}
-      - YANDEX_MARKET_API_TOKEN=${YANDEX_MARKET_API_TOKEN:-}
-      - YANDEX_BUSINESS_ID=${YANDEX_BUSINESS_ID:-}
-      - YANDEX_MARKET_CAMPAIGN_ID=${YANDEX_MARKET_CAMPAIGN_ID:-}
-      - YANDEX_MARKET_API_URL=${YANDEX_MARKET_API_URL:-https://api.partner.market.yandex.ru}
-      - SMTP_HOST=${SMTP_HOST:-}
-      - SMTP_PORT=${SMTP_PORT:-587}
-      - SMTP_USER=${SMTP_USER:-}
-      - SMTP_PASSWORD=${SMTP_PASSWORD:-}
-      - FROM_EMAIL=${FROM_EMAIL:-noreply@market.yandex.ru}
+      # Note: Yandex API and SMTP settings are now configured per business in the Settings page
+      # Each business must configure their own credentials
       - SECRET_KEY=${SECRET_KEY:-change-this-in-production}
       - FRONTEND_URL=http://localhost:3000
       - PUBLIC_URL=${PUBLIC_URL:-http://localhost:8000}

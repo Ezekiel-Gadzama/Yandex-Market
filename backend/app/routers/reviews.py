@@ -3,7 +3,10 @@ from sqlalchemy.orm import Session
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel
 from app.database import get_db
+from app import models
+from app.auth import get_current_active_user, get_business_id
 from app.services.yandex_api import YandexMarketAPI
+from app.services.config_validator import ConfigurationError, format_config_error_response
 
 router = APIRouter()
 
@@ -16,11 +19,13 @@ class ReplyRequest(BaseModel):
 def get_product_reviews(
     product_id: Optional[str] = None,
     limit: int = 50,
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """Get product reviews from Yandex Market with ratings"""
     try:
-        yandex_api = YandexMarketAPI()
+        business_id = get_business_id(current_user)
+        yandex_api = YandexMarketAPI(business_id=business_id, db=db)
         reviews = yandex_api.get_product_reviews(product_id=product_id, limit=limit)
         
         # Calculate average rating if reviews exist
@@ -34,6 +39,11 @@ def get_product_reviews(
                 "rating_breakdown": _calculate_rating_breakdown(reviews)
             }
         return {"reviews": [], "average_rating": 0, "total_reviews": 0, "rating_breakdown": {}}
+    except ConfigurationError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=format_config_error_response(e)
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get product reviews: {str(e)}")
 
@@ -51,11 +61,13 @@ def _calculate_rating_breakdown(reviews: List[Dict]) -> Dict:
 @router.get("/products/{product_id}/rating", response_model=Dict)
 def get_product_rating(
     product_id: str,
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """Get product rating summary"""
     try:
-        yandex_api = YandexMarketAPI()
+        business_id = get_business_id(current_user)
+        yandex_api = YandexMarketAPI(business_id=business_id, db=db)
         reviews = yandex_api.get_product_reviews(product_id=product_id, limit=100)
         
         if not reviews:
@@ -73,6 +85,11 @@ def get_product_rating(
             "total_reviews": len(reviews),
             "rating_breakdown": _calculate_rating_breakdown(reviews)
         }
+    except ConfigurationError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=format_config_error_response(e)
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get product rating: {str(e)}")
 
@@ -81,11 +98,13 @@ def get_product_rating(
 def reply_to_product_review(
     review_id: str,
     reply: ReplyRequest,
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """Reply to a product review"""
     try:
-        yandex_api = YandexMarketAPI()
+        business_id = get_business_id(current_user)
+        yandex_api = YandexMarketAPI(business_id=business_id, db=db)
         
         # Get review details before replying
         reviews = yandex_api.get_product_reviews(limit=100)
@@ -95,6 +114,11 @@ def reply_to_product_review(
         result = yandex_api.reply_to_review(review_id, reply.text)
         
         return result
+    except ConfigurationError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=format_config_error_response(e)
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to reply to review: {str(e)}")
 
@@ -102,11 +126,13 @@ def reply_to_product_review(
 @router.get("/shop", response_model=Dict)
 def get_shop_reviews(
     limit: int = 50,
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """Get shop reviews from Yandex Market with ratings"""
     try:
-        yandex_api = YandexMarketAPI()
+        business_id = get_business_id(current_user)
+        yandex_api = YandexMarketAPI(business_id=business_id, db=db)
         reviews = yandex_api.get_shop_reviews(limit=limit)
         
         # Calculate average rating
@@ -120,15 +146,24 @@ def get_shop_reviews(
                 "rating_breakdown": _calculate_rating_breakdown(reviews)
             }
         return {"reviews": [], "average_rating": 0, "total_reviews": 0, "rating_breakdown": {}}
+    except ConfigurationError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=format_config_error_response(e)
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get shop reviews: {str(e)}")
 
 
 @router.get("/shop/rating", response_model=Dict)
-def get_shop_rating(db: Session = Depends(get_db)):
+def get_shop_rating(
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Get shop rating summary"""
     try:
-        yandex_api = YandexMarketAPI()
+        business_id = get_business_id(current_user)
+        yandex_api = YandexMarketAPI(business_id=business_id, db=db)
         reviews = yandex_api.get_shop_reviews(limit=100)
         
         if not reviews:
@@ -146,6 +181,11 @@ def get_shop_rating(db: Session = Depends(get_db)):
             "total_reviews": len(reviews),
             "rating_breakdown": _calculate_rating_breakdown(reviews)
         }
+    except ConfigurationError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=format_config_error_response(e)
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to get shop rating: {str(e)}")
 
@@ -154,11 +194,13 @@ def get_shop_rating(db: Session = Depends(get_db)):
 def reply_to_shop_review(
     review_id: str,
     reply: ReplyRequest,
+    current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
     """Reply to a shop review"""
     try:
-        yandex_api = YandexMarketAPI()
+        business_id = get_business_id(current_user)
+        yandex_api = YandexMarketAPI(business_id=business_id, db=db)
         
         # Get review details before replying
         reviews = yandex_api.get_shop_reviews(limit=100)
@@ -168,5 +210,10 @@ def reply_to_shop_review(
         result = yandex_api.reply_to_shop_review(review_id, reply.text)
         
         return result
+    except ConfigurationError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=format_config_error_response(e)
+        )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to reply to shop review: {str(e)}")
