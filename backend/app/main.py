@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from contextlib import asynccontextmanager
@@ -1613,6 +1613,22 @@ app.include_router(staff.router, prefix="/api/staff", tags=["staff"])
 @app.get("/")
 async def root():
     return {"message": "Yandex Market Digital Products Manager API"}
+
+
+@app.post("/webhook")
+async def webhook(request: Request):
+    """
+    Generic webhook endpoint for external services (e.g. Pilot notifications).
+    Accepts POST with optional JSON body and always returns 200 so the URL is not blacklisted.
+    Logs the payload for debugging (check app logs or ngrok at http://127.0.0.1:4040).
+    """
+    body = {}
+    try:
+        body = await request.json()
+    except Exception:
+        pass
+    print(f"[Webhook] POST /webhook received: {body}")
+    return {"ok": True, "received": True}
 
 
 @app.get("/api/health")
