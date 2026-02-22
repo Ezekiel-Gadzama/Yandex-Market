@@ -86,4 +86,33 @@ export const marketingEmailsApi = {
     const response = await apiClient.post(`marketing-emails/${id}/broadcast`, filters)
     return response.data
   },
+
+  /** Export template as TXT or PDF; triggers browser download */
+  export: async (id: number, format: 'txt' | 'pdf'): Promise<void> => {
+    const response = await apiClient.get(`marketing-emails/${id}/export`, {
+      params: { format },
+      responseType: 'blob',
+    })
+    const disposition = response.headers['content-disposition']
+    const match = disposition && disposition.match(/filename="?([^";]+)"?/)
+    const filename = match ? match[1] : `marketing-template.${format}`
+    const url = window.URL.createObjectURL(new Blob([response.data]))
+    const a = document.createElement('a')
+    a.href = url
+    a.setAttribute('download', filename)
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(url)
+  },
+
+  /** Create template from uploaded TXT or PDF file */
+  createFromFile: async (file: File): Promise<MarketingEmailTemplate> => {
+    const formData = new FormData()
+    formData.append('file', file)
+    const response = await apiClient.post('marketing-emails/from-file', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    return response.data
+  },
 }

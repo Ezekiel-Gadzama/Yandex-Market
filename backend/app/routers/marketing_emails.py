@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, File
+from fastapi.responses import Response
 from sqlalchemy.orm import Session
 from sqlalchemy import text, and_, or_ as sql_or, func
 from typing import List, Optional
@@ -7,6 +8,12 @@ from pydantic import BaseModel
 from app.database import get_db
 from app import models, schemas
 from app.auth import get_current_active_user, has_permission, get_business_id
+from app.utils.export_utils import (
+    extract_text_from_file,
+    build_txt_marketing,
+    build_pdf_bytes,
+    strip_html,
+)
 
 router = APIRouter()
 
@@ -84,6 +91,44 @@ def create_marketing_template(
     db.refresh(db_template)
     return db_template
 
+
+@router.post("/from-file", response_model=schemas.MarketingEmailTemplate, status_code=201)
+async def create_marketing_template_from_file(
+    file: UploadFile = File(...),
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Create a marketing email template from a TXT or PDF file. Name and subject from filename; body from file content."""
+    if not current_user.is_admin and not has_permission(current_user, "view_marketing_emails"):
+        raise HTTPException(status_code=403, detail="Permission required: view_marketing_emails")
+    if not file.filename or not file.filename.lower().endswith((".txt", ".pdf")):
+        raise HTTPException(status_code=400, detail="Only .txt or .pdf files are allowed")
+    content = await file.read()
+    body_text = extract_text_from_file(content, file.filename)
+    if not body_text.strip():
+        raise HTTPException(status_code=400, detail="File appears empty or could not extract text")
+    import os
+    base_name = os.path.splitext(file.filename or "template")[0]
+    name = base_name.replace("_", " ").replace("-", " ").strip() or "Imported Template"
+    # Use first line as subject if multiple lines, else name
+    lines = body_text.strip().split("\n")
+    subject = lines[0][:200].strip() if lines else name
+    body = body_text  # Store as plain text; frontend may show as HTML
+    business_id = get_business_id(current_user)
+    db_template = models.MarketingEmailTemplate(
+        business_id=business_id,
+        name=name,
+        subject=subject,
+        body=f"<p>{body.replace(chr(10), '<br/>')}</p>",
+        is_default=False,
+        auto_broadcast_enabled=False,
+    )
+    db.add(db_template)
+    db.commit()
+    db.refresh(db_template)
+    return db_template
+
+
 @router.get("/{template_id}", response_model=schemas.MarketingEmailTemplate)
 def get_marketing_template(
     template_id: int,
@@ -105,6 +150,40 @@ def get_marketing_template(
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")
     return template
+
+
+@router.get("/{template_id}/export")
+def export_marketing_template(
+    template_id: int,
+    format: str = Query("txt", regex="^(txt|pdf)$"),
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Export marketing email template as TXT or PDF."""
+    if not current_user.is_admin and not has_permission(current_user, "view_marketing_emails"):
+        raise HTTPException(status_code=403, detail="Permission required: view_marketing_emails")
+    business_id = get_business_id(current_user)
+    template = db.query(models.MarketingEmailTemplate).filter(
+        models.MarketingEmailTemplate.id == template_id,
+        models.MarketingEmailTemplate.business_id == business_id,
+    ).first()
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    full_text = build_txt_marketing(template.name, template.subject or "", template.body or "")
+    safe_name = "".join(c for c in template.name if c.isalnum() or c in " -_")[:80].strip() or "marketing-template"
+    if format == "pdf":
+        pdf_bytes = build_pdf_bytes(template.name, full_text)
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="{safe_name}.pdf"'},
+        )
+    return Response(
+        content=full_text.encode("utf-8"),
+        media_type="text/plain; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{safe_name}.txt"'},
+    )
+
 
 @router.put("/{template_id}", response_model=schemas.MarketingEmailTemplate)
 def update_marketing_template(

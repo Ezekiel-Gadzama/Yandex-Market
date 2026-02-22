@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { activationTemplatesApi, ActivationTemplate, ActivationTemplateCreate } from '../api/activationTemplates'
-import { Plus, Edit, Trash2, X, Bold, Italic, Underline, Copy } from 'lucide-react'
+import { Plus, Edit, Trash2, X, Bold, Italic, Underline, Copy, Upload } from 'lucide-react'
 import ConfirmationModal from '../components/ConfirmationModal'
 
 // Component to preview template body with height-based truncation
@@ -82,6 +82,15 @@ export default function ActivationTemplates() {
     },
   })
 
+  const createFromFileMutation = useMutation({
+    mutationFn: (file: File) => activationTemplatesApi.createFromFile(file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['email-templates'] })
+      setShowModal(false)
+    },
+    onError: () => alert('Upload failed. Only .txt or .pdf are allowed.'),
+  })
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -135,7 +144,25 @@ export default function ActivationTemplates() {
                     </div>
                     <TemplateBodyPreview body={template.body || ''} />
                   </div>
-                  <div className="ml-4 flex space-x-2">
+                  <div className="ml-4 flex flex-wrap items-center gap-2">
+                    <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                      <span className="px-2 py-1 text-xs text-gray-600 bg-gray-50 border-r border-gray-300">Download</span>
+                      <select
+                        className="text-sm py-1 pr-6 pl-2 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        value=""
+                        onChange={(e) => {
+                          const fmt = e.target.value as 'txt' | 'pdf'
+                          if (fmt) {
+                            activationTemplatesApi.export(template.id, fmt).catch(() => alert('Download failed'))
+                            e.target.value = ''
+                          }
+                        }}
+                      >
+                        <option value="">Format</option>
+                        <option value="txt">TXT</option>
+                        <option value="pdf">PDF</option>
+                      </select>
+                    </div>
                     <button
                       onClick={() => {
                         // Create a copy with new name
@@ -194,6 +221,8 @@ export default function ActivationTemplates() {
               createMutation.mutate(data)
             }
           }}
+          onUploadFile={(file) => createFromFileMutation.mutate(file)}
+          uploadPending={createFromFileMutation.isPending}
           isLoading={createMutation.isPending || updateMutation.isPending}
         />
       )}
@@ -351,11 +380,15 @@ function TemplateModal({
   template,
   onClose,
   onSave,
+  onUploadFile,
+  uploadPending,
   isLoading,
 }: {
   template: ActivationTemplate | null
   onClose: () => void
   onSave: (data: ActivationTemplateCreate) => void
+  onUploadFile?: (file: File) => void
+  uploadPending?: boolean
   isLoading: boolean
 }) {
   const [name, setName] = useState('')
@@ -363,6 +396,8 @@ function TemplateModal({
   const [randomKey, setRandomKey] = useState(true)
   const [requiredLogin, setRequiredLogin] = useState(false)
   const [activateTillDays, setActivateTillDays] = useState(30)
+  const uploadFileInputRef = useRef<HTMLInputElement>(null)
+  const isCreate = !template || !template.id
 
   // Sync with template prop
   useEffect(() => {
@@ -422,6 +457,34 @@ function TemplateModal({
           </button>
         </div>
         <form id="template-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto">
+          {isCreate && onUploadFile && (
+            <div className="pb-4 mb-4 border-b border-gray-200">
+              <p className="text-sm font-medium text-gray-700 mb-2">Create from file (TXT or PDF)</p>
+              <div className="flex items-center gap-2">
+                <input
+                  ref={uploadFileInputRef}
+                  type="file"
+                  accept=".txt,.pdf"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) onUploadFile(file)
+                    e.target.value = ''
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => uploadFileInputRef.current?.click()}
+                  disabled={uploadPending}
+                  className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  {uploadPending ? 'Uploading...' : 'Upload TXT or PDF'}
+                </button>
+                <span className="text-xs text-gray-500">Or fill the form below</span>
+              </div>
+            </div>
+          )}
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Name *</label>

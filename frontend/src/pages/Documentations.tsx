@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { documentationsApi, Documentation, DocumentationCreate } from '../api/documentations'
 import { mediaApi } from '../api/media'
-import { Plus, Edit, Trash2, X, FileText, Link as LinkIcon, Copy, Bold, Italic, Underline } from 'lucide-react'
+import { Plus, Edit, Trash2, X, FileText, Link as LinkIcon, Copy, Bold, Italic, Underline, Upload } from 'lucide-react'
 import ConfirmationModal from '../components/ConfirmationModal'
 
 export default function Documentations() {
@@ -23,6 +23,15 @@ export default function Documentations() {
       queryClient.invalidateQueries({ queryKey: ['documentations'] })
       setShowModal(false)
     },
+  })
+
+  const createFromFileMutation = useMutation({
+    mutationFn: (file: File) => documentationsApi.createFromFile(file),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['documentations'] })
+      setShowModal(false)
+    },
+    onError: () => alert('Upload failed. Only .txt or .pdf are allowed.'),
   })
 
   const updateMutation = useMutation({
@@ -132,7 +141,25 @@ export default function Documentations() {
                       )}
                     </div>
                   </div>
-                  <div className="ml-4 flex space-x-2">
+                  <div className="ml-4 flex flex-wrap items-center gap-1">
+                    <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
+                      <span className="px-2 py-1 text-xs text-gray-600 bg-gray-50 border-r border-gray-300">Download</span>
+                      <select
+                        className="text-sm py-1 pr-6 pl-2 text-gray-700 bg-white focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        value=""
+                        onChange={(e) => {
+                          const fmt = e.target.value as 'txt' | 'pdf'
+                          if (fmt) {
+                            documentationsApi.export(doc.id, fmt).catch(() => alert('Download failed'))
+                            e.target.value = ''
+                          }
+                        }}
+                      >
+                        <option value="">Format</option>
+                        <option value="txt">TXT</option>
+                        <option value="pdf">PDF</option>
+                      </select>
+                    </div>
                     <button
                       onClick={() => handleDuplicate(doc)}
                       className="p-2 text-blue-600 hover:bg-blue-50 rounded"
@@ -186,6 +213,8 @@ export default function Documentations() {
               createMutation.mutate(data)
             }
           }}
+          onUploadFile={(file) => createFromFileMutation.mutate(file)}
+          uploadPending={createFromFileMutation.isPending}
           isLoading={createMutation.isPending || updateMutation.isPending}
         />
       )}
@@ -214,11 +243,15 @@ function DocumentationModal({
   documentation,
   onClose,
   onSave,
+  onUploadFile,
+  uploadPending,
   isLoading,
 }: {
   documentation: Documentation | null
   onClose: () => void
   onSave: (data: DocumentationCreate) => void
+  onUploadFile?: (file: File) => void
+  uploadPending?: boolean
   isLoading: boolean
 }) {
   const [name, setName] = useState(documentation?.name || '')
@@ -228,7 +261,9 @@ function DocumentationModal({
   const [linkUrl, setLinkUrl] = useState(documentation?.link_url || '')
   const [content, setContent] = useState(documentation?.content || '')
   const [uploading, setUploading] = useState(false)
+  const uploadFileInputRef = useRef<HTMLInputElement>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const isCreate = !documentation || !documentation.id
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -292,6 +327,34 @@ function DocumentationModal({
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 flex-1 overflow-y-auto">
+          {isCreate && onUploadFile && (
+            <div className="pb-4 border-b border-gray-200">
+              <p className="text-sm font-medium text-gray-700 mb-2">Create from file (TXT or PDF)</p>
+              <div className="flex items-center gap-2">
+                <input
+                  ref={uploadFileInputRef}
+                  type="file"
+                  accept=".txt,.pdf"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0]
+                    if (file) onUploadFile(file)
+                    e.target.value = ''
+                  }}
+                />
+                <button
+                  type="button"
+                  onClick={() => uploadFileInputRef.current?.click()}
+                  disabled={uploadPending}
+                  className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                >
+                  <Upload className="h-4 w-4 mr-2" />
+                  {uploadPending ? 'Uploading...' : 'Upload TXT or PDF'}
+                </button>
+                <span className="text-xs text-gray-500">Or fill the form below</span>
+              </div>
+            </div>
+          )}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Name *</label>
             <input

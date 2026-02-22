@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File, Query
+from fastapi.responses import Response, PlainTextResponse
 from sqlalchemy.orm import Session
 from typing import List, Optional
 import os
@@ -7,6 +8,12 @@ from datetime import datetime
 from app.database import get_db
 from app import models, schemas
 from app.auth import get_current_active_user, get_business_id
+from app.utils.export_utils import (
+    extract_text_from_file,
+    build_txt_documentation,
+    build_pdf_bytes,
+    strip_html,
+)
 
 router = APIRouter()
 
@@ -54,6 +61,53 @@ def get_documentations(
     return docs
 
 
+@router.post("/from-file", response_model=schemas.Documentation, status_code=status.HTTP_201_CREATED)
+async def create_documentation_from_file(
+    file: UploadFile = File(...),
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Create a new documentation by uploading a TXT or PDF file. File is stored and linked; name is derived from filename."""
+    if not file.filename or not file.filename.lower().endswith((".txt", ".pdf")):
+        raise HTTPException(status_code=400, detail="Only .txt or .pdf files are allowed")
+    # Reuse upload logic
+    content = await file.read()
+    # Determine target path (same as upload endpoint)
+    import re
+    original_filename = file.filename or "file"
+    sanitized_name = re.sub(r"[()\[\]{}]", "_", original_filename)
+    sanitized_name = re.sub(r"\s+", "_", sanitized_name)
+    sanitized_name = re.sub(r"[^\w\.-]", "_", sanitized_name)
+    sanitized_name = re.sub(r"_+", "_", sanitized_name).strip("_")
+    base_name, ext = os.path.splitext(sanitized_name)
+    date_str = datetime.now().strftime("%Y%m%d")
+    filename = f"{base_name}_{date_str}{ext}"
+    relative_path = f"documentation/files/{filename}"
+    target_dir = DOCUMENTATION_FILES_DIR
+    file_path = target_dir / filename
+    counter = 1
+    while file_path.exists():
+        filename = f"{base_name}_{date_str}_{counter}{ext}"
+        relative_path = f"documentation/files/{filename}"
+        file_path = target_dir / filename
+        counter += 1
+    with open(file_path, "wb") as buffer:
+        buffer.write(content)
+    file_url = f"/api/media/files/{relative_path}"
+    name = base_name.replace("_", " ").strip() or original_filename
+    business_id = get_business_id(current_user)
+    db_documentation = models.Documentation(
+        business_id=business_id,
+        name=name,
+        type="file",
+        file_url=file_url,
+    )
+    db.add(db_documentation)
+    db.commit()
+    db.refresh(db_documentation)
+    return db_documentation
+
+
 @router.get("/{documentation_id}", response_model=schemas.Documentation)
 def get_documentation(documentation_id: int, db: Session = Depends(get_db)):
     """Get a single documentation by ID"""
@@ -75,6 +129,54 @@ def get_documentation(documentation_id: int, db: Session = Depends(get_db)):
             pass  # If encoding fails, leave as-is
     
     return documentation
+
+
+@router.get("/{documentation_id}/export")
+def export_documentation(
+    documentation_id: int,
+    format: str = Query("txt", regex="^(txt|pdf)$"),
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Export documentation as TXT or PDF. For type 'text' uses content; for file/link exports name and description."""
+    business_id = get_business_id(current_user)
+    doc = (
+        db.query(models.Documentation)
+        .filter(
+            models.Documentation.id == documentation_id,
+            models.Documentation.business_id == business_id,
+        )
+        .first()
+    )
+    if not doc:
+        raise HTTPException(status_code=404, detail="Documentation not found")
+    if doc.type == "text" and doc.content:
+        body_plain = strip_html(doc.content)
+    else:
+        body_plain = doc.description or ""
+        if doc.type == "file" and doc.file_url:
+            body_plain = (body_plain + "\n\n(See attached file.)").strip()
+        elif doc.type == "link" and doc.link_url:
+            body_plain = (body_plain + f"\n\nLink: {doc.link_url}").strip()
+    full_text = build_txt_documentation(
+        doc.name,
+        doc.description,
+        doc.content if doc.type == "text" else None,
+        "See attached file." if doc.type == "file" else (f"Link: {doc.link_url}" if doc.type == "link" else None),
+    )
+    safe_name = "".join(c for c in doc.name if c.isalnum() or c in " -_")[:80].strip() or "documentation"
+    if format == "pdf":
+        pdf_bytes = build_pdf_bytes(doc.name, full_text)
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f'attachment; filename="{safe_name}.pdf"'},
+        )
+    return Response(
+        content=full_text.encode("utf-8"),
+        media_type="text/plain; charset=utf-8",
+        headers={"Content-Disposition": f'attachment; filename="{safe_name}.txt"'},
+    )
 
 
 @router.post("/", response_model=schemas.Documentation, status_code=status.HTTP_201_CREATED)

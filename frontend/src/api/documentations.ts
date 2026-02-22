@@ -66,4 +66,33 @@ export const documentationsApi = {
     })
     return response.data
   },
+
+  /** Export documentation as TXT or PDF; triggers browser download */
+  export: async (id: number, format: 'txt' | 'pdf'): Promise<void> => {
+    const response = await apiClient.get(`/documentations/${id}/export`, {
+      params: { format },
+      responseType: 'blob',
+    })
+    const disposition = response.headers['content-disposition']
+    const match = disposition && disposition.match(/filename="?([^";]+)"?/)
+    const filename = match ? match[1] : `documentation.${format}`
+    const url = window.URL.createObjectURL(new Blob([response.data]))
+    const a = document.createElement('a')
+    a.href = url
+    a.setAttribute('download', filename)
+    document.body.appendChild(a)
+    a.click()
+    a.remove()
+    window.URL.revokeObjectURL(url)
+  },
+
+  /** Create documentation by uploading a TXT or PDF file */
+  createFromFile: async (file: File): Promise<Documentation> => {
+    const formData = new FormData()
+    formData.append('file', file)
+    const response = await apiClient.post('/documentations/from-file', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    })
+    return response.data
+  },
 }
