@@ -114,8 +114,8 @@ export default function Staff() {
 
   if (!canManageStaff) {
     return (
-      <div className="bg-white shadow rounded-lg p-6">
-        <h1 className="text-2xl font-bold text-gray-900 mb-4">Staff Management</h1>
+      <div className="bg-white shadow rounded-lg p-4 sm:p-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4">Staff Management</h1>
         <p className="text-gray-600">You don't have permission to view this page.</p>
       </div>
     )
@@ -123,11 +123,11 @@ export default function Staff() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Staff Management</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Staff Management</h1>
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+          className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 w-full sm:w-auto"
         >
           <UserPlus className="mr-2 h-5 w-5" />
           Add Staff
@@ -141,110 +141,99 @@ export default function Staff() {
           No staff members found
         </div>
       ) : (
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Permissions
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Created
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {staff.map((member) => (
-                <tr key={member.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    {member.email}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span
-                      className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        member.is_active
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
-                      }`}
-                    >
-                      {member.is_active ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">
-                    <div className="flex flex-wrap gap-1">
-                      {member.permissions.view_staff && (
-                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">Staff</span>
-                      )}
-                      {member.permissions.view_settings && (
-                        <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">Settings</span>
-                      )}
-                      {member.permissions.client_right && (
-                        <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Clients</span>
-                      )}
-                      {member.permissions.view_marketing_emails && (
-                        <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded">Marketing</span>
-                      )}
-                      {member.permissions.dashboard_right && (
-                        <span className="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded">Dashboard</span>
-                      )}
-                      {member.permissions.view_product_prices && (
-                        <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded">Prices</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(member.created_at).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <div className="flex items-center justify-end space-x-2">
-                      <button
-                        onClick={() => handleEdit(member)}
-                        className="text-blue-600 hover:text-blue-900"
-                        title="Edit permissions"
-                      >
-                        <Edit2 className="h-5 w-5" />
-                      </button>
-                      {currentUser?.is_admin && (
-                        <>
-                          <button
-                            onClick={() => resendPasswordResetMutation.mutate(member.id)}
-                            disabled={resendPasswordResetMutation.isPending}
-                            className="text-green-600 hover:text-green-900 disabled:opacity-50"
-                            title="Resend password reset link"
-                          >
-                            <Mail className="h-5 w-5" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(member.id)}
-                            className="text-red-600 hover:text-red-900"
-                            title="Delete staff"
-                          >
-                            <Trash2 className="h-5 w-5" />
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <>
+          {/* Desktop: table */}
+          <div className="hidden md:block bg-white shadow rounded-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {staff.map((member) => (
+                    <tr key={member.id}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{member.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${member.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                          {member.is_active ? 'Active' : 'Inactive'}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        <div className="flex flex-wrap gap-1">
+                          {member.permissions.view_staff && <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">Staff</span>}
+                          {member.permissions.view_settings && <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">Settings</span>}
+                          {member.permissions.client_right && <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded">Clients</span>}
+                          {member.permissions.view_marketing_emails && <span className="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded">Marketing</span>}
+                          {member.permissions.dashboard_right && <span className="px-2 py-1 bg-indigo-100 text-indigo-800 text-xs rounded">Dashboard</span>}
+                          {member.permissions.view_product_prices && <span className="px-2 py-1 bg-gray-100 text-gray-800 text-xs rounded">Prices</span>}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(member.created_at).toLocaleDateString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <div className="flex items-center justify-end space-x-2">
+                          <button onClick={() => handleEdit(member)} className="text-blue-600 hover:text-blue-900" title="Edit permissions"><Edit2 className="h-5 w-5" /></button>
+                          {currentUser?.is_admin && (
+                            <>
+                              <button onClick={() => resendPasswordResetMutation.mutate(member.id)} disabled={resendPasswordResetMutation.isPending} className="text-green-600 hover:text-green-900 disabled:opacity-50" title="Resend password reset"><Mail className="h-5 w-5" /></button>
+                              <button onClick={() => handleDelete(member.id)} className="text-red-600 hover:text-red-900" title="Delete staff"><Trash2 className="h-5 w-5" /></button>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile: cards */}
+          <div className="md:hidden space-y-4">
+            {staff.map((member) => (
+              <div key={member.id} className="bg-white shadow rounded-lg p-4 border border-gray-100">
+                <div className="flex justify-between items-start gap-2 mb-3">
+                  <span className="text-sm font-medium text-gray-900 break-all">{member.email}</span>
+                  <span className={`shrink-0 px-2 py-1 text-xs font-semibold rounded-full ${member.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                    {member.is_active ? 'Active' : 'Inactive'}
+                  </span>
+                </div>
+                <div className="mb-2">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Permissions</span>
+                  <div className="flex flex-wrap gap-1 mt-1">
+                    {member.permissions.view_staff && <span className="px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded">Staff</span>}
+                    {member.permissions.view_settings && <span className="px-2 py-0.5 bg-purple-100 text-purple-800 text-xs rounded">Settings</span>}
+                    {member.permissions.client_right && <span className="px-2 py-0.5 bg-green-100 text-green-800 text-xs rounded">Clients</span>}
+                    {member.permissions.view_marketing_emails && <span className="px-2 py-0.5 bg-yellow-100 text-yellow-800 text-xs rounded">Marketing</span>}
+                    {member.permissions.dashboard_right && <span className="px-2 py-0.5 bg-indigo-100 text-indigo-800 text-xs rounded">Dashboard</span>}
+                    {member.permissions.view_product_prices && <span className="px-2 py-0.5 bg-gray-100 text-gray-800 text-xs rounded">Prices</span>}
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500 mb-3">Created {new Date(member.created_at).toLocaleDateString()}</div>
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+                  <button onClick={() => handleEdit(member)} className="p-2 text-blue-600 hover:bg-blue-50 rounded" title="Edit permissions"><Edit2 className="h-5 w-5" /></button>
+                  {currentUser?.is_admin && (
+                    <>
+                      <button onClick={() => resendPasswordResetMutation.mutate(member.id)} disabled={resendPasswordResetMutation.isPending} className="p-2 text-green-600 hover:bg-green-50 rounded disabled:opacity-50" title="Resend password reset"><Mail className="h-5 w-5" /></button>
+                      <button onClick={() => handleDelete(member.id)} className="p-2 text-red-600 hover:bg-red-50 rounded" title="Delete staff"><Trash2 className="h-5 w-5" /></button>
+                    </>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Add Staff Modal */}
       {isAddModalOpen && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 p-4">
+          <div className="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium text-gray-900">Add Staff Member</h3>
               <button
@@ -300,8 +289,8 @@ export default function Staff() {
 
       {/* Edit Staff Modal */}
       {isEditModalOpen && selectedStaff && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 p-4">
+          <div className="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-md shadow-lg rounded-md bg-white max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-medium text-gray-900">Edit Staff Permissions</h3>
               <button

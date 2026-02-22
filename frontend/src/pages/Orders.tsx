@@ -150,9 +150,9 @@ export default function Orders() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Orders</h1>
-        <div className="flex gap-2">
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-gray-900">Orders</h1>
+        <div className="flex flex-wrap gap-2">
           <button
             onClick={async () => {
               setRefreshSuccess(false)
@@ -306,10 +306,11 @@ export default function Orders() {
         </div>
       </div>
 
-      {/* Orders Table */}
+      {/* Orders Table: horizontal scroll on mobile with hint */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+        <p className="md:hidden px-4 py-2 text-xs text-gray-500 bg-gray-50 border-b">Swipe left to see more columns</p>
+        <div className="overflow-x-auto overflow-y-visible" style={{ WebkitOverflowScrolling: 'touch' }}>
+          <table className="min-w-full divide-y divide-gray-200" style={{ minWidth: '900px' }}>
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">

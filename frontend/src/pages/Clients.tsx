@@ -146,12 +146,12 @@ export default function Clients() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Clients</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-gray-900">Clients</h1>
         {hasClientRight && (
           <button
             onClick={() => setIsAddModalOpen(true)}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+            className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 w-full sm:w-auto"
           >
             <UserPlus className="h-5 w-5 mr-2" />
             Add Client
@@ -218,50 +218,34 @@ export default function Clients() {
 
       {isLoading ? (
         <div className="text-center py-12">Loading clients...</div>
+      ) : clients.length === 0 ? (
+        <div className="bg-white shadow rounded-lg p-6 text-center text-gray-500">
+          No clients yet. Add your first client to get started.
+        </div>
       ) : (
-        <div className="bg-white shadow rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Products
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Created At
-                </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {clients.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-6 py-4 text-center text-gray-500">
-                    No clients yet. Add your first client to get started.
-                  </td>
-                </tr>
-              ) : (
-                clients.map((client) => (
-                  <tr key={client.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {client.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {client.email}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-500">
-                      {client.purchased_product_ids && client.purchased_product_ids.length > 0 ? (
-                        <div className="space-y-1">
-                          {products
-                            .filter(p => client.purchased_product_ids.includes(p.id))
-                            .map((product) => {
+        <>
+          {/* Desktop: table */}
+          <div className="hidden md:block bg-white shadow rounded-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Products</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created At</th>
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {clients.map((client) => (
+                    <tr key={client.id}>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{client.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{client.email}</td>
+                      <td className="px-6 py-4 text-sm text-gray-500">
+                        {client.purchased_product_ids && client.purchased_product_ids.length > 0 ? (
+                          <div className="space-y-1">
+                            {products.filter(p => client.purchased_product_ids.includes(p.id)).map((product) => {
                               const quantity = client.product_quantities?.[product.id] || 1
                               return (
                                 <div key={product.id} className="flex items-center justify-between bg-gray-50 p-2 rounded">
@@ -270,65 +254,80 @@ export default function Clients() {
                                     <span className="text-xs font-semibold text-gray-700 px-1">{quantity}</span>
                                     {hasClientRight && (
                                       <>
-                                        <button
-                                          onClick={() => handleDecrement(client.id, product.id)}
-                                          disabled={decrementMutation.isPending}
-                                          className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                                          title="Decrement purchase count (disabled if last purchase was more than 7 days ago)"
-                                        >
-                                          -1
-                                        </button>
-                                        <button
-                                          onClick={() => handleIncrement(client.id, product.id)}
-                                          disabled={incrementMutation.isPending}
-                                          className="px-2 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50"
-                                          title="Increment purchase count"
-                                        >
-                                          +1
-                                        </button>
+                                        <button onClick={() => handleDecrement(client.id, product.id)} disabled={decrementMutation.isPending} className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 disabled:opacity-50 disabled:cursor-not-allowed" title="Decrement">-1</button>
+                                        <button onClick={() => handleIncrement(client.id, product.id)} disabled={incrementMutation.isPending} className="px-2 py-1 text-xs bg-green-500 text-white rounded hover:bg-green-600 disabled:opacity-50" title="Increment">+1</button>
                                       </>
                                     )}
                                   </div>
                                 </div>
                               )
                             })}
-                        </div>
-                      ) : (
-                        <span className="text-xs text-gray-400">No purchases</span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {new Date(client.created_at).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      {hasClientRight && (
-                        <>
-                          <button
-                            onClick={() => {
-                              setSelectedClient(client)
-                              setSelectedProducts(client.purchased_product_ids || [])
-                              setProductSearchTerm('')
-                              setIsEditModalOpen(true)
-                            }}
-                            className="text-blue-600 hover:text-blue-900 mr-4"
-                          >
-                            <Edit2 className="h-5 w-5" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(client.id)}
-                            className="text-red-600 hover:text-red-900"
-                          >
-                            <Trash2 className="h-5 w-5" />
-                          </button>
-                        </>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+                          </div>
+                        ) : (
+                          <span className="text-xs text-gray-400">No purchases</span>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{new Date(client.created_at).toLocaleDateString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        {hasClientRight && (
+                          <>
+                            <button onClick={() => { setSelectedClient(client); setSelectedProducts(client.purchased_product_ids || []); setProductSearchTerm(''); setIsEditModalOpen(true) }} className="text-blue-600 hover:text-blue-900 mr-4"><Edit2 className="h-5 w-5" /></button>
+                            <button onClick={() => handleDelete(client.id)} className="text-red-600 hover:text-red-900"><Trash2 className="h-5 w-5" /></button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile: cards */}
+          <div className="md:hidden space-y-4">
+            {clients.map((client) => (
+              <div key={client.id} className="bg-white shadow rounded-lg p-4 border border-gray-100">
+                <div className="flex justify-between items-start gap-2 mb-2">
+                  <span className="text-sm font-medium text-gray-900 break-words">{client.name}</span>
+                  <span className="text-xs text-gray-500 shrink-0">Created {new Date(client.created_at).toLocaleDateString()}</span>
+                </div>
+                <a href={`mailto:${client.email}`} className="text-sm text-blue-600 break-all block mb-3">{client.email}</a>
+                <div className="mb-3">
+                  <span className="text-xs font-medium text-gray-500 uppercase tracking-wider">Products</span>
+                  {client.purchased_product_ids && client.purchased_product_ids.length > 0 ? (
+                    <div className="space-y-1 mt-1">
+                      {products.filter(p => client.purchased_product_ids.includes(p.id)).map((product) => {
+                        const quantity = client.product_quantities?.[product.id] || 1
+                        return (
+                          <div key={product.id} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                            <span className="text-xs truncate flex-1 min-w-0">{product.name}</span>
+                            <div className="flex items-center gap-1 shrink-0">
+                              <span className="text-xs font-semibold text-gray-700 px-1">{quantity}</span>
+                              {hasClientRight && (
+                                <>
+                                  <button onClick={() => handleDecrement(client.id, product.id)} disabled={decrementMutation.isPending} className="px-2 py-1 text-xs bg-red-500 text-white rounded disabled:opacity-50">−</button>
+                                  <button onClick={() => handleIncrement(client.id, product.id)} disabled={incrementMutation.isPending} className="px-2 py-1 text-xs bg-green-500 text-white rounded disabled:opacity-50">+</button>
+                                </>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-gray-400 mt-1">No purchases</p>
+                  )}
+                </div>
+                {hasClientRight && (
+                  <div className="flex items-center justify-end gap-2 pt-2 border-t border-gray-100">
+                    <button onClick={() => { setSelectedClient(client); setSelectedProducts(client.purchased_product_ids || []); setProductSearchTerm(''); setIsEditModalOpen(true) }} className="p-2 text-blue-600 hover:bg-blue-50 rounded" title="Edit"><Edit2 className="h-5 w-5" /></button>
+                    <button onClick={() => handleDelete(client.id)} className="p-2 text-red-600 hover:bg-red-50 rounded" title="Delete"><Trash2 className="h-5 w-5" /></button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {/* Add Client Modal */}

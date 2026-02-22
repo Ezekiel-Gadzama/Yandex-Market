@@ -126,7 +126,7 @@ export default function Settings() {
 
   return (
     <div>
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Settings</h1>
+      <h1 className="text-xl sm:text-3xl font-bold text-gray-900 mb-6">Settings</h1>
 
       <div className="space-y-6">
         {/* Sync Section */}

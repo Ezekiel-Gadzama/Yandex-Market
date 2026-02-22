@@ -62,9 +62,9 @@ export default function Documentations() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Documentations</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-6">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900">Documentations</h1>
           <p className="mt-2 text-sm text-gray-600">
             Manage documentation files and links for order fulfillment processes.
           </p>
@@ -74,7 +74,7 @@ export default function Documentations() {
             setEditingDoc(null)
             setShowModal(true)
           }}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+          className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 w-full sm:w-auto shrink-0"
         >
           <Plus className="h-5 w-5 mr-2" />
           Add Documentation
@@ -99,8 +99,8 @@ export default function Documentations() {
         ) : documentations && documentations.length > 0 ? (
           <div className="divide-y divide-gray-200">
             {documentations.map((doc) => (
-              <div key={doc.id} className="p-6">
-                <div className="flex justify-between items-start">
+              <div key={doc.id} className="p-4 sm:p-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start">
                   <div className="flex-1">
                     <div className="flex items-center space-x-2">
                       {doc.type === 'file' ? (
@@ -141,7 +141,7 @@ export default function Documentations() {
                       )}
                     </div>
                   </div>
-                  <div className="ml-4 flex flex-wrap items-center gap-1">
+                  <div className="ml-0 sm:ml-4 flex flex-wrap items-center gap-1 shrink-0">
                     <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                       <span className="px-2 py-1 text-xs text-gray-600 bg-gray-50 border-r border-gray-300">Download</span>
                       <select

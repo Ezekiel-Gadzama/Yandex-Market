@@ -170,7 +170,7 @@ class EmailService:
                 print(f"Body: {html_body}")
                 return {"success": True, "message": "Email logged (SMTP not configured)"}
             
-            with smtplib.SMTP(self.smtp_host, self.smtp_port) as server:
+            with smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=30) as server:
                 server.starttls()
                 server.login(self.smtp_user, self.smtp_password)
                 server.send_message(msg)
@@ -223,7 +223,7 @@ class EmailService:
                     "message": "Email logged (SMTP not configured)"
                 }
             
-            with smtplib.SMTP(self.smtp_host, self.smtp_port) as server:
+            with smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=30) as server:
                 server.starttls()
                 server.login(self.smtp_user, self.smtp_password)
                 server.send_message(msg)
@@ -306,7 +306,7 @@ class EmailService:
                     "message": "Email logged (SMTP not configured). Configure SMTP_HOST, SMTP_USER, and SMTP_PASSWORD in .env to send actual emails."
                 }
             
-            with smtplib.SMTP(self.smtp_host, self.smtp_port) as server:
+            with smtplib.SMTP(self.smtp_host, self.smtp_port, timeout=30) as server:
                 server.starttls()
                 server.login(self.smtp_user, self.smtp_password)
                 server.send_message(msg)

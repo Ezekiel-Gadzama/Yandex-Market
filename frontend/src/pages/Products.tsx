@@ -96,8 +96,8 @@ export default function Products() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">Products</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
+        <h1 className="text-xl sm:text-3xl font-bold text-gray-900">Products</h1>
         <div className="flex gap-2">
           <button
             onClick={async () => {
@@ -147,135 +147,103 @@ export default function Products() {
         </select>
       </div>
 
-      {/* Products Table */}
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Type
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Price
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Cost
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Docs
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Activation
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {productsLoading ? (
-              <tr>
-                <td colSpan={8} className="px-6 py-4 text-center">Loading...</td>
-              </tr>
-            ) : filteredProducts && filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
-                <tr key={product.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="text-sm text-gray-500 capitalize">{product.product_type}</span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {canViewPrices ? (
-                        `₽${(() => {
-                          // Try to get price from Yandex data first
-                          const yandexPrice = product.yandex_full_data?.basicPrice?.value || 
-                                            product.yandex_full_data?.campaignPrice?.value ||
-                                            product.yandex_full_data?.price
-                          return (yandexPrice || product.selling_price || 0).toLocaleString('ru-RU')
-                        })()}`
-                      ) : (
-                        <span className="text-gray-400">—</span>
-                      )}
+      {/* Products: desktop table */}
+      {productsLoading ? (
+        <div className="text-center py-12 text-gray-500">Loading...</div>
+      ) : !filteredProducts || filteredProducts.length === 0 ? (
+        <div className="bg-white shadow rounded-lg p-6 text-center text-gray-500">No products found</div>
+      ) : (
+        <>
+          <div className="hidden md:block bg-white shadow rounded-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cost</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Docs</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activation</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {filteredProducts.map((product) => (
+                    <tr key={product.id}>
+                      <td className="px-6 py-4 whitespace-nowrap"><div className="text-sm font-medium text-gray-900">{product.name}</div></td>
+                      <td className="px-6 py-4 whitespace-nowrap"><span className="text-sm text-gray-500 capitalize">{product.product_type}</span></td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {canViewPrices ? `₽${(product.yandex_full_data?.basicPrice?.value || product.yandex_full_data?.campaignPrice?.value || product.yandex_full_data?.price || product.selling_price || 0).toLocaleString('ru-RU')}` : <span className="text-gray-400">—</span>}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <div className="text-sm text-gray-900">
+                          {canViewPrices && product.cost_price && product.cost_price > 0 ? `₽${product.cost_price.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : <span className="text-gray-400">—</span>}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${product.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{product.is_active ? 'Active' : 'Inactive'}</span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {product.documentation_id ? <button onClick={() => setViewingDoc(product.documentation_id!)} className="text-blue-600 hover:text-blue-800 underline">{allDocumentations?.find(d => d.id === product.documentation_id)?.name || `Doc #${product.documentation_id}`}</button> : <span className="text-gray-400">—</span>}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        {product.email_template_id ? <button onClick={() => setViewingTemplate(product.email_template_id!)} className="text-blue-600 hover:text-blue-800 underline">{allTemplates?.find(t => t.id === product.email_template_id)?.name || `Template #${product.email_template_id}`}</button> : <span className="text-gray-400">—</span>}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                        <button onClick={() => handleViewProduct(product)} className="text-indigo-600 hover:text-indigo-900" title="View Details"><Eye className="h-5 w-5" /></button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Mobile: product cards */}
+          <div className="md:hidden space-y-4">
+            {filteredProducts.map((product) => {
+              const displayPrice = canViewPrices ? (product.yandex_full_data?.basicPrice?.value || product.yandex_full_data?.campaignPrice?.value || product.yandex_full_data?.price || product.selling_price || 0) : null
+              const displayCost = canViewPrices && product.cost_price && product.cost_price > 0 ? product.cost_price : null
+              return (
+                <div key={product.id} className="bg-white shadow rounded-lg p-4 border border-gray-100">
+                  <div className="flex justify-between items-start gap-2 mb-2">
+                    <span className="text-sm font-medium text-gray-900 line-clamp-2">{product.name}</span>
+                    <span className={`shrink-0 px-2 py-1 text-xs font-semibold rounded-full ${product.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{product.is_active ? 'Active' : 'Inactive'}</span>
+                  </div>
+                  <div className="text-xs text-gray-500 capitalize mb-2">{product.product_type}</div>
+                  {(displayPrice != null || displayCost != null) && (
+                    <div className="flex gap-4 text-sm text-gray-700 mb-2">
+                      {displayPrice != null && <span>Price: ₽{Number(displayPrice).toLocaleString('ru-RU')}</span>}
+                      {displayCost != null && <span>Cost: ₽{displayCost.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>}
                     </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">
-                      {canViewPrices ? (
-                        product.cost_price && product.cost_price > 0 ? (
-                          `₽${product.cost_price.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
-                        ) : (
-                          <span className="text-gray-400">—</span>
-                        )
-                      ) : (
-                        <span className="text-gray-400">—</span>
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                      product.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {product.is_active ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    {product.documentation_id ? (
-                      <button
-                        onClick={() => setViewingDoc(product.documentation_id!)}
-                        className="text-blue-600 hover:text-blue-800 underline"
-                      >
+                  )}
+                  <div className="flex flex-wrap gap-2 text-sm mb-3">
+                    {product.documentation_id && (
+                      <button onClick={() => setViewingDoc(product.documentation_id!)} className="text-blue-600 hover:underline">
                         {allDocumentations?.find(d => d.id === product.documentation_id)?.name || `Doc #${product.documentation_id}`}
                       </button>
-                    ) : (
-                      <span className="text-gray-400">—</span>
                     )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    {product.email_template_id ? (
-                      <button
-                        onClick={() => setViewingTemplate(product.email_template_id!)}
-                        className="text-blue-600 hover:text-blue-800 underline"
-                      >
+                    {product.email_template_id && (
+                      <button onClick={() => setViewingTemplate(product.email_template_id!)} className="text-blue-600 hover:underline">
                         {allTemplates?.find(t => t.id === product.email_template_id)?.name || `Template #${product.email_template_id}`}
                       </button>
-                    ) : (
-                      <span className="text-gray-400">—</span>
                     )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => handleViewProduct(product)}
-                        className="text-indigo-600 hover:text-indigo-900"
-                        title="View Details"
-                      >
-                        <Eye className="h-5 w-5" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={8} className="px-6 py-4 text-center text-gray-500">
-                  No products found
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-        </div>
-      </div>
+                  </div>
+                  <div className="pt-2 border-t border-gray-100">
+                    <button onClick={() => handleViewProduct(product)} className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium text-sm">
+                      <Eye className="h-4 w-4" /> View details
+                    </button>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </>
+      )}
 
       {/* View Product Modal */}
       {showViewModal && viewingProduct && (

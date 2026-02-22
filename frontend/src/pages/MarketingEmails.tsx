@@ -347,9 +347,9 @@ export default function MarketingEmails() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Marketing Emails</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-6">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900">Marketing Emails</h1>
           <p className="mt-1 text-sm text-gray-600">
             Create email templates and broadcast them to all your clients
           </p>
@@ -359,7 +359,7 @@ export default function MarketingEmails() {
             setEditingTemplate(null)
             setShowModal(true)
           }}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+          className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 w-full sm:w-auto shrink-0"
         >
           <Plus className="h-5 w-5 mr-2" />
           New Template
@@ -404,8 +404,8 @@ export default function MarketingEmails() {
                 return 0
               })
               .map((template) => (
-              <div key={template.id} className={`bg-white shadow rounded-lg p-6 ${template.is_default ? 'border-2 border-blue-500' : ''}`}>
-                <div className="flex justify-between items-start mb-4">
+              <div key={template.id} className={`bg-white shadow rounded-lg p-4 sm:p-6 ${template.is_default ? 'border-2 border-blue-500' : ''}`}>
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start mb-4">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="text-lg font-medium text-gray-900">{template.name}</h3>

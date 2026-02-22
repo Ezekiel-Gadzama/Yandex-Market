@@ -93,9 +93,9 @@ export default function ActivationTemplates() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Activation Templates</h1>
+      <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start mb-6">
+        <div className="min-w-0">
+          <h1 className="text-xl sm:text-3xl font-bold text-gray-900">Activation Templates</h1>
           <p className="mt-2 text-sm text-gray-600">
             Manage templates for digital product activation messages sent when completing orders.
           </p>
@@ -105,7 +105,7 @@ export default function ActivationTemplates() {
             setEditingTemplate(null)
             setShowModal(true)
           }}
-          className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700"
+          className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 w-full sm:w-auto shrink-0"
         >
           <Plus className="h-5 w-5 mr-2" />
           Add Template
@@ -130,9 +130,9 @@ export default function ActivationTemplates() {
         ) : templates && templates.length > 0 ? (
           <div className="divide-y divide-gray-200">
             {templates.map((template) => (
-              <div key={template.id} className="p-6">
-                <div className="flex justify-between items-start">
-                  <div className="flex-1">
+              <div key={template.id} className="p-4 sm:p-6">
+                <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-start">
+                  <div className="flex-1 min-w-0">
                     <h3 className="text-lg font-medium text-gray-900">{template.name}</h3>
                     <div className="mt-2 flex space-x-4 text-sm">
                       <span className={`px-2 py-1 rounded ${template.random_key ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
@@ -144,7 +144,7 @@ export default function ActivationTemplates() {
                     </div>
                     <TemplateBodyPreview body={template.body || ''} />
                   </div>
-                  <div className="ml-4 flex flex-wrap items-center gap-2">
+                  <div className="ml-0 sm:ml-4 flex flex-wrap items-center gap-2 shrink-0">
                     <div className="flex items-center border border-gray-300 rounded-md overflow-hidden">
                       <span className="px-2 py-1 text-xs text-gray-600 bg-gray-50 border-r border-gray-300">Download</span>
                       <select
