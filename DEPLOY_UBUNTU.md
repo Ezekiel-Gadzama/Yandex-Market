@@ -267,13 +267,19 @@ Backend `requirements.txt` includes: FastAPI, Uvicorn, SQLAlchemy, Alembic, Pyda
 
 ## Troubleshooting
 
+- **White page + “MIME type text/html” for scripts + proxy error ECONNREFUSED 127.0.0.1:8000**  
+  The frontend cannot reach the backend, so the app never loads and the browser may get HTML (error pages) instead of JavaScript. Fix:
+  1. Ensure the backend is running: `curl http://127.0.0.1:8000/api/health` should return 200. If not, check `backend.log` in the project root (e.g. `tail -50 backend.log`). Common causes: database not running, wrong `DATABASE_URL` in `.env`, or port 8000 in use.
+  2. Start the backend first (see “ModuleNotFoundError” below), then start the frontend with `cd frontend && npm run dev`.
+  3. If you use `setup_and_run.sh`, it now waits for the backend to be ready and exits with an error and a log snippet if the backend fails to start.
+
 - **Database connection refused**  
   Ensure PostgreSQL is running: `sudo systemctl status postgresql`.  
   Use `DATABASE_URL=postgresql://...@localhost:5432/...` when running on the same host.
 
 - **ModuleNotFoundError: app**  
   Run uvicorn from the `backend` directory:  
-  `cd backend && uvicorn app.main:app --host 0.0.0.0 --port 8000`
+  `cd backend && source ../venv/bin/activate && export $(grep -v '^#' ../.env | xargs) && uvicorn app.main:app --host 0.0.0.0 --port 8000`
 
 - **401 / CORS**  
   Set `FRONTEND_URL` and `PUBLIC_URL` in `.env` to the URL you use in the browser (e.g. `http://144.172.117.31:3000`).
