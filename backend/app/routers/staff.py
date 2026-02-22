@@ -57,7 +57,7 @@ def get_staff(
     return result
 
 
-@router.post("/", response_model=schemas.User)
+@router.post("/", response_model=schemas.StaffCreateResponse)
 def create_staff(
     staff_data: schemas.StaffCreate,
     current_user: models.User = Depends(get_current_active_user),
@@ -113,7 +113,21 @@ def create_staff(
     db.commit()
     db.refresh(db_user)
     
-    # Send password reset email
+    # Build response user (same for success or email failure)
+    permissions = schemas.UserPermissions(**db_user.permissions) if db_user.permissions else schemas.UserPermissions()
+    response_user = schemas.User(
+        id=db_user.id,
+        email=db_user.email,
+        is_admin=db_user.is_admin,
+        created_by_id=db_user.created_by_id,
+        permissions=permissions,
+        is_active=db_user.is_active,
+        created_at=db_user.created_at,
+        updated_at=db_user.updated_at
+    )
+    
+    # Send password reset email (do not fail the request if SMTP is unreachable)
+    invitation_email_sent = True
     try:
         from app.auth import get_business_id
         from app.services.config_validator import ConfigurationError, format_config_error_response
@@ -138,35 +152,17 @@ def create_staff(
             body=email_body
         )
         if not result.get("success"):
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=result.get("message", "Staff created but failed to send invitation email. Check SMTP settings and server network.")
-            )
-    except HTTPException:
-        raise
+            invitation_email_sent = False
+            print(f"Staff created but invitation email not sent: {result.get('message')}")
     except ConfigurationError as e:
-        error_detail = format_config_error_response(e)
-        error_detail["action_required"] = "Configure SMTP in Settings to send invitation emails."
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error_detail)
+        # SMTP not configured: still succeed, flag email not sent
+        invitation_email_sent = False
+        print(f"Staff created but SMTP not configured: {e}")
     except Exception as e:
-        print(f"Error sending staff invitation email: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Failed to send invitation email: {str(e)}"
-        )
+        invitation_email_sent = False
+        print(f"Staff created but invitation email failed: {str(e)}")
     
-    # Convert to response format
-    permissions = schemas.UserPermissions(**db_user.permissions) if db_user.permissions else schemas.UserPermissions()
-    return schemas.User(
-        id=db_user.id,
-        email=db_user.email,
-        is_admin=db_user.is_admin,
-        created_by_id=db_user.created_by_id,
-        permissions=permissions,
-        is_active=db_user.is_active,
-        created_at=db_user.created_at,
-        updated_at=db_user.updated_at
-    )
+    return schemas.StaffCreateResponse(user=response_user, invitation_email_sent=invitation_email_sent)
 
 
 @router.put("/{staff_id}", response_model=schemas.User)

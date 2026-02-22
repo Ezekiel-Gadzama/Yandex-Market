@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { staffApi, StaffCreate } from '../api/staff'
+import { staffApi, StaffCreate, StaffCreateResponse } from '../api/staff'
 import { User, UserPermissions } from '../api/auth'
 import { useAuth } from '../contexts/AuthContext'
 import { UserPlus, Edit2, Trash2, X, Mail, CheckCircle, AlertCircle } from 'lucide-react'
@@ -29,10 +29,15 @@ export default function Staff() {
 
   const createMutation = useMutation({
     mutationFn: (data: StaffCreate) => staffApi.create(data),
-    onSuccess: () => {
+    onSuccess: (data: StaffCreateResponse) => {
       queryClient.invalidateQueries({ queryKey: ['staff'] })
       setIsAddModalOpen(false)
       setEmail('')
+      if (!data.invitation_email_sent) {
+        showNotification('error', 'Staff created, but the invitation email could not be sent. Check SMTP settings or use "Resend password reset" after fixing network/SMTP.')
+      } else {
+        showNotification('success', 'Staff member added. They will receive an email to set their password.')
+      }
     },
   })
 
@@ -60,10 +65,10 @@ export default function Staff() {
       showNotification('success', 'Password reset link has been sent to the staff member\'s email')
     },
     onError: (error: any) => {
-      const errorMessage = error?.response?.data?.detail?.message || 
-                          error?.response?.data?.detail || 
-                          error?.message || 
-                          'Failed to send password reset link'
+      const d = error?.response?.data?.detail
+      const errorMessage = (typeof d === 'string' ? d : d?.message) ||
+                          error?.message ||
+                          'Failed to send password reset link. Check SMTP settings and that the server can reach the email server (e.g. firewall allows outbound port 587).'
       showNotification('error', errorMessage)
     },
   })

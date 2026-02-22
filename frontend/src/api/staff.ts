@@ -5,6 +5,11 @@ export interface StaffCreate {
   email: string
 }
 
+export interface StaffCreateResponse {
+  user: User
+  invitation_email_sent: boolean
+}
+
 export interface UserUpdate {
   permissions?: UserPermissions
   is_active?: boolean
@@ -16,8 +21,8 @@ export const staffApi = {
     return response.data
   },
 
-  create: async (data: StaffCreate): Promise<User> => {
-    const response = await apiClient.post<User>('/staff/', data)
+  create: async (data: StaffCreate): Promise<StaffCreateResponse> => {
+    const response = await apiClient.post<StaffCreateResponse>('/staff/', data)
     return response.data
   },
 

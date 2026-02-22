@@ -424,6 +424,12 @@ class StaffCreate(BaseModel):
     email: EmailStr
 
 
+class StaffCreateResponse(BaseModel):
+    """Response when creating a staff member. User is always returned; invitation_email_sent is False if SMTP failed."""
+    user: User
+    invitation_email_sent: bool
+
+
 class UserUpdate(BaseModel):
     permissions: Optional[UserPermissions] = None
     is_active: Optional[bool] = None
