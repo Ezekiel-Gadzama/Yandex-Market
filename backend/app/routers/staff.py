@@ -132,14 +132,28 @@ def create_staff(
         If you did not expect this invitation, please contact your administrator.
         """
         
-        email_service.send_email(
+        result = email_service.send_email(
             to_email=db_user.email,
             subject="Welcome to Yandex Market - Set Your Password",
             body=email_body
         )
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=result.get("message", "Staff created but failed to send invitation email. Check SMTP settings and server network.")
+            )
+    except HTTPException:
+        raise
+    except ConfigurationError as e:
+        error_detail = format_config_error_response(e)
+        error_detail["action_required"] = "Configure SMTP in Settings to send invitation emails."
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error_detail)
     except Exception as e:
         print(f"Error sending staff invitation email: {str(e)}")
-        # Don't fail the request if email fails
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail=f"Failed to send invitation email: {str(e)}"
+        )
     
     # Convert to response format
     permissions = schemas.UserPermissions(**db_user.permissions) if db_user.permissions else schemas.UserPermissions()
@@ -300,11 +314,18 @@ def resend_password_reset(
         </html>
         """
         
-        email_service.send_email(
+        result = email_service.send_email(
             to_email=staff.email,
             subject="Password Reset Request - Staff Account",
             body=email_body
         )
+        if not result.get("success"):
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=result.get("message", "Failed to send password reset email. Check SMTP settings and server network (e.g. firewall allows outbound port 587).")
+            )
+    except HTTPException:
+        raise
     except ConfigurationError as e:
         error_detail = format_config_error_response(e)
         error_detail["action_required"] = "Please configure your email settings (SMTP) in the Settings page to send password reset emails."

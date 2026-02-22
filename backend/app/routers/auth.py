@@ -209,7 +209,7 @@ def request_password_reset(request: schemas.PasswordResetRequest, db: Session = 
         )
     except Exception as e:
         print(f"Error sending password reset email: {str(e)}")
-        # Don't fail the request if email fails
+        # Don't fail the request if email fails (avoid leaking email existence)
     
     return {"message": "If the email exists and is an admin account, a password reset link has been sent"}
 
