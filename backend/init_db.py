@@ -12,8 +12,8 @@ from sqlalchemy import text
 def init_database():
     """Run Alembic migrations and create default data"""
     print("Running database migrations...")
+    tables_created = False
     try:
-        # Run Alembic migrations
         result = subprocess.run(
             ["alembic", "upgrade", "head"],
             capture_output=True,
@@ -23,21 +23,18 @@ def init_database():
             print("✓ Database migrations completed successfully")
             if result.stdout:
                 print(result.stdout)
+            tables_created = True
         else:
             print(f"⚠ Migration output: {result.stdout}")
             print(f"⚠ Migration errors: {result.stderr}")
-            # Don't exit on migration errors - they might be expected (e.g., already up to date)
+            print("  Falling back to create_all()...")
     except FileNotFoundError:
         print("⚠ Alembic not found, falling back to create_all()...")
-        try:
-            Base.metadata.create_all(bind=engine)
-            print("✓ Database tables created using create_all()")
-        except Exception as e2:
-            print(f"✗ Error creating tables: {e2}")
-            sys.exit(1)
     except Exception as e:
         print(f"⚠ Warning: Could not run migrations: {e}")
         print("  Falling back to create_all()...")
+    
+    if not tables_created:
         try:
             Base.metadata.create_all(bind=engine)
             print("✓ Database tables created using create_all()")
