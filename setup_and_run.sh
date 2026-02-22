@@ -151,6 +151,7 @@ if [ -z "$BACKEND_READY" ]; then
   echo "Fix the error above, then start backend manually:"
   echo "  cd backend && source ../venv/bin/activate && export \$(grep -v '^#' ../.env | xargs) && uvicorn app.main:app --host 0.0.0.0 --port 8000"
   echo "Then in another terminal run: cd frontend && npm run dev"
+  echo "(Note: npm run dev must be run from the frontend/ folder, not backend/.)"
   exit 1
 fi
 

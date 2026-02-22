@@ -281,6 +281,9 @@ Backend `requirements.txt` includes: FastAPI, Uvicorn, SQLAlchemy, Alembic, Pyda
   Run uvicorn from the `backend` directory:  
   `cd backend && source ../venv/bin/activate && export $(grep -v '^#' ../.env | xargs) && uvicorn app.main:app --host 0.0.0.0 --port 8000`
 
+- **npm ENOENT: no such file or directory, package.json**  
+  You're in the wrong directory. The frontend (and `package.json`) is in `frontend/`. Run `npm run dev` from the project root as: `cd frontend && npm run dev`.
+
 - **401 / CORS**  
   Set `FRONTEND_URL` and `PUBLIC_URL` in `.env` to the URL you use in the browser (e.g. `http://144.172.117.31:3000`).
 
