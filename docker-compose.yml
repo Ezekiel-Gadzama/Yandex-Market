@@ -12,7 +12,7 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-yandex_user}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-yandex_user} -d ${POSTGRES_DB:-yandex_market}"]
       interval: 10s
       timeout: 5s
       retries: 5

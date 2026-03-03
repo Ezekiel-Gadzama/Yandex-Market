@@ -388,7 +388,10 @@ class User(Base):
     __tablename__ = "users"
     
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String, unique=True, nullable=False, index=True)
+    email = Column(String, nullable=False, index=True)  # Unique per business - enforced by migration indexes
+    name = Column(String, nullable=True)  # Display name for staff (optional)
+    business_name = Column(String, nullable=True)  # Display name for business (admin only)
+    business_username = Column(String, nullable=True, index=True)  # Admin login identifier e.g. @Goal_sale (unique per admin)
     hashed_password = Column(String, nullable=False)
     
     # User role: 'admin' or 'staff'

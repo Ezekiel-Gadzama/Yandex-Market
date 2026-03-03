@@ -1,19 +1,33 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { staffApi, StaffCreate } from '../api/staff'
+import { staffApi, StaffCreate, BusinessAccountUpdate } from '../api/staff'
 import { User, UserPermissions } from '../api/auth'
 import { useAuth } from '../contexts/AuthContext'
-import { UserPlus, Edit2, Trash2, X, Mail, CheckCircle, AlertCircle } from 'lucide-react'
+import { UserPlus, Edit2, Trash2, X, Mail, CheckCircle, AlertCircle, Eye, EyeOff } from 'lucide-react'
 import ConfirmationModal from '../components/ConfirmationModal'
 
 export default function Staff() {
-  const { user: currentUser } = useAuth()
+  const { user: currentUser, refreshUser, logout } = useAuth()
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [isEditModalOpen, setIsEditModalOpen] = useState(false)
   const [selectedStaff, setSelectedStaff] = useState<User | null>(null)
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [editName, setEditName] = useState('')
+  const [editNewPassword, setEditNewPassword] = useState('')
+  const [editConfirmPassword, setEditConfirmPassword] = useState('')
+  const [showEditPassword, setShowEditPassword] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; staffId: number | null }>({ isOpen: false, staffId: null })
   const [notification, setNotification] = useState<{ isOpen: boolean; type: 'success' | 'error'; message: string }>({ isOpen: false, type: 'success', message: '' })
+  const [isBusinessModalOpen, setIsBusinessModalOpen] = useState(false)
+  const [businessEmail, setBusinessEmail] = useState('')
+  const [businessNewPassword, setBusinessNewPassword] = useState('')
+  const [businessConfirmPassword, setBusinessConfirmPassword] = useState('')
+  const [businessName, setBusinessName] = useState('')
+  const [businessUsername, setBusinessUsername] = useState('')
+  const [showBusinessPassword, setShowBusinessPassword] = useState(false)
   const queryClient = useQueryClient()
 
   const showNotification = (type: 'success' | 'error', message: string) => {
@@ -27,22 +41,35 @@ export default function Staff() {
     queryFn: () => staffApi.getAll(),
   })
 
+  const { data: businessAccount } = useQuery({
+    queryKey: ['staff', 'business-account'],
+    queryFn: () => staffApi.getBusinessAccount(),
+    enabled: isBusinessModalOpen,
+  })
+
   const createMutation = useMutation({
     mutationFn: (data: StaffCreate) => staffApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['staff'] })
       setIsAddModalOpen(false)
+      setName('')
       setEmail('')
+      setPassword('')
+      setShowPassword(false)
     },
   })
 
   const updateMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: { permissions?: UserPermissions; is_active?: boolean } }) =>
+    mutationFn: ({ id, data }: { id: number; data: { permissions?: UserPermissions; is_active?: boolean; name?: string } }) =>
       staffApi.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['staff'] })
       setIsEditModalOpen(false)
       setSelectedStaff(null)
+      setEditName('')
+      setEditNewPassword('')
+      setEditConfirmPassword('')
+      setShowEditPassword(false)
     },
   })
 
@@ -51,6 +78,31 @@ export default function Staff() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['staff'] })
       setDeleteConfirm({ isOpen: false, staffId: null })
+    },
+  })
+
+  const updateBusinessMutation = useMutation({
+    mutationFn: (data: BusinessAccountUpdate) => staffApi.updateBusinessAccount(data),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['staff'] })
+      queryClient.invalidateQueries({ queryKey: ['staff', 'business-account'] })
+      setIsBusinessModalOpen(false)
+      setBusinessEmail('')
+      setBusinessNewPassword('')
+      setBusinessConfirmPassword('')
+      setBusinessName('')
+      setBusinessUsername('')
+      setShowBusinessPassword(false)
+      if (variables.new_email && currentUser?.is_admin) {
+        showNotification('success', 'Business account updated. Please sign in with your new email.')
+        logout()
+      } else {
+        refreshUser()
+        showNotification('success', 'Business account updated')
+      }
+    },
+    onError: (error: any) => {
+      showNotification('error', error?.response?.data?.detail || 'Failed to update business account')
     },
   })
 
@@ -70,17 +122,34 @@ export default function Staff() {
 
   const handleAdd = (e: React.FormEvent) => {
     e.preventDefault()
-    createMutation.mutate({ email })
+    createMutation.mutate({
+      email,
+      ...(name.trim() ? { name: name.trim() } : {}),
+      ...(password && password.trim() ? { password } : {}),
+    })
   }
 
   const handleEdit = (staff: User) => {
     setSelectedStaff(staff)
+    setEditName(staff.name || '')
+    setEditNewPassword('')
+    setEditConfirmPassword('')
+    setShowEditPassword(false)
     setIsEditModalOpen(true)
   }
 
   const handleUpdate = (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedStaff) return
+
+    if (editNewPassword && editNewPassword !== editConfirmPassword) {
+      showNotification('error', 'New passwords do not match')
+      return
+    }
+    if (editNewPassword && editNewPassword.length < 8) {
+      showNotification('error', 'Password must be at least 8 characters')
+      return
+    }
 
     const formData = new FormData(e.currentTarget as HTMLFormElement)
     const permissions: UserPermissions = {
@@ -95,7 +164,12 @@ export default function Staff() {
 
     updateMutation.mutate({
       id: selectedStaff.id,
-      data: { permissions, is_active },
+      data: {
+        permissions,
+        is_active,
+        ...(editName.trim() !== (selectedStaff.name || '').trim() ? { name: editName.trim() } : {}),
+        ...(editNewPassword ? { new_password: editNewPassword } : {}),
+      },
     })
   }
 
@@ -107,6 +181,56 @@ export default function Staff() {
     if (deleteConfirm.staffId) {
       deleteMutation.mutate(deleteConfirm.staffId)
     }
+  }
+
+  useEffect(() => {
+    if (businessAccount && isBusinessModalOpen) {
+      setBusinessEmail(businessAccount.email)
+      setBusinessName(businessAccount.business_name || '')
+      setBusinessUsername(businessAccount.business_username || '')
+    }
+  }, [businessAccount, isBusinessModalOpen])
+
+  const handleOpenBusinessModal = () => {
+    setBusinessNewPassword('')
+    setBusinessConfirmPassword('')
+    setShowBusinessPassword(false)
+    setIsBusinessModalOpen(true)
+  }
+
+  const BUSINESS_USERNAME_REGEX = /^@[a-zA-Z0-9_]+$/
+
+  const handleBusinessUpdate = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (businessNewPassword && businessNewPassword !== businessConfirmPassword) {
+      showNotification('error', 'New passwords do not match')
+      return
+    }
+    if (businessNewPassword && businessNewPassword.length < 8) {
+      showNotification('error', 'Password must be at least 8 characters')
+      return
+    }
+    const trimmedUsername = businessUsername.trim()
+    if (trimmedUsername && !BUSINESS_USERNAME_REGEX.test(trimmedUsername)) {
+      showNotification('error', 'Business username must start with @ and contain only letters, numbers, and underscores (e.g. @Goal_sale)')
+      return
+    }
+    const data: BusinessAccountUpdate = {}
+    if (businessAccount && businessEmail.trim() !== businessAccount.email) {
+      data.new_email = businessEmail.trim()
+    }
+    if (businessNewPassword) data.new_password = businessNewPassword
+    if (businessAccount && businessName.trim() !== (businessAccount.business_name || '').trim()) {
+      data.business_name = businessName.trim() || ''
+    }
+    if (businessAccount && trimmedUsername !== (businessAccount.business_username || '').trim()) {
+      data.new_business_username = trimmedUsername  // "" clears username
+    }
+    if (Object.keys(data).length === 0) {
+      showNotification('error', 'No changes to save')
+      return
+    }
+    updateBusinessMutation.mutate(data)
   }
 
   // Check if current user can manage staff
@@ -125,13 +249,22 @@ export default function Staff() {
     <div>
       <div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center mb-6">
         <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Staff Management</h1>
-        <button
-          onClick={() => setIsAddModalOpen(true)}
-          className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 w-full sm:w-auto"
-        >
-          <UserPlus className="mr-2 h-5 w-5" />
-          Add Staff
-        </button>
+        <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <button
+            onClick={handleOpenBusinessModal}
+            className="flex items-center justify-center px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 w-full sm:w-auto"
+          >
+            <Edit2 className="mr-2 h-5 w-5" />
+            Edit Business Account
+          </button>
+          <button
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 w-full sm:w-auto"
+          >
+            <UserPlus className="mr-2 h-5 w-5" />
+            Add Staff
+          </button>
+        </div>
       </div>
 
       {isLoading ? (
@@ -149,6 +282,7 @@ export default function Staff() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Permissions</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
@@ -159,6 +293,7 @@ export default function Staff() {
                   {staff.map((member) => (
                     <tr key={member.id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{member.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{member.name || '—'}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${member.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                           {member.is_active ? 'Active' : 'Inactive'}
@@ -198,7 +333,10 @@ export default function Staff() {
             {staff.map((member) => (
               <div key={member.id} className="bg-white shadow rounded-lg p-4 border border-gray-100">
                 <div className="flex justify-between items-start gap-2 mb-3">
-                  <span className="text-sm font-medium text-gray-900 break-all">{member.email}</span>
+                  <div>
+                    <span className="text-sm font-medium text-gray-900 break-all block">{member.email}</span>
+                    {member.name && <span className="text-sm text-gray-500">{member.name}</span>}
+                  </div>
                   <span className={`shrink-0 px-2 py-1 text-xs font-semibold rounded-full ${member.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     {member.is_active ? 'Active' : 'Inactive'}
                   </span>
@@ -239,7 +377,10 @@ export default function Staff() {
               <button
                 onClick={() => {
                   setIsAddModalOpen(false)
+                  setName('')
                   setEmail('')
+                  setPassword('')
+                  setShowPassword(false)
                 }}
                 className="text-gray-400 hover:text-gray-500"
               >
@@ -247,6 +388,18 @@ export default function Staff() {
               </button>
             </div>
             <form onSubmit={handleAdd}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Name <span className="text-gray-500 font-normal">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="John Doe"
+                />
+              </div>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Email
@@ -259,8 +412,32 @@ export default function Staff() {
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   placeholder="staff@example.com"
                 />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Initial Password <span className="text-gray-500 font-normal">(optional)</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    minLength={8}
+                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Min 8 characters. Staff can reset at /reset-password"
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    title={showPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                  </button>
+                </div>
                 <p className="mt-1 text-xs text-gray-500">
-                  A password reset link will be sent to this email
+                  If set, give this password to the staff. They can login or go to /reset-password to set their own password.
                 </p>
               </div>
               <div className="flex justify-end space-x-3">
@@ -268,7 +445,9 @@ export default function Staff() {
                   type="button"
                   onClick={() => {
                     setIsAddModalOpen(false)
+                    setName('')
                     setEmail('')
+                    setPassword('')
                   }}
                   className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                 >
@@ -297,6 +476,10 @@ export default function Staff() {
                 onClick={() => {
                   setIsEditModalOpen(false)
                   setSelectedStaff(null)
+                  setEditName('')
+                  setEditNewPassword('')
+                  setEditConfirmPassword('')
+                  setShowEditPassword(false)
                 }}
                 className="text-gray-400 hover:text-gray-500"
               >
@@ -308,6 +491,18 @@ export default function Staff() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email: {selectedStaff.email}
                 </label>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Name <span className="text-gray-500 font-normal">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={editName}
+                  onChange={(e) => setEditName(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="John Doe"
+                />
               </div>
 
               <div className="mb-4">
@@ -380,12 +575,51 @@ export default function Staff() {
                 </label>
               </div>
 
+              {currentUser?.is_admin && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    New Password <span className="text-gray-500 font-normal">(optional)</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showEditPassword ? 'text' : 'password'}
+                      value={editNewPassword}
+                      onChange={(e) => setEditNewPassword(e.target.value)}
+                      minLength={8}
+                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Set new password for this staff"
+                      autoComplete="new-password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowEditPassword(!showEditPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      title={showEditPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showEditPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                  <input
+                    type={showEditPassword ? 'text' : 'password'}
+                    value={editConfirmPassword}
+                    onChange={(e) => setEditConfirmPassword(e.target.value)}
+                    minLength={8}
+                    className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Confirm new password"
+                    autoComplete="new-password"
+                  />
+                </div>
+              )}
+
               <div className="flex justify-end space-x-3">
                 <button
                   type="button"
                   onClick={() => {
                     setIsEditModalOpen(false)
                     setSelectedStaff(null)
+                    setEditNewPassword('')
+                    setEditConfirmPassword('')
+                    setShowEditPassword(false)
                   }}
                   className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
                 >
@@ -400,6 +634,126 @@ export default function Staff() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Business Account Modal */}
+      {isBusinessModalOpen && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 p-4">
+          <div className="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-medium text-gray-900">Edit Business Account</h3>
+              <button
+                onClick={() => {
+                  setIsBusinessModalOpen(false)
+                  setBusinessEmail('')
+                  setBusinessNewPassword('')
+                  setBusinessConfirmPassword('')
+                  setBusinessName('')
+                  setShowBusinessPassword(false)
+                }}
+                className="text-gray-400 hover:text-gray-500"
+              >
+                <X className="h-6 w-6" />
+              </button>
+            </div>
+            {!businessAccount ? (
+              <div className="py-4 text-gray-500">Loading...</div>
+            ) : (
+              <form onSubmit={handleBusinessUpdate}>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Business Email</label>
+                  <input
+                    type="email"
+                    required
+                    value={businessEmail}
+                    onChange={(e) => setBusinessEmail(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="admin@business.com"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Change the business (admin) login email.</p>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Business Name</label>
+                  <input
+                    type="text"
+                    value={businessName}
+                    onChange={(e) => setBusinessName(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="My Business"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Displayed at the top of the app.</p>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Business Username</label>
+                  <input
+                    type="text"
+                    value={businessUsername}
+                    onChange={(e) => setBusinessUsername(e.target.value)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="@Goal_sale"
+                  />
+                  <p className="mt-1 text-xs text-gray-500">Optional. Used for login instead of email. Must start with @, letters, numbers, underscores only.</p>
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    New Password <span className="text-gray-500 font-normal">(optional)</span>
+                  </label>
+                  <div className="relative">
+                    <input
+                      type={showBusinessPassword ? 'text' : 'password'}
+                      value={businessNewPassword}
+                      onChange={(e) => setBusinessNewPassword(e.target.value)}
+                      minLength={8}
+                      className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Set new password for business account"
+                      autoComplete="new-password"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowBusinessPassword(!showBusinessPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                      title={showBusinessPassword ? 'Hide password' : 'Show password'}
+                    >
+                      {showBusinessPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                    </button>
+                  </div>
+                  <input
+                    type={showBusinessPassword ? 'text' : 'password'}
+                    value={businessConfirmPassword}
+                    onChange={(e) => setBusinessConfirmPassword(e.target.value)}
+                    minLength={8}
+                    className="mt-2 w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Confirm new password"
+                    autoComplete="new-password"
+                  />
+                </div>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsBusinessModalOpen(false)
+                      setBusinessEmail('')
+                      setBusinessNewPassword('')
+                      setBusinessConfirmPassword('')
+                      setBusinessName('')
+                      setShowBusinessPassword(false)
+                    }}
+                    className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={updateBusinessMutation.isPending}
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {updateBusinessMutation.isPending ? 'Saving...' : 'Save'}
+                  </button>
+                </div>
+              </form>
+            )}
           </div>
         </div>
       )}

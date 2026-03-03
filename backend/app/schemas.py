@@ -1,4 +1,5 @@
-from pydantic import BaseModel, EmailStr, Field, validator
+import re
+from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 import json
@@ -393,21 +394,57 @@ class UserCreate(UserBase):
     password: str = Field(..., min_length=8)
 
 
+def _validate_business_username(v: str) -> str:
+    """Username format: @Goal_sale - starts with @, only alphanumeric and underscore."""
+    if not v or not v.strip():
+        return v
+    v = v.strip()
+    if not re.match(r"^@[a-zA-Z0-9_]+$", v):
+        raise ValueError("Business username must start with @ and contain only letters, numbers, and underscores (e.g. @Goal_sale)")
+    if len(v) < 2:
+        raise ValueError("Business username must have at least one character after @")
+    return v
+
+
 class UserSignup(UserCreate):
-    pass  # First user becomes admin
+    business_name: Optional[str] = None  # Display name for the business (first user = admin)
+    business_username: Optional[str] = None  # Login identifier e.g. @Goal_sale
+
+    @field_validator("business_username", mode="before")
+    @classmethod
+    def validate_business_username(cls, v):
+        if v is None or (isinstance(v, str) and not v.strip()):
+            return None
+        return _validate_business_username(str(v).strip())
 
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    """Login with business email or username (required) + staff/admin email + password."""
+    business_identifier: str  # Admin email OR business username (e.g. @Goal_sale) - identifies the business
+    email: str  # Staff email (or same as business_identifier for owner - can be username)
     password: str
 
 
+class ChangePassword(BaseModel):
+    """Change password when logged in - no business email needed."""
+    previous_password: str
+    new_password: str = Field(..., min_length=8)
+
+
 class PasswordResetRequest(BaseModel):
-    email: EmailStr
+    identifier: str  # Admin email OR business username (e.g. @Goal_sale)
 
 
 class PasswordReset(BaseModel):
     token: str
+    new_password: str = Field(..., min_length=8)
+
+
+class PasswordResetWithPrevious(BaseModel):
+    """Staff reset password using business email/username, staff email, and previous password."""
+    business_identifier: str  # Admin email OR business username (e.g. @Goal_sale)
+    staff_email: EmailStr
+    previous_password: str
     new_password: str = Field(..., min_length=8)
 
 
@@ -422,11 +459,29 @@ class UserPermissions(BaseModel):
 
 class StaffCreate(BaseModel):
     email: EmailStr
+    name: Optional[str] = None  # Display name for staff (optional)
+    password: Optional[str] = Field(None, min_length=8)  # Optional. If set, staff uses this to login or reset at /reset-password
+
+    @field_validator("password", mode="before")
+    @classmethod
+    def empty_to_none(cls, v):
+        if v == "" or v is None:
+            return None
+        return v
 
 
 class UserUpdate(BaseModel):
     permissions: Optional[UserPermissions] = None
     is_active: Optional[bool] = None
+    name: Optional[str] = None  # Display name for staff (optional)
+    new_password: Optional[str] = Field(None, min_length=8)  # Admin can set staff password directly
+
+    @field_validator("new_password", mode="before")
+    @classmethod
+    def empty_to_none(cls, v):
+        if v == "" or v is None:
+            return None
+        return v
 
 
 class User(UserBase):
@@ -435,18 +490,39 @@ class User(UserBase):
     created_by_id: Optional[int] = None
     permissions: UserPermissions
     is_active: bool
+    name: Optional[str] = None  # Staff display name (optional)
+    business_name: Optional[str] = None  # Business display name (admin's business or staff's business)
+    business_username: Optional[str] = None  # Admin login identifier e.g. @Goal_sale
     created_at: datetime
     updated_at: Optional[datetime] = None
-    
+
     class Config:
         from_attributes = True
+
+
+class BusinessAccountUpdate(BaseModel):
+    """Update business admin email, password, business name, and/or business username. Used by staff with view_staff or admin."""
+    new_email: Optional[EmailStr] = None
+    new_password: Optional[str] = Field(None, min_length=8)
+    business_name: Optional[str] = None
+    new_business_username: Optional[str] = None
+
+    @field_validator("new_password", mode="before")
+    @classmethod
+    def empty_to_none(cls, v):
+        if v == "" or v is None:
+            return None
+        return v
+
+    @field_validator("new_business_username", mode="before")
+    @classmethod
+    def validate_business_username(cls, v):
+        if v is None or (isinstance(v, str) and not v.strip()):
+            return None
+        return _validate_business_username(str(v).strip())
 
 
 class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: User
-
-
-class StaffCreate(BaseModel):
-    email: EmailStr

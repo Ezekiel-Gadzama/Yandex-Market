@@ -3,10 +3,13 @@ import apiClient from './client'
 export interface User {
   id: number
   email: string
+  name?: string | null
   is_admin: boolean
   created_by_id: number | null
   permissions: UserPermissions
   is_active: boolean
+  business_name?: string | null
+  business_username?: string | null
   created_at: string
   updated_at: string | null
 }
@@ -29,19 +32,34 @@ export interface Token {
 export interface UserSignup {
   email: string
   password: string
+  business_name?: string
+  business_username?: string  // e.g. @Goal_sale
 }
 
 export interface UserLogin {
+  business_identifier: string  // Admin email OR business username (e.g. @Goal_sale)
   email: string
   password: string
 }
 
+export interface ChangePassword {
+  previous_password: string
+  new_password: string
+}
+
 export interface PasswordResetRequest {
-  email: string
+  identifier: string  // Admin email OR business username (e.g. @Goal_sale)
 }
 
 export interface PasswordReset {
   token: string
+  new_password: string
+}
+
+export interface PasswordResetWithPrevious {
+  business_identifier: string  // Admin email OR business username (e.g. @Goal_sale)
+  staff_email: string
+  previous_password: string
   new_password: string
 }
 
@@ -68,6 +86,16 @@ export const authApi = {
 
   resetPassword: async (data: PasswordReset): Promise<{ message: string }> => {
     const response = await apiClient.post<{ message: string }>('/auth/reset-password', data)
+    return response.data
+  },
+
+  resetPasswordWithPrevious: async (data: PasswordResetWithPrevious): Promise<{ message: string }> => {
+    const response = await apiClient.post<{ message: string }>('/auth/reset-password-with-previous', data)
+    return response.data
+  },
+
+  changePassword: async (data: ChangePassword): Promise<{ message: string }> => {
+    const response = await apiClient.post<{ message: string }>('/auth/change-password', data)
     return response.data
   },
 }

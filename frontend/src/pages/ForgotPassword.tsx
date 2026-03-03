@@ -1,8 +1,8 @@
 import { useState } from 'react'
-import apiClient from '../api/client'
+import { authApi } from '../api/auth'
 
 export default function ForgotPassword() {
-  const [email, setEmail] = useState('')
+  const [identifier, setIdentifier] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -14,8 +14,8 @@ export default function ForgotPassword() {
     setIsLoading(true)
 
     try {
-      const response = await apiClient.post('/api/auth/request-password-reset', { email })
-      const message = response.data.message || 'If the email exists and is an admin account, a password reset link has been sent'
+      const response = await authApi.requestPasswordReset({ identifier })
+      const message = response.message || 'If the email or username exists and is an admin account, a password reset link has been sent'
       
       // Check if it's the non-admin message
       if (message.includes('contact your administrator')) {
@@ -38,7 +38,7 @@ export default function ForgotPassword() {
             Forgot Password
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            Enter your admin email address to receive a password reset link
+            Enter your admin email or business username (e.g. @Goal_sale) to receive a password reset link
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -54,19 +54,19 @@ export default function ForgotPassword() {
           )}
           <div className="rounded-md shadow-sm">
             <div>
-              <label htmlFor="email" className="sr-only">
-                Email address
+              <label htmlFor="identifier" className="sr-only">
+                Business email or username
               </label>
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
+                id="identifier"
+                name="identifier"
+                type="text"
+                autoComplete="username"
                 required
                 className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Admin email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Admin email or username (e.g. @Goal_sale)"
+                value={identifier}
+                onChange={(e) => setIdentifier(e.target.value)}
               />
             </div>
           </div>

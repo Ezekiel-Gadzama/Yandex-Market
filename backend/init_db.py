@@ -11,9 +11,16 @@ from sqlalchemy import text
 
 def init_database():
     """Run Alembic migrations and create default data"""
-    print("Running database migrations...")
+    print("Ensuring base tables exist...")
     try:
-        # Run Alembic migrations
+        Base.metadata.create_all(bind=engine)
+        print("✓ Base tables created/verified")
+    except Exception as e:
+        print(f"✗ Error creating base tables: {e}")
+        sys.exit(1)
+
+    print("Running Alembic migrations...")
+    try:
         result = subprocess.run(
             ["alembic", "upgrade", "head"],
             capture_output=True,
@@ -131,6 +138,69 @@ def init_database():
     finally:
         db.close()
     
+    # Allow same staff email in multiple businesses (drop email unique, add per-business indexes)
+    print("Applying users multi-business migration if needed...")
+    db = SessionLocal()
+    try:
+        try:
+            db.execute(text("ALTER TABLE users DROP CONSTRAINT IF EXISTS users_email_key"))
+            db.commit()
+        except Exception:
+            db.rollback()
+        db.execute(text("""
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_users_admin_email_unique
+            ON users (email) WHERE is_admin = true
+        """))
+        db.commit()
+        db.execute(text("""
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_users_staff_email_business_unique
+            ON users (email, created_by_id) WHERE is_admin = false AND created_by_id IS NOT NULL
+        """))
+        db.commit()
+        print("✓ Users multi-business indexes added/verified")
+    except Exception as e:
+        db.rollback()
+        print(f"⚠ Warning: Could not apply users multi-business migration: {e}")
+    finally:
+        db.close()
+
+    # Add business_username to users (admin login identifier e.g. @Goal_sale)
+    print("Adding business_username column if needed...")
+    db = SessionLocal()
+    try:
+        db.execute(text("""
+            ALTER TABLE users 
+            ADD COLUMN IF NOT EXISTS business_username VARCHAR
+        """))
+        db.commit()
+        db.execute(text("""
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_users_admin_business_username_unique
+            ON users (business_username) WHERE is_admin = true AND business_username IS NOT NULL AND business_username != ''
+        """))
+        db.commit()
+        print("✓ business_username column added/verified")
+    except Exception as e:
+        db.rollback()
+        print(f"⚠ Warning: Could not add business_username: {e}")
+    finally:
+        db.close()
+
+    # Add name column to users (staff display name)
+    print("Adding name column to users if needed...")
+    db = SessionLocal()
+    try:
+        db.execute(text("""
+            ALTER TABLE users 
+            ADD COLUMN IF NOT EXISTS name VARCHAR
+        """))
+        db.commit()
+        print("✓ name column added/verified")
+    except Exception as e:
+        db.rollback()
+        print(f"⚠ Warning: Could not add name column: {e}")
+    finally:
+        db.close()
+
     # Add smtp_user column to app_settings if it doesn't exist
     print("Adding smtp_user column if needed...")
     db = SessionLocal()

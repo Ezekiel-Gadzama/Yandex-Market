@@ -57,9 +57,11 @@ def get_password_hash(password: str) -> str:
     return _get_pwd_context().hash(password)
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-    """Create a JWT access token"""
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None, *, user_id: Optional[int] = None) -> str:
+    """Create a JWT access token. Uses sub=user_id for unique user identification (supports multi-business staff)."""
     to_encode = data.copy()
+    if user_id is not None:
+        to_encode["sub"] = str(user_id)
     if expires_delta:
         expire = datetime.now(timezone.utc) + expires_delta
     else:
@@ -69,31 +71,31 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
     return encoded_jwt
 
 
-def create_password_reset_token(email: str) -> str:
-    """Create a password reset token"""
-    delta = timedelta(hours=24)  # Token expires in 24 hours
+def create_password_reset_token(user_id: int) -> str:
+    """Create a password reset token. Uses user_id for unambiguous lookup (supports multi-business staff)."""
+    delta = timedelta(hours=24)
     now = datetime.now(timezone.utc)
     expires = now + delta
     exp = expires.timestamp()
     encoded_jwt = jwt.encode(
-        {"sub": email, "exp": exp, "type": "password_reset"},
+        {"sub": str(user_id), "exp": exp, "type": "password_reset"},
         settings.SECRET_KEY,
         algorithm=settings.ALGORITHM
     )
     return encoded_jwt
 
 
-def verify_password_reset_token(token: str) -> Optional[str]:
-    """Verify a password reset token and return the email"""
+def verify_password_reset_token(token: str) -> Optional[int]:
+    """Verify a password reset token and return the user_id"""
     try:
         decoded_token = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         if decoded_token.get("type") != "password_reset":
             return None
-        email: str = decoded_token.get("sub")
-        if email is None:
+        sub = decoded_token.get("sub")
+        if sub is None:
             return None
-        return email
-    except JWTError:
+        return int(sub)
+    except (JWTError, ValueError):
         return None
 
 
@@ -101,7 +103,7 @@ async def get_current_user(
     token: str = Depends(oauth2_scheme),
     db: Session = Depends(get_db)
 ) -> models.User:
-    """Get the current authenticated user from JWT token"""
+    """Get the current authenticated user from JWT token. Token sub = user_id for multi-business support."""
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Could not validate credentials",
@@ -109,22 +111,22 @@ async def get_current_user(
     )
     try:
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        email: str = payload.get("sub")
-        if email is None:
+        sub = payload.get("sub")
+        if sub is None:
             raise credentials_exception
-    except JWTError:
+        user_id = int(sub)
+    except (JWTError, ValueError):
         raise credentials_exception
-    
-    user = db.query(models.User).filter(models.User.email == email).first()
+
+    user = db.query(models.User).filter(models.User.id == user_id).first()
     if user is None:
         raise credentials_exception
-    
+
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="User account is inactive"
         )
-    
     return user
 
 

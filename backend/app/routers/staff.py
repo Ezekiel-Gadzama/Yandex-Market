@@ -6,7 +6,7 @@ from app.database import get_db
 from app import models, schemas
 from app.auth import (
     get_current_active_user, require_admin, has_permission,
-    create_password_reset_token, get_business_id
+    create_password_reset_token, get_password_hash, get_business_id
 )
 from app.services.email_service import EmailService
 from app.services.config_validator import ConfigurationError, format_config_error_response
@@ -28,10 +28,12 @@ def get_staff(
             detail="Permission required: view_staff"
         )
     
-    # If admin, show all staff (non-admin users)
-    # If staff with permission, show only staff created by their admin
+    business_id = get_business_id(current_user)
     if current_user.is_admin:
-        staff = db.query(models.User).filter(models.User.is_admin == False).all()
+        staff = db.query(models.User).filter(
+            models.User.is_admin == False,
+            models.User.created_by_id == business_id
+        ).all()
     else:
         # Staff can only see staff created by their admin
         staff = db.query(models.User).filter(
@@ -46,6 +48,7 @@ def get_staff(
         result.append(schemas.User(
             id=user.id,
             email=user.email,
+            name=user.name,
             is_admin=user.is_admin,
             created_by_id=user.created_by_id,
             permissions=permissions,
@@ -55,6 +58,91 @@ def get_staff(
         ))
     
     return result
+
+
+@router.get("/business-account", response_model=schemas.User)
+def get_business_account(
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """Get the business admin account. Access: admin or users with view_staff permission."""
+    if not current_user.is_admin and not has_permission(current_user, "view_staff"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Permission required: view_staff"
+        )
+    business_id = get_business_id(current_user)
+    admin_user = db.query(models.User).filter(
+        models.User.id == business_id,
+        models.User.is_admin == True
+    ).first()
+    if not admin_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business account not found")
+    permissions = schemas.UserPermissions(**admin_user.permissions) if admin_user.permissions else schemas.UserPermissions()
+    return schemas.User(
+        id=admin_user.id,
+        email=admin_user.email,
+        is_admin=admin_user.is_admin,
+        created_by_id=admin_user.created_by_id,
+        permissions=permissions,
+        is_active=admin_user.is_active,
+        business_name=admin_user.business_name,
+        business_username=admin_user.business_username,
+        created_at=admin_user.created_at,
+        updated_at=admin_user.updated_at
+    )
+
+
+@router.put("/business-account", response_model=schemas.User)
+def update_business_account(
+    data: schemas.BusinessAccountUpdate,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """Update business admin email, password, and/or business name. Uses business_id (not email). Access: admin or users with view_staff."""
+    if not current_user.is_admin and not has_permission(current_user, "view_staff"):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Permission required: view_staff"
+        )
+    business_id = get_business_id(current_user)
+    admin_user = db.query(models.User).filter(
+        models.User.id == business_id,
+        models.User.is_admin == True
+    ).first()
+    if not admin_user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Business account not found")
+    if data.new_email is not None:
+        existing_admin = db.query(models.User).filter(
+            models.User.email == data.new_email,
+            models.User.is_admin == True,
+            models.User.id != admin_user.id
+        ).first()
+        if existing_admin:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
+        admin_user.email = data.new_email
+    if data.new_password:
+        admin_user.hashed_password = get_password_hash(data.new_password)
+        admin_user.password_reset_token = None
+        admin_user.password_reset_token_expires = None
+    if data.business_name is not None:
+        admin_user.business_name = data.business_name.strip() or None
+    admin_user.updated_at = datetime.now(timezone.utc)
+    db.commit()
+    db.refresh(admin_user)
+    permissions = schemas.UserPermissions(**admin_user.permissions) if admin_user.permissions else schemas.UserPermissions()
+    return schemas.User(
+        id=admin_user.id,
+        email=admin_user.email,
+        is_admin=admin_user.is_admin,
+        created_by_id=admin_user.created_by_id,
+        permissions=permissions,
+        is_active=admin_user.is_active,
+        business_name=admin_user.business_name,
+        business_username=admin_user.business_username,
+        created_at=admin_user.created_at,
+        updated_at=admin_user.updated_at
+    )
 
 
 @router.post("/", response_model=schemas.User)
@@ -71,12 +159,15 @@ def create_staff(
             detail="Permission required: view_staff"
         )
     
-    # Check if user already exists
-    existing_user = db.query(models.User).filter(models.User.email == staff_data.email).first()
-    if existing_user:
+    created_by_id = current_user.id if current_user.is_admin else current_user.created_by_id
+    existing_staff = db.query(models.User).filter(
+        models.User.email == staff_data.email,
+        models.User.created_by_id == created_by_id
+    ).first()
+    if existing_staff:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
+            detail="Email already registered for this business"
         )
     
     # Determine created_by_id
@@ -91,11 +182,14 @@ def create_staff(
         "dashboard_right": False,
         "view_product_prices": True  # Default: True
     }
+
+    # If password provided, use it; otherwise empty (will send reset link via email)
+    hashed_password = get_password_hash(staff_data.password) if staff_data.password else ""
     
-    # Create user without password (will be set via password reset)
     db_user = models.User(
         email=staff_data.email,
-        hashed_password="",  # Empty password - must be set via reset
+        name=(staff_data.name or "").strip() or None,
+        hashed_password=hashed_password,
         is_admin=False,
         created_by_id=created_by_id,
         permissions=default_permissions,
@@ -103,63 +197,54 @@ def create_staff(
     )
     
     db.add(db_user)
-    db.flush()  # Flush to get the user ID
+    db.flush()
     
-    # Generate password reset token
-    reset_token = create_password_reset_token(db_user.email)
-    db_user.password_reset_token = reset_token
-    db_user.password_reset_token_expires = datetime.now(timezone.utc) + timedelta(hours=24)
+    # When no password: set reset token and optionally send email (never block staff creation)
+    if not staff_data.password:
+        reset_token = create_password_reset_token(db_user.id)
+        db_user.password_reset_token = reset_token
+        db_user.password_reset_token_expires = datetime.now(timezone.utc) + timedelta(hours=24)
+        
+        try:
+            from app.auth import get_business_id
+            
+            business_id = get_business_id(current_user)
+            email_service = EmailService(business_id=business_id, db=db)
+            reset_url = f"{settings.FRONTEND_URL}/reset-password?token={reset_token}"
+            email_body = f"""
+            You have been invited to join the Yandex Market management system.
+            
+            Click the following link to set your password and activate your account:
+            {reset_url}
+            
+            This link will expire in 24 hours.
+            
+            If you did not expect this invitation, please contact your administrator.
+            """
+            
+            result = email_service.send_email(
+                to_email=db_user.email,
+                subject="Welcome to Yandex Market - Set Your Password",
+                body=email_body
+            )
+            if result.get("success"):
+                print(f"[Staff] Invitation email sent to {db_user.email}")
+            else:
+                print(f"[Staff] Invitation email not sent: {result.get('message', 'unknown')}")
+        except ConfigurationError as e:
+            print(f"[Staff] SMTP not configured - invitation email skipped: {e}")
+        except Exception as e:
+            print(f"[Staff] Failed to send invitation email: {e}")
     
     db.commit()
     db.refresh(db_user)
-    
-    # Send password reset email
-    try:
-        from app.auth import get_business_id
-        from app.services.config_validator import ConfigurationError, format_config_error_response
-        
-        business_id = get_business_id(current_user)
-        email_service = EmailService(business_id=business_id, db=db)
-        reset_url = f"{settings.FRONTEND_URL}/reset-password?token={reset_token}"
-        email_body = f"""
-        You have been invited to join the Yandex Market management system.
-        
-        Click the following link to set your password and activate your account:
-        {reset_url}
-        
-        This link will expire in 24 hours.
-        
-        If you did not expect this invitation, please contact your administrator.
-        """
-        
-        result = email_service.send_email(
-            to_email=db_user.email,
-            subject="Welcome to Yandex Market - Set Your Password",
-            body=email_body
-        )
-        if not result.get("success"):
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail=result.get("message", "Staff created but failed to send invitation email. Check SMTP settings and server network.")
-            )
-    except HTTPException:
-        raise
-    except ConfigurationError as e:
-        error_detail = format_config_error_response(e)
-        error_detail["action_required"] = "Configure SMTP in Settings to send invitation emails."
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error_detail)
-    except Exception as e:
-        print(f"Error sending staff invitation email: {str(e)}")
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail=f"Failed to send invitation email: {str(e)}"
-        )
     
     # Convert to response format
     permissions = schemas.UserPermissions(**db_user.permissions) if db_user.permissions else schemas.UserPermissions()
     return schemas.User(
         id=db_user.id,
         email=db_user.email,
+        name=db_user.name,
         is_admin=db_user.is_admin,
         created_by_id=db_user.created_by_id,
         permissions=permissions,
@@ -221,6 +306,16 @@ def update_staff(
     # Update is_active if provided
     if staff_update.is_active is not None:
         staff_user.is_active = staff_update.is_active
+
+    # Update password if provided (admin can set staff password directly)
+    if staff_update.new_password:
+        staff_user.hashed_password = get_password_hash(staff_update.new_password)
+        staff_user.password_reset_token = None
+        staff_user.password_reset_token_expires = None
+
+    # Update name if provided
+    if staff_update.name is not None:
+        staff_user.name = (staff_update.name or "").strip() or None
     
     staff_user.updated_at = datetime.now(timezone.utc)
     db.commit()
@@ -231,6 +326,7 @@ def update_staff(
     return schemas.User(
         id=staff_user.id,
         email=staff_user.email,
+        name=staff_user.name,
         is_admin=staff_user.is_admin,
         created_by_id=staff_user.created_by_id,
         permissions=permissions,
@@ -289,7 +385,7 @@ def resend_password_reset(
         )
     
     # Generate reset token
-    reset_token = create_password_reset_token(staff.email)
+    reset_token = create_password_reset_token(staff.id)
     
     # Store token in database
     staff.password_reset_token = reset_token

@@ -14,16 +14,59 @@ from app.services.email_service import EmailService
 router = APIRouter()
 
 
+def _resolve_admin_by_identifier(db: Session, identifier: str):
+    """Resolve admin user by email or business_username.
+    Usernames are stored with @ prefix (e.g. @Goal_sale). If user enters 'Goal_sale' without @,
+    we try '@Goal_sale' when looking up business_username.
+    """
+    iden = (identifier or "").strip()
+    if not iden:
+        return None
+    # Try exact match as email first
+    admin = db.query(models.User).filter(
+        models.User.email == iden,
+        models.User.is_admin == True
+    ).first()
+    if admin:
+        return admin
+    # Try exact match as business_username
+    admin = db.query(models.User).filter(
+        models.User.business_username == iden,
+        models.User.is_admin == True
+    ).first()
+    if admin:
+        return admin
+    # Try with @ prefix if identifier doesn't start with @ (e.g. "digital_sales" -> "@digital_sales")
+    if not iden.startswith("@"):
+        admin = db.query(models.User).filter(
+            models.User.business_username == ("@" + iden),
+            models.User.is_admin == True
+        ).first()
+    return admin
+
+
 @router.post("/signup", response_model=schemas.Token)
 def signup(user_data: schemas.UserSignup, db: Session = Depends(get_db)):
     """Sign up a new user. First user becomes admin."""
-    # Check if user already exists
-    existing_user = db.query(models.User).filter(models.User.email == user_data.email).first()
-    if existing_user:
+    existing_admin = db.query(models.User).filter(
+        models.User.email == user_data.email,
+        models.User.is_admin == True
+    ).first()
+    if existing_admin:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
+            detail="Email already registered as admin"
         )
+    if user_data.business_username:
+        existing_username = db.query(models.User).filter(
+            models.User.business_username == user_data.business_username,
+            models.User.is_admin == True
+        ).first()
+        if existing_username:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Business username already taken"
+            )
     
     # Check if this is the first user (becomes admin)
     user_count = db.query(models.User).count()
@@ -47,7 +90,9 @@ def signup(user_data: schemas.UserSignup, db: Session = Depends(get_db)):
         hashed_password=hashed_password,
         is_admin=is_admin,
         permissions=default_permissions,
-        is_active=True
+        is_active=True,
+        business_name=(user_data.business_name or "").strip() or None,
+        business_username=((user_data.business_username or "").strip() or None) if is_admin else None,
     )
     
     db.add(db_user)
@@ -62,13 +107,18 @@ def signup(user_data: schemas.UserSignup, db: Session = Depends(get_db)):
     # Create access token
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": db_user.email},
-        expires_delta=access_token_expires
+        data={},
+        expires_delta=access_token_expires,
+        user_id=db_user.id
     )
     
     # Convert permissions dict to UserPermissions schema
     permissions = schemas.UserPermissions(**db_user.permissions)
-    
+    business_name = db_user.business_name if db_user.is_admin else None
+    if not db_user.is_admin and db_user.created_by_id:
+        admin_user = db.query(models.User).filter(models.User.id == db_user.created_by_id).first()
+        business_name = admin_user.business_name if admin_user else None
+
     user_response = schemas.User(
         id=db_user.id,
         email=db_user.email,
@@ -76,6 +126,7 @@ def signup(user_data: schemas.UserSignup, db: Session = Depends(get_db)):
         created_by_id=db_user.created_by_id,
         permissions=permissions,
         is_active=db_user.is_active,
+        business_name=business_name,
         created_at=db_user.created_at,
         updated_at=db_user.updated_at
     )
@@ -89,16 +140,40 @@ def signup(user_data: schemas.UserSignup, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=schemas.Token)
 def login(credentials: schemas.UserLogin, db: Session = Depends(get_db)):
-    """Login with email and password"""
-    user = db.query(models.User).filter(models.User.email == credentials.email).first()
-    
-    if not user or not verify_password(credentials.password, user.hashed_password):
+    """Login with business email/username + staff/admin email + password. Business identifier identifies the business."""
+    admin = _resolve_admin_by_identifier(db, credentials.business_identifier)
+    if not admin:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect business email, username, or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    if credentials.email == credentials.business_identifier.strip():
+        user = admin
+    else:
+        user = db.query(models.User).filter(
+            models.User.email == credentials.email,
+            models.User.created_by_id == admin.id,
+            models.User.is_admin == False
+        ).first()
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    
+    if not user.hashed_password or not user.hashed_password.strip():
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Account not activated. Please set your password using the link sent to your email, or ask your administrator to resend it.",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    if not verify_password(credentials.password, user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect email or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     if not user.is_active:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -108,13 +183,18 @@ def login(credentials: schemas.UserLogin, db: Session = Depends(get_db)):
     # Create access token
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
-        data={"sub": user.email},
-        expires_delta=access_token_expires
+        data={},
+        expires_delta=access_token_expires,
+        user_id=user.id
     )
     
     # Convert permissions dict to UserPermissions schema
     permissions = schemas.UserPermissions(**user.permissions) if user.permissions else schemas.UserPermissions()
-    
+    business_name = user.business_name if user.is_admin else None
+    if not user.is_admin and user.created_by_id:
+        admin_user = db.query(models.User).filter(models.User.id == user.created_by_id).first()
+        business_name = admin_user.business_name if admin_user else None
+
     user_response = schemas.User(
         id=user.id,
         email=user.email,
@@ -122,6 +202,7 @@ def login(credentials: schemas.UserLogin, db: Session = Depends(get_db)):
         created_by_id=user.created_by_id,
         permissions=permissions,
         is_active=user.is_active,
+        business_name=business_name,
         created_at=user.created_at,
         updated_at=user.updated_at
     )
@@ -134,10 +215,16 @@ def login(credentials: schemas.UserLogin, db: Session = Depends(get_db)):
 
 
 @router.get("/me", response_model=schemas.User)
-def get_current_user_info(current_user: models.User = Depends(get_current_active_user)):
+def get_current_user_info(
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
     """Get current user information"""
     permissions = schemas.UserPermissions(**current_user.permissions) if current_user.permissions else schemas.UserPermissions()
-    
+    business_name = current_user.business_name if current_user.is_admin else None
+    if not current_user.is_admin and current_user.created_by_id:
+        admin_user = db.query(models.User).filter(models.User.id == current_user.created_by_id).first()
+        business_name = admin_user.business_name if admin_user else None
     return schemas.User(
         id=current_user.id,
         email=current_user.email,
@@ -145,6 +232,7 @@ def get_current_user_info(current_user: models.User = Depends(get_current_active
         created_by_id=current_user.created_by_id,
         permissions=permissions,
         is_active=current_user.is_active,
+        business_name=business_name,
         created_at=current_user.created_at,
         updated_at=current_user.updated_at
     )
@@ -153,9 +241,7 @@ def get_current_user_info(current_user: models.User = Depends(get_current_active
 @router.post("/request-password-reset")
 def request_password_reset(request: schemas.PasswordResetRequest, db: Session = Depends(get_db)):
     """Request a password reset. Only admins can use this endpoint."""
-    user = db.query(models.User).filter(models.User.email == request.email).first()
-    
-    # Check if user exists and is admin
+    user = _resolve_admin_by_identifier(db, request.identifier)
     if not user:
         # Don't reveal if user exists (security best practice)
         return {"message": "If the email exists and is an admin account, a password reset link has been sent"}
@@ -166,8 +252,7 @@ def request_password_reset(request: schemas.PasswordResetRequest, db: Session = 
             "message": "Password reset is only available for admin accounts. Please contact your administrator to reset your password."
         }
     
-    # Generate reset token
-    reset_token = create_password_reset_token(user.email)
+    reset_token = create_password_reset_token(user.id)
     
     # Store token in database
     from datetime import datetime, timedelta, timezone
@@ -216,17 +301,14 @@ def request_password_reset(request: schemas.PasswordResetRequest, db: Session = 
 
 @router.post("/reset-password")
 def reset_password(reset_data: schemas.PasswordReset, db: Session = Depends(get_db)):
-    """Reset password using a reset token"""
-    # Verify token
-    email = verify_password_reset_token(reset_data.token)
-    if not email:
+    """Reset password using a reset token (token contains user_id)."""
+    user_id = verify_password_reset_token(reset_data.token)
+    if not user_id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Invalid or expired reset token"
         )
-    
-    # Find user
-    user = db.query(models.User).filter(models.User.email == email).first()
+    user = db.query(models.User).filter(models.User.id == user_id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -253,4 +335,67 @@ def reset_password(reset_data: schemas.PasswordReset, db: Session = Depends(get_
     user.password_reset_token_expires = None
     db.commit()
     
+    return {"message": "Password reset successfully"}
+
+
+@router.post("/change-password")
+def change_password(
+    data: schemas.ChangePassword,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db)
+):
+    """Change password when logged in. No business email needed - uses session."""
+    if not verify_password(data.previous_password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Previous password is incorrect"
+        )
+    current_user.hashed_password = get_password_hash(data.new_password)
+    current_user.password_reset_token = None
+    current_user.password_reset_token_expires = None
+    db.commit()
+    return {"message": "Password changed successfully"}
+
+
+@router.post("/reset-password-with-previous")
+def reset_password_with_previous(
+    data: schemas.PasswordResetWithPrevious, db: Session = Depends(get_db)
+):
+    """Reset staff password using business email/username, staff email, and previous password.
+    Allows staff to set their own password without needing an email token.
+    """
+    admin = _resolve_admin_by_identifier(db, data.business_identifier)
+    if not admin:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid business email or staff email",
+        )
+
+    # Find staff under this business
+    staff = db.query(models.User).filter(
+        models.User.email == data.staff_email,
+        models.User.created_by_id == admin.id,
+        models.User.is_admin == False,
+    ).first()
+    if not staff:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid business email or staff email",
+        )
+
+    if not staff.hashed_password or not staff.hashed_password.strip():
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This account has not set a password yet. Please use the password reset link sent to your email, or ask your administrator to resend it.",
+        )
+    if not verify_password(data.previous_password, staff.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Previous password is incorrect",
+        )
+
+    # Update password
+    staff.hashed_password = get_password_hash(data.new_password)
+    db.commit()
+
     return {"message": "Password reset successfully"}
