@@ -534,3 +534,8 @@ class Token(BaseModel):
     access_token: str
     token_type: str = "bearer"
     user: User
+
+
+# Resolve forward refs (StaffCreateResponse, Token reference User defined above)
+StaffCreateResponse.model_rebuild()
+Token.model_rebuild()
