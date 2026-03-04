@@ -14,8 +14,7 @@ ENV/
 # Alembic
 alembic/versions/*.pyc
 
-# Environment variables
-.env
+# Environment variables ( .env is tracked so it exists after git pull on VPS )
 .env.local
 docker-compose.override.yml
 

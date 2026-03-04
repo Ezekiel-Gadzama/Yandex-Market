@@ -145,7 +145,7 @@ def update_business_account(
     )
 
 
-@router.post("/", response_model=schemas.User)
+@router.post("/", response_model=schemas.StaffCreateResponse)
 def create_staff(
     staff_data: schemas.StaffCreate,
     current_user: models.User = Depends(get_current_active_user),
@@ -200,34 +200,34 @@ def create_staff(
     db.flush()
     
     # When no password: set reset token and optionally send email (never block staff creation)
+    invitation_email_sent = True  # True if password provided (no email needed)
     if not staff_data.password:
         reset_token = create_password_reset_token(db_user.id)
         db_user.password_reset_token = reset_token
         db_user.password_reset_token_expires = datetime.now(timezone.utc) + timedelta(hours=24)
-        
+
+        invitation_email_sent = False
         try:
-            from app.auth import get_business_id
-            
             business_id = get_business_id(current_user)
             email_service = EmailService(business_id=business_id, db=db)
             reset_url = f"{settings.FRONTEND_URL}/reset-password?token={reset_token}"
             email_body = f"""
             You have been invited to join the Yandex Market management system.
-            
+
             Click the following link to set your password and activate your account:
             {reset_url}
-            
+
             This link will expire in 24 hours.
-            
+
             If you did not expect this invitation, please contact your administrator.
             """
-            
             result = email_service.send_email(
                 to_email=db_user.email,
                 subject="Welcome to Yandex Market - Set Your Password",
                 body=email_body
             )
             if result.get("success"):
+                invitation_email_sent = True
                 print(f"[Staff] Invitation email sent to {db_user.email}")
             else:
                 print(f"[Staff] Invitation email not sent: {result.get('message', 'unknown')}")
@@ -235,13 +235,12 @@ def create_staff(
             print(f"[Staff] SMTP not configured - invitation email skipped: {e}")
         except Exception as e:
             print(f"[Staff] Failed to send invitation email: {e}")
-    
+
     db.commit()
     db.refresh(db_user)
-    
-    # Convert to response format
+
     permissions = schemas.UserPermissions(**db_user.permissions) if db_user.permissions else schemas.UserPermissions()
-    return schemas.User(
+    response_user = schemas.User(
         id=db_user.id,
         email=db_user.email,
         name=db_user.name,
@@ -252,6 +251,8 @@ def create_staff(
         created_at=db_user.created_at,
         updated_at=db_user.updated_at
     )
+
+    return schemas.StaffCreateResponse(user=response_user, invitation_email_sent=invitation_email_sent)
 
 
 @router.put("/{staff_id}", response_model=schemas.User)

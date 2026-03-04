@@ -1,0 +1,4 @@
+# Yandex Market Manager – Python (backend) dependencies.
+# Install from project root:  pip install -r requirements.txt
+# Or from backend folder:    pip install -r backend/requirements.txt
+-r backend/requirements.txt

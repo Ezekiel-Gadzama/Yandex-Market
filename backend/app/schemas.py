@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import re
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional, List, Dict, Any
@@ -468,6 +470,12 @@ class StaffCreate(BaseModel):
         if v == "" or v is None:
             return None
         return v
+
+
+class StaffCreateResponse(BaseModel):
+    """Response when creating a staff member. User is always returned; invitation_email_sent is False if SMTP failed."""
+    user: User
+    invitation_email_sent: bool
 
 
 class UserUpdate(BaseModel):
