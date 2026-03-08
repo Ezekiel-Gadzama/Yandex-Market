@@ -4,7 +4,6 @@ import { ordersApi } from '../api/orders'
 import { productsApi } from '../api/products'
 import { documentationsApi } from '../api/documentations'
 import { chatApi, ChatMessage } from '../api/chat'
-import { settingsApi } from '../api/settings'
 import { activationTemplatesApi } from '../api/activationTemplates'
 import { clientsApi } from '../api/clients'
 import { mediaApi } from '../api/media'
@@ -60,13 +59,6 @@ export default function Orders() {
     staleTime: 0, // Always refetch on mount
     gcTime: 0, // Don't cache (gcTime replaces cacheTime in React Query v5)
     refetchInterval: 30000, // Refetch every 30 seconds to get latest data after sync
-  })
-
-  // Get settings to check auto-activation status
-  const { data: settings } = useQuery({
-    queryKey: ['settings'],
-    queryFn: () => settingsApi.get(),
-    staleTime: 60000, // Cache for 1 minute
   })
 
   // Fetch all activation templates to check random_key
@@ -499,12 +491,10 @@ export default function Orders() {
                           <RefreshCw className="h-5 w-5" />
                         </button>
                       )}
-                      {/* Show Send Activation button at order level - only for digital orders */}
-                      {/* Show button if: auto-activation is disabled OR order requires manual keys */}
+                      {/* Show Send Activation button at order level - whenever activation not yet sent */}
                       {activeTab === 'digital' && 
                        order.status === 'processing' && 
-                       !order.activation_code_sent && 
-                       ((!settings?.auto_activation_enabled) || !allProductsHaveRandomKey) && (
+                       !order.activation_code_sent && (
                         <button
                           onClick={() => {
                             if (!allProductsHaveTemplates) {

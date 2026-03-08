@@ -22,9 +22,11 @@ def get_email_templates(
     current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """Get all email templates with optional search. Only returns templates for the current user's business."""
+    """Get all email templates with optional search. Returns templates for the current user's business, plus global templates (business_id is NULL)."""
     business_id = get_business_id(current_user)
-    query = db.query(models.EmailTemplate).filter(models.EmailTemplate.business_id == business_id)
+    query = db.query(models.EmailTemplate).filter(
+        (models.EmailTemplate.business_id == business_id) | (models.EmailTemplate.business_id == None)
+    )
     
     if search:
         search_term = f"%{search.lower()}%"

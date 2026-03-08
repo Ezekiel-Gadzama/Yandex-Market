@@ -550,7 +550,7 @@ def complete_order(
         models.Order.business_id == business_id
     ).all()
     
-    order_service = OrderService(db)
+    order_service = OrderService(db, business_id=business_id)
     result = order_service.complete_order_with_all_items(all_orders, manual_activation_keys=activation_keys)
     
     if not result["success"]:

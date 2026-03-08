@@ -420,7 +420,7 @@ function ProductViewModal({
                   <label className="block text-sm font-medium text-gray-700">Type</label>
                   <p className="mt-1 text-sm text-gray-900 capitalize">{product.product_type}</p>
                 </div>
-                {product.product_type === 'digital' && (
+                {String(product.product_type || '').toLowerCase() === 'digital' && (
                   <div className="col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-2">Activation Template</label>
                     <EmailTemplateSelector
@@ -901,7 +901,9 @@ function EmailTemplateSelector({
         ))}
       </select>
       <p className="mt-1 text-xs text-gray-500">
-        Select an activation template to use when sending activation codes for this product
+        {emailTemplates?.length
+          ? 'Select an activation template to use when sending activation codes for this product'
+          : 'No activation templates yet. Create one in Activation Templates to assign to products.'}
       </p>
     </>
   )

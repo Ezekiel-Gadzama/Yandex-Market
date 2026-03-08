@@ -1028,11 +1028,13 @@ def _sync_orders_sync(business_id: int = None):
                                     db.flush()
                                     
                                     # Auto-fulfill digital products (only if auto-activation is enabled)
-                                    if product.product_type == models.ProductType.DIGITAL:
-                                        app_settings = db.query(models.AppSettings).first()
+                                    if product.product_type == models.ProductType.DIGITAL and product.business_id:
+                                        app_settings = db.query(models.AppSettings).filter(
+                                            models.AppSettings.business_id == product.business_id
+                                        ).first()
                                         if app_settings and app_settings.auto_activation_enabled:
                                             from app.services.order_service import OrderService
-                                            order_service = OrderService(db)
+                                            order_service = OrderService(db, business_id=product.business_id)
                                             order_service.auto_fulfill_order(new_order)
                                     
                                     orders_created += 1
@@ -1079,11 +1081,13 @@ def _sync_orders_sync(business_id: int = None):
                                 db.flush()  # Get the order ID
                                 
                                 # Auto-fulfill digital products (only if auto-activation is enabled)
-                                if product.product_type == models.ProductType.DIGITAL:
-                                    app_settings = db.query(models.AppSettings).first()
+                                if product.product_type == models.ProductType.DIGITAL and product.business_id:
+                                    app_settings = db.query(models.AppSettings).filter(
+                                        models.AppSettings.business_id == product.business_id
+                                    ).first()
                                     if app_settings and app_settings.auto_activation_enabled:
                                         from app.services.order_service import OrderService
-                                        order_service = OrderService(db)
+                                        order_service = OrderService(db, business_id=product.business_id)
                                         order_service.auto_fulfill_order(new_order)
                                 
                                 orders_created += 1
