@@ -49,21 +49,21 @@ class EmailService:
         # Get product using query
         product = db.query(models.Product).filter(models.Product.id == order.product_id).first()
         if not product:
-            # Default template if product not found
-            template_subject = "Digital Product Activation Code"
+            # Default template if product not found (Russian)
+            template_subject = "Код активации цифрового товара"
             template_body = """
             <html>
             <body>
-                <h2>Digital Product Activation</h2>
-                <p>Hello, {{ customer_name }}!</p>
-                <p>Here is your activation code for the digital product from your order.</p>
-                <p><strong>Order Number:</strong> {{ order_number }}</p>
-                <p><strong>Product:</strong> {{ product_name }}</p>
-                <p><strong>Activation Code:</strong> {{ activation_code }}</p>
-                <p><strong>Activate before:</strong> {{ expiry_date }}</p>
-                <p>Thank you for your purchase!</p>
+                <h2>Активация цифрового товара</h2>
+                <p>Здравствуйте, {{ customer_name }}!</p>
+                <p>Ваш код активации цифрового товара из заказа.</p>
+                <p><strong>Номер заказа:</strong> {{ order_number }}</p>
+                <p><strong>Товар:</strong> {{ product_name }}</p>
+                <p><strong>Код активации:</strong> {{ activation_code }}</p>
+                <p><strong>Активировать до:</strong> {{ expiry_date }}</p>
+                <p>Спасибо за покупку!</p>
                 {% if instructions %}
-                <h3>Activation Instructions:</h3>
+                <h3>Инструкция по активации:</h3>
                 <div>{{ instructions }}</div>
                 {% endif %}
             </body>
@@ -82,21 +82,21 @@ class EmailService:
             template_body = email_template.body
             template_subject = email_template.subject
         else:
-            # Default template
-            template_subject = "Digital Product Activation Code"
+            # Default template (Russian)
+            template_subject = "Код активации цифрового товара"
             template_body = """
             <html>
             <body>
-                <h2>Digital Product Activation</h2>
-                <p>Hello, {{ customer_name }}!</p>
-                <p>Here is your activation code for the digital product from your order.</p>
-                <p><strong>Order Number:</strong> {{ order_number }}</p>
-                <p><strong>Product:</strong> {{ product_name }}</p>
-                <p><strong>Activation Code:</strong> {{ activation_code }}</p>
-                <p><strong>Activate before:</strong> {{ expiry_date }}</p>
-                <p>Thank you for your purchase!</p>
+                <h2>Активация цифрового товара</h2>
+                <p>Здравствуйте, {{ customer_name }}!</p>
+                <p>Ваш код активации цифрового товара из заказа.</p>
+                <p><strong>Номер заказа:</strong> {{ order_number }}</p>
+                <p><strong>Товар:</strong> {{ product_name }}</p>
+                <p><strong>Код активации:</strong> {{ activation_code }}</p>
+                <p><strong>Активировать до:</strong> {{ expiry_date }}</p>
+                <p>Спасибо за покупку!</p>
                 {% if instructions %}
-                <h3>Activation Instructions:</h3>
+                <h3>Инструкция по активации:</h3>
                 <div>{{ instructions }}</div>
                 {% endif %}
             </body>
@@ -137,12 +137,12 @@ class EmailService:
         # Get email template
         subject, body_template = self._get_email_template(order, db)
         
-        # Calculate expiry date (30 days from now)
-        expiry_date = (datetime.utcnow() + timedelta(days=30)).strftime("%B %d, %Y")
+        # Calculate expiry date (30 days from now) - Russian format
+        expiry_date = (datetime.utcnow() + timedelta(days=30)).strftime("%d.%m.%Y")
         
         # Prepare context
         context = {
-            "customer_name": order.customer_name or "Customer",
+            "customer_name": order.customer_name or "Покупатель",
             "order_number": order.yandex_order_id,
             "product_name": product.name,
             "activation_code": activation_key.key,

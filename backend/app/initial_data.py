@@ -32,7 +32,7 @@ def create_default_settings():
                 processing_time_max=30,
                 maximum_wait_time_value=6,
                 maximum_wait_time_unit="hours",
-                working_hours_text="We are open seven days a week from 10:00 AM to 12:00 AM Moscow time.",
+                working_hours_text="Мы работаем ежедневно с 10:00 до 00:00 по московскому времени.",
             )
             db.add(default_settings)
         
@@ -69,7 +69,7 @@ def create_default_email_template():
             
             default_template = models.EmailTemplate(
                 name="Default Digital Product Template",
-                body="""1. Send your registered email to the order chat on the Market. Within few minutes you will get an OTP to your email to login to your account, you need to send the OTP code to the order chat.""",
+                body="""1. Отправьте ваш зарегистрированный email в чат заказа на Маркете. В течение нескольких минут вы получите одноразовый код (OTP) на почту для входа в аккаунт — отправьте этот код в чат заказа.""",
                 random_key=True,
                 required_login=False,
                 business_id=admin.id

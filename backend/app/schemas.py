@@ -32,6 +32,7 @@ class ProductBase(BaseModel):
 class ProductUpdate(BaseModel):
     """Update product - only local-only fields and dynamic Yandex JSON updates"""
     # Essential local-only fields (not in Yandex)
+    product_type: Optional[ProductType] = None  # Override type when Yandex sync sets it incorrectly
     cost_price: Optional[float] = Field(None, ge=0)
     supplier_url: Optional[str] = None
     supplier_name: Optional[str] = None

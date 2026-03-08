@@ -173,7 +173,21 @@ export default function Products() {
                   {filteredProducts.map((product) => (
                     <tr key={product.id}>
                       <td className="px-6 py-4 whitespace-nowrap"><div className="text-sm font-medium text-gray-900">{product.name}</div></td>
-                      <td className="px-6 py-4 whitespace-nowrap"><span className="text-sm text-gray-500 capitalize">{product.product_type}</span></td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <select
+                          value={String(product.product_type || '').toLowerCase()}
+                          onChange={(e) => {
+                            const v = e.target.value as 'digital' | 'physical'
+                            if (v === 'digital' || v === 'physical') {
+                              updateProductMutation.mutate({ id: product.id, data: { product_type: v } })
+                            }
+                          }}
+                          className="text-sm border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        >
+                          <option value="digital">Digital</option>
+                          <option value="physical">Physical</option>
+                        </select>
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="text-sm text-gray-900">
                           {canViewPrices ? `₽${(product.yandex_full_data?.basicPrice?.value || product.yandex_full_data?.campaignPrice?.value || product.yandex_full_data?.price || product.selling_price || 0).toLocaleString('ru-RU')}` : <span className="text-gray-400">—</span>}
@@ -214,7 +228,21 @@ export default function Products() {
                     <span className="text-sm font-medium text-gray-900 line-clamp-2">{product.name}</span>
                     <span className={`shrink-0 px-2 py-1 text-xs font-semibold rounded-full ${product.is_active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>{product.is_active ? 'Active' : 'Inactive'}</span>
                   </div>
-                  <div className="text-xs text-gray-500 capitalize mb-2">{product.product_type}</div>
+                  <div className="mb-2">
+                    <select
+                      value={String(product.product_type || '').toLowerCase()}
+                      onChange={(e) => {
+                        const v = e.target.value as 'digital' | 'physical'
+                        if (v === 'digital' || v === 'physical') {
+                          updateProductMutation.mutate({ id: product.id, data: { product_type: v } })
+                        }
+                      }}
+                      className="text-xs border border-gray-300 rounded px-2 py-1 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    >
+                      <option value="digital">Digital</option>
+                      <option value="physical">Physical</option>
+                    </select>
+                  </div>
                   {(displayPrice != null || displayCost != null) && (
                     <div className="flex gap-4 text-sm text-gray-700 mb-2">
                       {displayPrice != null && <span>Price: ₽{Number(displayPrice).toLocaleString('ru-RU')}</span>}

@@ -5,6 +5,22 @@ from app import models
 from app.services.yandex_api import YandexMarketAPI
 
 
+def _russian_time_unit(unit_en: str, value: int) -> str:
+    """Return Russian plural form for time unit (минут, часов, дней, недель)."""
+    units = {
+        "minutes": ("минута", "минуты", "минут"),
+        "hours": ("час", "часа", "часов"),
+        "days": ("день", "дня", "дней"),
+        "weeks": ("неделя", "недели", "недель"),
+    }
+    variants = units.get(unit_en, (unit_en, unit_en, unit_en))
+    if value == 1:
+        return variants[0]
+    if 2 <= value <= 4:
+        return variants[1]
+    return variants[2]
+
+
 class OrderService:
     """Service for handling order fulfillment"""
     
@@ -262,13 +278,13 @@ class OrderService:
         # REMOVED: "Activate the code before {expiry_date}" - Yandex handles this automatically
         
         # 1. Thank you message
-        html_parts.append("<p>Thank you for your purchase!</p>")
+        html_parts.append("<p>Спасибо за покупку!</p>")
         html_parts.append("<br>")  # Extra spacing
         
         # 2. Template body
         if email_template:
             # "To activate your subscription..." - slightly bold (using <b> instead of <strong>)
-            html_parts.append("<p><b>To activate your subscription, please follow these steps:</b></p>")
+            html_parts.append("<p><b>Чтобы активировать подписку, следуйте инструкции:</b></p>")
             
             # Add template body - preserve structure, convert newlines to <br> tags
             template_lines = email_template.body.split('\n')
@@ -286,29 +302,25 @@ class OrderService:
             
             # 3. Required login text (if checked)
             if email_template.required_login:
-                html_parts.append("<p>Done! The operator will log in to your account and activate your subscription. Requests are processed in the order they are received.</p>")
+                html_parts.append("<p>Готово! Оператор войдёт в ваш аккаунт и активирует подписку. Заявки обрабатываются в порядке поступления.</p>")
                 html_parts.append("<br>")  # One line spacing
         
         # 4. Processing time and maximum wait time (from settings) - conditional
         processing_text = None
         if app_settings.processing_time_min and app_settings.processing_time_min > 0:
             if app_settings.processing_time_max and app_settings.processing_time_max > 0:
-                processing_text = f"The process typically takes {app_settings.processing_time_min}-{app_settings.processing_time_max} minutes"
+                processing_text = f"Обработка заказа обычно занимает {app_settings.processing_time_min}–{app_settings.processing_time_max} минут"
             else:
-                processing_text = f"The process typically takes {app_settings.processing_time_min} minutes"
+                processing_text = f"Обработка заказа обычно занимает {app_settings.processing_time_min} минут"
             
             # Add maximum wait time if specified
             if app_settings.maximum_wait_time_value and app_settings.maximum_wait_time_value > 0 and app_settings.maximum_wait_time_unit:
-                unit = app_settings.maximum_wait_time_unit
                 value = app_settings.maximum_wait_time_value
-                # Make unit plural if value > 1
-                if value > 1 and not unit.endswith('s'):
-                    unit = unit + 's'
-                
+                unit_ru = _russian_time_unit(app_settings.maximum_wait_time_unit, value)
                 if processing_text:
-                    processing_text += f", with a maximum wait time of {value} {unit}."
+                    processing_text += f", максимальное время ожидания — {value} {unit_ru}."
                 else:
-                    processing_text = f"Maximum wait time of {value} {unit}."
+                    processing_text = f"Максимальное время ожидания: {value} {unit_ru}."
             elif processing_text:
                 processing_text += "."
         
@@ -321,10 +333,10 @@ class OrderService:
             html_parts.append("<br><br>")  # Two lines spacing
         
         # 6. Company email (from settings) - conditional
-        # "Mail:" should be bold, email should be clickable
+        # "Почта:" should be bold, email should be clickable
         if app_settings.company_email and app_settings.company_email.strip():
             email_link = f'<a href="mailto:{app_settings.company_email}">{app_settings.company_email}</a>'
-            html_parts.append(f"<p><b>Mail:</b> {email_link}</p>")
+            html_parts.append(f"<p><b>Почта:</b> {email_link}</p>")
         
         # Join all HTML parts - each <p> tag creates a paragraph with spacing
         html_text = "".join(html_parts)

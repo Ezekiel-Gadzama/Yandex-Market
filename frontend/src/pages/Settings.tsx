@@ -403,13 +403,13 @@ export default function Settings() {
                 </div>
               </div>
 
-              {/* Email Message Settings */}
+              {/* Email Message Settings - shown to buyers in activation emails */}
               <div>
-                <h3 className="text-md font-medium text-gray-900 mb-3">Email Message Settings</h3>
+                <h3 className="text-md font-medium text-gray-900 mb-3">Настройки сообщений для покупателей</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Processing Time Min (minutes)
+                      Мин. время обработки (мин)
                     </label>
                     {isEditing ? (
                       <input
@@ -428,7 +428,7 @@ export default function Settings() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Processing Time Max (minutes)
+                      Макс. время обработки (мин)
                     </label>
                     {isEditing ? (
                       <input
@@ -447,7 +447,7 @@ export default function Settings() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Maximum Wait Time (Optional)
+                      Макс. время ожидания (необязательно)
                     </label>
                     {isEditing ? (
                       <>
@@ -465,14 +465,14 @@ export default function Settings() {
                             defaultValue={settings.maximum_wait_time_unit || 'hours'}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                           >
-                            <option value="minutes">Minutes</option>
-                            <option value="hours">Hours</option>
-                            <option value="days">Days</option>
-                            <option value="weeks">Weeks</option>
+                            <option value="minutes">Минуты</option>
+                            <option value="hours">Часы</option>
+                            <option value="days">Дни</option>
+                            <option value="weeks">Недели</option>
                           </select>
                         </div>
                         <p className="mt-1 text-xs text-gray-500">
-                          Leave empty to omit maximum wait time from activation emails
+                          Оставьте пустым, чтобы не указывать макс. время ожидания в письмах об активации
                         </p>
                       </>
                     ) : (
@@ -486,7 +486,7 @@ export default function Settings() {
                   
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Company Email
+                      Контактный email
                     </label>
                     {isEditing ? (
                       <input
@@ -505,13 +505,13 @@ export default function Settings() {
                   
                   <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Working Hours Text
+                      Режим работы
                     </label>
                     {isEditing ? (
                       <textarea
                         name="working_hours_text"
                         rows={2}
-                        placeholder="We are open seven days a week from 10:00 AM to 12:00 AM Moscow time."
+                        placeholder="Мы работаем ежедневно с 10:00 до 00:00 по московскому времени."
                         defaultValue={settings.working_hours_text || ''}
                         className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                       />

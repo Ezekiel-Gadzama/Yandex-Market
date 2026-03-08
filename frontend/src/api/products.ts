@@ -44,6 +44,7 @@ export interface ProductCreate {
 
 export interface ProductUpdate {
   // Essential local-only fields
+  product_type?: 'digital' | 'physical'
   cost_price?: number
   supplier_url?: string
   supplier_name?: string

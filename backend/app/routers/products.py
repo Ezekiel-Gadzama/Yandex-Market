@@ -246,11 +246,14 @@ def update_product(
         else:
             db_product.yandex_full_data = yandex_field_updates
     
-    # Update only local-only fields (cost_price, supplier info, email_template_id, documentation_id, is_active)
-    local_only_fields = ['cost_price', 'supplier_url', 'supplier_name', 'email_template_id', 'documentation_id', 'is_active']
+    # Update only local-only fields (product_type, cost_price, supplier info, email_template_id, documentation_id, yandex_purchase_link, usage_period, is_active)
+    local_only_fields = ['product_type', 'cost_price', 'supplier_url', 'supplier_name', 'email_template_id', 'documentation_id', 'yandex_purchase_link', 'usage_period', 'is_active']
     for field in local_only_fields:
         if field in update_data:
-            setattr(db_product, field, update_data[field])
+            val = update_data[field]
+            if field == 'product_type' and val is not None:
+                val = models.ProductType(val) if isinstance(val, str) else val
+            setattr(db_product, field, val)
     
     # If product is synced with Yandex and we have Yandex field updates, push changes
     if is_synced and has_yandex_updates:
