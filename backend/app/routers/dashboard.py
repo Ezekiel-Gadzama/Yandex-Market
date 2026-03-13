@@ -2,7 +2,7 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func, desc
 from typing import List, Optional
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date as date_type
 from app.database import get_db
 from app import models, schemas
 from app.auth import get_current_active_user, has_permission, get_business_id
@@ -434,6 +434,23 @@ def get_recent_orders(
     return result
 
 
+def _get_extra_costs(
+    business_id: int,
+    period: Optional[str],
+    start_date: Optional[str],
+    end_date: Optional[str],
+    db: Session,
+) -> List[models.ExtraCost]:
+    """Return extra costs for the business, optionally filtered by period/date range."""
+    query = db.query(models.ExtraCost).filter(models.ExtraCost.business_id == business_id)
+    start_dt, end_dt = _get_date_range(period, start_date, end_date)
+    if start_dt is not None:
+        query = query.filter(models.ExtraCost.date >= start_dt.date())
+    if end_dt is not None:
+        query = query.filter(models.ExtraCost.date <= end_dt.date())
+    return query.order_by(models.ExtraCost.date.desc()).all()
+
+
 @router.get("/data", response_model=schemas.DashboardData)
 def get_dashboard_data(
     period: Optional[str] = Query(None, description="Period: today, week, month, or all"),
@@ -444,14 +461,17 @@ def get_dashboard_data(
 ):
     """Get complete dashboard data with optional period filter or custom date range"""
     try:
+        business_id = get_business_id(current_user)
         stats = get_dashboard_stats(period=period, start_date=start_date, end_date=end_date, current_user=current_user, db=db)
         top_products = get_top_products(limit=10, period=period, start_date=start_date, end_date=end_date, current_user=current_user, db=db)
         recent_orders = get_recent_orders(limit=10, current_user=current_user, db=db)
-        
+        extra_costs = _get_extra_costs(business_id, period, start_date, end_date, db)
+
         return schemas.DashboardData(
             stats=stats,
             top_products=top_products,
-            recent_orders=recent_orders
+            recent_orders=recent_orders,
+            extra_costs=extra_costs,
         )
     except Exception as e:
         # Log the full error for debugging
@@ -459,3 +479,77 @@ def get_dashboard_data(
         print(f"Error in get_dashboard_data: {str(e)}")
         print(traceback.format_exc())
         raise
+
+
+@router.post("/extra-costs", response_model=schemas.ExtraCost)
+def create_extra_cost(
+    body: schemas.ExtraCostCreate,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Add an extra cost for the current business (e.g. ads, packaging)."""
+    business_id = get_business_id(current_user)
+    from fastapi import HTTPException
+    cost_date = date_type.fromisoformat(body.date)
+    if cost_date > date_type.today():
+        raise HTTPException(status_code=400, detail="Extra cost date cannot be in the future")
+    row = models.ExtraCost(
+        business_id=business_id,
+        description=body.description.strip(),
+        amount=float(body.amount),
+        date=cost_date,
+    )
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+@router.patch("/extra-costs/{extra_cost_id}", response_model=schemas.ExtraCost)
+def update_extra_cost(
+    extra_cost_id: int,
+    body: schemas.ExtraCostUpdate,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Update an extra cost. Only allowed for the cost's business."""
+    from fastapi import HTTPException
+    business_id = get_business_id(current_user)
+    row = db.query(models.ExtraCost).filter(
+        models.ExtraCost.id == extra_cost_id,
+        models.ExtraCost.business_id == business_id,
+    ).first()
+    if not row:
+        raise HTTPException(status_code=404, detail="Extra cost not found")
+    if body.description is not None:
+        row.description = body.description.strip()
+    if body.amount is not None:
+        row.amount = float(body.amount)
+    if body.date is not None:
+        new_date = date_type.fromisoformat(body.date)
+        if new_date > date_type.today():
+            raise HTTPException(status_code=400, detail="Extra cost date cannot be in the future")
+        row.date = new_date
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+@router.delete("/extra-costs/{extra_cost_id}", status_code=204)
+def delete_extra_cost(
+    extra_cost_id: int,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Delete an extra cost. Only allowed for the cost's business."""
+    business_id = get_business_id(current_user)
+    row = db.query(models.ExtraCost).filter(
+        models.ExtraCost.id == extra_cost_id,
+        models.ExtraCost.business_id == business_id,
+    ).first()
+    if not row:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail="Extra cost not found")
+    db.delete(row)
+    db.commit()
+    return None

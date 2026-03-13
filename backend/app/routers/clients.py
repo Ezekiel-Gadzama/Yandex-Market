@@ -27,6 +27,8 @@ def _add_product_quantities(client, db):
 
 @router.get("/", response_model=List[schemas.Client])
 def get_clients(
+    skip: int = Query(0, ge=0, description="Pagination offset"),
+    limit: int = Query(15, ge=1, le=100, description="Pagination page size"),
     product_id: Optional[int] = Query(None, description="Filter by product ID"),
     search: Optional[str] = Query(None, description="Search by name or email"),
     start_date: Optional[str] = Query(None, description="Filter by created_at start date (ISO format)"),
@@ -71,7 +73,7 @@ def get_clients(
         except:
             pass
     
-    clients = query.all()
+    clients = query.order_by(models.Client.created_at.desc()).offset(skip).limit(limit).all()
     
     # Add purchased_product_ids, product_quantities, and order_ids to each client
     for client in clients:

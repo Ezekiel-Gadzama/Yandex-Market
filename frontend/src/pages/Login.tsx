@@ -8,6 +8,7 @@ export default function Login() {
   const [email, setEmail] = useState('')
   const [isOwner, setIsOwner] = useState(false)
   const [password, setPassword] = useState('')
+  const [rememberMe, setRememberMe] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -20,7 +21,7 @@ export default function Login() {
     setIsLoading(true)
 
     try {
-      await login(businessEmail, isOwner ? businessEmail : email, password)
+      await login(businessEmail, isOwner ? businessEmail : email, password, rememberMe)
       navigate('/dashboard')
     } catch (err: any) {
       setError(err.response?.data?.detail || 'Login failed')
@@ -110,6 +111,17 @@ export default function Login() {
           </div>
 
           <div>
+            <div className="flex items-center justify-between mb-3">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="h-4 w-4 text-blue-600 border-gray-300 rounded"
+                />
+                <span className="text-sm text-gray-700">Remember me on this device</span>
+              </label>
+            </div>
             <button
               type="submit"
               disabled={isLoading}

@@ -181,7 +181,11 @@ def login(credentials: schemas.UserLogin, db: Session = Depends(get_db)):
         )
     
     # Create access token
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    # If remember_me is enabled, extend the session significantly (e.g. 30 days)
+    if getattr(credentials, "remember_me", False):
+        access_token_expires = timedelta(days=30)
+    else:
+        access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={},
         expires_delta=access_token_expires,

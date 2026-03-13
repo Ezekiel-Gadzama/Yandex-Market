@@ -40,6 +40,7 @@ export interface UserLogin {
   business_identifier: string  // Admin email OR business username (e.g. @Goal_sale)
   email: string
   password: string
+  remember_me?: boolean
 }
 
 export interface ChangePassword {

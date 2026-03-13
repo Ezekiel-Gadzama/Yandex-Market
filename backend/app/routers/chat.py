@@ -1,6 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from pydantic import BaseModel
 from app.database import get_db
 from app.auth import get_current_active_user, get_business_id
@@ -10,6 +10,13 @@ router = APIRouter()
 
 
 class MessageRequest(BaseModel):
+    text: str
+    # Optional unified attachments; stored and echoed back for UI, not sent to Yandex
+    # Format matches existing attachments structure elsewhere in the app
+    attachments: list[dict] | None = None
+
+
+class ChatMessageRequest(BaseModel):
     text: str
 
 
@@ -192,6 +199,74 @@ def get_order_chat_messages(
         return []  # Return empty list instead of raising 500 error
 
 
+@router.get("/chats", response_model=Dict)
+def get_chats(
+    limit: int = Query(20, ge=1, le=20),
+    page_token: Optional[str] = Query(None, alias="page_token"),
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_active_user),
+):
+    """Get all chats for the business (includes DIRECT chats)."""
+    business_id = get_business_id(current_user)
+    yandex_api = YandexMarketAPI(business_id=business_id, db=db)
+    result = yandex_api.get_chats(limit=limit, page_token=page_token)
+    return result
+
+
+@router.get("/chats/{chat_id}/messages", response_model=Dict)
+def get_chat_messages(
+    chat_id: int,
+    limit: int = Query(100, ge=1, le=100),
+    page_token: Optional[str] = Query(None, alias="page_token"),
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_active_user),
+):
+    """Get messages for a chat by chatId."""
+    business_id = get_business_id(current_user)
+    yandex_api = YandexMarketAPI(business_id=business_id, db=db)
+    history = yandex_api.get_chat_history(chat_id=int(chat_id), limit=limit, page_token=page_token)
+
+    messages = history.get("messages", []) or []
+    transformed_messages: List[Dict[str, Any]] = []
+    for msg in messages:
+        sender = str(msg.get("sender", "")).upper()
+        if sender == "PARTNER":
+            author = "SELLER"
+        elif sender == "CUSTOMER":
+            author = "CUSTOMER"
+        else:
+            author = "SYSTEM"
+        transformed_messages.append(
+            {
+                "id": str(msg.get("messageId", "")),
+                "text": msg.get("message", "") or "",
+                "author": author,
+                "created_at": msg.get("createdAt", ""),
+                "payload": msg.get("payload"),
+            }
+        )
+
+    return {
+        "context": history.get("context") or {},
+        "messages": transformed_messages,
+        "nextPageToken": history.get("nextPageToken"),
+    }
+
+
+@router.post("/chats/{chat_id}/messages", response_model=Dict)
+def send_chat_message(
+    chat_id: int,
+    body: ChatMessageRequest,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_active_user),
+):
+    """Send a message to a chat by chatId."""
+    business_id = get_business_id(current_user)
+    yandex_api = YandexMarketAPI(business_id=business_id, db=db)
+    result = yandex_api.send_message_to_chat(int(chat_id), body.text)
+    return {"success": True, "data": result}
+
+
 @router.post("/orders/{order_id}/messages", response_model=Dict)
 def send_order_chat_message(
     order_id: str,
@@ -204,7 +279,7 @@ def send_order_chat_message(
         business_id = get_business_id(current_user)
         yandex_api = YandexMarketAPI(business_id=business_id, db=db)
         
-        # Send message
+        # Send message text to Yandex (attachments are local-only and not sent to Yandex)
         result = yandex_api.send_order_chat_message(order_id, message.text)
         
         return {"success": True, "message": "Message sent successfully", "data": result}

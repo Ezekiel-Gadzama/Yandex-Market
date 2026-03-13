@@ -2,20 +2,27 @@ import { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { documentationsApi, Documentation, DocumentationCreate } from '../api/documentations'
 import { mediaApi } from '../api/media'
-import { Plus, Edit, Trash2, X, FileText, Link as LinkIcon, Copy, Bold, Italic, Underline, Upload } from 'lucide-react'
+import { Plus, Edit, Trash2, X, FileText, Link as LinkIcon, Copy, Bold, Italic, Underline, Upload, Check } from 'lucide-react'
 import ConfirmationModal from '../components/ConfirmationModal'
+import FeedbackButton from '../components/FeedbackButton'
 
 export default function Documentations() {
   const [showModal, setShowModal] = useState(false)
   const [editingDoc, setEditingDoc] = useState<Documentation | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(0)
+  const pageSize = 15
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; docId: number | null }>({ isOpen: false, docId: null })
   const queryClient = useQueryClient()
 
   const { data: documentations, isLoading } = useQuery({
-    queryKey: ['documentations', searchTerm],
-    queryFn: () => documentationsApi.getAll(searchTerm || undefined),
+    queryKey: ['documentations', searchTerm, page, pageSize],
+    queryFn: () => documentationsApi.getAll(searchTerm || undefined, { skip: page * pageSize, limit: pageSize }),
   })
+
+  useEffect(() => {
+    setPage(0)
+  }, [searchTerm])
 
   const createMutation = useMutation({
     mutationFn: (data: DocumentationCreate) => documentationsApi.create(data),
@@ -92,6 +99,31 @@ export default function Documentations() {
         />
       </div>
 
+      {/* Pagination */}
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="text-sm text-gray-600">
+          Page <span className="font-semibold">{page + 1}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0 || isLoading}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={isLoading || (documentations ? documentations.length < pageSize : true)}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
       {/* Documentations List */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
         {isLoading ? (
@@ -160,13 +192,20 @@ export default function Documentations() {
                         <option value="pdf">PDF</option>
                       </select>
                     </div>
-                    <button
-                      onClick={() => handleDuplicate(doc)}
-                      className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                    <FeedbackButton
+                      onAction={() => handleDuplicate(doc)}
                       title="Duplicate"
+                      label="Duplicate"
+                      successLabel="Duplicated"
+                      className="p-2 text-blue-600 hover:bg-blue-50 rounded inline-flex items-center justify-center"
+                      successClassName="bg-green-50 text-green-700 hover:bg-green-100"
+                      successChildren={<Check className="h-5 w-5" />}
                     >
-                      <Copy className="h-5 w-5" />
-                    </button>
+                      <>
+                        <Copy className="h-5 w-5" />
+                        <span className="sr-only">Duplicate</span>
+                      </>
+                    </FeedbackButton>
                     <button
                       onClick={() => {
                         setEditingDoc(doc)

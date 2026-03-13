@@ -11,13 +11,16 @@ import {
   Send,
   FileText,
   Star,
+  MessageCircle,
   UserCog,
   LogOut,
   Key
 } from 'lucide-react'
 import { useState, useEffect, useRef } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { useAuth } from '../contexts/AuthContext'
 import NotificationIcon from './NotificationIcon'
+import { chatApi } from '../api/chat'
 
 interface LayoutProps {
   children: React.ReactNode
@@ -55,6 +58,7 @@ export default function Layout({ children }: LayoutProps) {
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
     { name: 'Products', href: '/products', icon: Package },
     { name: 'Orders', href: '/orders', icon: ShoppingCart },
+    { name: 'Chats', href: '/chats', icon: MessageCircle },
     { name: 'Activation Templates', href: '/activation-templates', icon: Mail },
     { name: 'Reviews', href: '/reviews', icon: Star },
     { name: 'Clients', href: '/clients', icon: Users },
@@ -72,6 +76,32 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   const navigation = allNavItems.filter(item => hasPermission(item.permission))
+
+  const { data: chatsNavData } = useQuery({
+    queryKey: ['chats', 'nav-unread'],
+    queryFn: () => chatApi.listChats(20),
+    enabled: !!user,
+    staleTime: 15_000,
+    refetchInterval: 30_000,
+  })
+
+  const hasUnreadChats = (() => {
+    const chats = chatsNavData?.chats ?? []
+    for (const c of chats) {
+      const updatedAt = c.updatedAt || c.createdAt
+      if (!updatedAt) continue
+      // For ORDER chats, prefer the shared order key so Orders <-> Chats stay in sync.
+      const lastSeen =
+        c.orderId != null
+          ? (localStorage.getItem(`order_chat_last_seen_${c.orderId}`) || localStorage.getItem(`chat_last_seen_${c.chatId}`))
+          : localStorage.getItem(`chat_last_seen_${c.chatId}`)
+      if (!lastSeen) return true
+      const u = new Date(updatedAt).getTime()
+      const s = new Date(lastSeen).getTime()
+      if (!Number.isNaN(u) && !Number.isNaN(s) && u > s) return true
+    }
+    return false
+  })()
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -99,7 +129,12 @@ export default function Layout({ children }: LayoutProps) {
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
-                  <item.icon className="mr-3 h-5 w-5" />
+                  <span className="relative mr-3">
+                    <item.icon className="h-5 w-5" />
+                    {item.href === '/chats' && hasUnreadChats && (
+                      <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-red-500" />
+                    )}
+                  </span>
                   {item.name}
                 </Link>
               )
@@ -153,7 +188,12 @@ export default function Layout({ children }: LayoutProps) {
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
-                  <item.icon className="mr-3 h-5 w-5" />
+                  <span className="relative mr-3">
+                    <item.icon className="h-5 w-5" />
+                    {item.href === '/chats' && hasUnreadChats && (
+                      <span className="absolute -top-1 -right-1 h-2.5 w-2.5 rounded-full bg-red-500" />
+                    )}
+                  </span>
                   {item.name}
                 </Link>
               )

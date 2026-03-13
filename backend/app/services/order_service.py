@@ -395,6 +395,8 @@ class OrderService:
         # Yandex requires ALL digital items to be delivered
         delivery_items = []
         processed_item_ids = set()
+        products_skipped_no_template = []  # Product names skipped because no activation template
+        products_skipped_not_digital = []  # Product names skipped because type is not digital
         
         # Create a map of order records by product_id for quick lookup
         order_by_product = {o.product_id: o for o in orders}
@@ -436,6 +438,7 @@ class OrderService:
             # Check if product is digital
             if product.product_type != models.ProductType.DIGITAL:
                 print(f"  ℹ️  Item {item_id} product {product.name} is not digital, skipping")
+                products_skipped_not_digital.append(product.name)
                 continue
             
             # Find order record for this product
@@ -541,6 +544,8 @@ class OrderService:
             if not product.email_template_id:
                 print(f"  ⚠️  Product {product.name} (item {item_id}) has no activation template attached")
                 print(f"     Skipping this item. Please attach an activation template to the product first.")
+                if product.name not in products_skipped_no_template:
+                    products_skipped_no_template.append(product.name)
                 continue
             
             # Build activation message for this product
@@ -601,7 +606,16 @@ class OrderService:
                 }
         
         if not delivery_items:
-            return {"success": False, "message": "No items to deliver. Make sure all products have activation keys assigned and activation templates attached."}
+            msg = "No items to deliver."
+            if products_skipped_no_template:
+                names = ", ".join(products_skipped_no_template)
+                msg += f" Attach an activation template to these products (Products page): {names}."
+            elif products_skipped_not_digital:
+                names = ", ".join(set(products_skipped_not_digital))
+                msg += f" The following products are set as non-digital in your database: {names}. To deliver digital goods, change the product type to Digital in Products and attach an activation template."
+            else:
+                msg += " No products in this order could be matched to your catalog, or the order has no digital items. Make sure products are synced, set to Digital, and have activation templates attached."
+            return {"success": False, "message": msg}
         
         # Final validation: Check if we're missing any digital items that belong to our products
         # This ensures ALL products in the order have templates

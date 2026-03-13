@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { clientsApi, ClientCreate, ClientUpdate } from '../api/clients'
 import { productsApi } from '../api/products'
@@ -18,6 +18,8 @@ export default function Clients() {
   const [productSearchTerm, setProductSearchTerm] = useState('')
   const [startDate, setStartDate] = useState<string>('')
   const [endDate, setEndDate] = useState<string>('')
+  const [page, setPage] = useState(0)
+  const pageSize = 15
   const [formValid, setFormValid] = useState(false)
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; clientId: number | null }>({ isOpen: false, clientId: null })
   const [incrementConfirm, setIncrementConfirm] = useState<{ isOpen: boolean; clientId: number | null; productId: number | null; productName: string | null }>({ isOpen: false, clientId: null, productId: null, productName: null })
@@ -30,9 +32,16 @@ export default function Clients() {
     }
   }
 
+  // Reset paging when filters change
+  useEffect(() => {
+    setPage(0)
+  }, [filterProductId, searchTerm, startDate, endDate])
+
   const { data: clients = [], isLoading } = useQuery({
-    queryKey: ['clients', filterProductId, searchTerm, startDate, endDate],
+    queryKey: ['clients', page, pageSize, filterProductId, searchTerm, startDate, endDate],
     queryFn: () => clientsApi.getAll({
+      skip: page * pageSize,
+      limit: pageSize,
       product_id: filterProductId,
       search: searchTerm || undefined,
       start_date: startDate || undefined,
@@ -213,6 +222,31 @@ export default function Clients() {
               className="px-3 py-2 border border-gray-300 rounded-md"
             />
           </div>
+        </div>
+      </div>
+
+      {/* Pagination */}
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="text-sm text-gray-600">
+          Page <span className="font-semibold">{page + 1}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0 || isLoading}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={isLoading || clients.length < pageSize}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
       </div>
 

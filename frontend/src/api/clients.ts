@@ -24,7 +24,7 @@ export interface ClientUpdate {
 }
 
 export const clientsApi = {
-  getAll: async (params?: { product_id?: number; search?: string; start_date?: string; end_date?: string }): Promise<Client[]> => {
+  getAll: async (params?: { product_id?: number; search?: string; start_date?: string; end_date?: string; skip?: number; limit?: number }): Promise<Client[]> => {
     const response = await apiClient.get('clients/', { params })
     return response.data
   },

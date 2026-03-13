@@ -167,12 +167,13 @@ def sync_products(
                         products_synced += 1
                         continue
                     
-                    # Preserve local-only fields before updating
+                    # Preserve local-only fields before updating (user overrides must not be overwritten)
                     preserved_cost_price = existing_product.cost_price
                     preserved_supplier_url = existing_product.supplier_url
                     preserved_supplier_name = existing_product.supplier_name
                     preserved_email_template_id = existing_product.email_template_id
                     preserved_documentation_id = existing_product.documentation_id
+                    preserved_product_type = existing_product.product_type
                     
                     # Fetch product card to get mapping.marketSkuName and parameterValues
                     try:
@@ -231,12 +232,23 @@ def sync_products(
                     existing_product.yandex_market_sku = yandex_sku
                     
                     # Update active status from Yandex (always sync this from Yandex)
-                    status = yandex_product.get("status", "")
-                    if status:
+                    raw_status = yandex_product.get("status")
+                    # Some Yandex responses nest status under "offer"
+                    if raw_status is None and isinstance(yandex_product.get("offer"), dict):
+                        raw_status = yandex_product["offer"].get("status")
+                    if isinstance(raw_status, dict):
+                        raw_status = raw_status.get("value") or raw_status.get("status") or raw_status.get("name")
+
+                    status_str = str(raw_status).strip().upper() if raw_status is not None else ""
+                    if status_str:
                         # PUBLISHED = active, others = inactive
-                        existing_product.is_active = (status == "PUBLISHED")
+                        existing_product.is_active = (status_str == "PUBLISHED")
                     elif "available" in yandex_product:
                         existing_product.is_active = bool(yandex_product.get("available"))
+                    elif "isActive" in yandex_product:
+                        existing_product.is_active = bool(yandex_product.get("isActive"))
+                    elif yandex_product.get("archived") is True:
+                        existing_product.is_active = False
                     
                     # Restore preserved local-only fields (these are never synced from Yandex)
                     existing_product.cost_price = preserved_cost_price
@@ -244,10 +256,11 @@ def sync_products(
                     existing_product.supplier_name = preserved_supplier_name
                     existing_product.email_template_id = preserved_email_template_id
                     existing_product.documentation_id = preserved_documentation_id
+                    existing_product.product_type = preserved_product_type
                     
                     existing_product.is_synced = True
                     products_updated += 1
-                    print(f"  ✅ Updated existing product: {product_name} (offerId: {yandex_id}, type: {'digital' if is_digital else 'physical'})")
+                    print(f"  ✅ Updated existing product: {product_name} (offerId: {yandex_id}, type: {preserved_product_type.value})")
                 else:
                     # Fetch product card to get mapping.marketSkuName for new products
                     try:

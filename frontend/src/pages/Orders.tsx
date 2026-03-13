@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ordersApi } from '../api/orders'
 import { productsApi } from '../api/products'
@@ -7,16 +7,21 @@ import { chatApi, ChatMessage } from '../api/chat'
 import { activationTemplatesApi } from '../api/activationTemplates'
 import { clientsApi } from '../api/clients'
 import { mediaApi } from '../api/media'
-import { CheckCircle, Mail, RefreshCw, Search, FileText, MessageCircle, X, Send, AlertCircle, ChevronDown, ChevronRight, UserPlus } from 'lucide-react'
-import { format } from 'date-fns'
+import { CheckCircle, Mail, RefreshCw, Search, FileText, MessageCircle, X, Send, AlertCircle, ChevronDown, ChevronRight, UserPlus, Paperclip, CheckCheck } from 'lucide-react'
+import { useTimeZone } from '../contexts/TimeZoneContext'
+import CopyButton from '../components/CopyButton'
+import FeedbackButton from '../components/FeedbackButton'
 import ConfirmationModal from '../components/ConfirmationModal'
 
 export default function Orders() {
+  const { formatDateTime } = useTimeZone()
   const [activeTab, setActiveTab] = useState<'digital' | 'physical'>('digital')
   const [statusFilter, setStatusFilter] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState('')
   const [startDate, setStartDate] = useState<string>('')
   const [endDate, setEndDate] = useState<string>('')
+  const [page, setPage] = useState(0)
+  const pageSize = 15
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
   const [showOrderChat, setShowOrderChat] = useState(false)
   const [showStoreChat, setShowStoreChat] = useState(false)
@@ -49,13 +54,38 @@ export default function Orders() {
     setTimeout(() => setNotification(prev => ({ ...prev, isOpen: false })), 4000)
   }
 
+  useEffect(() => {
+    // Reset paging when switching Digital/Physical tabs
+    setPage(0)
+  }, [activeTab])
+
+  useEffect(() => {
+    // Reset paging when filters change
+    setPage(0)
+  }, [statusFilter, startDate, endDate])
+
+  const { data: pendingCounts } = useQuery({
+    queryKey: ['orders', 'pending-counts'],
+    queryFn: () => ordersApi.getPendingCounts(),
+    staleTime: 15_000,
+    refetchInterval: 30_000,
+  })
+
   const { data: orders, isLoading, refetch } = useQuery({
-    queryKey: ['orders', statusFilter, startDate, endDate],
-    queryFn: () => ordersApi.getAll({
-      status: statusFilter || undefined,
-      start_date: startDate || undefined,
-      end_date: endDate || undefined,
-    }),
+    queryKey: ['orders', activeTab, page, pageSize, statusFilter, startDate, endDate],
+    queryFn: () => {
+      // Cast to avoid TS stale type mismatch in some environments
+      const params = {
+        is_digital: activeTab === 'digital',
+        skip: page * pageSize,
+        limit: pageSize,
+        refresh_status: page === 0,
+        status: statusFilter || undefined,
+        start_date: startDate || undefined,
+        end_date: endDate || undefined,
+      } as any
+      return ordersApi.getAll(params)
+    },
     staleTime: 0, // Always refetch on mount
     gcTime: 0, // Don't cache (gcTime replaces cacheTime in React Query v5)
     refetchInterval: 30000, // Refetch every 30 seconds to get latest data after sync
@@ -64,7 +94,7 @@ export default function Orders() {
   // Fetch all activation templates to check random_key
   const { data: allTemplates } = useQuery({
     queryKey: ['activation-templates'],
-    queryFn: () => activationTemplatesApi.getAll(),
+    queryFn: () => activationTemplatesApi.getAll(undefined, { skip: 0, limit: 2000 }),
   })
 
   const fulfillMutation = useMutation({
@@ -104,30 +134,17 @@ export default function Orders() {
   })
 
   const filteredOrders = orders?.filter((order) => {
-    // Filter by delivery type (tab)
-    const isDigital = order.delivery_type === 'DIGITAL'
-    if (activeTab === 'digital' && !isDigital) return false
-    if (activeTab === 'physical' && isDigital) return false
-    
-    // Filter by search term
+    // Filter by search term (client-side)
     if (!searchTerm) return true
-    
+
     const searchLower = searchTerm.toLowerCase()
-    
-    // Search by order ID
+
     const matchesOrderId = order.yandex_order_id.toLowerCase().includes(searchLower)
-    
-    // Search by customer name
     const matchesCustomerName = order.customer_name?.toLowerCase().includes(searchLower)
-    
-    // Search by customer email
     const matchesCustomerEmail = order.customer_email?.toLowerCase().includes(searchLower)
-    
-    // Search by product names in order items
-    const matchesProductName = order.items?.some((item: any) => 
-      item.product_name?.toLowerCase().includes(searchLower)
-    ) || false
-    
+    const matchesProductName =
+      order.items?.some((item: any) => item.product_name?.toLowerCase().includes(searchLower)) || false
+
     return matchesOrderId || matchesCustomerName || matchesCustomerEmail || matchesProductName
   })
 
@@ -189,7 +206,14 @@ export default function Orders() {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            Digital Orders
+            <span className="inline-flex items-center">
+              Digital Orders
+              {(pendingCounts?.digital ?? 0) > 0 && (
+                <span className="ml-2 inline-flex items-center justify-center h-5 min-w-5 px-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+                  {pendingCounts!.digital > 99 ? '99+' : pendingCounts!.digital}
+                </span>
+              )}
+            </span>
           </button>
           <button
             onClick={() => setActiveTab('physical')}
@@ -199,7 +223,14 @@ export default function Orders() {
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             }`}
           >
-            Physical Orders
+            <span className="inline-flex items-center">
+              Physical Orders
+              {(pendingCounts?.physical ?? 0) > 0 && (
+                <span className="ml-2 inline-flex items-center justify-center h-5 min-w-5 px-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+                  {pendingCounts!.physical > 99 ? '99+' : pendingCounts!.physical}
+                </span>
+              )}
+            </span>
           </button>
         </nav>
       </div>
@@ -208,17 +239,12 @@ export default function Orders() {
       {orders && (
         <div className="mb-6 grid grid-cols-2 md:grid-cols-5 gap-4">
           {(() => {
-            const tabOrders = orders.filter((order) => {
-              const isDigital = order.delivery_type === 'DIGITAL'
-              return activeTab === 'digital' ? isDigital : !isDigital
-            })
-            
             const counts = {
-              pending: tabOrders.filter(o => o.status === 'pending').length,
-              processing: tabOrders.filter(o => o.status === 'processing').length,
-              completed: tabOrders.filter(o => o.status === 'completed').length,
-              cancelled: tabOrders.filter(o => o.status === 'cancelled').length,
-              finished: tabOrders.filter(o => o.status === 'finished').length,
+              pending: orders.filter(o => o.status === 'pending').length,
+              processing: orders.filter(o => o.status === 'processing').length,
+              completed: orders.filter(o => o.status === 'completed').length,
+              cancelled: orders.filter(o => o.status === 'cancelled').length,
+              finished: orders.filter(o => o.status === 'finished').length,
             }
             
             return (
@@ -295,6 +321,31 @@ export default function Orders() {
               className="px-4 py-2 border border-gray-300 rounded-md"
             />
           </div>
+        </div>
+      </div>
+
+      {/* Pagination */}
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="text-sm text-gray-600">
+          Page <span className="font-semibold">{page + 1}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0 || isLoading}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={isLoading || (orders ? orders.length < pageSize : true)}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
         </div>
       </div>
 
@@ -466,7 +517,7 @@ export default function Orders() {
                     </>
                   )}
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {format(new Date(order.order_created_at || order.created_at), 'MMM d, yyyy HH:mm')}
+                    {formatDateTime(order.order_created_at || order.created_at)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     {hasMultipleItems ? (
@@ -781,28 +832,14 @@ export default function Orders() {
 
 // Order Chat Button Component with Unread Count Badge
 function OrderChatButton({ orderId, onOpenChat }: { orderId: string; onOpenChat: (orderId: string) => void }) {
-  const queryClient = useQueryClient()
   const { data: unreadCount } = useQuery({
     queryKey: ['order-chat-unread', orderId],
     queryFn: () => chatApi.getUnreadCount(orderId),
     refetchInterval: 10000, // Refresh every 10 seconds
   })
 
-  const handleClick = async () => {
-    // Optimistically update unread count to 0 immediately
-    queryClient.setQueryData(['order-chat-unread', orderId], 0)
-    
-    // Mark as read immediately when button is clicked
-    try {
-      await chatApi.markAsRead(orderId)
-      // Force immediate refetch of unread count to get accurate value
-      await queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] })
-    } catch (error) {
-      console.error('Failed to mark chat as read:', error)
-      // If marking as read fails, refetch to get the actual count
-      await queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] })
-    }
-    // Open the chat modal
+  const handleClick = () => {
+    // Open the chat modal immediately (don't block on network)
     onOpenChat(orderId)
   }
 
@@ -824,32 +861,123 @@ function OrderChatButton({ orderId, onOpenChat }: { orderId: string; onOpenChat:
 
 // Order Chat Modal Component
 function OrderChatModal({ orderId, onClose }: { orderId: string; onClose: () => void }) {
+  const { formatDateTime } = useTimeZone()
   const [messageText, setMessageText] = useState('')
+  const [isUploading, setIsUploading] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [attachedFiles, setAttachedFiles] = useState<{ url: string; name: string }[]>([])
   const queryClient = useQueryClient()
+  const messagesScrollRef = useRef<HTMLDivElement>(null)
+  const stickToBottomRef = useRef(true)
+  const initialAutoScrollDoneRef = useRef(false)
+  const openedLastSeenRef = useRef<string | null>(null)
+  const autoMarkedReadRef = useRef(false)
+  const [markingRead, setMarkingRead] = useState(false)
 
-  const { data: messages, isLoading } = useQuery({
+  const { data: messages, isLoading, isFetching } = useQuery({
     queryKey: ['order-chat', orderId],
     queryFn: () => chatApi.getOrderMessages(orderId),
     refetchInterval: 5000, // Refresh every 5 seconds
+    placeholderData: (prev) => prev,
   })
 
-  // Mark messages as read when modal opens (backup in case button click didn't work)
+  // Copy UI handled by shared CopyButton component
+
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files
+    if (!files || files.length === 0) return
+
+    setUploadError(null)
+    setIsUploading(true)
+    try {
+      const fileArray = Array.from(files)
+      const uploaded = await mediaApi.uploadFiles(fileArray, 'documentation')
+      setAttachedFiles(prev => [
+        ...prev,
+        ...uploaded.map(f => ({
+          url: mediaApi.encodeFileUrl(f.url),
+          name: mediaApi.decodeFileName(f.url),
+        })),
+      ])
+      // Clear the input so the same file can be selected again if needed
+      event.target.value = ''
+    } catch (error: any) {
+      console.error('Failed to upload chat attachments:', error)
+      setUploadError(error?.response?.data?.detail || 'Failed to upload files')
+    } finally {
+      setIsUploading(false)
+    }
+  }
+
+  // On open: capture last seen. Do NOT auto-mark as read (user may already have read in Yandex).
   React.useEffect(() => {
-    // Mark as read when modal opens
-    chatApi.markAsRead(orderId).then(() => {
-      // Force immediate refetch of unread count
-      queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] })
-    }).catch((error) => {
-      console.error('Failed to mark chat as read:', error)
-      // Still refetch to refresh
-      queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] })
-    })
+    initialAutoScrollDoneRef.current = false
+    autoMarkedReadRef.current = false
+    openedLastSeenRef.current = localStorage.getItem(`order_chat_last_seen_${orderId}`)
   }, [orderId, queryClient])
+
+  useEffect(() => {
+    const el = messagesScrollRef.current
+    if (!el) return
+    if (!messages || messages.length === 0) return
+
+    if (!initialAutoScrollDoneRef.current) {
+      const lastSeen = openedLastSeenRef.current
+      let didScrollToUnread = false
+      if (lastSeen) {
+        const lastSeenMs = new Date(lastSeen).getTime()
+        if (!Number.isNaN(lastSeenMs)) {
+          const firstUnread = messages.find((m) => {
+            if (!m.created_at) return false
+            const ms = new Date(m.created_at).getTime()
+            return !Number.isNaN(ms) && ms > lastSeenMs
+          })
+          if (firstUnread) {
+            const node = el.querySelector(`[data-message-id="${firstUnread.id}"]`) as HTMLElement | null
+            if (node) {
+              node.scrollIntoView({ block: 'center' })
+              didScrollToUnread = true
+            }
+          }
+        }
+      }
+
+      if (!didScrollToUnread) {
+        el.scrollTop = el.scrollHeight
+      }
+      initialAutoScrollDoneRef.current = true
+    }
+
+    if (stickToBottomRef.current) {
+      el.scrollTop = el.scrollHeight
+    }
+  }, [orderId, messages?.length])
+
+  const markOrderChatAsRead = async () => {
+    if (!messages || messages.length === 0) return
+    const latest = [...messages]
+      .map((m) => m.created_at)
+      .filter(Boolean)
+      .sort()
+      .slice(-1)[0] as string | undefined
+    if (latest) localStorage.setItem(`order_chat_last_seen_${orderId}`, latest)
+    setMarkingRead(true)
+    try {
+      queryClient.setQueryData(['order-chat-unread', orderId], 0)
+      await chatApi.markAsRead(orderId)
+    } catch (e) {
+      console.error('Failed to mark chat as read:', e)
+    } finally {
+      setMarkingRead(false)
+      queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] })
+    }
+  }
 
   const sendMessageMutation = useMutation({
     mutationFn: (text: string) => chatApi.sendOrderMessage(orderId, text),
     onSuccess: () => {
       setMessageText('')
+      setAttachedFiles([])
       queryClient.invalidateQueries({ queryKey: ['order-chat', orderId] })
       queryClient.invalidateQueries({ queryKey: ['order-chat-unread', orderId] })
     },
@@ -862,36 +990,131 @@ function OrderChatModal({ orderId, onClose }: { orderId: string; onClose: () => 
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault()
-    if (messageText.trim()) {
-      sendMessageMutation.mutate(messageText.trim())
+    const baseText = messageText.trim()
+    const hasFiles = attachedFiles.length > 0
+    if (!baseText && !hasFiles) return
+
+    // Build message text with file links appended on new lines
+    let finalText = baseText
+    if (hasFiles) {
+      const filesBlock = attachedFiles
+        .map((file) => `📎 ${file.name}: ${file.url}`)
+        .join('\n')
+      finalText = finalText ? `${finalText}\n\n${filesBlock}` : filesBlock
     }
+
+    sendMessageMutation.mutate(finalText)
+  }
+
+  const extractAttachmentsFromMessage = (text: string | undefined) => {
+    if (!text) return { body: text, attachments: [] as { url: string; name: string }[] }
+    const lines = text.split('\n')
+    const attachmentLines: string[] = []
+    const bodyLines: string[] = []
+
+    for (const line of lines) {
+      if (line.trim().startsWith('📎 ')) {
+        attachmentLines.push(line.trim())
+      } else {
+        bodyLines.push(line)
+      }
+    }
+
+    const attachments = attachmentLines
+      .map((line) => {
+        // Format: 📎 name: url
+        const withoutIcon = line.replace(/^📎\s*/, '')
+        const parts = withoutIcon.split(':')
+        if (parts.length < 2) return null
+        const name = parts[0].trim()
+        const url = parts.slice(1).join(':').trim()
+        if (!url) return null
+        return { url, name: name || url }
+      })
+      .filter((x): x is { url: string; name: string } => !!x)
+
+    return { body: bodyLines.join('\n').trim(), attachments }
   }
 
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
       <div className="relative top-10 mx-auto p-5 border w-full max-w-2xl shadow-lg rounded-md bg-white max-h-[90vh] flex flex-col">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4 gap-3">
           <h3 className="text-xl font-bold text-gray-900">Order Chat - {orderId}</h3>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600"
-          >
-            <X className="h-6 w-6" />
-          </button>
+          <div className="flex items-center gap-2">
+            <FeedbackButton
+              onAction={markOrderChatAsRead}
+              disabled={markingRead}
+              className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-60"
+              title="Mark chat as read (use if you already read in Yandex)"
+              label="Mark as read"
+              successLabel="Marked as read"
+              successClassName="border-green-300 bg-green-50 text-green-800 hover:bg-green-100"
+              errorLabel="Failed"
+              errorClassName="border-red-300 bg-red-50 text-red-800 hover:bg-red-100"
+              successChildren={
+                <>
+                  <CheckCheck className="h-4 w-4" />
+                  Marked
+                </>
+              }
+            >
+              <>
+                <CheckCheck className={`h-4 w-4 ${markingRead ? 'animate-pulse' : ''}`} />
+                Mark as read
+              </>
+            </FeedbackButton>
+            <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+              <X className="h-6 w-6" />
+            </button>
+          </div>
         </div>
 
         {/* Messages */}
-        <div className="flex-1 overflow-y-auto mb-4 space-y-3 border border-gray-200 rounded-lg p-4 bg-gray-50">
+        <div
+          ref={messagesScrollRef}
+          onScroll={() => {
+            const el = messagesScrollRef.current
+            if (!el) return
+            const distanceFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight
+            stickToBottomRef.current = distanceFromBottom < 120
+            if (distanceFromBottom < 30 && messages && messages.length > 0) {
+              const latest = [...messages]
+                .map((m) => m.created_at)
+                .filter(Boolean)
+                .sort()
+                .slice(-1)[0] as string | undefined
+              if (latest) {
+                localStorage.setItem(`order_chat_last_seen_${orderId}`, latest)
+                if (!autoMarkedReadRef.current) {
+                  autoMarkedReadRef.current = true
+                  queryClient.setQueryData(['order-chat-unread', orderId], 0)
+                  chatApi
+                    .markAsRead(orderId)
+                    .then(() => queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] }))
+                    .catch(() => queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] }))
+                } else {
+                  queryClient.refetchQueries({ queryKey: ['order-chat-unread', orderId] })
+                }
+              }
+            }
+          }}
+          className="flex-1 overflow-y-auto mb-4 space-y-3 border border-gray-200 rounded-lg p-4 bg-gray-50"
+        >
           {isLoading ? (
             <div className="text-center py-4 text-gray-500">Loading messages...</div>
           ) : messages && messages.length > 0 ? (
             messages.map((message: ChatMessage) => (
               <div
                 key={message.id}
+                data-message-id={message.id}
                 className={`flex ${message.author === 'SELLER' ? 'justify-end' : 'justify-start'}`}
               >
+                {(() => {
+                  const { body, attachments } = extractAttachmentsFromMessage(message.text)
+                  return (
                 <div
-                  className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                  className={`relative max-w-xs lg:max-w-md px-4 py-2 rounded-lg break-words whitespace-pre-wrap ${
                     message.author === 'SELLER'
                       ? 'bg-blue-600 text-white'
                       : message.author === 'CUSTOMER'
@@ -902,38 +1125,115 @@ function OrderChatModal({ orderId, onClose }: { orderId: string; onClose: () => 
                   <div className="text-xs mb-1 opacity-75">
                     {message.author === 'SELLER' ? 'You' : message.author === 'CUSTOMER' ? 'Customer' : 'System'}
                   </div>
-                  <div className="text-sm">{message.text}</div>
+                  {body && (
+                    <div className="text-sm break-words whitespace-pre-wrap">{body}</div>
+                  )}
+                  {attachments.length > 0 && (
+                    <div className="mt-2 space-y-1 text-xs">
+                      {attachments.map((file, idx) => (
+                        <a
+                          key={`${file.url}-${idx}`}
+                          href={file.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-1 underline decoration-dotted hover:decoration-solid break-all"
+                        >
+                          <FileText className="h-3 w-3" />
+                          <span>{file.name}</span>
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                  <div className="absolute top-2 right-2">
+                    <CopyButton
+                      text={message.text}
+                      title="Copy message"
+                      className="inline-flex items-center gap-1 rounded-full bg-black/10 px-2 py-0.5 text-[10px] font-medium hover:bg-black/20 text-inherit"
+                      copiedLabel="Copied"
+                      label="Copy"
+                    />
+                  </div>
                   {message.created_at && (
                     <div className="text-xs mt-1 opacity-75">
-                      {format(new Date(message.created_at), 'MMM d, HH:mm')}
+                      {formatDateTime(message.created_at)}
                     </div>
                   )}
                 </div>
+                  )
+                })()}
               </div>
             ))
           ) : (
             <div className="text-center py-4 text-gray-500">No messages yet. Start the conversation!</div>
           )}
+          {!isLoading && isFetching && (
+            <div className="text-center pt-2 text-xs text-gray-400">Refreshing…</div>
+          )}
         </div>
 
-        {/* Message Input */}
-        <form onSubmit={handleSend} className="flex space-x-2">
-          <input
-            type="text"
-            value={messageText}
-            onChange={(e) => setMessageText(e.target.value)}
-            placeholder="Type your message..."
-            className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            disabled={sendMessageMutation.isPending}
-          />
-          <button
-            type="submit"
-            disabled={!messageText.trim() || sendMessageMutation.isPending}
-            className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
-          >
-            <Send className="h-4 w-4" />
-          </button>
-        </form>
+        {/* Attachments & Message Input */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between gap-2">
+            <div className="flex items-center gap-2">
+              <label className="inline-flex items-center gap-1 px-3 py-1.5 border border-gray-300 rounded-md text-xs font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer">
+                <Paperclip className="h-4 w-4" />
+                <span>Attach files</span>
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={handleFileChange}
+                  disabled={isUploading || sendMessageMutation.isPending}
+                />
+              </label>
+              {isUploading && (
+                <span className="text-xs text-gray-500">Uploading…</span>
+              )}
+            </div>
+            {uploadError && (
+              <span className="text-xs text-red-600 truncate">{uploadError}</span>
+            )}
+          </div>
+
+          {attachedFiles.length > 0 && (
+            <div className="max-h-20 overflow-y-auto rounded-md border border-dashed border-gray-300 bg-gray-50 px-3 py-2">
+              <div className="text-[11px] font-medium text-gray-600 mb-1">Attached files (will be sent as links):</div>
+              <ul className="space-y-0.5 text-[11px] text-gray-700">
+                {attachedFiles.map((file, idx) => (
+                  <li key={`${file.url}-${idx}`} className="flex items-center gap-1">
+                    <span className="text-gray-500">•</span>
+                    <a
+                      href={file.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline break-all"
+                    >
+                      {file.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <form onSubmit={handleSend} className="flex space-x-2">
+            <input
+              type="text"
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
+              placeholder="Type your message..."
+              className="flex-1 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              disabled={sendMessageMutation.isPending}
+            />
+            <button
+              type="submit"
+              disabled={sendMessageMutation.isPending || (!messageText.trim() && attachedFiles.length === 0)}
+              className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+            >
+              <Send className="h-4 w-4" />
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   )
@@ -1022,7 +1322,7 @@ function OrderActivationTemplate({
   // Fetch all activation templates to check random_key
   const { data: allTemplates } = useQuery({
     queryKey: ['activation-templates'],
-    queryFn: () => activationTemplatesApi.getAll(),
+    queryFn: () => activationTemplatesApi.getAll(undefined, { skip: 0, limit: 2000 }),
   })
 
   // If product not in database

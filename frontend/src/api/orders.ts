@@ -39,8 +39,13 @@ export interface Order {
 }
 
 export const ordersApi = {
-  getAll: async (params?: { status?: string; start_date?: string; end_date?: string }) => {
+  getAll: async (params?: { status?: string; start_date?: string; end_date?: string; skip?: number; limit?: number; refresh_status?: boolean; is_digital?: boolean }) => {
     const response = await apiClient.get<Order[]>('/orders/', { params })
+    return response.data
+  },
+
+  getPendingCounts: async () => {
+    const response = await apiClient.get<{ digital: number; physical: number }>('/orders/pending-counts')
     return response.data
   },
   

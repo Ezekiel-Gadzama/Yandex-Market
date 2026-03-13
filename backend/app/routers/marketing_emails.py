@@ -29,6 +29,8 @@ class BroadcastFilters(BaseModel):
 @router.get("/", response_model=List[schemas.MarketingEmailTemplate])
 def get_marketing_templates(
     search: str = Query(None, description="Search by name, subject, or body"),
+    skip: int = Query(0, ge=0, description="Pagination offset"),
+    limit: int = Query(15, ge=1, le=200, description="Pagination page size"),
     current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
@@ -56,7 +58,7 @@ def get_marketing_templates(
     templates = query.order_by(
         models.MarketingEmailTemplate.is_default.desc(),
         models.MarketingEmailTemplate.created_at.desc()
-    ).all()
+    ).offset(skip).limit(limit).all()
     
     return templates
 
@@ -199,8 +201,10 @@ def update_marketing_template(
             status_code=403,
             detail="Permission required: view_marketing_emails"
         )
+    business_id = get_business_id(current_user)
     template = db.query(models.MarketingEmailTemplate).filter(
-        models.MarketingEmailTemplate.id == template_id
+        models.MarketingEmailTemplate.id == template_id,
+        models.MarketingEmailTemplate.business_id == business_id,
     ).first()
     if not template:
         raise HTTPException(status_code=404, detail="Template not found")

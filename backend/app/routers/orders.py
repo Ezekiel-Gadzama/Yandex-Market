@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Body
 from sqlalchemy.orm import Session
 from typing import List, Dict, Optional
+from sqlalchemy import func, desc
 from app.database import get_db
 from app import models, schemas
 from app.services.order_service import OrderService
@@ -12,7 +13,8 @@ router = APIRouter()
 @router.get("/", response_model=List[schemas.Order])
 def get_orders(
     skip: int = 0,
-    limit: int = 100,
+    limit: int = 15,
+    is_digital: Optional[bool] = None,
     status: str = None,
     start_date: str = None,
     end_date: str = None,
@@ -33,6 +35,12 @@ def get_orders(
     
     business_id = get_business_id(current_user)
     query = db.query(models.Order).filter(models.Order.business_id == business_id)
+    delivery_type = models.Order.yandex_order_data["delivery"]["type"].astext
+
+    if is_digital is True:
+        query = query.filter(delivery_type == "DIGITAL")
+    elif is_digital is False:
+        query = query.filter(func.coalesce(delivery_type, "") != "DIGITAL")
     
     if status:
         # Special handling for "unfinished" filter - show all orders that are not finished
@@ -62,7 +70,62 @@ def get_orders(
         except:
             pass
     
-    orders = query.order_by(models.Order.created_at.desc()).offset(skip).limit(limit * 10).all()  # Get more to account for grouping
+    # Pagination is based on distinct yandex_order_id groups (not raw rows).
+    # Step 1: fetch page of order group IDs.
+    group_query = db.query(
+        models.Order.yandex_order_id.label("yandex_order_id"),
+        func.max(models.Order.created_at).label("max_created_at"),
+    ).filter(models.Order.business_id == business_id)
+
+    if is_digital is True:
+        group_query = group_query.filter(delivery_type == "DIGITAL")
+    elif is_digital is False:
+        group_query = group_query.filter(func.coalesce(delivery_type, "") != "DIGITAL")
+
+    # Apply the same filters to grouping query
+    if status:
+        if status.lower() == "unfinished":
+            group_query = group_query.filter(models.Order.status != models.OrderStatus.FINISHED)
+        else:
+            status_upper = status.upper()
+            try:
+                status_enum = models.OrderStatus[status_upper]
+                group_query = group_query.filter(models.Order.status == status_enum)
+            except KeyError:
+                pass
+    if start_date:
+        try:
+            start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
+            group_query = group_query.filter(models.Order.created_at >= start_dt)
+        except Exception:
+            pass
+    if end_date:
+        try:
+            end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
+            group_query = group_query.filter(models.Order.created_at <= end_dt)
+        except Exception:
+            pass
+
+    group_rows = (
+        group_query
+        .group_by(models.Order.yandex_order_id)
+        .order_by(desc("max_created_at"))
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
+    yandex_ids_page = [r[0] for r in group_rows if r and r[0]]
+
+    if not yandex_ids_page:
+        return []
+
+    # Step 2: fetch all rows for those group IDs.
+    orders = (
+        query
+        .filter(models.Order.yandex_order_id.in_(yandex_ids_page))
+        .order_by(models.Order.created_at.desc())
+        .all()
+    )
     
     # Refresh order status from Yandex for orders that might be stale
     if refresh_status:
@@ -131,30 +194,13 @@ def get_orders(
             # IMPORTANT: Re-query to get fresh data from database, especially for FINISHED status
             if orders_to_refresh:
                 # Rebuild query to get fresh data (filter by business_id)
-                fresh_query = db.query(models.Order).filter(models.Order.business_id == business_id)
-                if status:
-                    if status.lower() == "unfinished":
-                        fresh_query = fresh_query.filter(models.Order.status != models.OrderStatus.FINISHED)
-                    else:
-                        status_upper = status.upper()
-                        try:
-                            status_enum = models.OrderStatus[status_upper]
-                            fresh_query = fresh_query.filter(models.Order.status == status_enum)
-                        except KeyError:
-                            pass
-                if start_date:
-                    try:
-                        start_dt = datetime.fromisoformat(start_date.replace('Z', '+00:00'))
-                        fresh_query = fresh_query.filter(models.Order.created_at >= start_dt)
-                    except:
-                        pass
-                if end_date:
-                    try:
-                        end_dt = datetime.fromisoformat(end_date.replace('Z', '+00:00'))
-                        fresh_query = fresh_query.filter(models.Order.created_at <= end_dt)
-                    except:
-                        pass
-                orders = fresh_query.order_by(models.Order.created_at.desc()).offset(skip).limit(limit * 10).all()
+                orders = (
+                    db.query(models.Order)
+                    .filter(models.Order.business_id == business_id)
+                    .filter(models.Order.yandex_order_id.in_(yandex_ids_page))
+                    .order_by(models.Order.created_at.desc())
+                    .all()
+                )
         except ConfigurationError as e:
             # Configuration error - log but don't fail the request
             print(f"⚠️  Yandex API configuration required: {e.message}")
@@ -399,11 +445,45 @@ def get_orders(
         order_schema = schemas.Order(**order_dict)
         result.append(order_schema)
         
-        # Limit results
-        if len(result) >= limit:
-            break
-    
     return result
+
+
+@router.get("/pending-counts", response_model=Dict[str, int])
+def get_pending_counts(
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Counts of not-yet-completed orders for Digital vs Physical tabs.
+
+    Digital is determined from Yandex order delivery.type == 'DIGITAL'.
+    """
+    business_id = get_business_id(current_user)
+    delivery_type = models.Order.yandex_order_data["delivery"]["type"].astext
+
+    not_done_statuses = [
+        models.OrderStatus.PENDING,
+        models.OrderStatus.PROCESSING,
+    ]
+
+    digital = (
+        db.query(func.count(func.distinct(models.Order.yandex_order_id)))
+        .filter(models.Order.business_id == business_id)
+        .filter(models.Order.status.in_(not_done_statuses))
+        .filter(delivery_type == "DIGITAL")
+        .scalar()
+        or 0
+    )
+
+    physical = (
+        db.query(func.count(func.distinct(models.Order.yandex_order_id)))
+        .filter(models.Order.business_id == business_id)
+        .filter(models.Order.status.in_(not_done_statuses))
+        .filter(func.coalesce(delivery_type, "") != "DIGITAL")
+        .scalar()
+        or 0
+    )
+
+    return {"digital": int(digital), "physical": int(physical)}
 
 
 @router.get("/{order_id}", response_model=schemas.Order)

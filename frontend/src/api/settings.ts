@@ -19,6 +19,7 @@ export interface AppSettings {
   secret_key?: string
   auto_activation_enabled: boolean
   auto_append_clients: boolean
+  timezone?: string
   created_at: string
   updated_at?: string
 }
@@ -41,6 +42,7 @@ export interface AppSettingsUpdate {
   secret_key?: string
   auto_activation_enabled?: boolean
   auto_append_clients?: boolean
+  timezone?: string
 }
 
 export const settingsApi = {

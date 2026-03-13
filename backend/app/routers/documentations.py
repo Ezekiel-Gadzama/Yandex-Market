@@ -32,6 +32,8 @@ DOCUMENTATION_VIDEOS_DIR.mkdir(parents=True, exist_ok=True)
 
 @router.get("/", response_model=List[schemas.Documentation])
 def get_documentations(
+    skip: int = Query(0, ge=0, description="Pagination offset"),
+    limit: int = Query(15, ge=1, le=200, description="Pagination page size"),
     search: Optional[str] = None,
     current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
@@ -44,7 +46,13 @@ def get_documentations(
     if search:
         query = query.filter(models.Documentation.name.ilike(f"%{search}%"))
     
-    docs = query.order_by(models.Documentation.created_at.desc()).all()
+    docs = (
+        query
+        .order_by(models.Documentation.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
     
     # Ensure file_url is properly encoded
     for doc in docs:

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import { ConfigurationErrorProvider } from './contexts/ConfigurationErrorContext'
 import { NotificationProvider } from './contexts/NotificationContext'
+import { TimeZoneProvider } from './contexts/TimeZoneContext'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import Products from './pages/Products'
@@ -12,6 +13,7 @@ import MarketingEmails from './pages/MarketingEmails'
 import Documentations from './pages/Documentations'
 import Settings from './pages/Settings'
 import Reviews from './pages/Reviews'
+import Chats from './pages/Chats'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
 import ForgotPassword from './pages/ForgotPassword'
@@ -144,6 +146,16 @@ function AppRoutes() {
         }
       />
       <Route
+        path="/chats"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <Chats />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
         path="/settings"
         element={
           <ProtectedRoute>
@@ -173,7 +185,9 @@ function App() {
       <AuthProvider>
         <NotificationProvider>
           <ConfigurationErrorProvider>
-            <AppRoutes />
+            <TimeZoneProvider>
+              <AppRoutes />
+            </TimeZoneProvider>
           </ConfigurationErrorProvider>
         </NotificationProvider>
       </AuthProvider>

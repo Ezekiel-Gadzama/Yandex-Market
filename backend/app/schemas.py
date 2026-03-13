@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from typing import Optional, List, Dict, Any
-from datetime import datetime
+from datetime import datetime, date
 import json
 from app.models import ProductType, OrderStatus
 
@@ -197,10 +197,35 @@ class TopProduct(BaseModel):
     total_profit: float
 
 
+class ExtraCostCreate(BaseModel):
+    description: str
+    amount: float
+    date: str  # YYYY-MM-DD
+
+
+class ExtraCostUpdate(BaseModel):
+    description: Optional[str] = None
+    amount: Optional[float] = None
+    date: Optional[str] = None  # YYYY-MM-DD
+
+
+class ExtraCost(BaseModel):
+    id: int
+    business_id: int
+    description: str
+    amount: float
+    date: date
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 class DashboardData(BaseModel):
     stats: DashboardStats
     top_products: List[TopProduct]
     recent_orders: List[Order]
+    extra_costs: List[ExtraCost] = []
 
 
 # Sync Schema
@@ -249,6 +274,9 @@ class AppSettingsBase(BaseModel):
     # Client Management Settings
     auto_append_clients: bool = False  # If True, automatically append client orders when customer name matches
 
+    # UI / Localization
+    timezone: Optional[str] = None  # IANA timezone name, e.g. Europe/Moscow
+
 
 class AppSettingsUpdate(BaseModel):
     processing_time_min: Optional[int] = Field(None, ge=1)
@@ -269,6 +297,7 @@ class AppSettingsUpdate(BaseModel):
     secret_key: Optional[str] = None
     auto_activation_enabled: Optional[bool] = None
     auto_append_clients: Optional[bool] = None
+    timezone: Optional[str] = None
 
 
 class AppSettings(AppSettingsBase):
@@ -426,6 +455,7 @@ class UserLogin(BaseModel):
     business_identifier: str  # Admin email OR business username (e.g. @Goal_sale) - identifies the business
     email: str  # Staff email (or same as business_identifier for owner - can be username)
     password: str
+    remember_me: bool = False
 
 
 class ChangePassword(BaseModel):

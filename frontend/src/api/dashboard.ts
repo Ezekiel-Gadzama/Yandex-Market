@@ -25,10 +25,20 @@ export interface TopProduct {
   total_profit: number
 }
 
+export interface ExtraCost {
+  id: number
+  business_id: number
+  description: string
+  amount: number
+  date: string
+  created_at: string
+}
+
 export interface DashboardData {
   stats: DashboardStats
   top_products: TopProduct[]
   recent_orders: Order[]
+  extra_costs: ExtraCost[]
 }
 
 export interface DateRange {
@@ -81,5 +91,19 @@ export const dashboardApi = {
     }
     const response = await apiClient.get<DashboardData>('/dashboard/data', { params })
     return response.data
+  },
+
+  createExtraCost: async (payload: { description: string; amount: number; date: string }) => {
+    const response = await apiClient.post<ExtraCost>('/dashboard/extra-costs', payload)
+    return response.data
+  },
+
+  updateExtraCost: async (id: number, payload: { description?: string; amount?: number; date?: string }) => {
+    const response = await apiClient.patch<ExtraCost>(`/dashboard/extra-costs/${id}`, payload)
+    return response.data
+  },
+
+  deleteExtraCost: async (id: number) => {
+    await apiClient.delete(`/dashboard/extra-costs/${id}`)
   },
 }

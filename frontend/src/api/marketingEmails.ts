@@ -57,8 +57,10 @@ export interface BroadcastResponse {
 }
 
 export const marketingEmailsApi = {
-  getAll: async (search?: string): Promise<MarketingEmailTemplate[]> => {
-    const params = search ? { search } : {}
+  getAll: async (search?: string, paging?: { skip?: number; limit?: number }): Promise<MarketingEmailTemplate[]> => {
+    const params: any = search ? { search } : {}
+    if (paging?.skip !== undefined) params.skip = paging.skip
+    if (paging?.limit !== undefined) params.limit = paging.limit
     const response = await apiClient.get('marketing-emails/', { params })
     return response.data
   },

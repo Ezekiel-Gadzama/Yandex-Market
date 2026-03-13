@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { productsApi, Product, ProductUpdate } from '../api/products'
 import { activationTemplatesApi } from '../api/activationTemplates'
@@ -15,6 +15,9 @@ export default function Products() {
   const [showViewModal, setShowViewModal] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [statusFilter, setStatusFilter] = useState<string>('')
+  const [typeFilter, setTypeFilter] = useState<string>('') // digital | physical
+  const [page, setPage] = useState(0)
+  const pageSize = 15
   const [viewingDoc, setViewingDoc] = useState<number | null>(null)
   const [viewingTemplate, setViewingTemplate] = useState<number | null>(null)
   const [notification, setNotification] = useState<{ isOpen: boolean; type: 'success' | 'error'; message: string }>({ isOpen: false, type: 'success', message: '' })
@@ -28,22 +31,26 @@ export default function Products() {
   }
 
   const { data: products, isLoading: productsLoading, refetch: refetchProducts } = useQuery({
-    queryKey: ['products', statusFilter, searchTerm],
-    queryFn: () => productsApi.getAll({
-      is_active: statusFilter === 'active' ? true : statusFilter === 'inactive' ? false : undefined,
-      search: searchTerm || undefined,
-    }),
+    queryKey: ['products', page, pageSize, statusFilter, typeFilter, searchTerm],
+    queryFn: () =>
+      productsApi.getAll({
+        skip: page * pageSize,
+        limit: pageSize,
+        is_active: statusFilter === 'active' ? true : statusFilter === 'inactive' ? false : undefined,
+        product_type: typeFilter || undefined,
+        search: searchTerm || undefined,
+      }),
   })
 
   // Fetch all documentations and templates for the table
   const { data: allDocumentations } = useQuery({
     queryKey: ['documentations'],
-    queryFn: () => documentationsApi.getAll(),
+    queryFn: () => documentationsApi.getAll(undefined, { skip: 0, limit: 2000 }),
   })
 
   const { data: allTemplates } = useQuery({
     queryKey: ['activation-templates'],
-    queryFn: () => activationTemplatesApi.getAll(),
+    queryFn: () => activationTemplatesApi.getAll(undefined, { skip: 0, limit: 2000 }),
   })
   
 
@@ -86,6 +93,11 @@ export default function Products() {
 
   // Products are already filtered by backend, no need for additional filtering
   const filteredProducts = products
+
+  // Reset paging when filters change
+  useEffect(() => {
+    setPage(0)
+  }, [statusFilter, typeFilter, searchTerm])
 
   const handleViewProduct = async (product: Product) => {
     setViewingProduct(product)
@@ -145,6 +157,40 @@ export default function Products() {
           <option value="active">Active</option>
           <option value="inactive">Inactive</option>
         </select>
+        <select
+          value={typeFilter}
+          onChange={(e) => setTypeFilter(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">All Types</option>
+          <option value="digital">Digital</option>
+          <option value="physical">Physical</option>
+        </select>
+      </div>
+
+      {/* Pagination */}
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="text-sm text-gray-600">
+          Page <span className="font-semibold">{page + 1}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0 || productsLoading}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={productsLoading || (products ? products.length < pageSize : true)}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       {/* Products: desktop table */}

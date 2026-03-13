@@ -28,8 +28,10 @@ export interface ActivationTemplateUpdate {
 }
 
 export const activationTemplatesApi = {
-  getAll: async (search?: string) => {
-    const params = search ? { search } : {}
+  getAll: async (search?: string, paging?: { skip?: number; limit?: number }) => {
+    const params: any = search ? { search } : {}
+    if (paging?.skip !== undefined) params.skip = paging.skip
+    if (paging?.limit !== undefined) params.limit = paging.limit
     const response = await apiClient.get<ActivationTemplate[]>('activation-templates/', { params })
     return response.data
   },

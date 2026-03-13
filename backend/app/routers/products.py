@@ -57,7 +57,16 @@ def get_products(
         query = query.filter(models.Product.is_active == is_active)
     
     if product_type:
-        query = query.filter(models.Product.product_type == product_type)
+        pt = str(product_type).lower().strip()
+        if pt in ["digital", "physical"]:
+            try:
+                query = query.filter(
+                    models.Product.product_type
+                    == (models.ProductType.DIGITAL if pt == "digital" else models.ProductType.PHYSICAL)
+                )
+            except Exception:
+                # Fallback: keep original filter if enum mapping fails
+                query = query.filter(models.Product.product_type == product_type)
     
     # Search by name, description, or generated keys
     if search:
@@ -136,19 +145,11 @@ def get_product_full_details(product_id: int, db: Session = Depends(get_db)):
                     merged_data.update(product_card)
                     product.yandex_full_data = merged_data
                     product_dict["yandex_full_data"] = merged_data
-                    
-                    # Update product type based on product card data
-                    is_digital = _is_digital_product(merged_data)
-                    product.product_type = models.ProductType.DIGITAL if is_digital else models.ProductType.PHYSICAL
-                    product_dict["product_type"] = product.product_type.value
-                    
-                    # Update product name from mapping.marketSkuName if available
-                    if product_card.get("mapping", {}).get("marketSkuName"):
-                        product.name = product_card["mapping"]["marketSkuName"]
-                        product_dict["name"] = product_card["mapping"]["marketSkuName"]
-                    
+                    # Do NOT overwrite product_type or name from Yandex here - user may have set
+                    # product to Digital manually (e.g. for orders that came as physical). Only
+                    # refresh yandex_full_data for display; keep existing product_type and name.
                     db.commit()
-                    print(f"✅ Successfully refreshed product card for {product.yandex_market_id} (type: {'digital' if is_digital else 'physical'})")
+                    print(f"✅ Successfully refreshed product card for {product.yandex_market_id}")
             except ConfigurationError as e:
                 print(f"⚠️  Warning: Configuration required - {e.message}")
                 # Continue with existing data if configuration is missing

@@ -3,8 +3,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { marketingEmailsApi, MarketingEmailTemplateCreate, BroadcastFilters } from '../api/marketingEmails'
 import { productsApi } from '../api/products'
 import { mediaApi } from '../api/media'
-import { Plus, Edit, Trash2, X, Send, Bold, Italic, Underline, X as XIcon, Copy, CheckCircle, AlertCircle, Upload } from 'lucide-react'
+import { Plus, Edit, Trash2, X, Send, Bold, Italic, Underline, X as XIcon, Copy, CheckCircle, AlertCircle, Upload, Check } from 'lucide-react'
 import ConfirmationModal from '../components/ConfirmationModal'
+import FeedbackButton from '../components/FeedbackButton'
 
 export default function MarketingEmails() {
   const [showModal, setShowModal] = useState(false)
@@ -19,6 +20,8 @@ export default function MarketingEmails() {
   const [minQuantity, setMinQuantity] = useState<number>(1)
   const [minTotalProducts, setMinTotalProducts] = useState<number>(1)
   const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(0)
+  const pageSize = 15
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; templateId: number | null }>({ isOpen: false, templateId: null })
   const [broadcastConfirm, setBroadcastConfirm] = useState<{ isOpen: boolean; template: any | null }>({ isOpen: false, template: null })
   const [notification, setNotification] = useState<{ isOpen: boolean; type: 'success' | 'error'; message: string }>({ isOpen: false, type: 'success', message: '' })
@@ -31,9 +34,13 @@ export default function MarketingEmails() {
   }
 
   const { data: templates, isLoading, error: templatesError } = useQuery({
-    queryKey: ['marketing-templates', searchTerm],
-    queryFn: () => marketingEmailsApi.getAll(searchTerm || undefined),
+    queryKey: ['marketing-templates', searchTerm, page, pageSize],
+    queryFn: () => marketingEmailsApi.getAll(searchTerm || undefined, { skip: page * pageSize, limit: pageSize }),
   })
+
+  useEffect(() => {
+    setPage(0)
+  }, [searchTerm])
 
   const { data: products = [] } = useQuery({
     queryKey: ['products'],
@@ -377,6 +384,31 @@ export default function MarketingEmails() {
         />
       </div>
 
+      {/* Pagination */}
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="text-sm text-gray-600">
+          Page <span className="font-semibold">{page + 1}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0 || isLoading}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={isLoading || (templates ? templates.length < pageSize : true)}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
       {isLoading ? (
         <div className="text-center py-12">Loading templates...</div>
       ) : templatesError ? (
@@ -454,14 +486,25 @@ export default function MarketingEmails() {
                     </button>
                     {!template.is_default && (
                       <>
-                        <button
-                          onClick={() => handleDuplicate(template)}
+                        <FeedbackButton
+                          onAction={() => handleDuplicate(template)}
                           className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
                           title="Duplicate"
+                          label="Duplicate"
+                          successLabel="Duplicated"
+                          successClassName="border-green-300 bg-green-50 text-green-800 hover:bg-green-100"
+                          successChildren={
+                            <>
+                              <Check className="h-4 w-4 mr-1" />
+                              Duplicated
+                            </>
+                          }
                         >
-                          <Copy className="h-4 w-4 mr-1" />
-                          Duplicate
-                        </button>
+                          <>
+                            <Copy className="h-4 w-4 mr-1" />
+                            Duplicate
+                          </>
+                        </FeedbackButton>
                         <button
                           onClick={() => handleEdit(template)}
                           className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"

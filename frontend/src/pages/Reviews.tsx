@@ -3,6 +3,8 @@ import { useQuery } from '@tanstack/react-query'
 import { Star, MessageSquareText, RefreshCw, Search } from 'lucide-react'
 import { reviewsApi } from '../api/reviews'
 import { productsApi } from '../api/products'
+import { useTimeZone } from '../contexts/TimeZoneContext'
+import CopyButton from '../components/CopyButton'
 
 type Tab = 'shop' | 'product'
 
@@ -12,8 +14,51 @@ function getRating(review: any): number {
   return Number.isFinite(n) ? n : 0
 }
 
-function getText(review: any): string {
-  return review?.text ?? review?.description ?? review?.comment ?? ''
+function extractStructuredTextFromPythonDictString(text: string): { advantages?: string; disadvantages?: string; comment?: string } | null {
+  if (!text || typeof text !== 'string') return null
+  const t = text.trim()
+  if (!t.startsWith('{')) return null
+  if (!t.includes('advantages') && !t.includes('comment') && !t.includes('disadvantages')) return null
+
+  const grab = (key: 'advantages' | 'disadvantages' | 'comment') => {
+    // matches: 'key': 'value' OR "key": "value"
+    const re = new RegExp(String.raw`['"]${key}['"]\s*:\s*['"]([^'"]*)['"]`)
+    const m = t.match(re)
+    return m?.[1]?.trim() || undefined
+  }
+
+  return {
+    advantages: grab('advantages'),
+    disadvantages: grab('disadvantages'),
+    comment: grab('comment'),
+  }
+}
+
+function getTextParts(review: any): { advantages?: string; disadvantages?: string; comment?: string; raw?: string } {
+  const text = review?.text
+  if (typeof text === 'string' && text.trim()) {
+    const structured = extractStructuredTextFromPythonDictString(text)
+    if (structured && (structured.advantages || structured.disadvantages || structured.comment)) return structured
+    return { raw: text }
+  }
+
+  const desc = review?.description
+  if (desc && typeof desc === 'object') {
+    const advantages = typeof desc.advantages === 'string' ? desc.advantages : undefined
+    const disadvantages = typeof desc.disadvantages === 'string' ? desc.disadvantages : undefined
+    const comment = typeof desc.comment === 'string' ? desc.comment : undefined
+    if (advantages || disadvantages || comment) return { advantages, disadvantages, comment }
+  }
+  if (typeof desc === 'string' && desc.trim()) {
+    const structured = extractStructuredTextFromPythonDictString(desc)
+    if (structured && (structured.advantages || structured.disadvantages || structured.comment)) return structured
+    return { raw: desc }
+  }
+
+  const comment = review?.comment
+  if (typeof comment === 'string' && comment.trim()) return { raw: comment }
+
+  return {}
 }
 
 function getAuthorName(review: any): string {
@@ -38,12 +83,37 @@ function Stars({ value }: { value: number }) {
   )
 }
 
+function RatingPill({ value }: { value: number }) {
+  const v = Math.max(0, Math.min(5, Math.round(Number(value) || 0)))
+  return (
+    <span className="text-xs font-semibold text-gray-700 bg-gray-100 px-2 py-0.5 rounded-full">
+      {v}/5
+    </span>
+  )
+}
+
 export default function Reviews() {
+  const { formatDateTime } = useTimeZone()
   const [tab, setTab] = useState<Tab>('shop')
   const [productId, setProductId] = useState('')
+  const [page, setPage] = useState(0)
+  const pageSize = 15
   const [productSearchTerm, setProductSearchTerm] = useState('')
   const [showProductDropdown, setShowProductDropdown] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
+
+  const buildCopyText = (textParts: { advantages?: string; disadvantages?: string; comment?: string; raw?: string }) => {
+    return (
+      textParts.raw ||
+      [
+        textParts.advantages ? `Advantages: ${textParts.advantages}` : '',
+        textParts.disadvantages ? `Disadvantages: ${textParts.disadvantages}` : '',
+        textParts.comment ? `Comment: ${textParts.comment}` : '',
+      ]
+        .filter(Boolean)
+        .join('\n')
+    )
+  }
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -63,17 +133,25 @@ export default function Reviews() {
     enabled: tab === 'product' && productSearchTerm.length > 0,
   })
 
-  const queryKey = useMemo(() => ['reviews', tab, productId], [tab, productId])
+  useEffect(() => {
+    setPage(0)
+  }, [tab, productId])
+
+  const queryKey = useMemo(() => ['reviews', tab, productId, page, pageSize], [tab, productId, page, pageSize])
 
   const { data, isLoading, error, refetch, isFetching } = useQuery({
     queryKey,
     queryFn: async () => {
-      if (tab === 'shop') return await reviewsApi.getShopReviews(50)
-      return await reviewsApi.getProductReviews(productId || undefined, 50)
+      // Yandex reviews endpoints don't expose reliable page tokens in our current integration,
+      // so we emulate paging by increasing limit.
+      const limit = (page + 1) * pageSize
+      if (tab === 'shop') return await reviewsApi.getShopReviews(limit)
+      return await reviewsApi.getProductReviews(productId || undefined, limit)
     },
   })
 
-  const reviews = (data as any)?.reviews ?? []
+  const reviewsAll = (data as any)?.reviews ?? []
+  const reviews = reviewsAll.slice(page * pageSize, page * pageSize + pageSize)
   const average = (data as any)?.average_rating ?? 0
   const total = (data as any)?.total_reviews ?? 0
   const breakdown = (data as any)?.rating_breakdown ?? {}
@@ -172,6 +250,31 @@ export default function Reviews() {
         </div>
       </div>
 
+      {/* Pagination */}
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="text-sm text-gray-600">
+          Page <span className="font-semibold">{page + 1}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0 || isFetching}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={isFetching || reviewsAll.length < (page + 1) * pageSize}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-lg shadow p-4">
           <div className="text-sm text-gray-600">Average rating</div>
@@ -218,21 +321,56 @@ export default function Reviews() {
           <div className="divide-y divide-gray-200">
             {reviews.map((r: any) => {
               const rating = getRating(r)
-              const text = getText(r)
+              const textParts = getTextParts(r)
               const author = getAuthorName(r)
-              const created = getCreatedAt(r)
+              const created = formatDateTime(getCreatedAt(r))
+              const copyText = buildCopyText(textParts)
               return (
-                <div key={r?.id ?? `${author}-${created}-${text.slice(0, 20)}`} className="p-6">
+                <div
+                  key={r?.id ?? `${author}-${created}-${String(rating)}-${(textParts.raw ?? '').slice(0, 20)}`}
+                  className="p-6"
+                >
                   <div className="flex items-start justify-between gap-4">
                     <div>
                       <div className="flex items-center gap-3">
                         <Stars value={rating} />
+                        <RatingPill value={rating} />
                         <div className="text-sm text-gray-700 font-medium">{author}</div>
                         {created && <div className="text-sm text-gray-500">{String(created)}</div>}
                       </div>
-                      {text && <div className="mt-3 text-gray-900 whitespace-pre-wrap">{text}</div>}
+                      <div className="mt-3 text-gray-900 space-y-2">
+                        {(textParts.advantages || textParts.disadvantages || textParts.comment) ? (
+                          <>
+                            {textParts.advantages && (
+                              <div className="text-sm">
+                                <div className="text-xs font-semibold text-gray-600 mb-0.5">Advantages</div>
+                                <div className="whitespace-pre-wrap break-words">{textParts.advantages}</div>
+                              </div>
+                            )}
+                            {textParts.disadvantages && (
+                              <div className="text-sm">
+                                <div className="text-xs font-semibold text-gray-600 mb-0.5">Disadvantages</div>
+                                <div className="whitespace-pre-wrap break-words">{textParts.disadvantages}</div>
+                              </div>
+                            )}
+                            {textParts.comment && (
+                              <div className="text-sm">
+                                <div className="text-xs font-semibold text-gray-600 mb-0.5">Comment</div>
+                                <div className="whitespace-pre-wrap break-words">{textParts.comment}</div>
+                              </div>
+                            )}
+                          </>
+                        ) : textParts.raw ? (
+                          <div className="whitespace-pre-wrap break-words text-sm">{textParts.raw}</div>
+                        ) : (
+                          <span className="text-gray-500 text-sm">No review text provided.</span>
+                        )}
+                      </div>
                     </div>
-                    <div className="text-sm text-gray-500">{r?.id ? `ID: ${r.id}` : ''}</div>
+                    <div className="flex flex-col items-end gap-2">
+                      {r?.id && <div className="text-sm text-gray-500">{`ID: ${r.id}`}</div>}
+                      {!!copyText?.trim() && <CopyButton text={copyText} title="Copy review text" />}
+                    </div>
                   </div>
                 </div>
               )

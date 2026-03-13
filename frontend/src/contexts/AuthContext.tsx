@@ -6,7 +6,7 @@ interface AuthContextType {
   user: User | null
   token: string | null
   isLoading: boolean
-  login: (businessIdentifier: string, email: string, password: string) => Promise<void>
+  login: (businessIdentifier: string, email: string, password: string, rememberMe?: boolean) => Promise<void>
   signup: (email: string, password: string, businessName?: string, businessUsername?: string) => Promise<void>
   logout: () => void
   refreshUser: () => Promise<void>
@@ -72,8 +72,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     fetchUserWithRetry()
   }, [])
 
-  const login = async (businessIdentifier: string, email: string, password: string) => {
-    const response = await authApi.login({ business_identifier: businessIdentifier, email, password })
+  const login = async (businessIdentifier: string, email: string, password: string, rememberMe: boolean = false) => {
+    const response = await authApi.login({ business_identifier: businessIdentifier, email, password, remember_me: rememberMe })
     setStoredToken(response.access_token)
     setToken(response.access_token)
     setUser(response.user)

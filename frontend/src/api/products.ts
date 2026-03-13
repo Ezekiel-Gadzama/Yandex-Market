@@ -58,7 +58,7 @@ export interface ProductUpdate {
 }
 
 export const productsApi = {
-  getAll: async (params?: { is_active?: boolean; product_type?: string; search?: string }) => {
+  getAll: async (params?: { is_active?: boolean; product_type?: string; search?: string; skip?: number; limit?: number }) => {
     const response = await apiClient.get<Product[]>('/products/', { params })
     return response.data
   },

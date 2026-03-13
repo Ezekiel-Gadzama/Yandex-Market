@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { dashboardApi, DateRange } from '../api/dashboard'
 import { useAuth } from '../contexts/AuthContext'
 import { settingsApi } from '../api/settings'
@@ -12,12 +12,18 @@ import {
   Calendar,
   Edit2,
   ChevronDown,
-  ChevronRight
+  ChevronRight,
+  X,
+  Trash2,
+  Pencil,
+  List
 } from 'lucide-react'
-import { format } from 'date-fns'
+import { format, parseISO } from 'date-fns'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import { useTimeZone } from '../contexts/TimeZoneContext'
 
 export default function Dashboard() {
+  const { formatDateTime } = useTimeZone()
   const { user } = useAuth()
   const hasDashboardRight = user?.is_admin || user?.permissions.dashboard_right
   const [period, setPeriod] = useState<string>('all')
@@ -26,8 +32,33 @@ export default function Dashboard() {
   const [showDatePicker, setShowDatePicker] = useState(false)
   const datePickerRef = useRef<HTMLDivElement>(null)
   const [expandedOrders, setExpandedOrders] = useState<Set<string>>(new Set())
+  const [recentOrdersFilter, setRecentOrdersFilter] = useState<'all' | 'digital' | 'physical'>('all')
   const hasCheckedSyncRef = useRef(false)
-  
+  const [extraCostDescription, setExtraCostDescription] = useState('')
+  const [extraCostAmount, setExtraCostAmount] = useState('')
+  const [extraCostDate, setExtraCostDate] = useState('')
+  const [showExtraCostsModal, setShowExtraCostsModal] = useState(false)
+  const [editingCostId, setEditingCostId] = useState<number | null>(null)
+  const [editDescription, setEditDescription] = useState('')
+  const [editAmount, setEditAmount] = useState('')
+  const [editDate, setEditDate] = useState('')
+  const queryClient = useQueryClient()
+
+  const resetExtraCostsModalInputs = () => {
+    setExtraCostDescription('')
+    setExtraCostAmount('')
+    setExtraCostDate('')
+    setEditingCostId(null)
+    setEditDescription('')
+    setEditAmount('')
+    setEditDate('')
+  }
+
+  const closeExtraCostsModal = () => {
+    setShowExtraCostsModal(false)
+    resetExtraCostsModalInputs()
+  }
+
   const toggleOrderExpansion = (yandexOrderId: string) => {
     setExpandedOrders(prev => {
       const newSet = new Set(prev)
@@ -44,6 +75,57 @@ export default function Dashboard() {
     queryKey: ['dashboard', period, dateRange],
     queryFn: () => dashboardApi.getData(period, dateRange),
   })
+  const todayStr = format(new Date(), 'yyyy-MM-dd')
+
+  const createExtraCostMutation = useMutation({
+    mutationFn: (payload: { description: string; amount: number; date: string }) =>
+      dashboardApi.createExtraCost(payload),
+    onSuccess: () => {
+      setExtraCostDescription('')
+      setExtraCostAmount('')
+      setExtraCostDate('')
+      queryClient.invalidateQueries({ queryKey: ['dashboard', period, dateRange] })
+    },
+  })
+
+  const updateExtraCostMutation = useMutation({
+    mutationFn: ({ id, payload }: { id: number; payload: { description: string; amount: number; date: string } }) =>
+      dashboardApi.updateExtraCost(id, payload),
+    onSuccess: () => {
+      setEditingCostId(null)
+      queryClient.invalidateQueries({ queryKey: ['dashboard', period, dateRange] })
+    },
+  })
+
+  const deleteExtraCostMutation = useMutation({
+    mutationFn: (id: number) => dashboardApi.deleteExtraCost(id),
+    onSuccess: () => {
+      setEditingCostId(null)
+      queryClient.invalidateQueries({ queryKey: ['dashboard', period, dateRange] })
+    },
+  })
+
+  const startEditingCost = (cost: { id: number; description: string; amount: number; date: string }) => {
+    setEditingCostId(cost.id)
+    setEditDescription(cost.description)
+    setEditAmount(String(cost.amount))
+    setEditDate(cost.date)
+  }
+
+  const cancelEditingCost = () => {
+    setEditingCostId(null)
+  }
+
+  const saveEditingCost = () => {
+    if (editingCostId == null) return
+    const amountNum = Number(editAmount)
+    if (!editDescription.trim() || !editDate || !Number.isFinite(amountNum) || amountNum <= 0) return
+    if (editDate > todayStr) return
+    updateExtraCostMutation.mutate({
+      id: editingCostId,
+      payload: { description: editDescription.trim(), amount: amountNum, date: editDate },
+    })
+  }
 
   // Check settings on mount and trigger sync if Yandex API is configured
   useEffect(() => {
@@ -151,7 +233,33 @@ export default function Dashboard() {
 
   if (!data) return null
 
-  const { stats, top_products, recent_orders } = data
+  const { stats, top_products, recent_orders, extra_costs = [] } = data
+
+  const visibleRecentOrders =
+    recentOrdersFilter === 'all'
+      ? recent_orders
+      : recent_orders.filter((o: any) => {
+          const isDigital = o?.delivery_type === 'DIGITAL'
+          return recentOrdersFilter === 'digital' ? isDigital : !isDigital
+        })
+
+  const totalExtraCost = extra_costs.reduce((sum, cost) => sum + cost.amount, 0)
+  const adjustedProfit = stats.total_profit - totalExtraCost
+  const adjustedProfitMargin =
+    stats.total_revenue > 0 ? (adjustedProfit / stats.total_revenue) * 100 : 0
+
+  const handleAddExtraCost = () => {
+    const amountNumber = Number(extraCostAmount)
+    if (!extraCostDescription.trim() || !extraCostDate || !Number.isFinite(amountNumber) || amountNumber <= 0) {
+      return
+    }
+    if (extraCostDate > todayStr) return
+    createExtraCostMutation.mutate({
+      description: extraCostDescription.trim(),
+      amount: amountNumber,
+      date: extraCostDate,
+    })
+  }
 
   const chartData = top_products.slice(0, 5).map(p => ({
     name: p.product_name.length > 20 ? p.product_name.substring(0, 20) + '...' : p.product_name,
@@ -352,7 +460,7 @@ export default function Dashboard() {
                     <dl>
                       <dt className="text-sm font-medium text-gray-500 truncate">Profit Margin</dt>
                       <dd className="text-lg font-medium text-gray-900">
-                        {stats.profit_margin.toFixed(2)}%
+                        {adjustedProfitMargin.toFixed(2)}%
                       </dd>
                       <dd className="text-sm text-gray-500">
                         {stats.successful_orders} successful
@@ -360,6 +468,36 @@ export default function Dashboard() {
                     </dl>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <div className="bg-white overflow-hidden shadow rounded-lg lg:col-span-2">
+              <div className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <h3 className="text-sm font-medium text-gray-900">Extra Costs (Current Period)</h3>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Total extra cost:{' '}
+                    <span className="font-semibold text-red-600">
+                      -₽{totalExtraCost.toLocaleString('ru-RU', { minimumFractionDigits: 2 })}
+                    </span>
+                    {' · '}
+                    Adjusted profit:{' '}
+                    <span className="font-semibold text-gray-900">
+                      ₽{adjustedProfit.toLocaleString('ru-RU', { minimumFractionDigits: 2 })}
+                    </span>
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingCostId(null)
+                    setShowExtraCostsModal(true)
+                  }}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <List className="h-4 w-4" />
+                  View & manage extra costs
+                </button>
               </div>
             </div>
           </>
@@ -421,7 +559,19 @@ export default function Dashboard() {
       {/* Recent Orders */}
       <div className="bg-white shadow rounded-lg">
         <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">Recent Orders</h2>
+          <div className="flex items-center justify-between gap-3">
+            <h2 className="text-lg font-medium text-gray-900">Recent Orders</h2>
+            <select
+              value={recentOrdersFilter}
+              onChange={(e) => setRecentOrdersFilter(e.target.value as any)}
+              className="px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-700 bg-white"
+              title="Filter by type"
+            >
+              <option value="all">All</option>
+              <option value="digital">Digital</option>
+              <option value="physical">Physical</option>
+            </select>
+          </div>
         </div>
         <p className="md:hidden px-4 py-2 text-xs text-gray-500 bg-gray-50 border-b">Swipe left to see more columns</p>
         <div className="overflow-x-auto" style={{ WebkitOverflowScrolling: 'touch' }}>
@@ -449,8 +599,8 @@ export default function Dashboard() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {recent_orders.length > 0 ? (
-                recent_orders.map((order) => {
+              {visibleRecentOrders.length > 0 ? (
+                visibleRecentOrders.map((order) => {
                   const isExpanded = expandedOrders.has(order.yandex_order_id)
                   
                   // If order doesn't have items array, create one from the single product (backward compatibility)
@@ -522,7 +672,7 @@ export default function Dashboard() {
                           </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                          {format(new Date(order.created_at), 'MMM d, yyyy')}
+                          {formatDateTime(order.created_at)}
                         </td>
                       </tr>
                       
@@ -566,6 +716,198 @@ export default function Dashboard() {
           </table>
         </div>
       </div>
+
+      {/* Extra Costs Modal */}
+      {showExtraCostsModal && (
+        <div className="fixed inset-0 z-50 overflow-y-auto" aria-modal="true" role="dialog">
+          <div className="flex min-h-screen items-center justify-center p-4">
+            <div className="fixed inset-0 bg-black/50" onClick={closeExtraCostsModal} aria-hidden="true" />
+            <div className="relative bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] flex flex-col">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900">Manage extra costs</h3>
+                <button
+                  type="button"
+                  onClick={closeExtraCostsModal}
+                  className="p-2 text-gray-500 hover:text-gray-700 rounded-md hover:bg-gray-100"
+                  aria-label="Close"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+              <div className="p-4 overflow-y-auto flex-1 space-y-4">
+                <p className="text-sm text-gray-500">
+                  Costs for the selected period are shown. They are subtracted from profit and profit margin.
+                </p>
+
+                {/* Add new cost form */}
+                <div className="border border-gray-200 rounded-lg p-4 space-y-3">
+                  <h4 className="text-sm font-medium text-gray-900">Add cost</h4>
+                  <div className="grid grid-cols-1 sm:grid-cols-12 gap-3">
+                    <div className="sm:col-span-5">
+                      <label className="block text-xs font-medium text-gray-700 mb-1">What was the cost for?</label>
+                      <input
+                        type="text"
+                        value={extraCostDescription}
+                        onChange={(e) => setExtraCostDescription(e.target.value)}
+                        placeholder="e.g. Ads, packaging..."
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Amount</label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={extraCostAmount}
+                        onChange={(e) => setExtraCostAmount(e.target.value)}
+                        placeholder="0"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label className="block text-xs font-medium text-gray-700 mb-1">Date</label>
+                      <input
+                        type="date"
+                        value={extraCostDate}
+                        onChange={(e) => setExtraCostDate(e.target.value)}
+                        max={todayStr}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      />
+                    </div>
+                    <div className="sm:col-span-3 flex items-end">
+                      <button
+                        type="button"
+                        onClick={handleAddExtraCost}
+                        className="w-full px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                        disabled={
+                          !extraCostDescription.trim() ||
+                          !extraCostDate ||
+                          extraCostDate > todayStr ||
+                          !extraCostAmount ||
+                          Number(extraCostAmount) <= 0 ||
+                          createExtraCostMutation.isPending
+                        }
+                      >
+                        {createExtraCostMutation.isPending ? 'Adding…' : 'Add cost'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* List of extra costs */}
+                <div>
+                  <h4 className="text-sm font-medium text-gray-900 mb-2">Costs in current period</h4>
+                  {extra_costs.length === 0 ? (
+                    <p className="text-sm text-gray-500 py-2">No extra costs yet. Add one above.</p>
+                  ) : (
+                    <ul className="space-y-2">
+                      {[...extra_costs]
+                        .sort((a, b) => (a.date < b.date ? 1 : -1))
+                        .map((cost) => (
+                          <li
+                            key={cost.id}
+                            className="border border-gray-200 rounded-lg p-3 flex flex-col sm:flex-row sm:items-center gap-2"
+                          >
+                            {editingCostId === cost.id ? (
+                              <>
+                                <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                  <input
+                                    type="text"
+                                    value={editDescription}
+                                    onChange={(e) => setEditDescription(e.target.value)}
+                                    placeholder="Description"
+                                    className="px-3 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  />
+                                  <input
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value={editAmount}
+                                    onChange={(e) => setEditAmount(e.target.value)}
+                                    className="px-3 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  />
+                                  <input
+                                    type="date"
+                                    value={editDate}
+                                    onChange={(e) => setEditDate(e.target.value)}
+                                    max={todayStr}
+                                    className="px-3 py-1.5 border border-gray-300 rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                  />
+                                </div>
+                                <div className="flex gap-2">
+                                  <button
+                                    type="button"
+                                    onClick={saveEditingCost}
+                                    disabled={updateExtraCostMutation.isPending || (editDate ? editDate > todayStr : false)}
+                                    className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50"
+                                  >
+                                    {updateExtraCostMutation.isPending ? 'Saving…' : 'Save'}
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={cancelEditingCost}
+                                    className="px-3 py-1.5 border border-gray-300 text-gray-700 text-sm rounded hover:bg-gray-50"
+                                  >
+                                    Cancel
+                                  </button>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="flex-1 min-w-0">
+                                  <span className="text-sm font-medium text-gray-900">{cost.description}</span>
+                                  <span className="text-sm text-gray-500 ml-2">
+                                    {format(parseISO(cost.date), 'MMM d, yyyy')}
+                                  </span>
+                                  <span className="text-sm font-semibold text-red-600 ml-2">
+                                    -₽{cost.amount.toLocaleString('ru-RU', { minimumFractionDigits: 2 })}
+                                  </span>
+                                </div>
+                                <div className="flex gap-1 shrink-0">
+                                  <button
+                                    type="button"
+                                    onClick={() => startEditingCost(cost)}
+                                    className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded"
+                                    title="Edit"
+                                  >
+                                    <Pencil className="h-4 w-4" />
+                                  </button>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      if (window.confirm('Delete this extra cost?')) {
+                                        deleteExtraCostMutation.mutate(cost.id)
+                                      }
+                                    }}
+                                    disabled={deleteExtraCostMutation.isPending}
+                                    className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded"
+                                    title="Delete"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          </li>
+                        ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+              <div className="p-4 border-t border-gray-200 flex justify-end">
+                <button
+                  type="button"
+                  onClick={closeExtraCostsModal}
+                  className="px-4 py-2 bg-gray-100 text-gray-700 text-sm font-medium rounded-md hover:bg-gray-200"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

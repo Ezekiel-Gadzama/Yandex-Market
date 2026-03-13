@@ -117,12 +117,13 @@ def _sync_products_sync(business_id: int = None):
                     
                     if existing_product:
                         # Always update existing products to reflect changes from Yandex
-                        # Preserve local-only fields (these are not synced from Yandex)
+                        # Preserve local-only fields (these are not synced from Yandex; user overrides must stick)
                         preserved_cost_price = existing_product.cost_price
                         preserved_supplier_url = existing_product.supplier_url
                         preserved_supplier_name = existing_product.supplier_name
                         preserved_email_template_id = existing_product.email_template_id
                         preserved_documentation_id = existing_product.documentation_id
+                        preserved_product_type = existing_product.product_type
                         
                         # Fetch product card to get mapping.marketSkuName and parameterValues
                         try:
@@ -147,11 +148,7 @@ def _sync_products_sync(business_id: int = None):
                         # Store complete Yandex JSON data
                         existing_product.yandex_full_data = yandex_product
                         
-                        # Determine product type from Yandex data (check merged data with parameterValues)
-                        is_digital = _is_digital_product(yandex_product)
-                        existing_product.product_type = models.ProductType.DIGITAL if is_digital else models.ProductType.PHYSICAL
-                        
-                        # Update with Yandex data (Yandex is source of truth)
+                        # Update with Yandex data (Yandex is source of truth for name/price; product_type is preserved)
                         # Extract product name from mapping.marketSkuName (priority) - this comes from product card
                         product_name = (
                             yandex_product.get("mapping", {}).get("marketSkuName") or
@@ -197,6 +194,7 @@ def _sync_products_sync(business_id: int = None):
                         existing_product.supplier_name = preserved_supplier_name
                         existing_product.email_template_id = preserved_email_template_id
                         existing_product.documentation_id = preserved_documentation_id
+                        existing_product.product_type = preserved_product_type
                         
                         existing_product.is_synced = True
                         products_updated += 1
@@ -1188,6 +1186,19 @@ async def lifespan(app: FastAPI):
             ALTER TABLE app_settings 
             ADD COLUMN IF NOT EXISTS auto_append_clients BOOLEAN DEFAULT FALSE
         """))
+
+        # Add timezone column to app_settings table (UI / Localization)
+        # Needed for user-selectable display timezone in Settings.
+        try:
+            db.execute(text("""
+                ALTER TABLE app_settings
+                ADD COLUMN IF NOT EXISTS timezone VARCHAR
+            """))
+            db.commit()  # commit early so Settings API won't fail even if later migrations error
+            print("✅ Added timezone column to app_settings")
+        except Exception as e:
+            db.rollback()
+            print(f"⚠️  Warning: Could not add timezone column to app_settings: {str(e)}")
         
         # Add smtp_user column to app_settings table
         db.execute(text("""

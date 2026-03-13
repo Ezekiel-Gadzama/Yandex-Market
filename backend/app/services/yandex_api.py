@@ -2,7 +2,7 @@ import httpx
 import json
 import os
 from pathlib import Path
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 from urllib.parse import urlparse
 from app.config import settings
 from app import models
@@ -924,29 +924,69 @@ class YandexMarketAPI:
             response.raise_for_status()
             data = response.json()
             
-            # Handle different response formats
-            result = data.get("result", {})
-            if "feedbacks" in result:
-                # ACMA returns "feedbacks", normalize to "reviews" format
-                feedbacks = result.get("feedbacks", [])
-                reviews = []
-                for feedback in feedbacks:
-                    review = {
-                        "id": feedback.get("id"),
-                        "rating": feedback.get("grade", 0),  # ACMA uses "grade" instead of "rating"
-                        "text": feedback.get("text", ""),
-                        "author": {
-                            "name": feedback.get("author", {}).get("name", "Anonymous") if isinstance(feedback.get("author"), dict) else "Anonymous",
-                            "id": feedback.get("author", {}).get("id") if isinstance(feedback.get("author"), dict) else None,
-                        },
-                        "created_at": feedback.get("createdAt") or feedback.get("created_at"),
-                        "product": feedback.get("product", {}),
+            result = data.get("result", {}) or {}
+            raw_items = result.get("feedbacks") or result.get("reviews") or []
+
+            reviews: List[Dict[str, Any]] = []
+            for item in raw_items:
+                if not isinstance(item, dict):
+                    continue
+                stats = item.get("statistics") if isinstance(item.get("statistics"), dict) else {}
+                rating_val = item.get("rating")
+                if rating_val is None:
+                    rating_val = stats.get("rating") if isinstance(stats, dict) else None
+                if rating_val is None:
+                    rating_val = item.get("grade")
+                try:
+                    rating_num = int(rating_val) if rating_val is not None else 0
+                except Exception:
+                    try:
+                        rating_num = int(float(rating_val))
+                    except Exception:
+                        rating_num = 0
+
+                author_obj = item.get("author")
+                if isinstance(author_obj, dict):
+                    author_name = author_obj.get("name") or "Anonymous"
+                    author_id = author_obj.get("id")
+                elif isinstance(author_obj, str):
+                    author_name = author_obj or "Anonymous"
+                    author_id = None
+                else:
+                    author_name = item.get("authorName") or "Anonymous"
+                    author_id = None
+
+                desc = item.get("description") if isinstance(item.get("description"), dict) else None
+                if desc:
+                    advantages = (desc.get("advantages") or "").strip()
+                    disadvantages = (desc.get("disadvantages") or "").strip()
+                    comment = (desc.get("comment") or "").strip()
+                    parts = []
+                    if advantages:
+                        parts.append(f"Advantages: {advantages}")
+                    if disadvantages:
+                        parts.append(f"Disadvantages: {disadvantages}")
+                    if comment:
+                        parts.append(f"Comment: {comment}")
+                    text_val = "\n".join(parts).strip()
+                else:
+                    text_val = item.get("text")
+                    if text_val is None:
+                        text_val = item.get("comment")
+                    if text_val is None:
+                        text_val = ""
+
+                reviews.append(
+                    {
+                        "id": item.get("id") or item.get("feedbackId"),
+                        "rating": rating_num,
+                        "text": str(text_val or ""),
+                        "author": {"name": author_name, "id": author_id},
+                        "created_at": item.get("createdAt") or item.get("created_at") or item.get("date") or item.get("created"),
+                        "product": item.get("product", {}) if isinstance(item.get("product"), dict) else {},
                     }
-                    reviews.append(review)
-                return reviews
-            else:
-                # OAuth returns "reviews"
-                return result.get("reviews", [])
+                )
+            return reviews
         except httpx.HTTPError as e:
             raise Exception(f"Failed to get product reviews: {str(e)}")
     
@@ -994,28 +1034,68 @@ class YandexMarketAPI:
             response.raise_for_status()
             data = response.json()
             
-            # Handle different response formats
-            result = data.get("result", {})
-            if "feedbacks" in result:
-                # ACMA returns "feedbacks", normalize to "reviews" format
-                feedbacks = result.get("feedbacks", [])
-                reviews = []
-                for feedback in feedbacks:
-                    review = {
-                        "id": feedback.get("id"),
-                        "rating": feedback.get("grade", 0),  # ACMA uses "grade" instead of "rating"
-                        "text": feedback.get("text", ""),
-                        "author": {
-                            "name": feedback.get("author", {}).get("name", "Anonymous") if isinstance(feedback.get("author"), dict) else "Anonymous",
-                            "id": feedback.get("author", {}).get("id") if isinstance(feedback.get("author"), dict) else None,
-                        },
-                        "created_at": feedback.get("createdAt") or feedback.get("created_at"),
+            result = data.get("result", {}) or {}
+            raw_items = result.get("feedbacks") or result.get("reviews") or []
+
+            reviews: List[Dict[str, Any]] = []
+            for item in raw_items:
+                if not isinstance(item, dict):
+                    continue
+                stats = item.get("statistics") if isinstance(item.get("statistics"), dict) else {}
+                rating_val = item.get("rating")
+                if rating_val is None:
+                    rating_val = stats.get("rating") if isinstance(stats, dict) else None
+                if rating_val is None:
+                    rating_val = item.get("grade")
+                try:
+                    rating_num = int(rating_val) if rating_val is not None else 0
+                except Exception:
+                    try:
+                        rating_num = int(float(rating_val))
+                    except Exception:
+                        rating_num = 0
+
+                author_obj = item.get("author")
+                if isinstance(author_obj, dict):
+                    author_name = author_obj.get("name") or "Anonymous"
+                    author_id = author_obj.get("id")
+                elif isinstance(author_obj, str):
+                    author_name = author_obj or "Anonymous"
+                    author_id = None
+                else:
+                    author_name = item.get("authorName") or "Anonymous"
+                    author_id = None
+
+                desc = item.get("description") if isinstance(item.get("description"), dict) else None
+                if desc:
+                    advantages = (desc.get("advantages") or "").strip()
+                    disadvantages = (desc.get("disadvantages") or "").strip()
+                    comment = (desc.get("comment") or "").strip()
+                    parts = []
+                    if advantages:
+                        parts.append(f"Advantages: {advantages}")
+                    if disadvantages:
+                        parts.append(f"Disadvantages: {disadvantages}")
+                    if comment:
+                        parts.append(f"Comment: {comment}")
+                    text_val = "\n".join(parts).strip()
+                else:
+                    text_val = item.get("text")
+                    if text_val is None:
+                        text_val = item.get("comment")
+                    if text_val is None:
+                        text_val = ""
+
+                reviews.append(
+                    {
+                        "id": item.get("id") or item.get("feedbackId"),
+                        "rating": rating_num,
+                        "text": str(text_val or ""),
+                        "author": {"name": author_name, "id": author_id},
+                        "created_at": item.get("createdAt") or item.get("created_at") or item.get("date") or item.get("created"),
                     }
-                    reviews.append(review)
-                return reviews
-            else:
-                # OAuth returns "reviews"
-                return result.get("reviews", [])
+                )
+            return reviews
         except httpx.HTTPError as e:
             raise Exception(f"Failed to get shop reviews: {str(e)}")
     
@@ -1041,6 +1121,122 @@ class YandexMarketAPI:
             raise Exception(f"Failed to reply to shop review: {str(e)}")
     
     # Order Chat Management
+    def get_chats(self, limit: int = 20, page_token: Optional[str] = None) -> Dict:
+        """Get available chats for the business (ORDER/RETURN/DIRECT)."""
+        if not self.business_id:
+            raise ValueError("business_id is required for chat operations")
+
+        url = f"{self.base_url}/v2/businesses/{self.business_id}/chats"
+        params: Dict[str, Any] = {"limit": max(1, min(20, int(limit)))}
+        if page_token:
+            params["pageToken"] = page_token
+
+        try:
+            with httpx.Client() as client:
+                response = client.post(
+                    url,
+                    params=params,
+                    json={},  # No filters -> return all chats available to the business
+                    headers=self._get_headers(),
+                    timeout=30.0,
+                )
+                response.raise_for_status()
+                data = response.json()
+                result = data.get("result", {}) or {}
+                return {
+                    "chats": result.get("chats", []) or [],
+                    "nextPageToken": (result.get("paging", {}) or {}).get("nextPageToken"),
+                }
+        except httpx.HTTPError as e:
+            error_msg = "Failed to get chats"
+            if hasattr(e, 'response') and e.response:
+                error_msg += f": {e.response.status_code} - {e.response.text}"
+            raise Exception(error_msg)
+
+    def get_chat_history(self, chat_id: int, limit: int = 100, page_token: Optional[str] = None) -> Dict:
+        """Get message history for a chat."""
+        if not self.business_id:
+            raise ValueError("business_id is required for chat operations")
+
+        url = f"{self.base_url}/v2/businesses/{self.business_id}/chats/history"
+        params: Dict[str, Any] = {"chatId": int(chat_id), "limit": max(1, min(100, int(limit)))}
+        if page_token:
+            params["pageToken"] = page_token
+
+        try:
+            with httpx.Client() as client:
+                response = client.post(
+                    url,
+                    params=params,
+                    json={},
+                    headers=self._get_headers(),
+                    timeout=30.0,
+                )
+                response.raise_for_status()
+                data = response.json()
+                result = data.get("result", {}) or {}
+                return {
+                    "context": result.get("context") or {},
+                    "messages": result.get("messages", []) or [],
+                    "nextPageToken": (result.get("paging", {}) or {}).get("nextPageToken"),
+                }
+        except httpx.HTTPError as e:
+            error_msg = f"Failed to get chat history for chat {chat_id}"
+            if hasattr(e, 'response') and e.response:
+                error_msg += f": {e.response.status_code} - {e.response.text}"
+            raise Exception(error_msg)
+
+    def create_chat_for_order(self, order_id: int) -> int:
+        """Create (or return existing) chat for an order and return chatId."""
+        if not self.business_id:
+            raise ValueError("business_id is required for chat operations")
+
+        url = f"{self.base_url}/v2/businesses/{self.business_id}/chats/new"
+        payload = {"orderId": int(order_id), "context": {"type": "ORDER", "id": int(order_id)}}
+
+        try:
+            with httpx.Client() as client:
+                response = client.post(
+                    url,
+                    json=payload,
+                    headers=self._get_headers(),
+                    timeout=30.0,
+                )
+                response.raise_for_status()
+                data = response.json()
+                chat_id = (data.get("result") or {}).get("chatId")
+                if not chat_id:
+                    raise Exception(f"Chat creation did not return chatId: {data}")
+                return int(chat_id)
+        except httpx.HTTPError as e:
+            error_msg = f"Failed to create chat for order {order_id}"
+            if hasattr(e, 'response') and e.response:
+                error_msg += f": {e.response.status_code} - {e.response.text}"
+            raise Exception(error_msg)
+
+    def send_message_to_chat(self, chat_id: int, message_text: str) -> Dict:
+        """Send a message to a chat by chatId."""
+        if not self.business_id:
+            raise ValueError("business_id is required for chat operations")
+
+        url = f"{self.base_url}/v2/businesses/{self.business_id}/chats/message"
+        try:
+            with httpx.Client() as client:
+                response = client.post(
+                    url,
+                    params={"chatId": int(chat_id)},
+                    json={"message": message_text},
+                    headers=self._get_headers(),
+                    timeout=30.0,
+                )
+                response.raise_for_status()
+                return response.json()
+        except httpx.HTTPError as e:
+            error_msg = f"Failed to send chat message to chat {chat_id}"
+            if hasattr(e, 'response') and e.response:
+                error_msg += f": {e.response.status_code} - {e.response.text}"
+            raise Exception(error_msg)
+
     def get_order_chat_messages(self, order_id: str) -> List[Dict]:
         """Get chat messages for an order
         
@@ -1050,6 +1246,12 @@ class YandexMarketAPI:
         """
         if not self.business_id:
             raise ValueError("business_id is required for chat operations")
+
+        try:
+            order_id_int = int(order_id)
+        except Exception:
+            # Some systems store Yandex order id as non-numeric string; chats API requires integer.
+            return []
         
         # Step 1: Get the chat for this order
         # According to docs: POST /v2/businesses/{businessId}/chats with body containing orderIds
@@ -1060,7 +1262,7 @@ class YandexMarketAPI:
                 # Use POST with orderIds filter in body (as per documentation)
                 # Note: API only allows ONE filter type - either orderIds, contextTypes, or contexts
                 payload = {
-                    "orderIds": [int(order_id)]
+                    "orderIds": [order_id_int]
                 }
                 response = client.post(
                     url,
@@ -1130,6 +1332,11 @@ class YandexMarketAPI:
         """
         if not self.business_id:
             raise ValueError("business_id is required for chat operations")
+
+        try:
+            order_id_int = int(order_id)
+        except Exception:
+            raise ValueError(f"Order id must be numeric for chats API: {order_id}")
         
         # Step 1: Get chat for the order
         chats_url = f"{self.base_url}/v2/businesses/{self.business_id}/chats"
@@ -1139,7 +1346,7 @@ class YandexMarketAPI:
                 # Get existing chat using POST with orderIds filter
                 # Note: API only allows ONE filter type - either orderIds, contextTypes, or contexts
                 payload = {
-                    "orderIds": [int(order_id)]
+                    "orderIds": [order_id_int]
                 }
                 response = client.post(
                     chats_url,
@@ -1156,38 +1363,26 @@ class YandexMarketAPI:
                         chat_id = chats[0].get("chatId")  # Note: field is "chatId", not "id"
                 
                 # If no chat exists, we need to create one first
-                # According to docs, we might need to use createChat endpoint, but for now
-                # we'll try to send anyway - Yandex might auto-create the chat
                 if not chat_id:
-                    # Try to get chat by orderId using GET /v2/businesses/{businessId}/chat endpoint
-                    get_chat_url = f"{self.base_url}/v2/businesses/{self.business_id}/chat"
-                    get_chat_response = client.get(
-                        get_chat_url,
-                        params={"orderId": order_id},
+                    # Create chat for the order (or return previously created one)
+                    create_url = f"{self.base_url}/v2/businesses/{self.business_id}/chats/new"
+                    create_payload = {"orderId": order_id_int, "context": {"type": "ORDER", "id": order_id_int}}
+                    create_resp = client.post(
+                        create_url,
+                        json=create_payload,
                         headers=self._get_headers(),
-                        timeout=30.0
+                        timeout=30.0,
                     )
-                    if get_chat_response.status_code == 200:
-                        chat_data = get_chat_response.json()
-                        chat_id = chat_data.get("result", {}).get("chatId")
+                    create_resp.raise_for_status()
+                    create_data = create_resp.json()
+                    chat_id = (create_data.get("result") or {}).get("chatId")
                 
                 if not chat_id:
                     raise ValueError(f"Could not find chat for order {order_id}. Chat may need to be created first.")
                 
                 # Step 2: Send message to the chat
                 # According to docs: POST /v2/businesses/{businessId}/chats/message with chatId query parameter
-                send_url = f"{self.base_url}/v2/businesses/{self.business_id}/chats/message"
-                
-                send_response = client.post(
-                    send_url,
-                    params={"chatId": chat_id},
-                    json={"message": message_text},  # Body contains "message" field, not "text"
-                    headers=self._get_headers(),
-                    timeout=30.0
-                )
-                
-                send_response.raise_for_status()
-                return send_response.json()
+                return self.send_message_to_chat(int(chat_id), message_text)
                 
         except httpx.HTTPError as e:
             error_msg = f"Failed to send order chat message for order {order_id}"

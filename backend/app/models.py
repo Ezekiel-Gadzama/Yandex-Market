@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Text, ForeignKey, Enum as SQLEnum, Table, UniqueConstraint
+from sqlalchemy import Column, Integer, String, Float, Boolean, DateTime, Date, Text, ForeignKey, Enum as SQLEnum, Table, UniqueConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -208,6 +208,10 @@ class AppSettings(Base):
     
     # Client Management Settings
     auto_append_clients = Column(Boolean, default=False)  # If True, automatically append client orders when customer name matches
+
+    # UI / Localization
+    # IANA timezone name, e.g. "Europe/Moscow"
+    timezone = Column(String, nullable=True)
     
     # Metadata
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -359,6 +363,18 @@ class ChatReadStatus(Base):
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class ExtraCost(Base):
+    """Extra costs (e.g. ads, packaging) per business, used to adjust profit on dashboard"""
+    __tablename__ = "extra_costs"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    business_id = Column(Integer, ForeignKey("users.id"), nullable=False, index=True)
+    description = Column(String(500), nullable=False)  # What the cost was for
+    amount = Column(Float, nullable=False)  # Cost amount
+    date = Column(Date, nullable=False)  # Date the cost was incurred
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 class Documentation(Base):

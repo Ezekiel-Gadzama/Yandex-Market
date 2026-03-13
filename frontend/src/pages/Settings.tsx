@@ -10,6 +10,7 @@ export default function Settings() {
   const [isEditing, setIsEditing] = useState(false)
   const [notification, setNotification] = useState<{ isOpen: boolean; type: 'success' | 'error'; message: string }>({ isOpen: false, type: 'success', message: '' })
   const queryClient = useQueryClient()
+  const [tzSearch, setTzSearch] = useState('')
 
   const showNotification = (type: 'success' | 'error', message: string) => {
     setNotification({ isOpen: true, type, message })
@@ -102,6 +103,7 @@ export default function Settings() {
       company_email: (formData.get('company_email') as string) || undefined,
       auto_activation_enabled: formData.get('auto_activation_enabled') === 'on',
       auto_append_clients: formData.get('auto_append_clients') === 'on',
+      timezone: (formData.get('timezone') as string) || undefined,
     }
     
     updateSettingsMutation.mutate(data)
@@ -212,6 +214,77 @@ export default function Settings() {
               handleConfigSubmit(e)
               setIsEditing(false)
             }} className="space-y-6">
+              {/* Time zone */}
+              <div>
+                <h3 className="text-md font-medium text-gray-900 mb-3">Time zone</h3>
+                <p className="text-sm text-gray-600 mb-3">
+                  Used for displaying dates and times across the app.
+                </p>
+                {(() => {
+                  const resolved = Intl.DateTimeFormat().resolvedOptions().timeZone
+                  const allZones =
+                    (Intl as any).supportedValuesOf?.('timeZone')?.slice?.() as string[] | undefined
+                  const zones = (allZones && allZones.length > 0)
+                    ? allZones
+                    : ['UTC', 'Europe/Moscow', resolved].filter(Boolean) as string[]
+
+                  const filtered = zones
+                    .filter((z) => z && z.toLowerCase().includes(tzSearch.trim().toLowerCase()))
+                    .sort((a, b) => a.localeCompare(b))
+
+                  const grouped = new Map<string, string[]>()
+                  for (const z of filtered) {
+                    const group = z.includes('/') ? z.split('/')[0] : 'Other'
+                    if (!grouped.has(group)) grouped.set(group, [])
+                    grouped.get(group)!.push(z)
+                  }
+
+                  const groupNames = Array.from(grouped.keys()).sort((a, b) => a.localeCompare(b))
+                  const currentTz = settings.timezone || resolved || 'UTC'
+
+                  return (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                        <input
+                          type="text"
+                          value={tzSearch}
+                          onChange={(e) => setTzSearch(e.target.value)}
+                          placeholder="Type to filter (e.g. Moscow, Europe, UTC)"
+                          disabled={!isEditing}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Selected</label>
+                        {isEditing ? (
+                          <select
+                            name="timezone"
+                            defaultValue={currentTz}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+                          >
+                            {groupNames.map((g) => (
+                              <optgroup key={g} label={g}>
+                                {grouped.get(g)!.map((z) => (
+                                  <option key={z} value={z}>{z}</option>
+                                ))}
+                              </optgroup>
+                            ))}
+                          </select>
+                        ) : (
+                          <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-md text-gray-900">
+                            {currentTz}
+                          </div>
+                        )}
+                        <p className="text-xs text-gray-500 mt-1">
+                          Example: <span className="font-medium">Europe/Moscow</span>
+                        </p>
+                      </div>
+                    </div>
+                  )
+                })()}
+              </div>
+
               {/* Yandex Market API */}
               <div>
                 <h3 className="text-md font-medium text-gray-900 mb-3">Yandex Market API</h3>

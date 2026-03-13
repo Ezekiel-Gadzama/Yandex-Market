@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { activationTemplatesApi, ActivationTemplate, ActivationTemplateCreate } from '../api/activationTemplates'
-import { Plus, Edit, Trash2, X, Bold, Italic, Underline, Copy, Upload } from 'lucide-react'
+import { Plus, Edit, Trash2, X, Bold, Italic, Underline, Copy, Upload, Check } from 'lucide-react'
 import ConfirmationModal from '../components/ConfirmationModal'
+import FeedbackButton from '../components/FeedbackButton'
 
 // Component to preview template body with height-based truncation
 function TemplateBodyPreview({ body }: { body: string }) {
@@ -49,13 +50,19 @@ export default function ActivationTemplates() {
   const [showModal, setShowModal] = useState(false)
   const [editingTemplate, setEditingTemplate] = useState<ActivationTemplate | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
+  const [page, setPage] = useState(0)
+  const pageSize = 15
   const [deleteConfirm, setDeleteConfirm] = useState<{ isOpen: boolean; templateId: number | null }>({ isOpen: false, templateId: null })
   const queryClient = useQueryClient()
 
   const { data: templates, isLoading } = useQuery({
-    queryKey: ['email-templates', searchTerm],
-    queryFn: () => activationTemplatesApi.getAll(searchTerm || undefined),
+    queryKey: ['email-templates', searchTerm, page, pageSize],
+    queryFn: () => activationTemplatesApi.getAll(searchTerm || undefined, { skip: page * pageSize, limit: pageSize }),
   })
+
+  useEffect(() => {
+    setPage(0)
+  }, [searchTerm])
 
   const createMutation = useMutation({
     mutationFn: (data: ActivationTemplateCreate) => activationTemplatesApi.create(data),
@@ -123,6 +130,31 @@ export default function ActivationTemplates() {
         />
       </div>
 
+      {/* Pagination */}
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <div className="text-sm text-gray-600">
+          Page <span className="font-semibold">{page + 1}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(0, p - 1))}
+            disabled={page === 0 || isLoading}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={isLoading || (templates ? templates.length < pageSize : true)}
+            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
       {/* Templates List */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
         {isLoading ? (
@@ -163,8 +195,8 @@ export default function ActivationTemplates() {
                         <option value="pdf">PDF</option>
                       </select>
                     </div>
-                    <button
-                      onClick={() => {
+                    <FeedbackButton
+                      onAction={() => {
                         // Create a copy with new name
                         const copyTemplate = {
                           ...template,
@@ -174,11 +206,18 @@ export default function ActivationTemplates() {
                         setEditingTemplate(copyTemplate)
                         setShowModal(true)
                       }}
-                      className="text-blue-600 hover:text-blue-900"
                       title="Duplicate"
+                      label="Duplicate"
+                      successLabel="Duplicated"
+                      className="text-blue-600 hover:text-blue-900 inline-flex items-center justify-center"
+                      successClassName="text-green-700"
+                      successChildren={<Check className="h-5 w-5" />}
                     >
-                      <Copy className="h-5 w-5" />
-                    </button>
+                      <>
+                        <Copy className="h-5 w-5" />
+                        <span className="sr-only">Duplicate</span>
+                      </>
+                    </FeedbackButton>
                     <button
                       onClick={() => {
                         setEditingTemplate(template)

@@ -31,8 +31,10 @@ export interface DocumentationUpdate {
 }
 
 export const documentationsApi = {
-  getAll: async (search?: string): Promise<Documentation[]> => {
-    const params = search ? { search } : {}
+  getAll: async (search?: string, paging?: { skip?: number; limit?: number }): Promise<Documentation[]> => {
+    const params: any = search ? { search } : {}
+    if (paging?.skip !== undefined) params.skip = paging.skip
+    if (paging?.limit !== undefined) params.limit = paging.limit
     const response = await apiClient.get('/documentations/', { params })
     return response.data
   },

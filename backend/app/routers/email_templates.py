@@ -19,6 +19,8 @@ router = APIRouter()
 @router.get("/", response_model=List[schemas.EmailTemplate])
 def get_email_templates(
     search: str = Query(None, description="Search by name or body"),
+    skip: int = Query(0, ge=0, description="Pagination offset"),
+    limit: int = Query(15, ge=1, le=200, description="Pagination page size"),
     current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
@@ -37,7 +39,13 @@ def get_email_templates(
             )
         )
     
-    templates = query.all()
+    templates = (
+        query
+        .order_by(models.EmailTemplate.created_at.desc())
+        .offset(skip)
+        .limit(limit)
+        .all()
+    )
     return templates
 
 
