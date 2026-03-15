@@ -1248,6 +1248,24 @@ async def lifespan(app: FastAPI):
             ADD COLUMN IF NOT EXISTS is_default BOOLEAN DEFAULT FALSE
         """))
         
+        # Create product_cost_history table (cost per product with date range for profit calculation)
+        db.execute(text("""
+            CREATE TABLE IF NOT EXISTS product_cost_history (
+                id SERIAL PRIMARY KEY,
+                product_id INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+                amount DOUBLE PRECISION NOT NULL,
+                start_date DATE NOT NULL,
+                end_date DATE,
+                created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+            )
+        """))
+        db.execute(text("""
+            CREATE INDEX IF NOT EXISTS idx_product_cost_history_product_id ON product_cost_history(product_id)
+        """))
+        db.execute(text("""
+            CREATE INDEX IF NOT EXISTS idx_product_cost_history_dates ON product_cost_history(product_id, start_date, end_date)
+        """))
+
         # Create chat_read_status table if it doesn't exist
         db.execute(text("""
             CREATE TABLE IF NOT EXISTS chat_read_status (

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { productsApi, Product, ProductUpdate } from '../api/products'
+import { productsApi, Product, ProductUpdate, ProductCostHistoryCreate } from '../api/products'
 import { activationTemplatesApi } from '../api/activationTemplates'
 import { documentationsApi } from '../api/documentations'
 import { reviewsApi } from '../api/reviews'
@@ -394,6 +394,33 @@ function ProductViewModal({
   const { user } = useAuth()
   const canViewPrices = user?.is_admin || user?.permissions.view_product_prices
   const [activeTab, setActiveTab] = useState<'details' | 'reviews'>('details')
+  const queryClient = useQueryClient()
+  const todayStr = new Date().toISOString().slice(0, 10)
+
+  const { data: costHistory = [] } = useQuery({
+    queryKey: ['product-cost-history', product.id],
+    queryFn: () => productsApi.getCostHistory(product.id),
+    enabled: !!product.id && canViewPrices,
+  })
+  const createCostMutation = useMutation({
+    mutationFn: (data: ProductCostHistoryCreate) => productsApi.createCostHistory(product.id, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['product-cost-history', product.id] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    },
+  })
+  const deleteCostMutation = useMutation({
+    mutationFn: (costId: number) => productsApi.deleteCostHistory(product.id, costId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['product-cost-history', product.id] })
+      queryClient.invalidateQueries({ queryKey: ['dashboard'] })
+    },
+  })
+
+  const [newCostAmount, setNewCostAmount] = useState('')
+  const [newCostStart, setNewCostStart] = useState('')
+  const [newCostEnd, setNewCostEnd] = useState('')
+  const [costEndTillDate, setCostEndTillDate] = useState(true)
   
   // Extract medias from yandex_full_data
   const getMedias = () => {
@@ -608,6 +635,100 @@ function ProductViewModal({
                       {fullDetails.yandex_full_data.discount_percentage ? ` (-${fullDetails.yandex_full_data.discount_percentage.toFixed(0)}%)` : ''}
                     </p>
                   </div>
+                )}
+              </div>
+            </div>
+            )}
+
+            {/* Cost History - for profit calculation by order date */}
+            {canViewPrices && (
+            <div>
+              <h4 className="text-lg font-semibold text-gray-800 mb-3 border-b pb-2">Cost History</h4>
+              <p className="text-sm text-gray-600 mb-3">
+                Set cost per unit with date ranges. Profit for past orders uses the cost in effect at the order date. Leave end date empty for &quot;till date&quot; (ongoing).
+              </p>
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-end gap-2 p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Amount (₽)</label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={newCostAmount}
+                      onChange={(e) => setNewCostAmount(e.target.value)}
+                      placeholder="0"
+                      className="w-24 px-2 py-1.5 border border-gray-300 rounded text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">From</label>
+                    <input
+                      type="date"
+                      value={newCostStart}
+                      onChange={(e) => setNewCostStart(e.target.value)}
+                      className="px-2 py-1.5 border border-gray-300 rounded text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">To</label>
+                    <input
+                      type="date"
+                      value={costEndTillDate ? '' : newCostEnd}
+                      onChange={(e) => setNewCostEnd(e.target.value)}
+                      disabled={costEndTillDate}
+                      max={todayStr}
+                      className="px-2 py-1.5 border border-gray-300 rounded text-sm disabled:bg-gray-100"
+                    />
+                    <label className="flex items-center gap-1 mt-1 text-xs text-gray-600">
+                      <input
+                        type="checkbox"
+                        checked={costEndTillDate}
+                        onChange={(e) => setCostEndTillDate(e.target.checked)}
+                      />
+                      Till date
+                    </label>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const amount = parseFloat(newCostAmount)
+                      if (!newCostStart || !Number.isFinite(amount) || amount < 0) return
+                      createCostMutation.mutate({
+                        amount,
+                        start_date: newCostStart,
+                        end_date: costEndTillDate ? null : (newCostEnd || undefined),
+                      })
+                      setNewCostAmount('')
+                      setNewCostStart('')
+                      setNewCostEnd('')
+                    }}
+                    disabled={createCostMutation.isPending || !newCostStart || !newCostAmount}
+                    className="px-3 py-1.5 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    Add
+                  </button>
+                </div>
+                {costHistory.length === 0 ? (
+                  <p className="text-sm text-gray-500 py-2">No cost periods. Add one above. Fallback: product cost price.</p>
+                ) : (
+                  <ul className="divide-y divide-gray-200 border border-gray-200 rounded-lg">
+                    {costHistory.map((c) => (
+                      <li key={c.id} className="flex items-center justify-between px-3 py-2 text-sm">
+                        <span>₽{c.amount.toLocaleString('ru-RU')} — {c.start_date} to {c.end_date || 'till date'}</span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (window.confirm('Delete this cost period?')) deleteCostMutation.mutate(c.id)
+                          }}
+                          disabled={deleteCostMutation.isPending}
+                          className="text-red-600 hover:text-red-800 text-xs"
+                        >
+                          Delete
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
                 )}
               </div>
             </div>

@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import or_ as sql_or
 from typing import List
+from datetime import date as date_type
 import json
 from app.database import get_db
 from app import models, schemas
@@ -209,6 +210,121 @@ def get_product_full_details(product_id: int, db: Session = Depends(get_db)):
             print(f"Failed to get Yandex product details: {str(e)}")
     
     return product_dict
+
+
+@router.get("/{product_id}/cost-history", response_model=List[schemas.ProductCostHistory])
+def get_product_cost_history(
+    product_id: int,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Get cost history for a product. Used for profit calculation by order date."""
+    business_id = get_business_id(current_user)
+    product = db.query(models.Product).filter(
+        models.Product.id == product_id,
+        models.Product.business_id == business_id,
+    ).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    rows = (
+        db.query(models.ProductCostHistory)
+        .filter(models.ProductCostHistory.product_id == product_id)
+        .order_by(models.ProductCostHistory.start_date.asc())
+        .all()
+    )
+    return rows
+
+
+@router.post("/{product_id}/cost-history", response_model=schemas.ProductCostHistory, status_code=status.HTTP_201_CREATED)
+def create_product_cost_history(
+    product_id: int,
+    body: schemas.ProductCostHistoryCreate,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Add a cost period for a product. end_date null = till date / ongoing."""
+    business_id = get_business_id(current_user)
+    product = db.query(models.Product).filter(
+        models.Product.id == product_id,
+        models.Product.business_id == business_id,
+    ).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    start_date = date_type.fromisoformat(body.start_date)
+    end_date = date_type.fromisoformat(body.end_date) if body.end_date else None
+    if end_date is not None and end_date < start_date:
+        raise HTTPException(status_code=400, detail="end_date must be >= start_date")
+    row = models.ProductCostHistory(
+        product_id=product_id,
+        amount=float(body.amount),
+        start_date=start_date,
+        end_date=end_date,
+    )
+    db.add(row)
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+@router.patch("/{product_id}/cost-history/{cost_id}", response_model=schemas.ProductCostHistory)
+def update_product_cost_history(
+    product_id: int,
+    cost_id: int,
+    body: schemas.ProductCostHistoryUpdate,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Update a cost history entry."""
+    business_id = get_business_id(current_user)
+    product = db.query(models.Product).filter(
+        models.Product.id == product_id,
+        models.Product.business_id == business_id,
+    ).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    row = db.query(models.ProductCostHistory).filter(
+        models.ProductCostHistory.id == cost_id,
+        models.ProductCostHistory.product_id == product_id,
+    ).first()
+    if not row:
+        raise HTTPException(status_code=404, detail="Cost history entry not found")
+    if body.amount is not None:
+        row.amount = float(body.amount)
+    if body.start_date is not None:
+        row.start_date = date_type.fromisoformat(body.start_date)
+    if body.end_date is not None:
+        row.end_date = date_type.fromisoformat(body.end_date) if (body.end_date and body.end_date.strip()) else None
+    if row.end_date is not None and row.end_date < row.start_date:
+        raise HTTPException(status_code=400, detail="end_date must be >= start_date")
+    db.commit()
+    db.refresh(row)
+    return row
+
+
+@router.delete("/{product_id}/cost-history/{cost_id}", status_code=204)
+def delete_product_cost_history(
+    product_id: int,
+    cost_id: int,
+    current_user: models.User = Depends(get_current_active_user),
+    db: Session = Depends(get_db),
+):
+    """Delete a cost history entry."""
+    business_id = get_business_id(current_user)
+    product = db.query(models.Product).filter(
+        models.Product.id == product_id,
+        models.Product.business_id == business_id,
+    ).first()
+    if not product:
+        raise HTTPException(status_code=404, detail="Product not found")
+    row = db.query(models.ProductCostHistory).filter(
+        models.ProductCostHistory.id == cost_id,
+        models.ProductCostHistory.product_id == product_id,
+    ).first()
+    if not row:
+        raise HTTPException(status_code=404, detail="Cost history entry not found")
+    db.delete(row)
+    db.commit()
+    return None
 
 
 @router.put("/{product_id}", response_model=schemas.Product)

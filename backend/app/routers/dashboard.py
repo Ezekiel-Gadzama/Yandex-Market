@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, date as date_type
 from app.database import get_db
 from app import models, schemas
 from app.auth import get_current_active_user, has_permission, get_business_id
+from app.cost_utils import get_product_cost_at_date
 
 router = APIRouter()
 
@@ -163,52 +164,66 @@ def get_top_products(
     current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):
-    """Get top selling products with optional period filter or custom date range. Revenue/profit data requires dashboard_right permission."""
+    """Get top selling products with optional period filter or custom date range. Revenue/profit uses cost at order date."""
     start_date_dt, end_date_dt = _get_date_range(period, start_date, end_date)
-    
     business_id = get_business_id(current_user)
-    query = (
-        db.query(
-            models.Product.id,
-            models.Product.name,
-            func.count(func.distinct(models.Order.yandex_order_id)).label("total_sales"),  # Count unique orders, not order records
-            func.sum(models.Order.total_amount).label("total_revenue"),
-            func.sum(models.Order.total_amount - (models.Product.cost_price * models.Order.quantity)).label("total_profit")
-        )
-        .join(models.Order)
+    has_dashboard_right = current_user.is_admin or has_permission(current_user, "dashboard_right")
+
+    orders_query = (
+        db.query(models.Order)
         .filter(
-            models.Product.business_id == business_id,
             models.Order.business_id == business_id,
             (models.Order.status == models.OrderStatus.COMPLETED) |
             (models.Order.status == models.OrderStatus.FINISHED)
         )
     )
-    
     if start_date_dt:
-        query = query.filter(models.Order.created_at >= start_date_dt)
+        orders_query = orders_query.filter(models.Order.created_at >= start_date_dt)
     if end_date_dt:
-        query = query.filter(models.Order.created_at <= end_date_dt)
-    
-    top_products = (
-        query
-        .group_by(models.Product.id, models.Product.name)
-        .order_by(desc("total_sales"))
-        .limit(limit)
-        .all()
-    )
-    
-    # Check if user has permission to view analytics
-    has_dashboard_right = current_user.is_admin or has_permission(current_user, "dashboard_right")
-    
+        orders_query = orders_query.filter(models.Order.created_at <= end_date_dt)
+    orders = orders_query.all()
+
+    # Aggregate by product: total_sales = distinct orders, revenue/profit from order amounts
+    by_product: dict[int, dict] = {}
+    seen_orders_per_product: dict[int, set] = {}
+    for order in orders:
+        product_id = order.product_id
+        order_date = order.order_created_at or order.created_at
+        cost = get_product_cost_at_date(db, product_id, order_date) if has_dashboard_right else 0.0
+        profit = order.total_amount - (cost * order.quantity) if has_dashboard_right else 0.0
+        if product_id not in by_product:
+            product = db.query(models.Product).filter(models.Product.id == product_id).first()
+            by_product[product_id] = {
+                "product_id": product_id,
+                "product_name": product.name if product else f"Product #{product_id}",
+                "total_sales": 0,
+                "total_revenue": 0.0,
+                "total_profit": 0.0,
+            }
+            seen_orders_per_product[product_id] = set()
+        yid = order.yandex_order_id
+        if yid not in seen_orders_per_product[product_id]:
+            seen_orders_per_product[product_id].add(yid)
+            by_product[product_id]["total_sales"] += 1
+        by_product[product_id]["total_revenue"] += order.total_amount
+        by_product[product_id]["total_profit"] += profit
+
+    # Sort by total_sales desc, take top limit
+    sorted_products = sorted(
+        by_product.values(),
+        key=lambda p: p["total_sales"],
+        reverse=True
+    )[:limit]
+
     return [
         schemas.TopProduct(
-            product_id=product.id,
-            product_name=product.name,
-            total_sales=product.total_sales,
-            total_revenue=float(product.total_revenue or 0) if has_dashboard_right else 0.0,
-            total_profit=float(product.total_profit or 0) if has_dashboard_right else 0.0
+            product_id=p["product_id"],
+            product_name=p["product_name"],
+            total_sales=p["total_sales"],
+            total_revenue=float(p["total_revenue"]) if has_dashboard_right else 0.0,
+            total_profit=float(p["total_profit"]) if has_dashboard_right else 0.0
         )
-        for product in top_products
+        for p in sorted_products
     ]
 
 

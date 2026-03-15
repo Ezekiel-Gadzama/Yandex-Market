@@ -59,6 +59,30 @@ class Product(ProductBase):
         from_attributes = True
 
 
+class ProductCostHistoryCreate(BaseModel):
+    amount: float = Field(ge=0, description="Cost per unit")
+    start_date: str  # YYYY-MM-DD
+    end_date: Optional[str] = None  # YYYY-MM-DD, null = till date / ongoing
+
+
+class ProductCostHistoryUpdate(BaseModel):
+    amount: Optional[float] = Field(None, ge=0)
+    start_date: Optional[str] = None  # YYYY-MM-DD
+    end_date: Optional[str] = None  # YYYY-MM-DD, null = till date
+
+
+class ProductCostHistory(BaseModel):
+    id: int
+    product_id: int
+    amount: float
+    start_date: date
+    end_date: Optional[date] = None
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
 # Email Template Schemas
 class EmailTemplateBase(BaseModel):
     name: str

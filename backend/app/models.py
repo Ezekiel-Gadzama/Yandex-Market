@@ -264,21 +264,23 @@ class Order(Base):
     # To get product: db.query(Product).filter(Product.id == self.product_id).first()
     # To get activation_key: db.query(ActivationKey).filter(ActivationKey.id == self.activation_key_id).first()
     
+    def _get_profit(self, db) -> float:
+        """Calculate profit for this order using cost in effect at order date."""
+        from app.cost_utils import get_product_cost_at_date
+        order_date = self.order_created_at or self.created_at
+        cost = get_product_cost_at_date(db, self.product_id, order_date)
+        return self.total_amount - (cost * self.quantity)
+
     @property
     def profit(self) -> float:
         """Calculate profit for this order.
-        
-        Uses the SQLAlchemy session bound to the object (if available) to look up
-        the product's cost_price. Returns 0.0 if product can't be found.
+        Uses cost from ProductCostHistory at order date, else product.cost_price.
         """
         try:
             from sqlalchemy import inspect
             session = inspect(self).session
             if session:
-                from app import models
-                product = session.query(models.Product).filter(models.Product.id == self.product_id).first()
-                if product:
-                    return self.total_amount - (product.cost_price * self.quantity)
+                return self._get_profit(session)
         except Exception:
             pass
         return 0.0
@@ -363,6 +365,18 @@ class ChatReadStatus(Base):
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+
+class ProductCostHistory(Base):
+    """Cost per product with date range. Used for profit calculation so past orders use cost in effect at order date."""
+    __tablename__ = "product_cost_history"
+
+    id = Column(Integer, primary_key=True, index=True)
+    product_id = Column(Integer, ForeignKey("products.id", ondelete="CASCADE"), nullable=False, index=True)
+    amount = Column(Float, nullable=False)  # Cost per unit
+    start_date = Column(Date, nullable=False)  # Date the cost became effective
+    end_date = Column(Date, nullable=True)  # Null = "till date" / ongoing
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
 
 class ExtraCost(Base):

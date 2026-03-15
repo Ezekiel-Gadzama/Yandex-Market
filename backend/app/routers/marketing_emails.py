@@ -30,7 +30,7 @@ class BroadcastFilters(BaseModel):
 def get_marketing_templates(
     search: str = Query(None, description="Search by name, subject, or body"),
     skip: int = Query(0, ge=0, description="Pagination offset"),
-    limit: int = Query(15, ge=1, le=200, description="Pagination page size"),
+    limit: int = Query(15, ge=1, le=5000, description="Pagination page size (higher for dropdowns)"),
     current_user: models.User = Depends(get_current_active_user),
     db: Session = Depends(get_db)
 ):

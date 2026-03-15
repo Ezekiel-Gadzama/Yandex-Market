@@ -91,4 +91,44 @@ export const productsApi = {
     const response = await apiClient.get(`/products/${id}/full`)
     return response.data
   },
+
+  getCostHistory: async (productId: number) => {
+    const response = await apiClient.get<ProductCostHistory[]>(`/products/${productId}/cost-history`)
+    return response.data
+  },
+
+  createCostHistory: async (productId: number, data: ProductCostHistoryCreate) => {
+    const response = await apiClient.post<ProductCostHistory>(`/products/${productId}/cost-history`, data)
+    return response.data
+  },
+
+  updateCostHistory: async (productId: number, costId: number, data: ProductCostHistoryUpdate) => {
+    const response = await apiClient.patch<ProductCostHistory>(`/products/${productId}/cost-history/${costId}`, data)
+    return response.data
+  },
+
+  deleteCostHistory: async (productId: number, costId: number) => {
+    await apiClient.delete(`/products/${productId}/cost-history/${costId}`)
+  },
+}
+
+export interface ProductCostHistory {
+  id: number
+  product_id: number
+  amount: number
+  start_date: string
+  end_date: string | null
+  created_at: string
+}
+
+export interface ProductCostHistoryCreate {
+  amount: number
+  start_date: string
+  end_date?: string | null
+}
+
+export interface ProductCostHistoryUpdate {
+  amount?: number
+  start_date?: string
+  end_date?: string | null
 }
